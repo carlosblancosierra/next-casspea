@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { selectAllProducts } from '@/redux/features/product/productSlice';
+import { selectAllProducts } from '@/redux/features/products/productSlice';
 import { useAppSelector } from '@/redux/hooks';
 import ProductCard from './ProductCard';
 import { motion, AnimatePresence } from 'framer-motion';

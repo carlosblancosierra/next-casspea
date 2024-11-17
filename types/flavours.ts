@@ -1,21 +1,23 @@
-export interface FlavourType {
+import { Allergen } from "./allergens";
+
+export interface FlavourCategory {
+    id: number;
+    name: string;
+    active: boolean;
+    slug: string;
+}
+
+export interface Flavour {
+    id: number;
     name: string;
     slug: string;
     description: string;
     mini_description: string;
-    allergens: {
-        name: string;
-        slug: string;
-    }[];
-    image: string;
-    valentines_flavour?: boolean;
-    updated?: string;
-    timestamp?: string;
+    category?: FlavourCategory;
+    allergens?: Allergen[];
     active?: boolean;
-}
-
-
-export interface FlavourSelectionType {
-    flavour: FlavourType;
-    quantity: number;
+    image?: string;
+    image_webp?: string;
+    thumbnail?: string;
+    thumbnail_webp?: string;
 }

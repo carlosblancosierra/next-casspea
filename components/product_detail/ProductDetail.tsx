@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { selectProductBySlug } from '@/redux/features/product/productSlice';
+import { selectProductBySlug } from '@/redux/features/products/productSlice';
 import { useAppSelector } from '@/redux/hooks';
 import { RootState } from '@/redux/store';
 import ProductInfo from '@/components/product_detail/ProductInfo';
@@ -12,7 +12,7 @@ import ProductFormGeneral from './ProductFormGeneral';
 import FlavourGrid from '../flavours/FlavourCarousel';
 import Reviews from '../common/Reviews';
 import ProductCard from '../store/ProductCard';
-import { selectBoxes } from '@/redux/features/product/productSlice';
+import { selectBoxes } from '@/redux/features/products/productSlice';
 
 const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
     const product = useAppSelector((state: RootState) => selectProductBySlug(state, slug));

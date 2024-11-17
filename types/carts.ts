@@ -1,12 +1,15 @@
-import { ProductType } from '@/types/products';
-import { FlavourSelectionType } from '@/types/flavours';
-
-export interface CartEntry {
+export interface CartItem {
     id: number;
-    product: ProductType;
     quantity: number;
-    active: boolean;
-    flavours?: FlavourSelectionType[];
-    selection?: 'RANDOM' | 'PICK';
-    selectedAllergens?: string[];
+    product_data: {
+        id: number;
+        name: string;
+        price: number;
+    };
+}
+
+export interface Cart {
+    id: number;
+    items: CartItem[];
+    total: number;
 }

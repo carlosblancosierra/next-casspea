@@ -1,27 +1,39 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FlavourType } from '@/types/flavours';
+import { Flavour } from '@/types/flavours';
 import { RootState } from '@/redux/store';
-import flavours from './flavoursMockData';
+import { createSelector } from '@reduxjs/toolkit';
 
 interface FlavourState {
-    flavours: FlavourType[];
+    flavours: Flavour[];
 }
 
 const initialState: FlavourState = {
-    flavours: [...flavours],
+    flavours: [],
 };
 
 const flavourSlice = createSlice({
     name: 'flavours',
     initialState,
     reducers: {
-        setFlavours(state, action: PayloadAction<FlavourType[]>) {
+        setFlavours(state, action: PayloadAction<Flavour[]>) {
             state.flavours = action.payload;
-        }
+        },
     },
 });
 
-export const { setFlavours } = flavourSlice.actions;
-export const selectAllFlavours = (state: RootState): FlavourType[] => state.flavours.flavours;
+// Base selector
+const selectFlavoursState = (state: RootState) => state.flavours;
 
+// Memoized selectors
+export const selectAllFlavours = createSelector(
+    [selectFlavoursState],
+    (flavourState) => flavourState.flavours
+);
+
+export const selectActiveFlavours = createSelector(
+    [selectAllFlavours],
+    (flavours) => flavours.filter(flavour => flavour.active) || []
+);
+
+export const { setFlavours } = flavourSlice.actions;
 export default flavourSlice.reducer;

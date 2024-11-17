@@ -1,22 +1,33 @@
-// types/products.ts
-
-export interface ProductCategoryType {
-    name: string;
-    slug: string;
-    short: string;
-}
-
-export interface ProductType {
+export interface ProductCategory {
     id: number;
     name: string;
-    name_short: string;
-    price: string;
     slug: string;
-    category: ProductCategoryType;
-    store_image: string;
-    images: string[];
     description?: string;
-    weight: string;
-    color: string;
-    pieces?: string;
+    active?: boolean;
+}
+
+export interface Product {
+    id: number;
+    name: string;
+    description?: string;
+    category?: ProductCategory;
+
+    base_price?: number;
+    stripe_price_id?: string;
+    slug: string;
+    weight?: number;  // in grams
+
+    active?: boolean;
+    sold_out?: boolean;
+
+    units_per_box?: number;
+
+    main_color?: string;
+    secondary_color?: string;
+
+    seo_title?: string;
+    seo_description?: string;
+
+    created?: string;
+    updated?: string;
 }

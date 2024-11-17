@@ -3,10 +3,12 @@
 import { useVerify } from '@/hooks';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import useFetchAndSaveFlavours from '@/hooks/useFetchAndSaveFlavours';
+import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
+import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 
 export default function Setup() {
 	// useVerify();
-	// useFetchAndSaveFlavours();
+	useGetProductsQuery();
+	useGetFlavoursQuery();
 	return <ToastContainer />;
 }

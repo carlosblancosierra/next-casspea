@@ -1,7 +1,7 @@
 // slices/productSlice.ts
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ProductType } from '@/types/products';
+import { Product as ProductType } from '@/types/products';
 import { RootState } from '@/redux/store';
 import { createSelector } from '@reduxjs/toolkit';
 
