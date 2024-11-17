@@ -1,8 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    reactStrictMode: true,
     images: {
-        domains: ['casspea-static-eu.s3-accelerate.amazonaws.com',
-            'flowbite.s3.amazonaws.com'
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: '**',
+            },
         ],
     },
     typescript: {
