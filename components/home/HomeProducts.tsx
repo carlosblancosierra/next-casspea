@@ -12,7 +12,7 @@ interface HomeProductsProps {
 const HomeProducts: React.FC<HomeProductsProps> = ({
 }) => {
 	const products = useAppSelector(selectAllProducts);
-	const boxes = useAppSelector(selectBoxes);
+	const boxes = useAppSelector(selectAllProducts);
 	const productVariants = {
 		hidden: { opacity: 0, scale: 0.8 },
 		visible: { opacity: 1, scale: 1 },
@@ -22,8 +22,8 @@ const HomeProducts: React.FC<HomeProductsProps> = ({
 		<section className="dark:bg-gray-900">
 			<div
 				className={`grid gap-x-2 gap-y-2 mt-2 justify-center ${boxes.length < 3
-						? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
-						: 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+					? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+					: 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
 					}`}
 			>
 				<AnimatePresence>

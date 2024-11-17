@@ -11,6 +11,7 @@ const productApiSlice = apiSlice.injectEndpoints({
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
+                    console.log('products data', data);
                     dispatch(setProducts(data));
                 } catch (err) {
                     console.error('Error fetching products:', err);

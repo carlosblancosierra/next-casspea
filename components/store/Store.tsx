@@ -7,13 +7,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Store() {
   const products = useAppSelector(selectAllProducts);
 
-  const categories = ['All', ...Array.from(new Set(products.map(product => product.category.name))).reverse()];
+  const categories = ['All', ...Array.from(new Set(products.map(product => product?.category?.name))).reverse()];
 
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   const filteredProducts = selectedCategory === 'All'
     ? products
-    : products.filter(product => product.category.name === selectedCategory);
+    : products.filter(product => product?.category?.name === selectedCategory);
 
   const productVariants = {
     hidden: { opacity: 0, scale: 0.8 },

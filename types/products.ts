@@ -4,6 +4,8 @@ export interface ProductCategory {
     slug: string;
     description?: string;
     active?: boolean;
+    created?: string;
+    updated?: string;
 }
 
 export interface Product {
@@ -12,7 +14,7 @@ export interface Product {
     description?: string;
     category?: ProductCategory;
 
-    base_price?: number;
+    base_price?: string;
     stripe_price_id?: string;
     slug: string;
     weight?: number;  // in grams
@@ -27,6 +29,11 @@ export interface Product {
 
     seo_title?: string;
     seo_description?: string;
+
+    image?: string;
+    image_webp?: string;
+    thumbnail?: string;
+    thumbnail_webp?: string;
 
     created?: string;
     updated?: string;

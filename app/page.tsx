@@ -16,20 +16,18 @@ export default function Page() {
 				<div className="grid grid-cols-1 lg:grid-cols-12 mpx-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 relative">
 					<div className="md:mr-10 lg:mt-[5vh] grid-cols-1 lg:col-span-6">
 						<h1 className="mb-4 text-5xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-8xl dark:text-white">Share the love <br /> Share CassPea Chocolates</h1>
-						<p className="mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-3xl dark:text-gray-200">Luxurious Handmade Bonbons for personal indulgence. Pick your box size, allergens and flavours. Or design your custom chocolates for your corporate event, wedding or birthday party</p>
-						{/* <ul className='text-xl dark:text-gray-400 gap-10'>
-							<li>Beautiful Gift Boxes</li>
-							<li>Choose Your Flavours</li>
-							<li>Custom orders</li>
-							<li>Design your own</li>
-						</ul> */}
-						<Link href="/store" className="inline-flex md:mt-5 items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300">
-							View the store
-							<svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-						</Link>
-						<Link href="/custom-orders" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-							Custom Orders
-						</Link>
+						<p className="md:mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-3xl dark:text-gray-200">Luxurious Handmade Bonbons for personal indulgence. Pick your box size, allergens and flavours. Or design your custom chocolates for your corporate event, wedding or birthday party</p>
+						{/* Desktop buttons */}
+						<div className='hidden md:flex gap-2'>
+							<Link href="/store" className="inline-flex md:mt-5 items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300">
+								View the store
+								<svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+							</Link>
+							<Link href="/custom-orders" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+								Custom Orders
+							</Link>
+						</div>
+
 					</div>
 					<div className="col-span-1 lg:col-span-6">
 						<Image src="/home/hero-1.png"
