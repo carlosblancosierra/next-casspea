@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { Disclosure, Menu, Transition, DisclosureButton, DisclosurePanel, MenuItems, MenuItem, MenuButton } from '@headlessui/react'
 import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-import { selectTotalCartItems, selectTotalCartValue } from '@/redux/features/cart/cartSlice';
+// import { selectCart } from '@/redux/features/carts/cartSlice';
 import Image from 'next/image';
 
 const navigation = [
@@ -22,8 +22,7 @@ function classNames(...classes: string[]) {
 }
 
 export default function Nav() {
-  const totalItems = useSelector(selectTotalCartItems);
-  const totalValue = useSelector(selectTotalCartValue);
+  // const cart = useSelector(selectCart);
 
   return (
     <Disclosure as="nav" className="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -84,9 +83,9 @@ export default function Nav() {
                     aria-hidden="true"
                     className="h-6 w-6 text-gray-400 group-hover:text-gray-500 dark:text-gray-300 dark:group-hover:text-white"
                   />
-                  <span className="ml-2 text-xs font-medium text-gray-700 group-hover:text-gray-800 dark:text-gray-300 dark:group-hover:text-white">
+                  {/* <span className="ml-2 text-xs font-medium text-gray-700 group-hover:text-gray-800 dark:text-gray-300 dark:group-hover:text-white">
                     {totalItems} (£{totalValue.toFixed(2)})
-                  </span>
+                  </span> */}
                   <span className="sr-only">items in cart, view bag</span>
                 </Link>
 

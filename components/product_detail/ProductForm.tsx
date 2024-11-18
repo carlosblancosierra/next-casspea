@@ -6,7 +6,7 @@ import FlavourPicker from './FlavourPicker';
 import ProgressBar from '@/components/common/ProgressBar';
 import { FlavourType, FlavourSelectionType } from '@/types/flavours';
 import ProductConfirm from './ProductConfirm';
-import { addToCart } from '@/redux/features/cart/cartSlice';
+import { addToCart } from '@/redux/features/carts/cartSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 
@@ -110,7 +110,7 @@ const ProductForm: React.FC<ProductInfoProps> = ({ product }) => {
         };
         dispatch(addToCart(cartEntry));
 
-        if ( selection === 'PICK') {
+        if (selection === 'PICK') {
             setPopupVisible(true);
         }
 
@@ -154,8 +154,7 @@ const ProductForm: React.FC<ProductInfoProps> = ({ product }) => {
                             key={obj.name}
                             value={obj.value}
                             className={({ checked }) =>
-                                `cursor-pointer bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none ${
-                                    checked ? 'ring-2 ring-indigo-500 border-indigo-500' : ''
+                                `cursor-pointer bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none ${checked ? 'ring-2 ring-indigo-500 border-indigo-500' : ''
                                 }`
                             }
                         >
@@ -205,10 +204,10 @@ const ProductForm: React.FC<ProductInfoProps> = ({ product }) => {
                 </>
             )}
             {selection === 'PICK' && (
-            <div className="mt-4">
-                <p className="text-sm mb-1 dark:text-gray-200">{getProgressText()}</p>
-                 <ProgressBar value={maxChocolates - remainingChocolates} max={maxChocolates} />
-            </div>
+                <div className="mt-4">
+                    <p className="text-sm mb-1 dark:text-gray-200">{getProgressText()}</p>
+                    <ProgressBar value={maxChocolates - remainingChocolates} max={maxChocolates} />
+                </div>
 
             )}
 
@@ -242,11 +241,10 @@ const ProductForm: React.FC<ProductInfoProps> = ({ product }) => {
                 type="button"
                 onClick={handleAddToCart}
                 disabled={selection === 'PICK' && remainingChocolates > 0}
-                className={`mt-8 w-full py-3 rounded flex items-center justify-center text-sm gap-2 ${
-                    selection === 'PICK' && remainingChocolates > 0
+                className={`mt-8 w-full py-3 rounded flex items-center justify-center text-sm gap-2 ${selection === 'PICK' && remainingChocolates > 0
                         ? 'bg-gray-300 text-gray-500 dark:bg-gray-600 dark:text-gray-400 cursor-not-allowed'
                         : 'bg-indigo-500 text-white dark:bg-indigo-600 cursor-pointer'
-                }`}
+                    }`}
             >
                 Add to Cart
             </button>

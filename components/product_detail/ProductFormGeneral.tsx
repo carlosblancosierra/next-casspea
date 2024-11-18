@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/redux/hooks';
-import { addToCart } from '@/redux/features/cart/cartSlice';
+import { addToCart } from '@/redux/features/carts/cartSlice';
 import { useRouter } from 'next/navigation';
 import { ProductType } from '@/types/products';
 

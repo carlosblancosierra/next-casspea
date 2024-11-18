@@ -39,7 +39,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
                 </div>
 
                 <div className="block w-full relative">
-                    <ImageGallery images={product?.images || []} />
+                    <ImageGallery images={[product?.image || '']} />
                 </div>
 
                 <div className="flex flex-col top-48 py-0 w-full gap-y-12">
