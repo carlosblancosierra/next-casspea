@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { toast } from 'react-toastify';
-import { ProductType } from '@/types/products';
+import { Product as ProductType } from '@/types/products';
 import FlavourPicker from './FlavourPicker';
 import ProgressBar from '@/components/common/ProgressBar';
-import { FlavourType, FlavourSelectionType } from '@/types/flavours';
+import {
+    Flavour as FlavourType,
+} from '@/types/flavours';
 import ProductConfirm from './ProductConfirm';
 import { addToCart } from '@/redux/features/carts/cartSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
+import { CartItemBoxFlavorSelection } from '@/types/carts';
 
 interface ProductInfoProps {
     product: ProductType;
 }
 
-const ProductForm: React.FC<ProductInfoProps> = ({ product }) => {
-    const maxChocolates = parseInt(product.pieces || '0');
+const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
+    const maxChocolates = product.units_per_box || 0;
     const [selection, setSelection] = useState('PICK');
-    const [flavours, setFlavours] = useState<FlavourSelectionType[]>([]);
+    const [flavours, setFlavours] = useState<CartItemBoxFlavorSelection[]>([]);
     const [remainingChocolates, setRemainingChocolates] = useState(maxChocolates);
     const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
     const [isPopupVisible, setPopupVisible] = useState(false);
@@ -37,19 +40,26 @@ const ProductForm: React.FC<ProductInfoProps> = ({ product }) => {
     ];
 
     const handleAddFlavour = (flavour: FlavourType) => {
-        const existingFlavourIndex = flavours.findIndex(f => f.flavour.name === flavour.name);
+        if (remainingChocolates <= 0) return;
+        const existingFlavourIndex = flavours.findIndex(f => f.flavor.name === flavour.name);
         if (existingFlavourIndex !== -1) {
             handleFlavourChange(existingFlavourIndex, 'quantity', flavours[existingFlavourIndex].quantity + 1);
         } else {
-            const newFlavours = [...flavours, { flavour, quantity: 1 }];
-            setFlavours(newFlavours);
-
-            const totalQuantity = newFlavours.reduce((acc, curr) => acc + curr.quantity, 0);
-            setRemainingChocolates(maxChocolates - totalQuantity);
+            const newFlavour: CartItemBoxFlavorSelection = {
+                id: flavour.id,
+                box_customization: product.id,
+                flavor: flavour,
+                quantity: 1,
+                created: new Date().toISOString(),
+                updated: new Date().toISOString(),
+            };
+            setFlavours([...flavours, newFlavour]);
+            setRemainingChocolates(remainingChocolates - 1);
         }
     };
 
     const handleFlavourChange = (index: number, field: string, value: string | number) => {
+        if (remainingChocolates <= 0) return;
         const newFlavours = [...flavours];
         newFlavours[index] = { ...newFlavours[index], [field]: value };
         setFlavours(newFlavours);
@@ -99,7 +109,7 @@ const ProductForm: React.FC<ProductInfoProps> = ({ product }) => {
             return;
         }
 
-        const cartEntry = {
+        const CartItem = {
             id: product.id,
             product,
             quantity: quantity === 'more' ? 1 : quantity,
@@ -108,7 +118,7 @@ const ProductForm: React.FC<ProductInfoProps> = ({ product }) => {
             selection: selection as 'PICK' | 'RANDOM',
             selectedAllergens,
         };
-        dispatch(addToCart(cartEntry));
+        dispatch(addToCart(CartItem));
 
         if (selection === 'PICK') {
             setPopupVisible(true);
@@ -242,8 +252,8 @@ const ProductForm: React.FC<ProductInfoProps> = ({ product }) => {
                 onClick={handleAddToCart}
                 disabled={selection === 'PICK' && remainingChocolates > 0}
                 className={`mt-8 w-full py-3 rounded flex items-center justify-center text-sm gap-2 ${selection === 'PICK' && remainingChocolates > 0
-                        ? 'bg-gray-300 text-gray-500 dark:bg-gray-600 dark:text-gray-400 cursor-not-allowed'
-                        : 'bg-indigo-500 text-white dark:bg-indigo-600 cursor-pointer'
+                    ? 'bg-gray-300 text-gray-500 dark:bg-gray-600 dark:text-gray-400 cursor-not-allowed'
+                    : 'bg-indigo-500 text-white dark:bg-indigo-600 cursor-pointer'
                     }`}
             >
                 Add to Cart
@@ -252,4 +262,4 @@ const ProductForm: React.FC<ProductInfoProps> = ({ product }) => {
     );
 };
 
-export default ProductForm;
+export default ProductFormBoxes;

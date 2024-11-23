@@ -7,7 +7,7 @@ import { setCart, addCartItem, updateCartItem, removeCartItem } from '@/redux/fe
 const cartApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getCart: builder.query<Cart, void>({
-            query: () => '/cart/',
+            query: () => '/carts/',
             transformResponse: (response: Cart) => response,
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppSelector } from '@/redux/hooks';
 import { selectCartEntries } from '@/redux/features/carts/cartSlice';
-import CartEntryTable from './CartEntryTable';
+import CartItemTable from './CartItemTable';
 import CartSummary from './CartSummary';
 
 const Cart: React.FC = () => {
@@ -15,7 +15,7 @@ const Cart: React.FC = () => {
         <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
           {/* Cart Entries */}
           <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-6xl">
-            <CartEntryTable cartEntries={cartEntries} />
+            <CartItemTable cartEntries={cartEntries} />
           </div>
 
           {/* Order Summary */}

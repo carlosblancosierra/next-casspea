@@ -15,14 +15,14 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
     const router = useRouter();
 
     const handleAddToCart = () => {
-        const cartEntry = {
+        const CartItem = {
             id: product.id,
             product,
             quantity,
             active: true,
         };
 
-        dispatch(addToCart(cartEntry));
+        dispatch(addToCart(CartItem));
         toast.success(`${product.name} added to cart!`);
 
         setTimeout(() => {

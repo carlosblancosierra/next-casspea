@@ -1,13 +1,13 @@
 import React from 'react';
 import { FiMinus, FiPlus, FiHeart, FiTrash2 } from 'react-icons/fi'; // Import icons
-import { CartEntry as CartEntryType } from '@/types/carts';
+import { CartItem as CartItemType } from '@/types/carts';
 import FlavourSelectionGrid from './FlavourSelectionGrid';
 
-interface CartEntryProps {
-  entry: CartEntryType;
+interface CartItemProps {
+  entry: CartItemType;
 }
 
-const CartEntry: React.FC<CartEntryProps> = ({ entry }) => {
+const CartItem: React.FC<CartItemProps> = ({ entry }) => {
   const boxSize = entry.product.pieces; // Adjust based on your box size logic
 
   return (
@@ -98,4 +98,4 @@ const CartEntry: React.FC<CartEntryProps> = ({ entry }) => {
   );
 };
 
-export default CartEntry;
+export default CartItem;

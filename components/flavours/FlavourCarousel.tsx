@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { motion, useAnimation } from "framer-motion";
 import { wrap } from "popmotion";
@@ -34,6 +35,8 @@ export default function FlavourCarousel() {
       (carouselRef.current.offsetWidth - gapSum) / CAROUSEL_LENGTH;
     return index * childWidth + index * GAP;
   };
+
+  if (availableFlavours.length === 0) return null;
 
   return (
     <div

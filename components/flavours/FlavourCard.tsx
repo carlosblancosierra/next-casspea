@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlavourType } from '@/types/flavours';
+import { Flavour as FlavourType } from '@/types/flavours';
 import Image from 'next/image';
 
 interface FlavourCardProps {
@@ -13,17 +13,17 @@ const FlavourCard: React.FC<FlavourCardProps> = ({ flavour }) => {
             style={{ overflow: 'hidden' }}
         >
             <div className="mx-10">
-                <Image src={flavour.image} alt={flavour.name} width={0} height={0} sizes="100vw" className='w-full h-auto' />
+                {/* <Image src={flavour.image} alt={flavour.name} width={0} height={0} sizes="100vw" className='w-full h-auto' /> */}
             </div>
             <h3 className="text-md font-bold md:text-md text-center h-[3rem] mt-3 leading-5
             ">{flavour.name}</h3>
             <p className="text-xs mt-2 h-[6.5rem] text-center overflow-hidden text-ellipsis">{flavour.description}</p>
             <p className="mt-1 text-[10px] text-gray-500 md:text-xs text-center">
-                {flavour.allergens.map((allergen, index) => (
+                {/* {flavour.allergens.map((allergen, index) => (
                     <span key={index} className="mr-1">
                         {allergen.name},
                     </span>
-                ))}
+                ))} */}
             </p>
         </div>
     );

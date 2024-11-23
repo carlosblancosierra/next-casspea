@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import HomeProducts from '@/components/home/HomeProducts';
 import HomeGallery from '@/components/home/HomeGallery';
+import FlavourCarousel from '@/components/flavours/FlavourCarousel';
 
 export const metadata: Metadata = {
 	title: 'CassPea Hand Crafted Chocolates',
@@ -49,6 +50,10 @@ export default function Page() {
 			<div>
 				<h2 className='text-center text-2xl font-bold mb-3'>Signature Boxes</h2>
 				<HomeProducts />
+			</div>
+			<div>
+				<h2 className='text-center text-2xl font-bold mb-3'>Our Flavours</h2>
+				<FlavourCarousel />
 			</div>
 			<div className="mt-10">
 				<h2 className='text-center text-2xl font-bold mb-3'>Gallery</h2>

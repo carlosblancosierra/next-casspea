@@ -7,24 +7,30 @@ import { notFound } from 'next/navigation';
 import ImageGallery from '@/components/product_detail/ImageGallery';
 import ProductBreadcrumb from '@/components/product_detail/ProductBreadcrumb';
 import ProductAccordion from './ProductAccordion';
-import ProductForm from './ProductForm';
+import ProductFormBoxes from './ProductFormBoxes';
 import ProductFormGeneral from './ProductFormGeneral';
 import FlavourGrid from '../flavours/FlavourCarousel';
 import Reviews from '../common/Reviews';
 import ProductCard from '../store/ProductCard';
 import { selectBoxes } from '@/redux/features/products/productSlice';
+import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 
 const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
+    const { data: productsData, isLoading: productsLoading } = useGetProductsQuery();
     const product = useAppSelector((state: RootState) => selectProductBySlug(state, slug));
     const products = useAppSelector(selectBoxes);
     const relatedProducts = products.filter(p => p.id !== product?.id);
+
+    if (productsLoading) {
+        return <div>Loading products...</div>;
+    }
 
     if (!product) {
         notFound();
     }
 
     // Check if the product belongs to the "Signature Boxes" category
-    const isSignatureBox = product?.category?.slug === 'gift-boxes';
+    const isSignatureBox = product?.category?.id === 1
 
     return (
         <div className="max-w-[90vw] mx-auto">
@@ -45,7 +51,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
                 <div className="flex flex-col top-48 py-0 w-full gap-y-12">
                     <Suspense fallback={"Loading..."}>
                         {isSignatureBox ? (
-                            <ProductForm product={product} />
+                            <ProductFormBoxes product={product} />
                         ) : (
                             <ProductFormGeneral product={product} />
                         )}
@@ -57,10 +63,10 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
                 </div>
             </div>
 
-            {/* <div className="my-16">
+            <div className="my-16">
                 <h2 className="text-center text-xl font-bold">Our Flavours</h2>
                 <FlavourGrid />
-            </div> */}
+            </div>
 
             <div className="mt-10">
                 <h2 className="text-center text-xl my-5 font-bold">Reviews</h2>

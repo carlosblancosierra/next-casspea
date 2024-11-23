@@ -1,16 +1,16 @@
 import React from 'react';
-import CartEntry from './CartEntry';
-import { CartEntry as CartEntryType } from '@/types/carts';
+import CartItem from './CartItem';
+import { CartItem as CartItemType } from '@/types/carts';
 
-interface CartEntryTableProps {
-  cartEntries: CartEntryType[];
+interface CartItemTableProps {
+  cartEntries: CartItemType[];
 }
 
-const CartEntryTable: React.FC<CartEntryTableProps> = ({ cartEntries }) => {
+const CartItemTable: React.FC<CartItemTableProps> = ({ cartEntries }) => {
   return (
     <div className="space-y-6">
       {cartEntries.length > 0 ? (
-        cartEntries.map((entry) => <CartEntry key={entry.id} entry={entry} />)
+        cartEntries.map((entry) => <CartItem key={entry.id} entry={entry} />)
       ) : (
         <p className="text-gray-500 dark:text-gray-400">Your cart is empty.</p>
       )}
@@ -18,4 +18,4 @@ const CartEntryTable: React.FC<CartEntryTableProps> = ({ cartEntries }) => {
   );
 };
 
-export default CartEntryTable;
+export default CartItemTable;
