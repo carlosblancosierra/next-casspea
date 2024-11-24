@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppSelector } from '@/redux/hooks';
-import selectCartEntries from '@/redux/features/carts/cartSlice';
+import { selectCartEntries } from '@/redux/features/carts/cartSlice';
 import CartItemTable from './CartItemTable';
 import CartSummary from './CartSummary';
 
@@ -20,7 +20,7 @@ const Cart: React.FC = () => {
 
           {/* Order Summary */}
           <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
-            <CartSummary cartEntries={cartEntries} />
+            {/* <CartSummary cartEntries={cartEntries} /> */}
           </div>
         </div>
       </div>

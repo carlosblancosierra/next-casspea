@@ -2,6 +2,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Cart, CartItem } from '@/types/carts';
+import { RootState } from '@/redux/store';
 
 interface CartState {
     cart: Cart | null;
@@ -44,5 +45,7 @@ const cartSlice = createSlice({
 });
 
 export const { setCart, addCartItem, updateCartItem, removeCartItem } = cartSlice.actions;
+
+export const selectCartEntries = (state: RootState) => state.cart.cart?.items || [];
 
 export default cartSlice.reducer;

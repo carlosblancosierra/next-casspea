@@ -8,7 +8,7 @@ interface CartItemProps {
 }
 
 const CartItem: React.FC<CartItemProps> = ({ entry }) => {
-  const boxSize = entry.product.pieces; // Adjust based on your box size logic
+  const boxSize = entry.product.units_per_box;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-[1.5fr,1.5fr,2fr] gap-4 border border-gray-200 bg-white p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
@@ -16,12 +16,12 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
       <a href="#" className="col-span-1 md:col-span-1">
         <img
           className="w-full dark:hidden"
-          src={entry.product.store_image || 'https://via.placeholder.com/150'}
+          src={entry.product.image || 'https://via.placeholder.com/150'}
           alt={entry.product.name}
         />
         <img
           className="w-full hidden dark:block"
-          src={entry.product.store_image || 'https://via.placeholder.com/150'}
+          src={entry.product.image || 'https://via.placeholder.com/150'}
           alt={entry.product.name}
         />
       </a>
@@ -33,16 +33,16 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
         </a>
         <p>
           <span className="items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
-            {entry.product.category.name}
+            {entry.product.category?.name}
           </span>
         </p>
         <p>
           <span className="items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
-            {entry.selection}
+            {entry.selection_type}
           </span>
         </p>
         <p>
-          {entry.selectedAllergens?.map((allergen) => (
+          {entry.selected_allergens?.map((allergen) => (
             <span
               key={allergen}
               className="items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 mr-2"
@@ -52,7 +52,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
           ))}
         </p>
 
-        <p className="text-base font-bold text-gray-900 dark:text-white">${entry.product.price}</p>
+        <p className="text-base font-bold text-gray-900 dark:text-white">${entry.product.base_price}</p>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center">
@@ -90,8 +90,8 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
 
       {/* Third Column: Flavour Selection Grid */}
       <div className="col-span-2 md:order-2 px-6 md:col-span-1">
-        {entry.flavours && (
-          <FlavourSelectionGrid flavours={entry.flavours} boxSize={boxSize} />
+        {entry.box_customization?.selection_type == 'PICK_AND_MIX' && (
+          <FlavourSelectionGrid flavours={entry.box_customization.flavor_selections} boxSize={boxSize} />
         )}
       </div>
     </div>

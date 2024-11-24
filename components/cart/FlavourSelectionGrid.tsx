@@ -1,18 +1,16 @@
 import React from 'react';
-import { FlavourSelectionType } from '@/types/flavours';
 import Image from 'next/image';
+import { CartItemBoxFlavorSelection } from '@/types/carts';
 
 interface FlavourSelectionGridProps {
-  flavours: FlavourSelectionType[];
-  boxSize?: string; // Passed as a string, will cast to a number later
+  flavours: CartItemBoxFlavorSelection[];
+  boxSize?: number;
 }
 
 const FlavourSelectionGrid: React.FC<FlavourSelectionGridProps> = ({ flavours, boxSize }) => {
-  const size = Number(boxSize); // Convert boxSize to a number
-
   // Calculate the number of columns based on the box size
   const getColumnsCount = () => {
-    switch (size) {
+    switch (boxSize) {
       case 9:
         return 3;
       case 15:
@@ -28,7 +26,7 @@ const FlavourSelectionGrid: React.FC<FlavourSelectionGridProps> = ({ flavours, b
 
   // Determine the margin class (mx) based on the box size
   const getMarginClass = () => {
-    switch (size) {
+    switch (boxSize) {
       case 9:
         return 'mx-4';
       case 15:
@@ -55,11 +53,11 @@ const FlavourSelectionGrid: React.FC<FlavourSelectionGridProps> = ({ flavours, b
         // Loop through each flavour and render the quantity number of images
         const columns = Array(flavourSelection.quantity).fill(null);
         return columns.map((_, colIndex) => (
-          <div key={`${flavourSelection.flavour.slug}-${index}-${colIndex}`} className={getMarginClass()}>
-            {flavourSelection.flavour.image && (
+          <div key={`${flavourSelection.flavor.slug}-${index}-${colIndex}`} className={getMarginClass()}>
+            {flavourSelection.flavor.image && (
               <Image
-                src={flavourSelection.flavour.image}
-                alt={flavourSelection.flavour.name}
+                src={flavourSelection.flavor.image}
+                alt={flavourSelection.flavor.name}
                 width={0}
                 height={0}
                 sizes="100vw"
