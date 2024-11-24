@@ -7,10 +7,34 @@ import type {
 import { setAuth, logout } from '../features/authSlice';
 import { Mutex } from 'async-mutex';
 
+function getCookie(name: string) {
+	let cookieValue = null;
+	if (document.cookie && document.cookie !== '') {
+		const cookies = document.cookie.split(';');
+		for (let i = 0; i < cookies.length; i++) {
+			const cookie = cookies[i].trim();
+			// Check if this cookie string begins with the name we want
+			if (cookie.substring(0, name.length + 1) === (name + '=')) {
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				break;
+			}
+		}
+	}
+	return cookieValue;
+}
+
+
 const mutex = new Mutex();
 const baseQuery = fetchBaseQuery({
 	baseUrl: `${process.env.NEXT_PUBLIC_HOST}/api`,
 	credentials: 'include',
+	prepareHeaders: (headers) => {
+		const csrfToken = getCookie('csrftoken');
+		if (csrfToken) {
+			headers.set('X-CSRFToken', csrfToken);
+		}
+		return headers;
+	},
 });
 const baseQueryWithReauth: BaseQueryFn<
 	string | FetchArgs,

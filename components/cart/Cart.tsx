@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppSelector } from '@/redux/hooks';
-import { selectCartEntries } from '@/redux/features/carts/cartSlice';
+import selectCartEntries from '@/redux/features/carts/cartSlice';
 import CartItemTable from './CartItemTable';
 import CartSummary from './CartSummary';
 

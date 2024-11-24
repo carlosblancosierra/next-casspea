@@ -37,10 +37,16 @@ export interface CartItemBoxCustomization {
 }
 
 export interface CartItemBoxFlavorSelection {
-    id: number;
-    box_customization: number;
-    flavor: Flavour;
-    quantity: number;
-    created: string;
-    updated: string;
+    flavor: number; // ID of the flavor
+    quantity: number; // Quantity of the flavor
+}
+
+export interface CartItemRequest {
+    product: number; // Product ID
+    quantity: number; // Quantity of the product
+    box_customization?: {
+        selection_type: 'PICK_AND_MIX' | 'RANDOM'; // Type of selection
+        allergens?: number[]; // Array of allergen IDs
+        flavor_selections?: CartItemBoxFlavorSelection[]; // Optional flavor selections
+    };
 }

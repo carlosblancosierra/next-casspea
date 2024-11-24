@@ -1,7 +1,7 @@
 // src/redux/services/cartApiSlice.ts
 
 import { apiSlice } from '@/redux/services/apiSlice';
-import { Cart, CartItem } from '@/types/carts';
+import { Cart, CartItem, CartItemRequest } from '@/types/carts';
 import { setCart, addCartItem, updateCartItem, removeCartItem } from '@/redux/features/carts/cartSlice';
 
 const cartApiSlice = apiSlice.injectEndpoints({
@@ -18,9 +18,9 @@ const cartApiSlice = apiSlice.injectEndpoints({
                 }
             },
         }),
-        addCartItem: builder.mutation<CartItem, Partial<CartItem>>({
+        addCartItem: builder.mutation<CartItem, CartItemRequest>({
             query: (cartItem) => ({
-                url: '/cart/items/',
+                url: '/carts/items/',
                 method: 'POST',
                 body: cartItem,
             }),
@@ -37,7 +37,7 @@ const cartApiSlice = apiSlice.injectEndpoints({
         }),
         updateCartItem: builder.mutation<CartItem, { id: number; cartItem: Partial<CartItem> }>({
             query: ({ id, cartItem }) => ({
-                url: `/cart/items/${id}/`,
+                url: `/carts/items/${id}/`,
                 method: 'PUT',
                 body: cartItem,
             }),
@@ -53,7 +53,7 @@ const cartApiSlice = apiSlice.injectEndpoints({
         }),
         deleteCartItem: builder.mutation<{ success: boolean }, number>({
             query: (id) => ({
-                url: `/cart/items/${id}/`,
+                url: `/carts/items/${id}/`,
                 method: 'DELETE',
             }),
             async onQueryStarted(id, { dispatch, queryFulfilled }) {

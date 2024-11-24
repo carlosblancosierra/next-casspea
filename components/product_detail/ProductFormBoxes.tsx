@@ -8,10 +8,12 @@ import {
     Flavour as FlavourType,
 } from '@/types/flavours';
 import ProductConfirm from './ProductConfirm';
-import { addToCart } from '@/redux/features/carts/cartSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { CartItemBoxFlavorSelection } from '@/types/carts';
+import { CartItemRequest } from '@/types/carts';
+import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice';
+import { addCartItem } from '@/redux/features/carts/cartSlice';
 
 interface ProductInfoProps {
     product: ProductType;
@@ -27,6 +29,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [quantity, setQuantity] = useState<number | 'more'>(1);
     const dispatch = useAppDispatch();
     const router = useRouter();
+    const [addToCart, { isLoading }] = useAddCartItemMutation();
 
     const prebulids = [
         { name: 'Pick & Mix', value: 'PICK' },
@@ -41,17 +44,13 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
 
     const handleAddFlavour = (flavour: FlavourType) => {
         if (remainingChocolates <= 0) return;
-        const existingFlavourIndex = flavours.findIndex(f => f.flavor.name === flavour.name);
+        const existingFlavourIndex = flavours.findIndex(f => f.flavor === flavour.id);
         if (existingFlavourIndex !== -1) {
             handleFlavourChange(existingFlavourIndex, 'quantity', flavours[existingFlavourIndex].quantity + 1);
         } else {
             const newFlavour: CartItemBoxFlavorSelection = {
-                id: flavour.id,
-                box_customization: product.id,
-                flavor: flavour,
+                flavor: flavour.id,
                 quantity: 1,
-                created: new Date().toISOString(),
-                updated: new Date().toISOString(),
             };
             setFlavours([...flavours, newFlavour]);
             setRemainingChocolates(remainingChocolates - 1);
@@ -103,32 +102,31 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         ? ` that are ${selectedAllergens.map((allergen) => allergens.find((a) => a.value === allergen)?.name).join(' and ')} Free`
         : '';
 
-    const handleAddToCart = () => {
-        if (selection === 'PICK' && remainingChocolates > 0) {
-            toast.error('Please select all chocolates.');
-            return;
-        }
-
-        const CartItem = {
-            id: product.id,
-            product,
-            quantity: quantity === 'more' ? 1 : quantity,
-            active: true,
-            flavours: selection === 'RANDOM' ? [] : flavours, // No flavours for RANDOM
-            selection: selection as 'PICK' | 'RANDOM',
-            selectedAllergens,
+    const handleAddToCart = async () => {
+        const cartItem: CartItemRequest = {
+            product: product.id,
+            quantity: quantity === 'more' ? 200 : quantity,
+            box_customization: {
+                selection_type: selection === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX',
+                allergens: [],
+                flavor_selections: flavours.length > 0 ? flavours.map(flavour => ({
+                    flavor: flavour.flavor,
+                    quantity: flavour.quantity,
+                })) : [],
+            },
         };
-        dispatch(addToCart(CartItem));
 
-        if (selection === 'PICK') {
-            setPopupVisible(true);
+        try {
+            console.log(cartItem);
+            const response = await addToCart(cartItem).unwrap();
+            dispatch(addCartItem(response));
+            toast.success(`${product.name} added to cart!`);
+            setTimeout(() => {
+                router.push('/cart');
+            }, 1000);
+        } catch (error) {
+            toast.error('Failed to add to cart. Please try again.');
         }
-
-        toast.success(`${product.name} added to cart!`);
-
-        setTimeout(() => {
-            router.push('/cart');
-        }, 1000);
     };
 
     const handleClosePopup = () => {
@@ -250,13 +248,13 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             <button
                 type="button"
                 onClick={handleAddToCart}
-                disabled={selection === 'PICK' && remainingChocolates > 0}
-                className={`mt-8 w-full py-3 rounded flex items-center justify-center text-sm gap-2 ${selection === 'PICK' && remainingChocolates > 0
+                disabled={isLoading}
+                className={`mt-8 w-full py-3 rounded flex items-center justify-center text-sm gap-2 ${isLoading
                     ? 'bg-gray-300 text-gray-500 dark:bg-gray-600 dark:text-gray-400 cursor-not-allowed'
                     : 'bg-indigo-500 text-white dark:bg-indigo-600 cursor-pointer'
                     }`}
             >
-                Add to Cart
+                {isLoading ? 'Adding...' : 'Add to Cart'}
             </button>
         </form>
     );
