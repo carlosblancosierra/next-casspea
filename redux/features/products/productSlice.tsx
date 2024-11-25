@@ -34,7 +34,7 @@ export const selectAllProducts = createSelector(
 
 export const selectBoxes = createSelector(
     [selectAllProducts],
-    (products) => products.filter(p => p.category?.slug === 'gift-boxes') || []
+    (products) => products.filter(p => p.category?.slug === 'signature-boxes') || []
 );
 
 export const selectSnacks = createSelector(

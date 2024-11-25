@@ -12,31 +12,30 @@ const FlavourSelectionGrid: React.FC<FlavourSelectionGridProps> = ({ flavours, b
   const getColumnsCount = () => {
     switch (boxSize) {
       case 9:
-        return 3;
+        return 5;
       case 15:
-        return 3;
+        return 5;
       case 24:
-        return 4;
-      case 48:
         return 6;
+      case 48:
+        return 8;
       default:
-        return 1; // Default to 1 column if the size is unknown
+        return 5;
     }
   };
 
-  // Determine the margin class (mx) based on the box size
-  const getMarginClass = () => {
+  const getGridGap = () => {
     switch (boxSize) {
       case 9:
-        return 'mx-4';
+        return '10px';
       case 15:
-        return 'mx-3';
+        return '10px';
       case 24:
-        return 'mx-2';
+        return '5px';
       case 48:
-        return 'mx-1';
+        return '3px';
       default:
-        return 'mx-0'; // Default margin if the size is unknown
+        return '10px';
     }
   };
 
@@ -46,15 +45,15 @@ const FlavourSelectionGrid: React.FC<FlavourSelectionGridProps> = ({ flavours, b
       style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${getColumnsCount()}, 1fr)`, // Dynamic number of columns
-        gap: '10px', // Optional: spacing between items
+        gap: getGridGap()
       }}
     >
       {flavours.map((flavourSelection, index) => {
         // Loop through each flavour and render the quantity number of images
         const columns = Array(flavourSelection.quantity).fill(null);
         return columns.map((_, colIndex) => (
-          <div key={`${flavourSelection.flavor.slug}-${index}-${colIndex}`} className={getMarginClass()}>
-            {flavourSelection.flavor.image && (
+          <div key={`${flavourSelection.flavor}-${index}-${colIndex}`}>
+            {flavourSelection.flavor && (
               <Image
                 src={flavourSelection.flavor.image}
                 alt={flavourSelection.flavor.name}

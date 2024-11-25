@@ -35,6 +35,7 @@ export default function Page() {
 							width={0}
 							height={0}
 							sizes='100vw'
+							priority
 							className='w-full h-auto hidden md:block'
 							alt="CassPea Chocolates" />
 
@@ -42,6 +43,7 @@ export default function Page() {
 							width={0}
 							height={0}
 							sizes='100vw'
+							priority
 							className='w-full h-auto block md:hidden mt-3'
 							alt="CassPea Chocolates" />
 					</div>
@@ -51,8 +53,8 @@ export default function Page() {
 				<h2 className='text-center text-2xl font-bold mb-3'>Signature Boxes</h2>
 				<HomeProducts />
 			</div>
-			<div>
-				<h2 className='text-center text-2xl font-bold mb-3'>Our Flavours</h2>
+			<div className='mt-10'>
+				<h2 className='text-center text-2xl font-bold'>Our Flavours</h2>
 				<FlavourCarousel />
 			</div>
 			<div className="mt-10">

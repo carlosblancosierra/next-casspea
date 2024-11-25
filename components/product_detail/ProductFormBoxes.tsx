@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import { CartItemBoxFlavorSelection } from '@/types/carts';
 import { CartItemRequest } from '@/types/carts';
 import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice';
-import { addCartItem } from '@/redux/features/carts/cartSlice';
+import { addCartItem, setCart } from '@/redux/features/carts/cartSlice';
 
 interface ProductInfoProps {
     product: ProductType;
@@ -24,22 +24,21 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [selection, setSelection] = useState('PICK');
     const [flavours, setFlavours] = useState<CartItemBoxFlavorSelection[]>([]);
     const [remainingChocolates, setRemainingChocolates] = useState(maxChocolates);
-    const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
-    const [isPopupVisible, setPopupVisible] = useState(false);
+    const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
     const [quantity, setQuantity] = useState<number | 'more'>(1);
     const dispatch = useAppDispatch();
     const router = useRouter();
     const [addToCart, { isLoading }] = useAddCartItemMutation();
 
     const prebulids = [
-        { name: 'Pick & Mix', value: 'PICK' },
+        { name: 'Pick & Mix', value: 'PICK_AND_MIX' },
         { name: 'Surprise Me', value: 'RANDOM' },
     ];
 
     const allergens = [
-        { name: 'Gluten', value: 'GLUTEN' },
-        { name: 'Alcohol', value: 'ALCOHOL' },
-        { name: 'Nut', value: 'NUTS' },
+        { name: 'Gluten', id: 2 },
+        { name: 'Alcohol', id: 5 },
+        { name: 'Nut', id: 6 },
     ];
 
     const handleAddFlavour = (flavour: FlavourType) => {
@@ -87,7 +86,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         setRemainingChocolates(maxChocolates - totalQuantity);
     };
 
-    const handleAllergenChange = (value: string) => {
+    const handleAllergenChange = (value: number) => {
         setSelectedAllergens((prev) =>
             prev.includes(value) ? prev.filter((allergen) => allergen !== value) : [...prev, value]
         );
@@ -99,7 +98,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     }
 
     const allergenText = selectedAllergens.length
-        ? ` that are ${selectedAllergens.map((allergen) => allergens.find((a) => a.value === allergen)?.name).join(' and ')} Free`
+        ? ` that are ${selectedAllergens.map((allergen) => allergens.find((a) => a.id === allergen)?.name).join(' and ')} Free`
         : '';
 
     const handleAddToCart = async () => {
@@ -108,18 +107,19 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             quantity: quantity === 'more' ? 200 : quantity,
             box_customization: {
                 selection_type: selection === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX',
-                allergens: [],
-                flavor_selections: flavours.length > 0 ? flavours.map(flavour => ({
+                allergens: selectedAllergens,
+                flavor_selections: selection === 'RANDOM' ? [] : flavours.map(flavour => ({
                     flavor: flavour.flavor,
                     quantity: flavour.quantity,
-                })) : [],
+                })),
             },
         };
 
         try {
-            console.log(cartItem);
+            console.log("adding to cart", cartItem);
             const response = await addToCart(cartItem).unwrap();
-            dispatch(addCartItem(response));
+            console.log("response", response);
+            dispatch(setCart(response));
             toast.success(`${product.name} added to cart!`);
             setTimeout(() => {
                 router.push('/cart');
@@ -127,10 +127,6 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         } catch (error) {
             toast.error('Failed to add to cart. Please try again.');
         }
-    };
-
-    const handleClosePopup = () => {
-        setPopupVisible(false);
     };
 
     const getProgressText = () => {
@@ -179,16 +175,16 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             <p className="mt-6 text-sm dark:text-gray-200">Select allergens</p>
             <fieldset aria-label="Choose allergens" className="mt-4">
                 {allergens.map((obj) => (
-                    <div key={obj.value} className="flex items-center">
+                    <div key={obj.id} className="flex items-center">
                         <input
                             type="checkbox"
-                            id={obj.value}
-                            name={`${obj.value} Free`}
-                            value={obj.value}
+                            id={obj.id.toString()}
+                            name={`${obj.id} Free`}
+                            value={obj.id}
                             className="mr-2 rounded dark:bg-gray-800 dark:text-gray-300"
-                            onChange={() => handleAllergenChange(obj.value)}
+                            onChange={() => handleAllergenChange(obj.id)}
                         />
-                        <label htmlFor={obj.value} className="text-xs my-1 text-gray-700 dark:text-gray-300">{`${obj.name} Free`}</label>
+                        <label htmlFor={obj.id.toString()} className="text-xs my-1 text-gray-700 dark:text-gray-300">{`${obj.name} Free`}</label>
                     </div>
                 ))}
             </fieldset>
@@ -236,14 +232,14 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 </select>
             </div>
 
-            <ProductConfirm
-                flavours={selection === 'PICK' ? flavours : []} // Only pass flavours for PICK
+            {/* <ProductConfirm
+                flavours={selection === 'PICK_AND_MIX' ? flavours : []}
                 isVisible={isPopupVisible}
                 onClose={handleClosePopup}
                 totalChocolates={maxChocolates}
                 selection={selection}
                 selectedAllergens={selectedAllergens}
-            />
+            /> */}
 
             <button
                 type="button"

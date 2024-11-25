@@ -1,17 +1,13 @@
 import React from 'react';
+import { useAppSelector } from '@/redux/hooks';
+import { selectCart } from '@/redux/features/carts/cartSlice';
 
-interface CartSummaryProps {
-  cartEntries: {
-    id: string;
-    quantity: number;
-    product: {
-      price: string;
-    };
-  }[];
-}
+const CartSummary: React.FC = () => {
+  const cart = useAppSelector(selectCart);
 
-const CartSummary: React.FC<CartSummaryProps> = ({ cartEntries }) => {
-  const totalPrice = cartEntries.reduce((acc, entry) => acc + parseFloat(entry.product.price) * entry.quantity, 0).toFixed(2);
+  if (!cart || cart.items.length === 0) {
+    return null;
+  }
 
   return (
     <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
@@ -20,7 +16,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ cartEntries }) => {
       <div className="space-y-4">
         <dl className="flex items-center justify-between gap-4">
           <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Original price</dt>
-          <dd className="text-base font-medium text-gray-900 dark:text-white">${totalPrice}</dd>
+          <dd className="text-base font-medium text-gray-900 dark:text-white">${cart?.total}</dd>
         </dl>
 
         <dl className="flex items-center justify-between gap-4">
@@ -36,7 +32,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ cartEntries }) => {
 
       <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
         <dt className="text-base font-bold text-gray-900 dark:text-white">Total</dt>
-        <dd className="text-base font-bold text-gray-900 dark:text-white">${totalPrice}</dd>
+        <dd className="text-base font-bold text-gray-900 dark:text-white">${cart?.total}</dd>
       </dl>
 
       <a

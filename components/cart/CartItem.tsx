@@ -11,7 +11,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
   const boxSize = entry.product.units_per_box;
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-[1.5fr,1.5fr,2fr] gap-4 border border-gray-200 bg-white p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+    <div className="grid grid-cols-[2fr,3fr] md:grid-cols-[1.5fr,1.5fr,2fr] gap-4 border border-gray-200 bg-white p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
       {/* First Column: Product Image */}
       <a href="#" className="col-span-1 md:col-span-1">
         <img
@@ -27,34 +27,38 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
       </a>
 
       {/* Second Column: Product Info and Actions */}
-      <div className="col-span-1 space-y-4 md:order-3 md:col-span-1">
-        <a href="#" className="text-base font-medium text-gray-900 hover:underline dark:text-white">
-          {entry.product.name}
-        </a>
-        <p>
-          <span className="items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+      <div className="col-span-1 space-y-2 md:order-3 md:col-span-1">
+        {/* <p>
+          <span className="items-center text-xs font-medium text-gray-900 hover:underline dark:text-gray-300">
             {entry.product.category?.name}
           </span>
+        </p> */}
+
+        <p
+          className="text-md !leading-5 font-medium text-gray-900 hover:underline dark:text-white"
+        >
+          {entry.product.name}
         </p>
-        <p>
+
+        <p className="flex flex-wrap items-center gap-2">
           <span className="items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
-            {entry.selection_type}
+            {entry.box_customization?.selection_type === 'PICK_AND_MIX' && 'Pick & Mix'}
+            {entry.box_customization?.selection_type === 'RANDOM' && 'Surprise Me'}
           </span>
-        </p>
-        <p>
-          {entry.selected_allergens?.map((allergen) => (
+
+          {entry.box_customization?.allergens?.map((allergen) => (
             <span
-              key={allergen}
-              className="items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 mr-2"
+              key={allergen.id}
+              className="items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
             >
-              {allergen}
+              {allergen.name} Free
             </span>
           ))}
         </p>
 
         <p className="text-base font-bold text-gray-900 dark:text-white">${entry.product.base_price}</p>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between !mt-1">
           <div className="flex items-center">
             <button
               type="button"
@@ -89,7 +93,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
       </div>
 
       {/* Third Column: Flavour Selection Grid */}
-      <div className="col-span-2 md:order-2 px-6 md:col-span-1">
+      <div className="col-span-2 md:order-2 md:col-span-1">
         {entry.box_customization?.selection_type == 'PICK_AND_MIX' && (
           <FlavourSelectionGrid flavours={entry.box_customization.flavor_selections} boxSize={boxSize} />
         )}

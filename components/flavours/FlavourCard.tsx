@@ -13,7 +13,7 @@ const FlavourCard: React.FC<FlavourCardProps> = ({ flavour }) => {
             style={{ overflow: 'hidden' }}
         >
             <div className="mx-10">
-                {/* <Image src={flavour.image} alt={flavour.name} width={0} height={0} sizes="100vw" className='w-full h-auto' /> */}
+                <Image src={flavour.image || ''} alt={flavour.name} width={0} height={0} sizes="100vw" className='w-full h-auto' />
             </div>
             <h3 className="text-md font-bold md:text-md text-center h-[3rem] mt-3 leading-5
             ">{flavour.name}</h3>

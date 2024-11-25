@@ -45,8 +45,8 @@ export interface CartItemRequest {
     product: number; // Product ID
     quantity: number; // Quantity of the product
     box_customization?: {
-        selection_type: 'PICK_AND_MIX' | 'RANDOM'; // Type of selection
-        allergens?: number[]; // Array of allergen IDs
-        flavor_selections?: CartItemBoxFlavorSelection[]; // Optional flavor selections
+        selection_type: 'PICK_AND_MIX' | 'RANDOM';
+        allergens?: number[];
+        flavor_selections?: CartItemBoxFlavorSelection[];
     };
 }
