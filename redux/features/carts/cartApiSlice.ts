@@ -1,7 +1,7 @@
 // src/redux/services/cartApiSlice.ts
 
 import { apiSlice } from '@/redux/services/apiSlice';
-import { Cart, CartItem, CartItemRequest } from '@/types/carts';
+import { Cart, CartItem, CartItemRequest, CartUpdate, CartUpdateResponse } from '@/types/carts';
 import { setCart, addCartItem, updateCartItem, removeCartItem } from '@/redux/features/carts/cartSlice';
 
 const cartApiSlice = apiSlice.injectEndpoints({
@@ -18,6 +18,22 @@ const cartApiSlice = apiSlice.injectEndpoints({
                 }
             },
         }),
+        updateCart: builder.mutation<CartUpdateResponse, CartUpdate>({
+            query: (cart) => ({
+                url: '/carts/',
+                method: 'POST',
+                body: cart,
+            }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    dispatch(setCart(data.cart));
+                } catch (err) {
+                    console.error('Error fetching cart:', err);
+                }
+            },
+        }),
+
         addCartItem: builder.mutation<CartItem, CartItemRequest>({
             query: (cartItem) => ({
                 url: '/carts/items/',
@@ -71,9 +87,11 @@ const cartApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetCartQuery,
+    useUpdateCartMutation,
     useAddCartItemMutation,
     useUpdateCartItemMutation,
     useDeleteCartItemMutation,
+
 } = cartApiSlice;
 
 export default cartApiSlice;

@@ -4,14 +4,16 @@ import authReducer from './features/authSlice';
 import productReducer from './features/products/productSlice';
 import flavourReducer from './features/flavour/flavourSlice';
 import cartReducer from './features/carts/cartSlice';
-
+import checkoutReducer from './features/checkout/checkoutSlice';
 export const store = configureStore({
 	reducer: {
 		[apiSlice.reducerPath]: apiSlice.reducer,
 		auth: authReducer,
 		cart: cartReducer,
+		checkout: checkoutReducer,
 		flavours: flavourReducer,
 		products: productReducer,
+
 	},
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware().concat(apiSlice.middleware),

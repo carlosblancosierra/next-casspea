@@ -1,12 +1,13 @@
 import { Product } from '@/types/products';
 import { Allergen } from '@/types/allergens';
 import { Flavour } from '@/types/flavours';
+import { Discount } from '@/types/discounts';
 
 export interface Cart {
     id: number;
     user?: number;
     session_id?: string;
-    // discount?: Discount;
+    discount?: Discount;
     gift_message?: string;
     shipping_date?: string;
     active: boolean;
@@ -14,6 +15,18 @@ export interface Cart {
     total: string;
     created?: string;
     updated?: string;
+}
+
+export interface CartUpdate {
+    gift_message?: string;
+    shipping_date?: string;
+    discount_code?: string;
+    remove_discount?: boolean;
+}
+
+export interface CartUpdateResponse {
+    details: string;
+    cart: Cart;
 }
 
 export interface CartItem {

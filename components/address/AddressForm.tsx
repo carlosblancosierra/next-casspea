@@ -1,11 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLoadScript } from '@react-google-maps/api';
+import { Address } from '@/types/addresses';
 
+// Define libraries array outside component to prevent reloading
+const libraries: ("places")[] = ['places'];
 
 interface AddressFormProps {
-    onAddressSubmit: (addressData: AddressData) => void;
-    initialData?: AddressData;
+    onAddressSubmit: (addressData: Address) => void;
+    initialData?: Address;
+    addressType: 'SHIPPING' | 'BILLING';
     buttonText?: string;
+    onFormReady?: (formRef: HTMLFormElement) => void;
 }
 
 interface AddressData {
@@ -23,23 +28,28 @@ interface AddressData {
     longitude: number;
 }
 
-// Add these validation functions at the top
+// Validation functions
 const isValidUKPostcode = (postcode: string) => {
-    const regex = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i;
-    return regex.test(postcode.trim());
+    // const regex = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i;
+    // return regex.test(postcode.trim());
+    return true;
 };
 
 const isValidUKPhone = (phone: string) => {
-    const cleanPhone = phone.replace(/\s+/g, '');
-    const regex = /^(?:(?:\+44)|(?:0))(?:(?:(?:\d{10})|(?:\d{9})|(?:\d{8})|(?:\d{7})))$/;
-    return regex.test(cleanPhone);
+    // const cleanPhone = phone.replace(/\s+/g, '');
+    // const regex = /^(?:(?:\+44)|(?:0))(?:(?:(?:\d{10})|(?:\d{9})|(?:\d{8})|(?:\d{7})))$/;
+    // return regex.test(cleanPhone);
+    return true;
 };
 
 const AddressForm: React.FC<AddressFormProps> = ({
     onAddressSubmit,
     initialData,
-    buttonText = 'Save Address'
+    addressType,
+    buttonText,
+    onFormReady
 }) => {
+    const formRef = useRef<HTMLFormElement>(null);
     const [formData, setFormData] = useState<AddressData>({
         full_name: '',
         phone: '',
@@ -62,12 +72,15 @@ const AddressForm: React.FC<AddressFormProps> = ({
 
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
-        libraries: ['places']
+        libraries
     });
 
-    if (loadError) {
-        console.error('Google Maps load error:', loadError);
-    }
+    // Notify parent component when form is ready
+    useEffect(() => {
+        if (formRef.current && onFormReady) {
+            onFormReady(formRef.current);
+        }
+    }, [onFormReady]);
 
     useEffect(() => {
         if (isLoaded && addressInputRef.current) {
@@ -137,40 +150,21 @@ const AddressForm: React.FC<AddressFormProps> = ({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
-        // Basic validation
-        if (!formData.place_id) {
-            setAddressError('Please select an address from the dropdown');
-            return;
-        }
-
-        if (!formData.full_name || !formData.phone) {
-            setAddressError('Please fill in all required fields');
-            return;
-        }
-
-        // Validate UK postcode
-        if (!isValidUKPostcode(formData.postcode)) {
-            setAddressError('Please enter a valid UK postcode');
-            return;
-        }
-
-        // Validate UK phone number
-        if (!isValidUKPhone(formData.phone)) {
-            setAddressError('Please enter a valid UK phone number');
-            return;
-        }
-
-        onAddressSubmit(formData);
+        onAddressSubmit(formData as Address);
     };
 
-    if (loadError) return <div>Error loading Google Maps</div>;
-    if (!isLoaded) return <div>Loading...</div>;
+    if (loadError) return <div className="text-red-500">Error loading Google Maps</div>;
+    if (!isLoaded) return <div className="text-gray-500">Loading...</div>;
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            className="space-y-4"
+            data-type={addressType}
+        >
             <div className="space-y-2">
-                <label htmlFor="full_name" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                     Full Name *
                 </label>
                 <input
@@ -180,12 +174,12 @@ const AddressForm: React.FC<AddressFormProps> = ({
                     value={formData.full_name}
                     onChange={handleInputChange}
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
             </div>
 
             <div className="space-y-2">
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                     Phone Number *
                 </label>
                 <input
@@ -195,12 +189,12 @@ const AddressForm: React.FC<AddressFormProps> = ({
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
             </div>
 
             <div className="space-y-2">
-                <label htmlFor="address-lookup" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="address-lookup" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                     Find Address *
                 </label>
                 <input
@@ -208,13 +202,13 @@ const AddressForm: React.FC<AddressFormProps> = ({
                     type="text"
                     id="address-lookup"
                     placeholder="Start typing your address..."
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
             </div>
 
             {/* Address fields populated by Google Places */}
             <div className="space-y-2">
-                <label htmlFor="street_address" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="street_address" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                     Street Address *
                 </label>
                 <input
@@ -224,12 +218,12 @@ const AddressForm: React.FC<AddressFormProps> = ({
                     value={formData.street_address}
                     onChange={handleInputChange}
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
             </div>
 
             <div className="space-y-2">
-                <label htmlFor="street_address2" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="street_address2" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                     Address Line 2
                 </label>
                 <input
@@ -238,13 +232,13 @@ const AddressForm: React.FC<AddressFormProps> = ({
                     name="street_address2"
                     value={formData.street_address2}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <label htmlFor="city" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="city" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                         City *
                     </label>
                     <input
@@ -254,12 +248,12 @@ const AddressForm: React.FC<AddressFormProps> = ({
                         value={formData.city}
                         onChange={handleInputChange}
                         required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label htmlFor="county" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="county" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                         County
                     </label>
                     <input
@@ -268,14 +262,14 @@ const AddressForm: React.FC<AddressFormProps> = ({
                         name="county"
                         value={formData.county}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                 </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <label htmlFor="postcode" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="postcode" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                         Postcode *
                     </label>
                     <input
@@ -285,12 +279,12 @@ const AddressForm: React.FC<AddressFormProps> = ({
                         value={formData.postcode}
                         onChange={handleInputChange}
                         required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="country" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                         Country *
                     </label>
                     <input
@@ -299,7 +293,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
                         name="country"
                         value={formData.country}
                         readOnly
-                        className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                 </div>
             </div>
@@ -310,14 +304,20 @@ const AddressForm: React.FC<AddressFormProps> = ({
                 </div>
             )}
 
-            <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-                {buttonText}
-            </button>
+            {buttonText && (
+                <button
+                    type="submit"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent
+                        rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600
+                        hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2
+                        focus:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400"
+                >
+                    {buttonText}
+                </button>
+            )}
         </form>
     );
+
 };
 
 export default AddressForm;

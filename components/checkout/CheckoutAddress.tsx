@@ -71,8 +71,8 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
 
     return (
         <div className="space-y-8">
-            <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
+            <div className="bg-white p-6 rounded-lg shadow dark:bg-gray-800">
+                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Shipping Address</h2>
                 <AddressForm
                     onAddressSubmit={handleShippingSubmit}
                     buttonText="Save Shipping Address"
