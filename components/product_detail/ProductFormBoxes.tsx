@@ -109,10 +109,32 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     };
 
     const handleAllergenChange = (id: number) => {
+        let updatedAllergens: number[];
         if (selectedAllergens.includes(id)) {
-            setSelectedAllergens(selectedAllergens.filter(allergenId => allergenId !== id));
+            updatedAllergens = selectedAllergens.filter(allergenId => allergenId !== id);
         } else {
-            setSelectedAllergens([...selectedAllergens, id]);
+            updatedAllergens = [...selectedAllergens, id];
+        }
+        setSelectedAllergens(updatedAllergens);
+
+        // Identify flavours to remove
+        const flavoursToRemove = flavours.filter(flavour =>
+            flavour.flavor.allergens?.some(allergen => updatedAllergens.includes(allergen.id))
+        );
+
+        if (flavoursToRemove.length > 0) {
+            // Remove conflicting flavours
+            const updatedFlavours = flavours.filter(flavour =>
+                !flavoursToRemove.includes(flavour)
+            );
+            setFlavours(updatedFlavours);
+
+            // Adjust remaining chocolates
+            const removedQuantity = flavoursToRemove.reduce((total, flavour) => total + flavour.quantity, 0);
+            setRemainingChocolates(prev => prev + removedQuantity);
+
+            // Optionally, notify the user
+            toast.warn('Some selected flavours were removed due to allergen changes.');
         }
     };
 
@@ -202,6 +224,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     decrementQuantity={decrementQuantity}
                                     deleteFlavour={deleteFlavour}
                                     handleDeleteAllFlavours={handleDeleteAllFlavours}
+                                    selectedAllergens={selectedAllergens}
                                 />
                             </div>
 
@@ -228,7 +251,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             onChange={handleQuantityChange}
                             className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
                                 bg-white dark:bg-gray-800 shadow-sm focus:border-indigo-500
-                                focus:ring-indigo-500 sm:text-sm"
+                                focus:ring-indigo-500"
                         >
                             {Array.from({ length: 10 }, (_, i) => (
                                 <option key={i + 1} value={i + 1}>{i + 1}</option>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiPlus, FiMinus, FiTrash, FiRefreshCw } from "react-icons/fi";
+import { FiPlus, FiMinus, FiTrash, FiRefreshCw, FiX } from "react-icons/fi";
 import { selectAllFlavours } from '@/redux/features/flavour/flavourSlice';
 import { useAppSelector } from '@/redux/hooks';
 import { Flavour as FlavourType } from '@/types/flavours';
@@ -16,6 +16,7 @@ interface FlavourPickerProps {
     decrementQuantity: (index: number) => void;
     deleteFlavour: (index: number) => void;
     handleDeleteAllFlavours: () => void;
+    selectedAllergens: number[];
 }
 
 const FlavourPicker: React.FC<FlavourPickerProps> = ({
@@ -26,7 +27,8 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     incrementQuantity,
     decrementQuantity,
     deleteFlavour,
-    handleDeleteAllFlavours
+    handleDeleteAllFlavours,
+    selectedAllergens
 }) => {
     const availableFlavours = useAppSelector(selectAllFlavours);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,6 +37,18 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
         if (e.target === e.currentTarget) {
             setIsModalOpen(false);
         }
+    };
+
+    // Function to filter out flavours that contain any selected allergens
+    const getFilteredFlavours = () => {
+        if (selectedAllergens.length === 0) return availableFlavours;
+
+        return availableFlavours.filter(flavour => {
+            if (!flavour.allergens) return true;
+            // Check if flavour's allergens intersect with selectedAllergens
+            const flavourAllergenIds = flavour.allergens.map(allergen => allergen.id);
+            return !flavourAllergenIds.some(id => selectedAllergens.includes(id));
+        });
     };
 
     const addFlavour = (flavour: FlavourType) => {
@@ -46,7 +60,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
         <div className='rounded md:px-3'>
             <div className="selected-flavours">
                 {flavours.map((flavour, index) => (
-                    <div key={index} className="flavour-item flex items-center mt-4">
+                    <div key={flavour.flavor.id} className="flavour-item flex items-center mt-4">
                         <div className="flavour-info flex-grow text-left grid grid-cols-4">
                             <div className="col-span-1 pr-3">
                                 <Image src={flavour.flavor.image || ''} alt={flavour.flavor.name} width={0} height={0} sizes="100vw" className='w-full h-auto' />
@@ -55,7 +69,6 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 <p className="font-bold text-xs md:text-sm dark:text-gray-200">{flavour.flavor.name}</p>
                             </div>
                         </div>
-
                         <div className="quantity-controls flex items-center">
                             <button
                                 type="button"
@@ -101,52 +114,64 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                 {remainingChocolates > 0 ? 'Add Flavour' : 'All Flavours Selected'}
             </button>
 
-            <button
+            {/* <button
                 type="button"
                 onClick={handleDeleteAllFlavours}
                 className="mt-4 py-4 flex items-center justify-center text-sm gap-2 text-gray-700 dark:text-gray-300"
             >
                 <FiRefreshCw />
                 Start over
-            </button>
+            </button> */}
 
             {isModalOpen && (
-                <div className="fixed inset-0 bg-gray-600 dark:bg-gray-900 bg-opacity-50 dark:bg-opacity-80 flex items-center justify-center overflow-auto z-50"
+                <div className="fixed inset-0 bg-gray-600 dark:bg-gray-900 bg-opacity-50 dark:bg-opacity-80 flex items-center justify-center overflow-auto z-[100]"
                     onClick={handleModalClick}>
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-[90vw] w-full max-h-[90vh] mx-auto shadow-lg overflow-y-auto">
-                        <h2 className="text-center text-2xl font-semibold mb-6 dark:text-gray-300">Select a Flavour</h2>
+                    <div className="relative bg-white dark:bg-gray-800 p-6 rounded-lg max-w-[90vw] w-full max-h-[85vh] mx-auto shadow-lg overflow-y-auto">
+                        <h2 className="text-center text-sm font-semibold mb-1 dark:text-gray-300">Select a Flavour</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
-                            {availableFlavours.map((flavour) => (
+                            {getFilteredFlavours().map((flavour) => (
                                 <button
                                     key={flavour.name}
                                     onClick={() => addFlavour(flavour)}
                                     className="border dark:border-gray-700 px-3 py-2 rounded-lg flex items-center gap-2 dark:bg-gray-800 dark:text-gray-300 hover:shadow-lg transition-shadow duration-200"
                                 >
-                                    <div className="flex-shrink-0 w-10 h-auto">
+                                    <div className="flex-shrink-0 relative w-16 h-16">
                                         <Image
-                                            src={flavour.image || ''}
+                                            src={flavour.image || '/images/default-flavour.png'}
                                             alt={flavour.name}
-                                            width={64}
-                                            height={64}
-                                            sizes="100vw"
-                                            className="w-full h-auto object-contain"
+                                            fill
+                                            sizes="64px" // Adjust based on desired size
+                                            className="object-contain rounded"
                                         />
                                     </div>
                                     <div className="flex-1 gap-1">
                                         <h3 className="text-lg font-semibold dark:text-gray-200 text-sm">{flavour.name}</h3>
                                         <p className="text-[0.7rem] text-gray-500 dark:text-gray-400 text-xs leading-3">{flavour.mini_description}</p>
-                                        {/* <p className="text-[8px] text-gray-500 md:text-xs text-center">
-                                            {flavour.allergens.map((allergen, index) => (
-                                                <span key={index} className="mr-1">
-                                                    {allergen.name},
-                                                </span>
-                                            ))}
-                                        </p> */}
+                                        {flavour.allergens && flavour.allergens.length > 0 && (
+                                            <p className="text-[8px] text-gray-500 md:text-xs text-center mt-1">
+                                                {flavour.allergens.map((allergen, index, array) => (
+                                                    <span key={allergen.id} className="mr-1">
+                                                        {allergen.name}
+                                                        {index < array.length - 1 ? ',' : '.'}
+                                                    </span>
+                                                ))}
+                                            </p>
+                                        )}
                                     </div>
                                     <FiPlus className="text-gray-500 dark:text-gray-400" />
                                 </button>
                             ))}
                         </div>
+
+                        {/* Close Modal Button */}
+                        <button
+                            type="button"
+                            onClick={() => setIsModalOpen(false)}
+                            className="absolute top-4 right-4 text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 focus:outline-none"
+                            aria-label="Close Modal"
+                        >
+                            <FiX size={24} />
+                        </button>
                     </div>
                 </div>
             )}
