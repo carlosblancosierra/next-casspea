@@ -17,6 +17,9 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
                                 src={url}
                                 priority={index <= 2 ? true : false}
                                 className="absolute inset-0 rounded-rounded"
+                                width={0}
+                                height={0}
+                                sizes="100vw"
                                 alt={`Product image ${index + 1}`}
                                 fill
                                 style={{

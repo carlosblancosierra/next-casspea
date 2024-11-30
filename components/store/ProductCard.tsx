@@ -18,6 +18,9 @@ export default function ProductCard({ product }: { product: ProductType }) {
                     <Image
                         alt={product.name}
                         src={product.image || '/images/default-product.png'}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
                         className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                     />
                 )}

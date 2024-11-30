@@ -33,6 +33,9 @@ export default function NewsletterSubscribe() {
                         <Image
                             src="/images/newsletter-image.jpg" // Update with your image path
                             alt="Newsletter subscription"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
                             fill
                             className="rounded-lg object-cover"
                         />
