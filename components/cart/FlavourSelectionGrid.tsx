@@ -55,7 +55,7 @@ const FlavourSelectionGrid: React.FC<FlavourSelectionGridProps> = ({ flavours, b
           <div key={`${flavourSelection.flavor}-${index}-${colIndex}`}>
             {flavourSelection.flavor && (
               <Image
-                src={flavourSelection.flavor.image}
+                src={flavourSelection.flavor.image || '/flavours/default.png'}
                 alt={flavourSelection.flavor.name}
                 width={0}
                 height={0}

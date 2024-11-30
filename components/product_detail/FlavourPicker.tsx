@@ -63,7 +63,16 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                     <div key={flavour.flavor.id} className="flavour-item flex items-center mt-4">
                         <div className="flavour-info flex-grow text-left grid grid-cols-4">
                             <div className="col-span-1 pr-3">
-                                <Image src={flavour.flavor.image || ''} alt={flavour.flavor.name} width={0} height={0} sizes="100vw" className='w-full h-auto' />
+                                {flavour.flavor.image && (
+                                    <Image
+                                        src={flavour.flavor.image || '/flavours/default.png'}
+                                        alt={flavour.flavor.name}
+                                        width={0}
+                                        height={0}
+                                        sizes="100vw"
+                                        className='w-full h-auto'
+                                    />
+                                )}
                             </div>
                             <div className='col-span-3 mt-1 mx-1 md:mx-4'>
                                 <p className="font-bold text-xs md:text-sm dark:text-gray-200">{flavour.flavor.name}</p>
@@ -136,13 +145,15 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                     className="border dark:border-gray-700 px-3 py-2 rounded-lg flex items-center gap-2 dark:bg-gray-800 dark:text-gray-300 hover:shadow-lg transition-shadow duration-200"
                                 >
                                     <div className="flex-shrink-0 relative w-16 h-16">
-                                        <Image
-                                            src={flavour.image || '/images/default-flavour.png'}
-                                            alt={flavour.name}
-                                            fill
-                                            sizes="64px" // Adjust based on desired size
-                                            className="object-contain rounded"
-                                        />
+                                        {flavour.image && (
+                                            <Image
+                                                src={flavour.image || '/flavours/default.png'}
+                                                alt={flavour.name}
+                                                fill
+                                                sizes="64px" // Adjust based on desired size
+                                                className="object-contain rounded"
+                                            />
+                                        )}
                                     </div>
                                     <div className="flex-1 gap-1">
                                         <h3 className="text-lg font-semibold dark:text-gray-200 text-sm">{flavour.name}</h3>

@@ -45,7 +45,8 @@ const ProductConfirm: React.FC<ProductConfirmProps> = ({ flavours, isVisible, on
           alt={flavour.name}
           className="w-full h-auto rounded-md mb-2"
         /> */}
-        <Image src={flavour.image} alt={flavour.name} width={0} height={0} sizes="100vw" className='w-20 h-22' />
+        <Image src={flavour.image || '/flavours/default.png'}
+          alt={flavour.name} width={0} height={0} sizes="100vw" className='w-20 h-22' />
         {/* <p className='text-xs dark:text-gray-300'>{flavour.name}</p> */}
       </div>
     ))

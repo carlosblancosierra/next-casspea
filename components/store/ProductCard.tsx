@@ -1,23 +1,26 @@
 import React from 'react';
 import { Product as ProductType } from '@/types/products';
 import Link from 'next/link';
+import { useProductDiscountedPrice } from '@/utils/useProductDiscountedPrice';
+import Image from 'next/image';
 
 export default function ProductCard({ product }: { product: ProductType }) {
 
-    // const { discountedPrice, discount_percentage } = useProductDiscountedPrice(product.id, product);
-    const discountedPrice = '67.50';
-    const discount_percentage = 10;
+    const { discountedPrice, discount_percentage } = useProductDiscountedPrice(product.id, product);
+
     return (
         <Link
             href={`/store/${product.slug}`}
             className="block group relative shadow-lg rounded-lg p-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:opacity-90 transition-opacity"
         >
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                <img
-                    alt={product.name}
-                    src={product.image}
-                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                />
+                {product.image && (
+                    <Image
+                        alt={product.name}
+                        src={product.image || '/images/default-product.png'}
+                        className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                    />
+                )}
             </div>
             {discountedPrice ? (
                 <p className="text-md font-medium text-gray-900 dark:text-white mt-4">

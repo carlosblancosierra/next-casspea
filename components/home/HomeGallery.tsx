@@ -30,7 +30,6 @@ const HomeGallery: React.FC = () => {
           {group.map((src, index) => (
             <div key={index}>
               <Image
-                // src={`${src}?v=${Date.now()}`}
                 src={src}
                 alt={`Gallery image ${groupIndex * 3 + index + 1}`}
                 className="h-auto w-full rounded-lg"
