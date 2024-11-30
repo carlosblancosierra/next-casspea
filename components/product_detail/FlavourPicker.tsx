@@ -48,10 +48,10 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                 {flavours.map((flavour, index) => (
                     <div key={index} className="flavour-item flex items-center mt-4">
                         <div className="flavour-info flex-grow text-left grid grid-cols-4">
-                            <div className="col-span-1">
+                            <div className="col-span-1 pr-3">
                                 <Image src={flavour.flavor.image || ''} alt={flavour.flavor.name} width={0} height={0} sizes="100vw" className='w-full h-auto' />
                             </div>
-                            <div className='col-span-3 mt-1 mx-1 md:mx-3'>
+                            <div className='col-span-3 mt-1 mx-1 md:mx-4'>
                                 <p className="font-bold text-xs md:text-sm dark:text-gray-200">{flavour.flavor.name}</p>
                             </div>
                         </div>

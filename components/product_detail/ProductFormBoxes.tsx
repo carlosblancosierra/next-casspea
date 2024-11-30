@@ -53,12 +53,12 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
 
     const handleAddFlavour = (flavour: FlavourType) => {
         if (remainingChocolates <= 0) return;
-        const existingFlavourIndex = flavours.findIndex(f => f.flavor === flavour.id);
+        const existingFlavourIndex = flavours.findIndex(f => f.flavor.id === flavour.id);
         if (existingFlavourIndex !== -1) {
             handleFlavourChange(existingFlavourIndex, 'quantity', flavours[existingFlavourIndex].quantity + 1);
         } else {
             const newFlavour: CartItemBoxFlavorSelection = {
-                flavor: flavour.id,
+                flavor: flavour,
                 quantity: 1,
             };
             setFlavours([...flavours, newFlavour]);
@@ -129,7 +129,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                     selection_type: selection === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX',
                     allergens: selectedAllergens,
                     flavor_selections: selection === 'RANDOM' ? [] : flavours.map(flavour => ({
-                        flavor: flavour.flavor,
+                        flavor: flavour.flavor.id,
                         quantity: flavour.quantity,
                     })),
                 },

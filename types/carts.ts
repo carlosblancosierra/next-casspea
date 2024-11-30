@@ -50,7 +50,7 @@ export interface CartItemBoxCustomization {
 }
 
 export interface CartItemBoxFlavorSelection {
-    flavor: number; // ID of the flavor
+    flavor: Flavour;
     quantity: number; // Quantity of the flavor
 }
 

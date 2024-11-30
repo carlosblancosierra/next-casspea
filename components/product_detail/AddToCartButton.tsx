@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spinner } from '@/components/common/Spinner';
+import { List, Spinner } from '@/components/common';
 
 interface AddToCartButtonProps {
     onClick: () => void;
