@@ -11,6 +11,7 @@ export interface ProductCategory {
 export interface Product {
     id: number;
     name: string;
+    name_short?: string;
     description?: string;
     category?: ProductCategory;
 

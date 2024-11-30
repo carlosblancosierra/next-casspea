@@ -26,7 +26,7 @@ export default function EmailForm({ onEmailSubmit, initialEmail = '' }: EmailFor
     };
 
     return (
-        <div className="mt-4 border border-gray-200 dark:border-gray-700 p-4 rounded-md
+        <div className="mt-4
             bg-white dark:bg-gray-800 shadow-sm">
             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
                 Contact Email

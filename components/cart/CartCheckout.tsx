@@ -9,12 +9,14 @@ import ShippingDateForm from './ShippingDateForm';
 import { useCreateCheckoutSessionMutation } from '@/redux/features/checkout/checkoutApiSlice';
 import { useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { CartUpdate } from '@/types/carts';
+import { useAppSelector } from '@/redux/hooks';
+import { selectCart } from '@/redux/features/carts/cartSlice';
 
 export default function CartCheckout() {
     const router = useRouter();
     const [createCheckoutSession] = useCreateCheckoutSessionMutation();
     const [updateCart] = useUpdateCartMutation();
-
+    const cart = useAppSelector(selectCart);
     const [addShippingDate, setAddShippingDate] = useState(false);
     const [addGiftMessage, setAddGiftMessage] = useState(false);
     const [shippingDate, setShippingDate] = useState<string>('');
@@ -56,32 +58,19 @@ export default function CartCheckout() {
     };
 
     return (
-        <div className="space-y-12 px-5">
-            {/* Discount Section */}
-            <div className="border-b border-gray-900/10 pb-12">
-                <h2 className="text-base font-semibold text-gray-900">Discount Code</h2>
-                <p className="mt-1 text-sm text-gray-600">
-                    Enter your discount code if you have one
-                </p>
-                <div className="mt-10">
-                    <DiscountForm />
-                </div>
-            </div>
+        <div className="space-y-4 px-5">
 
             {/* Optional Fields Section */}
-            <div className="border-b border-gray-900/10 pb-12">
+            <div className="border-b border-gray-900/10 pb-4">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h2 className="text-base font-semibold text-gray-900">Delivery Options</h2>
-                        <p className="mt-1 text-sm text-gray-600">
-                            Customize your delivery preferences
-                        </p>
+                        <h2 className="text-base font-semibold text-gray-900">Order Options</h2>
                     </div>
                 </div>
 
-                <div className="mt-10 space-y-8">
+                <div className="mt-4 space-y-4">
                     {/* Shipping Date Option */}
-                    <div className="space-y-4">
+                    <div className="">
                         <label className="flex items-center space-x-2">
                             <input
                                 type="checkbox"
@@ -92,14 +81,14 @@ export default function CartCheckout() {
                             <span className="text-sm font-medium text-gray-900">Add Shipping Date</span>
                         </label>
                         {!addShippingDate && (
-                            <p className="text-sm text-gray-500 ml-6">
-                                If not selected, we will send ASAP (1-2 business days)
+                            <p className="text-xs text-gray-500 ml-6">
+                                Otherwise, we will ship ASAP (1-2 business days)
                             </p>
                         )}
                         {addShippingDate && (
                             <div className="ml-6">
-                                <p className="text-sm text-gray-500 mb-4">
-                                    Please note: this is the shipping date, delivery date will be based on the shipping option you select next
+                                <p className="text-xs text-gray-500 mb-4">
+                                    Please note: this is the shipping date, delivery date will be based on the shipping option you select next. Otherwise, we will ship ASAP (1-2 business days).
                                 </p>
                                 <ShippingDateForm onShippingDateChange={setShippingDate} />
                             </div>
@@ -107,7 +96,7 @@ export default function CartCheckout() {
                     </div>
 
                     {/* Gift Message Option */}
-                    <div className="space-y-4">
+                    <div className="mt-4">
                         <label className="flex items-center space-x-2">
                             <input
                                 type="checkbox"
@@ -126,6 +115,43 @@ export default function CartCheckout() {
                 </div>
             </div>
 
+
+            {/* Discount Section */}
+            <div className="border-b border-gray-900/10 pb-2">
+                <h2 className="text-base font-semibold text-gray-900">Discount Code</h2>
+                {/* <p className="mt-1 text-sm text-gray-600">
+                    Enter your discount code if you have one
+                </p> */}
+                <div className="mt-2">
+                    <DiscountForm />
+                </div>
+            </div>
+
+            {/* Order Summary */}
+            <p className="text-xl font-semibold text-gray-900 dark:text-white">Order summary</p>
+
+            <div className="space-y-4">
+                <dl className="flex items-center justify-between gap-4">
+                    <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Original price</dt>
+                    <dd className="text-base font-medium text-gray-900 dark:text-white">${cart?.total}</dd>
+                </dl>
+
+                <dl className="flex items-center justify-between gap-4">
+                    <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Savings</dt>
+                    <dd className="text-base font-medium text-green-600">-$0.00</dd>
+                </dl>
+
+                {/* <dl className="flex items-center justify-between gap-4">
+          <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Shipping</dt>
+          <dd className="text-base font-medium text-gray-900 dark:text-white">$0.00</dd>
+        </dl> */}
+            </div>
+
+            <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
+                <dt className="text-base font-bold text-gray-900 dark:text-white">Total</dt>
+                <dd className="text-base font-bold text-gray-900 dark:text-white">${cart?.total}</dd>
+            </dl>
+
             {/* Contact Information */}
             <div className="border-b border-gray-900/10 pb-12">
                 <h2 className="text-base font-semibold text-gray-900">Ready to checkout?</h2>
@@ -138,6 +164,7 @@ export default function CartCheckout() {
                         initialEmail={email}
                     />
                 </div>
+
 
                 <div className="mt-6">
                     <button

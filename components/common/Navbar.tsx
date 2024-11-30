@@ -10,9 +10,9 @@ import Image from 'next/image';
 
 const navigation = [
   { name: 'Store', href: '/store', current: false },
-  { name: 'Gift Boxes', href: '/store/gift-boxes', current: false },
+  { name: 'Signature Boxes', href: '/store/signature-boxes', current: false },
   { name: 'Advent Calendar', href: '/store/advent-calendar', current: false },
-  { name: 'Snacks', href: '/store/snacks', current: false },
+  // { name: 'Snacks', href: '/store/snacks', current: false },
   { name: 'Flavours', href: '/flavours', current: false },
   { name: 'Track', href: '/track', current: false },
 ]

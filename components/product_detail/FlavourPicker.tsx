@@ -43,7 +43,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     }
 
     return (
-        <div className='border rounded md:px-3 dark:border-gray-700'>
+        <div className='rounded md:px-3'>
             <div className="selected-flavours">
                 {flavours.map((flavour, index) => (
                     <div key={index} className="flavour-item flex items-center mt-4">

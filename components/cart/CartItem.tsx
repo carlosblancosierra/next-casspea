@@ -58,7 +58,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
 
         <p className="text-base font-bold text-gray-900 dark:text-white">${entry.product.base_price}</p>
 
-        <div className="flex items-center justify-between !mt-1">
+        {/* <div className="flex items-center justify-between !mt-1">
           <div className="flex items-center">
             <button
               type="button"
@@ -79,7 +79,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
               <FiPlus className="text-gray-900 dark:text-white" />
             </button>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex items-center gap-4">
           {/* <button
@@ -95,7 +95,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
       {/* Third Column: Flavour Selection Grid */}
       <div className="col-span-2 md:order-2 md:col-span-1">
         {entry.box_customization?.selection_type == 'PICK_AND_MIX' && (
-          <FlavourSelectionGrid flavours={entry.box_customization.flavor_selections} boxSize={boxSize} />
+          <FlavourSelectionGrid flavours={entry.box_customization.flavor_selections || []} boxSize={boxSize} />
         )}
       </div>
     </div>

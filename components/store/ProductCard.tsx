@@ -3,6 +3,10 @@ import { Product as ProductType } from '@/types/products';
 import Link from 'next/link';
 
 export default function ProductCard({ product }: { product: ProductType }) {
+
+    // const { discountedPrice, discount_percentage } = useProductDiscountedPrice(product.id, product);
+    const discountedPrice = '67.50';
+    const discount_percentage = 10;
     return (
         <Link
             href={`/store/${product.slug}`}
@@ -15,7 +19,14 @@ export default function ProductCard({ product }: { product: ProductType }) {
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                 />
             </div>
-            <p className="text-md font-medium text-gray-900 dark:text-white mt-4">￡ {product.base_price}</p>
+            {discountedPrice ? (
+                <p className="text-md font-medium text-gray-900 dark:text-white mt-4">
+                    ￡ {discountedPrice}
+                    <span className="ml-1 text-xs line-through text-gray-500">￡ {product.base_price}</span>
+                </p>
+            ) : (
+                <p className="text-md font-medium text-gray-900 dark:text-white mt-4">￡ {product.base_price}</p>
+            )}
             <div className="flex justify-between mt-1">
                 <div>
                     <h3 className="text-xs md:text-sm text-gray-700 dark:text-gray-300 h-12">

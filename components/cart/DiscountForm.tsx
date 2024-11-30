@@ -50,14 +50,10 @@ export default function DiscountForm() {
     // If cart has an active discount code
     if (cart?.discount) {
         return (
-            <div className="mt-4 border border-gray-200 dark:border-gray-700 p-4 rounded-md
-                bg-white dark:bg-gray-800">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                    Applied Discount
-                </h3>
+            <div className="bg-white dark:bg-gray-800">
                 <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700
                     px-3 py-2 rounded-md">
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    <span className="text-xs font-medium text-gray-900 dark:text-gray-100">
                         {cart.discount.code}
                     </span>
                     <button
@@ -76,11 +72,7 @@ export default function DiscountForm() {
 
     // If no active discount code, show the form
     return (
-        <div className="mt-4 border border-gray-200 dark:border-gray-700 p-4 rounded-md
-            bg-white dark:bg-gray-800">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                Discount Code
-            </h3>
+        <div className="bg-white dark:bg-gray-800">
             <form onSubmit={handleSubmit} className="flex gap-2">
                 <input
                     type="text"
@@ -90,18 +82,19 @@ export default function DiscountForm() {
                     className="flex-1 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2
                         text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700
                         placeholder-gray-500 dark:placeholder-gray-400
+                        text-xs
                         focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400
                         focus:border-indigo-500 dark:focus:border-indigo-400"
                 />
                 <button
                     type="submit"
                     disabled={isValidating || !discountCode}
-                    className="bg-indigo-600 dark:bg-indigo-500 text-white px-4 py-2 rounded-md
+                    className="bg-indigo-600 dark:bg-indigo-500 text-white text-xs px-4 py-2 rounded-md
                         hover:bg-indigo-500 dark:hover:bg-indigo-400
                         disabled:bg-gray-300 dark:disabled:bg-gray-600
                         disabled:cursor-not-allowed"
                 >
-                    {isValidating ? 'Validating...' : 'Apply'}
+                    {isValidating ? 'Validating...' : 'Validate'}
                 </button>
             </form>
         </div>

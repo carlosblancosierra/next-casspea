@@ -12,7 +12,7 @@ const CartItemTable: React.FC<CartItemTableProps> = ({ cartEntries }) => {
       {cartEntries.length > 0 ? (
         cartEntries.map((entry) => <CartItem key={entry.id} entry={entry} />)
       ) : (
-        <p className="text-gray-500 dark:text-gray-400">Your cart is empty.</p>
+        <p className="text-gray-500 dark:text-gray-400 text-center"></p>
       )}
     </div>
   );

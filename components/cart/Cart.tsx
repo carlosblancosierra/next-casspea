@@ -11,13 +11,17 @@ const Cart: React.FC = () => {
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="space-y-8">
-          <CartItemTable cartEntries={cartEntries} />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <CartSummary />
-            <CartCheckout />
+        {cartEntries.length > 0 ? (
+          <div className="space-y-8">
+            <CartItemTable cartEntries={cartEntries} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <CartSummary />
+              <CartCheckout />
+            </div>
           </div>
-        </div>
+        ) : (
+          <p className="text-gray-500 dark:text-gray-400 text-center">Your cart is empty.</p>
+        )}
       </div>
     </div>
   );

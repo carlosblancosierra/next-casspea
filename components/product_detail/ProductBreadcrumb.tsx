@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProductType } from '@/types/products';
+import { Product as ProductType } from '@/types/products';
 
 interface ProductBreadcrumbProps {
     product: ProductType;
@@ -27,7 +27,7 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
                 <li>
                     <div className="flex items-center">
                         <a href="/store" className="mr-2 text-sm text-gray-900 dark:text-gray-400">
-                            {product.category.short}
+                            {product.category?.name}
                         </a>
                         <svg
                             fill="currentColor"
@@ -43,7 +43,7 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
                 </li>
                 <li className="text-sm">
                     <a aria-current="page" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300">
-                        {product.name_short}
+                        {product.name_short || product.slug.split('-').join(' ')}
                     </a>
                 </li>
             </ol>

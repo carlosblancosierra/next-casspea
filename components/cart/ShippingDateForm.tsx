@@ -40,24 +40,20 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
     };
 
     return (
-        <div className="mt-4 border border-gray-200 dark:border-gray-700 p-4 rounded-md
-            bg-white dark:bg-gray-800 shadow-sm">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                Shipping Date
-            </h3>
+        <div className="">
             <div className="space-y-1">
                 <input
                     type="date"
                     value={selectedDate}
                     onChange={handleDateChange}
                     min={minDate}
-                    className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2
+                    className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm
                         text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700
                         focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                     onKeyDown={(e) => e.preventDefault()}
                 />
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Delivery available on business days only
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Shipping available on business days only
                 </p>
             </div>
         </div>
