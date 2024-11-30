@@ -18,6 +18,14 @@ export default function AddressPage() {
     const [useSameAddress, setUseSameAddress] = useState(true);
     const [shippingAddress, setShippingAddress] = useState<Address | null>(null);
     const [billingAddress, setBillingAddress] = useState<Address | null>(null);
+    const [isShippingFormValid, setIsShippingFormValid] = useState(false);
+    const [isBillingFormValid, setIsBillingFormValid] = useState(true);
+
+    useEffect(() => {
+        if (useSameAddress) {
+            setIsBillingFormValid(true);
+        }
+    }, [useSameAddress]);
 
     useEffect(() => {
         if (!checkoutSession) {
@@ -30,10 +38,6 @@ export default function AddressPage() {
             ...address,
             address_type: 'SHIPPING'
         });
-
-        if (useSameAddress) {
-            handleFinalSubmit(address, address);
-        }
     };
 
     const handleBillingSubmit = (address: Address) => {
@@ -41,53 +45,45 @@ export default function AddressPage() {
             ...address,
             address_type: 'BILLING'
         });
-
-        if (shippingAddress) {
-            handleFinalSubmit(shippingAddress, address);
-        }
     };
 
-    const handleFinalSubmit = async (shipping: Address, billing?: Address) => {
+    const isFormValid = isShippingFormValid && (useSameAddress || isBillingFormValid);
+
+    const handleSubmitClick = async () => {
+        if (!shippingAddress || !shippingAddress.street_address || !shippingAddress.city || !shippingAddress.postcode) {
+            toast.error('Please complete all required shipping address fields');
+            return;
+        }
+
+        if (!useSameAddress && (!billingAddress || !billingAddress.street_address || !billingAddress.city || !billingAddress.postcode)) {
+            toast.error('Please complete all required billing address fields');
+            return;
+        }
+
         setIsProcessing(true);
         setError(null);
 
         try {
-            if (!shipping) {
-                toast.error('Shipping address is required');
-                setIsProcessing(false);
-                return;
-            }
-
             const addressRequest: AddressRequest = {
                 shipping_address: {
-                    full_name: shipping.full_name,
-                    phone: shipping.phone,
-                    street_address: shipping.street_address,
-                    street_address2: shipping.street_address2,
-                    city: shipping.city,
-                    county: shipping.county,
-                    postcode: shipping.postcode,
-                    country: shipping.country,
-                    place_id: shipping.place_id,
-                    formatted_address: shipping.formatted_address,
-                    latitude: shipping.latitude,
-                    longitude: shipping.longitude,
+                    ...shippingAddress,
                     address_type: 'SHIPPING'
                 },
                 billing_address: useSameAddress ? {
-                    ...shipping,
+                    ...shippingAddress,
                     address_type: 'BILLING'
-                } : billing || {
-                    ...shipping,
+                } : {
+                    ...billingAddress!,
                     address_type: 'BILLING'
                 }
             };
 
-            // Call the setAddresses mutation
             const response = await setAddresses(addressRequest).unwrap();
-
             if (response) {
                 router.push('/checkout/confirm');
+            } else {
+                setError('Failed to save addresses. Please try again.');
+                toast.error('Failed to save addresses. Please try again.');
             }
         } catch (err: any) {
             console.error('Error setting addresses:', err);
@@ -114,22 +110,6 @@ export default function AddressPage() {
         }
     };
 
-    const handleSubmitClick = () => {
-        if (useSameAddress) {
-            if (shippingAddress) {
-                handleFinalSubmit(shippingAddress, shippingAddress);
-            } else {
-                toast.error('Please provide a shipping address.');
-            }
-        } else {
-            if (shippingAddress && billingAddress) {
-                handleFinalSubmit(shippingAddress, billingAddress);
-            } else {
-                toast.error('Please provide both shipping and billing addresses.');
-            }
-        }
-    };
-
     if (!checkoutSession) {
         return null;
     }
@@ -152,7 +132,7 @@ export default function AddressPage() {
                     <AddressForm
                         onAddressSubmit={handleShippingSubmit}
                         addressType="SHIPPING"
-                        buttonText="Save Shipping Address"
+                        onFormValidityChange={setIsShippingFormValid}
                     />
                 </div>
 
@@ -177,21 +157,21 @@ export default function AddressPage() {
                             <AddressForm
                                 onAddressSubmit={handleBillingSubmit}
                                 addressType="BILLING"
-                                buttonText="Save Billing Address"
+                                onFormValidityChange={setIsBillingFormValid}
                             />
                         </div>
                     )}
                 </div>
 
                 {error && (
-                    <div className="text-red-600 dark:text-red-400 text-sm">
+                    <div className="text-red-600 dark:text-red-400 text-sm whitespace-pre-line">
                         {error}
                     </div>
                 )}
 
                 <button
                     onClick={handleSubmitClick}
-                    disabled={isProcessing}
+                    disabled={isProcessing || !isFormValid}
                     className="w-full bg-indigo-600 dark:bg-indigo-500 text-white dark:text-gray-100 py-3 px-4 rounded-md
                         hover:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2
                         focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 dark:disabled:bg-gray-700

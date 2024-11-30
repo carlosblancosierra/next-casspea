@@ -6,11 +6,11 @@ import { Address } from '@/types/addresses';
 const libraries: ("places")[] = ['places'];
 
 interface AddressFormProps {
-    onAddressSubmit: (addressData: Address) => void;
+    onAddressSubmit: (address: Address) => void;
     initialData?: Address;
     addressType: 'SHIPPING' | 'BILLING';
-    buttonText?: string;
-    onFormReady?: (formRef: HTMLFormElement) => void;
+    onFormReady?: (form: HTMLFormElement) => void;
+    onFormValidityChange?: (isValid: boolean) => void;
 }
 
 interface AddressData {
@@ -46,8 +46,8 @@ const AddressForm: React.FC<AddressFormProps> = ({
     onAddressSubmit,
     initialData,
     addressType,
-    buttonText,
-    onFormReady
+    onFormReady,
+    onFormValidityChange
 }) => {
     const formRef = useRef<HTMLFormElement>(null);
     const [formData, setFormData] = useState<AddressData>({
@@ -126,8 +126,8 @@ const AddressForm: React.FC<AddressFormProps> = ({
             return;
         }
 
-        setFormData(prev => ({
-            ...prev,
+        const newFormData = {
+            ...formData,
             street_address: `${addressComponents.street_number || ''} ${addressComponents.route || ''}`.trim(),
             city: addressComponents.postal_town || addressComponents.locality || '',
             county: addressComponents.administrative_area_level_2 || '',
@@ -137,31 +137,46 @@ const AddressForm: React.FC<AddressFormProps> = ({
             formatted_address: place.formatted_address || '',
             latitude: place.geometry?.location?.lat() || 0,
             longitude: place.geometry?.location?.lng() || 0
-        }));
+        };
+
+        setFormData(newFormData);
+        onAddressSubmit(newFormData as Address);
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
+        const newFormData = {
+            ...formData,
             [name]: value
-        }));
+        };
+        setFormData(newFormData);
+
+        // Submit to parent component whenever form data changes
+        onAddressSubmit(newFormData as Address);
+
+        // Check validity
+        if (onFormValidityChange && formRef.current) {
+            setTimeout(() => {
+                const isValid = formRef.current!.checkValidity() && !addressError;
+                onFormValidityChange(isValid);
+            }, 0);
+        }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onAddressSubmit(formData as Address);
-    };
-
-    if (loadError) return <div className="text-red-500">Error loading Google Maps</div>;
-    if (!isLoaded) return <div className="text-gray-500">Loading...</div>;
+    // Add form validity check
+    useEffect(() => {
+        if (formRef.current && onFormValidityChange) {
+            const isValid = formRef.current.checkValidity() && !addressError;
+            onFormValidityChange(isValid);
+        }
+    }, [formData, addressError, onFormValidityChange]);
 
     return (
         <form
             ref={formRef}
-            onSubmit={handleSubmit}
             className="space-y-4"
             data-type={addressType}
+            noValidate
         >
             <div className="space-y-2">
                 <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -302,18 +317,6 @@ const AddressForm: React.FC<AddressFormProps> = ({
                 <div className="text-red-500 text-sm mt-2">
                     {addressError}
                 </div>
-            )}
-
-            {buttonText && (
-                <button
-                    type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent
-                        rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600
-                        hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2
-                        focus:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400"
-                >
-                    {buttonText}
-                </button>
             )}
         </form>
     );

@@ -3,20 +3,6 @@ import { Allergen } from '@/types/allergens';
 import { Flavour } from '@/types/flavours';
 import { Discount } from '@/types/discounts';
 
-export interface Cart {
-    id: number;
-    user?: number;
-    session_id?: string;
-    discount?: Discount;
-    gift_message?: string;
-    shipping_date?: string;
-    active: boolean;
-    items: CartItem[];
-    total: string;
-    created?: string;
-    updated?: string;
-}
-
 export interface CartUpdate {
     gift_message?: string;
     shipping_date?: string;
@@ -29,15 +15,6 @@ export interface CartUpdateResponse {
     cart: Cart;
 }
 
-export interface CartItem {
-    id: number;
-    cart?: number;
-    product: Product;
-    quantity: number;
-    box_customization?: CartItemBoxCustomization;
-    created: string;
-    updated: string;
-}
 
 export interface CartItemBoxCustomization {
     id: number;
@@ -49,11 +26,6 @@ export interface CartItemBoxCustomization {
     updated?: string;
 }
 
-export interface CartItemBoxFlavorSelection {
-    flavor: Flavour;
-    quantity: number; // Quantity of the flavor
-}
-
 export interface CartItemRequest {
     product: number; // Product ID
     quantity: number; // Quantity of the product
@@ -62,4 +34,39 @@ export interface CartItemRequest {
         allergens?: number[];
         flavor_selections?: CartItemBoxFlavorSelection[];
     };
+}
+
+export interface Cart {
+    id: number;
+    user?: number;
+    session_id?: string;
+    discount?: Discount;
+    gift_message?: string | null;
+    shipping_date?: string | null;
+    items: CartItem[];
+    base_total: string;
+    discounted_total: string;
+    total_savings: string;
+    is_discount_valid: boolean;
+    created: string;
+    updated: string;
+}
+
+export interface CartItem {
+    id: number;
+    cart?: number;
+    product: Product;
+    quantity: number;
+    box_customization?: CartItemBoxCustomization;
+    base_price: string;
+    discounted_price: string;
+    savings: string;
+    created: string;
+    updated: string;
+}
+
+export interface CartItemBoxFlavorSelection {
+    id: number;
+    flavor: Flavour;
+    quantity: number;
 }
