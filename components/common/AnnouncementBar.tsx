@@ -1,6 +1,7 @@
 "use client";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react';
+import Link from 'next/link'
 
 export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
@@ -14,7 +15,7 @@ export default function AnnouncementBar() {
   }
 
   return (
-    <div className="relative isolate gap-x-6 overflow-hidden bg-gray-50 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
+    <div className="hidden md:block relative isolate overflow-hidden bg-gray-50 px-6 py-2.5 sm:px-3.5">
       <div
         aria-hidden="true"
         className="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
@@ -39,31 +40,31 @@ export default function AnnouncementBar() {
           className="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 mx-auto text-center">
-        <p className="text-sm leading-6 text-gray-900">
-          Code CASSPEA10 for 10% off
-        </p>
-        <p className="text-sm leading-6 text-gray-900">
-          Free Shipping over £45
-        </p>
-        <a
-          href="#"
-          className="w-full md:w-fit rounded-full bg-gray-900 px-3.5 py-1 text-sm text-white shadow-sm"
-        >
-          Subscribe for 15% off <span aria-hidden="true">&rarr;</span>
-        </a>
+      <div className="flex items-center justify-between gap-x-4 md:gap-x-6 max-w-screen-2xl mx-auto">
+        <div className="flex flex-1 justify-center items-center gap-x-4 md:gap-x-8">
+          <p className="text-sm leading-6 text-gray-900">
+            Tel: 07859 790386 / email: info@casspea.co.uk
+          </p>
+          <p className="text-sm leading-6 text-gray-900">
+            Free Shipping over £45
+          </p>
+          <Link
+            href="/subscribe"
+            className="rounded-full bg-gray-900 px-3.5 py-1 text-sm text-white shadow-sm hover:bg-gray-800"
+          >
+            Subscribe for 10% off <span aria-hidden="true">&rarr;</span>
+          </Link>
+        </div>
 
         <button
           type="button"
-          className="-m-3 p-3 focus-visible:outline-offset-[-4px] absolute right-5 top-3"
-          onClick={handleClose} // Add onClick handler to hide the announcement bar
+          className="p-2 hover:bg-gray-100 rounded-full"
+          onClick={handleClose}
         >
           <span className="sr-only">Dismiss</span>
           <XMarkIcon aria-hidden="true" className="h-5 w-5 text-gray-900" />
         </button>
-
       </div>
-
     </div>
   )
 }

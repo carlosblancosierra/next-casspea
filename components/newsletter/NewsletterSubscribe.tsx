@@ -26,37 +26,35 @@ export default function NewsletterSubscribe() {
 
     return (
         <section className="bg-white dark:bg-gray-900">
-            <div className="py-4 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-                <div className="grid lg:grid-cols-2 gap-8 items-center">
+            <div className="px-4 mx-auto lg:py-16 lg:px-6 gap-4">
+                <div className="grid lg:grid-cols-2 gap-2 items-center">
                     {/* Image Section */}
-                    <div className="hidden lg:block relative h-96">
+                    <div className="">
                         <Image
-                            src="/images/newsletter-image.jpg" // Update with your image path
+                            src="/home/gallery/10.jpg"
                             alt="Newsletter subscription"
                             width={0}
                             height={0}
                             sizes="100vw"
-                            fill
-                            className="rounded-lg object-cover"
+                            className="rounded-lg w-full h-full"
                         />
                     </div>
 
                     {/* Form Section */}
-                    <div className="mx-auto max-w-screen-md lg:text-left text-center">
-                        <h2 className="mb-4 text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl dark:text-white">
-                            Sign up for our newsletter for 10% OFF
+                    <div className="flex flex-col md:ml-10 lg:text-left text-center gap-2 md:gap-10 justify-start h-full mt-4">
+                        <h2 className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl dark:text-white">
+                            Join our mailing list for a 10% discount
                         </h2>
-                        <p className="mx-auto mb-4 max-w-2xl font-light text-gray-500 md:mb-12 sm:text-xl dark:text-gray-400">
-                            Stay up to date with the roadmap progress, announcements and exclusive discounts.
-                            Feel free to sign up with your email.
+                        <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
+                            Be the first to hear about our latest collections, special offers and tea-time treats.
                         </p>
 
-                        <p className="mx-auto mb-4 max-w-2xl font-bold text-primary md:mb-12 sm:text-xl dark:text-gray-400">
-                            You will receive a 10% off discount code via email.
+                        <p className="font-bold sm:text-xl dark:text-gray-400">
+                            You will receive your discount code via email.
                         </p>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
+                            <div className="items-center mx-auto mb-3 space-y-4 sm:flex sm:space-y-0">
                                 <div className="relative w-full">
                                     <label
                                         htmlFor="email"

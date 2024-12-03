@@ -24,7 +24,8 @@ export default function GiftMessage({ onGiftMessageChange }: GiftMessageProps) {
                     className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-xs
                         text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700
                         placeholder-gray-500 dark:placeholder-gray-400 min-h-[100px]
-                        focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                        focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+                        resize-none transition-colors duration-200"
                 />
             </div>
         </div>

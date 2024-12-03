@@ -71,8 +71,7 @@ export default function CartCheckout() {
     return (
         <div className="space-y-4 px-5">
             {/* Order Summary - Moved to top */}
-            <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm
-                dark:border-gray-700 dark:bg-gray-800 sm:p-6">
+            <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
                 <p className="text-xl font-semibold text-gray-900 dark:text-white">Order summary</p>
 
                 <div className="space-y-4">
@@ -90,7 +89,7 @@ export default function CartCheckout() {
                             <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
                                 Discount ({cart.discount.code})
                             </dt>
-                            <dd className="text-base font-medium text-green-600">
+                            <dd className="text-base font-medium text-green-600 dark:text-green-400">
                                 -{formatCurrency(cart.total_savings)}
                             </dd>
                         </dl>
@@ -105,8 +104,7 @@ export default function CartCheckout() {
                 </div>
 
                 {/* Total */}
-                <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2
-                    dark:border-gray-700">
+                <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
                     <dt className="text-base font-bold text-gray-900 dark:text-white">Total</dt>
                     <dd className="text-base font-bold text-gray-900 dark:text-white">
                         {formatCurrency(cart.discounted_total)}
@@ -115,18 +113,18 @@ export default function CartCheckout() {
             </div>
 
             {/* Discount Section */}
-            <div className="border-b border-gray-900/10 pb-2">
-                <h2 className="text-base font-semibold text-gray-900">Discount Code</h2>
+            <div className="border-b border-gray-900/10 pb-2 dark:border-gray-700">
+                <h2 className="text-base font-semibold text-gray-900 dark:text-gray-200">Discount Code</h2>
                 <div className="mt-2">
                     <DiscountForm />
                 </div>
             </div>
 
             {/* Optional Fields Section */}
-            <div className="border-b border-gray-900/10 pb-4">
+            <div className="border-b border-gray-900/10 pb-4 dark:border-gray-700">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h2 className="text-base font-semibold text-gray-900">Order Options</h2>
+                        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-200">Order Options</h2>
                     </div>
                 </div>
 
@@ -138,18 +136,20 @@ export default function CartCheckout() {
                                 type="checkbox"
                                 checked={addShippingDate}
                                 onChange={(e) => setAddShippingDate(e.target.checked)}
-                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-indigo-500"
                             />
-                            <span className="text-sm font-medium text-gray-900">Add Shipping Date</span>
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                Add Shipping Date
+                            </span>
                         </label>
                         {!addShippingDate && (
-                            <p className="text-xs text-gray-500 ml-6">
+                            <p className="text-xs mt-1 text-gray-500 ml-6 dark:text-gray-400">
                                 Otherwise, we will ship ASAP (1-2 business days)
                             </p>
                         )}
                         {addShippingDate && (
                             <div className="ml-6">
-                                <p className="text-xs text-gray-500 mb-4">
+                                <p className="mt-1 text-xs text-gray-500 mb-4 dark:text-gray-400">
                                     Please note: this is the shipping date, delivery date will be based on the shipping option you select next. Otherwise, we will ship ASAP (1-2 business days).
                                 </p>
                                 <ShippingDateForm onShippingDateChange={setShippingDate} />
@@ -164,9 +164,9 @@ export default function CartCheckout() {
                                 type="checkbox"
                                 checked={addGiftMessage}
                                 onChange={(e) => setAddGiftMessage(e.target.checked)}
-                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-indigo-500"
                             />
-                            <span className="text-sm font-medium text-gray-900">Add Gift Message</span>
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">Add Gift Message</span>
                         </label>
                         {addGiftMessage && (
                             <div className="ml-6">
@@ -178,9 +178,9 @@ export default function CartCheckout() {
             </div>
 
             {/* Contact Information */}
-            <div className="border-b border-gray-900/10 pb-12">
-                <h2 className="text-base font-semibold text-gray-900">Ready to checkout?</h2>
-                <p className="mt-1 text-sm text-gray-600">
+            <div className="border-b border-gray-900/10 pb-12 dark:border-gray-700">
+                <h2 className="text-base font-semibold text-gray-900 dark:text-gray-200">Ready to checkout?</h2>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                     Enter your email address to continue to checkout
                 </p>
                 <div className="mt-6">
@@ -198,16 +198,18 @@ export default function CartCheckout() {
                         className="w-full rounded-md bg-indigo-600 px-4 py-3 text-sm font-semibold text-white
                             shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2
                             focus-visible:outline-offset-2 focus-visible:outline-indigo-600
-                            disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            disabled:bg-gray-300 dark:disabled:bg-gray-700 dark:bg-indigo-500
+                            dark:hover:bg-indigo-600 dark:focus-visible:outline-indigo-500
+                            disabled:cursor-not-allowed transition-colors duration-200"
                     >
                         {isProcessing ? 'Processing...' : 'Continue to checkout'}
                     </button>
                     {error && (
-                        <p className="mt-2 text-sm text-red-600 text-center">
+                        <p className="mt-2 text-sm text-red-600 dark:text-red-400 text-center">
                             {error}
                         </p>
                     )}
-                    <p className="mt-3 text-sm text-gray-500 text-center">
+                    <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 text-center">
                         You'll be able to review your order before it's final
                     </p>
                 </div>

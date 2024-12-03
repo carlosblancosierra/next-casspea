@@ -107,7 +107,7 @@ export default function CheckoutPage() {
             {/* Delivery Details */}
             <div className="mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
                 <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                    Delivery Details
+                    Shipping Address
                 </h2>
                 {/* Add your address display components */}
             </div>

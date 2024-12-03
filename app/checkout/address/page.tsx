@@ -6,7 +6,7 @@ import AddressForm from '@/components/address/AddressForm';
 import { useAppSelector } from '@/redux/hooks';
 import { selectCheckoutSession } from '@/redux/features/checkout/checkoutSlice';
 import { useSetAddressesMutation } from '@/redux/features/addresses/addressApiSlice';
-import { Address, AddressRequest, AddressCreateRequest } from '@/types/addresses';
+import { Address, AddressRequest } from '@/types/addresses';
 import { toast } from 'react-toastify';
 
 export default function AddressPage() {
@@ -77,7 +77,7 @@ export default function AddressPage() {
                     address_type: 'BILLING'
                 }
             };
-
+            console.log('Address Request:', addressRequest);
             const response = await setAddresses(addressRequest).unwrap();
             if (response) {
                 router.push('/checkout/confirm');
@@ -115,13 +115,10 @@ export default function AddressPage() {
     }
 
     return (
-        <main className='mx-auto max-w-3xl md:py-6 md:py-8 py-4 px-4 sm:px-6 bg-gray-100 dark:bg-gray-900 min-h-screen'>
-            <div className="space-y-8">
+        <main className='mx-auto max-w-3xl md:py-8 py-4 px-4 sm:px-6 bg-gray-100 dark:bg-gray-900 min-h-screen'>
+            <div className="space-y-4">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
-                        Delivery Address
-                    </h1>
-                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-md text-gray-600 dark:text-gray-400">
                         Please enter your delivery details
                     </p>
                 </div>
@@ -138,7 +135,7 @@ export default function AddressPage() {
 
                 {/* Billing Address Option */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <label className="flex items-center space-x-3 mb-6">
+                    <label className="flex items-center space-x-3">
                         <input
                             type="checkbox"
                             checked={useSameAddress}

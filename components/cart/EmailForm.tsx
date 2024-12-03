@@ -26,11 +26,7 @@ export default function EmailForm({ onEmailSubmit, initialEmail = '' }: EmailFor
     };
 
     return (
-        <div className="mt-4
-            bg-white dark:bg-gray-800 shadow-sm">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                Contact Email
-            </h3>
+        <div className="mt-4">
             <div className="space-y-1">
                 <input
                     type="email"
