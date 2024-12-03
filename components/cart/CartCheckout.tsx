@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DiscountForm from './DiscountForm';
 import EmailForm from './EmailForm';
 import GiftMessage from './GiftMessage';
 import ShippingDateForm from './ShippingDateForm';
-import { useCreateCheckoutSessionMutation } from '@/redux/features/checkout/checkoutApiSlice';
+import { useGetOrCreateSessionQuery, useUpdateSessionMutation } from '@/redux/features/checkout/checkoutApiSlice';
 import { useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { CartUpdate } from '@/types/carts';
 import { useAppSelector } from '@/redux/hooks';
@@ -14,8 +14,10 @@ import { selectCart } from '@/redux/features/carts/cartSlice';
 
 export default function CartCheckout() {
     const router = useRouter();
-    const [createCheckoutSession] = useCreateCheckoutSessionMutation();
+    const [updateSession] = useUpdateSessionMutation();
     const [updateCart] = useUpdateCartMutation();
+    const { data: checkoutSession } = useGetOrCreateSessionQuery();
+    console.log('checkoutSession', checkoutSession);
     const cart = useAppSelector(selectCart);
     const [addShippingDate, setAddShippingDate] = useState(false);
     const [addGiftMessage, setAddGiftMessage] = useState(false);
@@ -24,6 +26,22 @@ export default function CartCheckout() {
     const [email, setEmail] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (checkoutSession?.email) {
+            setEmail(checkoutSession.email);
+        }
+    }, [checkoutSession]);
+
+    const handleEmailSubmit = async (newEmail: string) => {
+        setEmail(newEmail);
+        try {
+            await updateSession({ email: newEmail }).unwrap();
+
+        } catch (err) {
+            console.error('Failed to update session with email:', err);
+        }
+    };
 
     if (!cart || cart.items.length === 0) {
         return null;
@@ -37,6 +55,7 @@ export default function CartCheckout() {
     };
 
     const handleCheckout = async () => {
+        console.log('handleCheckout email', email);
         if (!email) return;
 
         setIsProcessing(true);
@@ -52,13 +71,16 @@ export default function CartCheckout() {
                 await updateCart(cartUpdate).unwrap();
             }
 
-            // Then create checkout session
-            const checkoutSession = await createCheckoutSession({
-                email
-            }).unwrap();
+            // Make sure the session is updated with email before redirecting
+            await updateSession({ email }).unwrap();
 
-            // If successful, redirect to address page
-            router.push('/checkout/address');
+            // Use replace instead of push to prevent back button issues
+            router.replace('/checkout/address');
+
+            // Add a fallback navigation if router.replace doesn't work
+            setTimeout(() => {
+                window.location.href = '/checkout/address';
+            }, 100);
 
         } catch (err) {
             console.error('Checkout error:', err);
@@ -185,7 +207,7 @@ export default function CartCheckout() {
                 </p>
                 <div className="mt-6">
                     <EmailForm
-                        onEmailSubmit={(email) => setEmail(email)}
+                        onEmailSubmit={handleEmailSubmit}
                         initialEmail={email}
                     />
                 </div>

@@ -16,7 +16,7 @@ export interface Address {
     formatted_address?: string;
     latitude?: number;
     longitude?: number;
-    is_default?: boolean;
+    is_a?: boolean;
     created?: string;
     updated?: string;
     session_key?: string;

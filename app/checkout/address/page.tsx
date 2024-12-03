@@ -3,15 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AddressForm from '@/components/address/AddressForm';
-import { useAppSelector } from '@/redux/hooks';
-import { selectCheckoutSession } from '@/redux/features/checkout/checkoutSlice';
 import { useSetAddressesMutation } from '@/redux/features/addresses/addressApiSlice';
 import { Address, AddressRequest } from '@/types/addresses';
 import { toast } from 'react-toastify';
+import { useGetOrCreateSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 
 export default function AddressPage() {
     const router = useRouter();
-    const checkoutSession = useAppSelector(selectCheckoutSession);
+    const { data: checkoutSession, isLoading } = useGetOrCreateSessionQuery();
     const [setAddresses] = useSetAddressesMutation();
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -26,12 +25,6 @@ export default function AddressPage() {
             setIsBillingFormValid(true);
         }
     }, [useSameAddress]);
-
-    useEffect(() => {
-        if (!checkoutSession) {
-            router.push('/cart');
-        }
-    }, [checkoutSession, router]);
 
     const handleShippingSubmit = (address: Address) => {
         setShippingAddress({
@@ -110,8 +103,21 @@ export default function AddressPage() {
         }
     };
 
+    if (isLoading) {
+        return (
+            <main className='mx-auto max-w-3xl md:py-8 py-4 px-4 sm:px-6 bg-gray-100 dark:bg-gray-900 min-h-screen'>
+                <div className="space-y-4">
+                    <p className="text-md text-gray-600 dark:text-gray-400">
+                        Loading checkout session...
+                    </p>
+                </div>
+            </main>
+        );
+    }
+
     if (!checkoutSession) {
-        return null;
+        // TODO: Redirect to cart
+        router.push('/cart');
     }
 
     return (

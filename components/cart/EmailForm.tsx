@@ -1,15 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface EmailFormProps {
     onEmailSubmit: (email: string) => void;
-    initialEmail?: string;
+    initialEmail: string;
 }
 
-export default function EmailForm({ onEmailSubmit, initialEmail = '' }: EmailFormProps) {
-    const [email, setEmail] = useState(initialEmail);
+export default function EmailForm({ onEmailSubmit, initialEmail }: EmailFormProps) {
+    const [emailInput, setEmailInput] = useState(initialEmail);
     const [isValid, setIsValid] = useState(true);
+
+    useEffect(() => {
+        if (initialEmail) {
+            setEmailInput(initialEmail);
+        }
+    }, [initialEmail]);
 
     const validateEmail = (email: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -18,7 +24,7 @@ export default function EmailForm({ onEmailSubmit, initialEmail = '' }: EmailFor
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newEmail = e.target.value;
-        setEmail(newEmail);
+        setEmailInput(newEmail);
         setIsValid(true);
         if (validateEmail(newEmail)) {
             onEmailSubmit(newEmail);
@@ -30,7 +36,7 @@ export default function EmailForm({ onEmailSubmit, initialEmail = '' }: EmailFor
             <div className="space-y-1">
                 <input
                     type="email"
-                    value={email}
+                    value={emailInput}
                     onChange={handleEmailChange}
                     placeholder="Enter your email address"
                     className={`w-full border rounded-md px-3 py-2

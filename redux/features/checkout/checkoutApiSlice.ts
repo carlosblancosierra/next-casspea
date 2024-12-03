@@ -1,64 +1,44 @@
 import { apiSlice } from '@/redux/services/apiSlice';
-import { CheckoutSession, CheckoutSessionRequest, StripeCheckoutSessionResponse } from '@/types/checkout';
-import { ShippingOption } from '@/types/shipping';
-import { setCheckoutSession, setError } from './checkoutSlice';
-
-interface UpdateShippingOptionRequest {
-    checkoutSessionId: number;
-    shippingOptionId: number;
-}
+import { CheckoutSession, CheckoutSessionRequest } from '@/types/checkout';
 
 export const checkoutApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        createCheckoutSession: builder.mutation<CheckoutSession, CheckoutSessionRequest>({
+        getOrCreateSession: builder.query<CheckoutSession, void>({
+            query: () => '/checkout/session/',
+            providesTags: ['CheckoutSession']
+        }),
+
+        updateSession: builder.mutation<CheckoutSession, Partial<CheckoutSessionRequest>>({
             query: (checkoutData) => ({
                 url: '/checkout/session/',
                 method: 'POST',
                 body: checkoutData,
             }),
-            async onQueryStarted(_, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    dispatch(setCheckoutSession(data));
-                } catch (error) {
-                    dispatch(setError('Failed to create checkout session'));
-                }
-            },
+            invalidatesTags: ['CheckoutSession']
         }),
 
-        updateShippingOption: builder.mutation<CheckoutSession, UpdateShippingOptionRequest>({
-            query: ({ checkoutSessionId, shippingOptionId }) => ({
-                url: `/checkout/session/${checkoutSessionId}/shipping-option/`,
-                method: 'POST',
-                body: { shipping_option_id: shippingOptionId }
-            }),
-            async onQueryStarted(_, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    dispatch(setCheckoutSession(data));
-                } catch (error) {
-                    dispatch(setError('Failed to update shipping option'));
-                }
-            },
-        }),
-
-        createStripeCheckoutSession: builder.mutation<StripeCheckoutSessionResponse, void>({
+        createStripeCheckoutSession: builder.mutation<any, void>({
             query: () => ({
-                url: '/checkout/stripe/create-checkout-session',
-                method: 'POST',
+                url: '/checkout/create-stripe-session/',
+                method: 'POST'
             }),
-            transformResponse: (response: StripeCheckoutSessionResponse) => response,
-            onQueryStarted(_, { queryFulfilled }) {
-                queryFulfilled.then((result) => {
-                    window.location.href = result.data.url;
-                });
-            },
+            invalidatesTags: ['CheckoutSession']
         }),
-    }),
+
+        updateShippingOption: builder.mutation<CheckoutSession, { shipping_option_id: string }>({
+            query: ({ shipping_option_id }) => ({
+                url: `/checkout/session/${shipping_option_id}/shipping-option/`,
+                method: 'POST',
+                body: { shipping_option_id }
+            }),
+            invalidatesTags: ['CheckoutSession']
+        })
+    })
 });
 
 export const {
-    useCreateCheckoutSessionMutation,
+    useGetOrCreateSessionQuery,
+    useUpdateSessionMutation,
     useCreateStripeCheckoutSessionMutation,
-    useUpdateShippingOptionMutation,
+    useUpdateShippingOptionMutation
 } = checkoutApiSlice;

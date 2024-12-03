@@ -1,18 +1,25 @@
 import { apiSlice } from '@/redux/services/apiSlice';
-import { Address, AddressRequest, AddressResponse } from '@/types/addresses';
+import { Address, AddressRequest } from '@/types/addresses';
 
 export const addressApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        setAddresses: builder.mutation<AddressResponse, AddressRequest>({
+        getAddresses: builder.query<Address[], void>({
+            query: () => '/addresses/',
+            providesTags: [{ type: 'Addresses', id: 'LIST' }]
+        }),
+
+        setAddresses: builder.mutation<any, AddressRequest>({
             query: (addresses) => ({
                 url: '/addresses/',
                 method: 'POST',
-                body: addresses,
+                body: addresses
             }),
-        }),
-    }),
+            invalidatesTags: [{ type: 'Addresses', id: 'LIST' }]
+        })
+    })
 });
 
 export const {
-    useSetAddressesMutation,
+    useGetAddressesQuery,
+    useSetAddressesMutation
 } = addressApiSlice;
