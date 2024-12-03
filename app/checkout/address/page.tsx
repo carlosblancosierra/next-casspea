@@ -136,6 +136,7 @@ export default function AddressPage() {
                         onAddressSubmit={handleShippingSubmit}
                         addressType="SHIPPING"
                         onFormValidityChange={setIsShippingFormValid}
+                        initialData={{ email: checkoutSession?.email || '' }}
                     />
                 </div>
 
@@ -161,6 +162,7 @@ export default function AddressPage() {
                                 onAddressSubmit={handleBillingSubmit}
                                 addressType="BILLING"
                                 onFormValidityChange={setIsBillingFormValid}
+                                initialData={{ email: checkoutSession?.email || '' }}
                             />
                         </div>
                     )}

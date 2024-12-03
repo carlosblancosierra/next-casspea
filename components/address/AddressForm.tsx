@@ -11,6 +11,7 @@ interface AddressFormProps {
     addressType: 'SHIPPING' | 'BILLING';
     onFormReady?: (form: HTMLFormElement) => void;
     onFormValidityChange?: (isValid: boolean) => void;
+    initialEmail?: string;
 }
 
 interface AddressData {
@@ -36,7 +37,8 @@ const AddressForm: React.FC<AddressFormProps> = ({
     initialData,
     addressType,
     onFormReady,
-    onFormValidityChange
+    onFormValidityChange,
+    initialEmail
 }) => {
     const formRef = useRef<HTMLFormElement>(null);
     const [formData, setFormData] = useState<AddressData>({
@@ -54,8 +56,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
         place_id: '',
         formatted_address: '',
         latitude: 0,
-        longitude: 0,
-        ...initialData
+        longitude: 0
     });
 
     const [addressError, setAddressError] = useState<string>('');
@@ -180,6 +181,23 @@ const AddressForm: React.FC<AddressFormProps> = ({
             onFormValidityChange(isValid);
         }
     }, [formData, addressError, onFormValidityChange]);
+
+    // Add useEffect to update form data when initialData changes
+    useEffect(() => {
+        if (initialData) {
+            setFormData(prevData => ({
+                ...prevData,
+                ...initialData,
+                // Ensure email is set from either initialData or initialEmail
+                email: initialData.email || initialEmail || prevData.email
+            }));
+        } else if (initialEmail) {
+            setFormData(prevData => ({
+                ...prevData,
+                email: initialEmail
+            }));
+        }
+    }, [initialData, initialEmail]);
 
     return (
         <form
