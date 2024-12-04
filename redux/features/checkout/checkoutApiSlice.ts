@@ -1,20 +1,41 @@
 import { apiSlice } from '@/redux/services/apiSlice';
 import { CheckoutSession, CheckoutSessionRequest } from '@/types/checkout';
+import { setCheckoutSession } from './checkoutSlice';
+import { toast } from 'react-toastify';
 
 export const checkoutApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getOrCreateSession: builder.query<CheckoutSession, void>({
+
+        getSession: builder.query<CheckoutSession, void>({
             query: () => '/checkout/session/',
-            providesTags: ['CheckoutSession']
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    dispatch(setCheckoutSession(data));
+                    console.log('checkout session', data);
+                } catch {
+                    // TODO: Handle error if needed
+                    toast.error('Error');
+                }
+            },
         }),
 
-        updateSession: builder.mutation<CheckoutSession, Partial<CheckoutSessionRequest>>({
+        createSession: builder.mutation<CheckoutSession, Partial<CheckoutSessionRequest>>({
             query: (checkoutData) => ({
                 url: '/checkout/session/',
                 method: 'POST',
                 body: checkoutData,
             }),
-            invalidatesTags: ['CheckoutSession']
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    dispatch(setCheckoutSession(data));
+                    console.log('checkout session', data);
+                } catch {
+                    // TODO: Handle error if needed
+                    toast.error('Error');
+                }
+            },
         }),
 
         createStripeCheckoutSession: builder.mutation<any, void>({
@@ -22,7 +43,6 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
                 url: '/checkout/create-stripe-session/',
                 method: 'POST'
             }),
-            invalidatesTags: ['CheckoutSession']
         }),
 
         updateShippingOption: builder.mutation<CheckoutSession, { shipping_option_id: string }>({
@@ -31,14 +51,13 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: { shipping_option_id }
             }),
-            invalidatesTags: ['CheckoutSession']
         })
     })
 });
 
 export const {
-    useGetOrCreateSessionQuery,
-    useUpdateSessionMutation,
     useCreateStripeCheckoutSessionMutation,
-    useUpdateShippingOptionMutation
+    useUpdateShippingOptionMutation,
+    useGetSessionQuery,
+    useCreateSessionMutation
 } = checkoutApiSlice;

@@ -1,7 +1,7 @@
 import { Address } from './addresses';
 
 export type CheckoutSessionRequest = {
-    email: string;
+    email?: string;
 }
 
 export type CheckoutSession = {

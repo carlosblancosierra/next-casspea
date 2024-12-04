@@ -16,10 +16,13 @@ export interface Address {
     formatted_address?: string;
     latitude?: number;
     longitude?: number;
-    is_a?: boolean;
+    is_active?: boolean;
     created?: string;
     updated?: string;
     session_key?: string;
+    email?: string;
+    first_name?: string;
+    last_name?: string;
 }
 
 export interface AddressRequest {

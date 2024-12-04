@@ -3,14 +3,15 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AddressForm from '@/components/address/AddressForm';
-import { useSetAddressesMutation } from '@/redux/features/addresses/addressApiSlice';
 import { Address, AddressRequest } from '@/types/addresses';
 import { toast } from 'react-toastify';
-import { useGetOrCreateSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
+import { useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
+import { useSetAddressesMutation } from '@/redux/features/addresses/addressApiSlice';
 
 export default function AddressPage() {
     const router = useRouter();
-    const { data: checkoutSession, isLoading } = useGetOrCreateSessionQuery();
+
+    const { data: checkoutSession } = useGetSessionQuery();
     const [setAddresses] = useSetAddressesMutation();
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -19,6 +20,12 @@ export default function AddressPage() {
     const [billingAddress, setBillingAddress] = useState<Address | null>(null);
     const [isShippingFormValid, setIsShippingFormValid] = useState(false);
     const [isBillingFormValid, setIsBillingFormValid] = useState(true);
+    const [email, setEmail] = useState('');
+    useEffect(() => {
+        if (checkoutSession?.email) {
+            setEmail(checkoutSession.email);
+        }
+    }, [checkoutSession]);
 
     useEffect(() => {
         if (useSameAddress) {
@@ -70,7 +77,6 @@ export default function AddressPage() {
                     address_type: 'BILLING'
                 }
             };
-            console.log('Address Request:', addressRequest);
             const response = await setAddresses(addressRequest).unwrap();
             if (response) {
                 router.push('/checkout/confirm');
@@ -103,23 +109,6 @@ export default function AddressPage() {
         }
     };
 
-    if (isLoading) {
-        return (
-            <main className='mx-auto max-w-3xl md:py-8 py-4 px-4 sm:px-6 bg-gray-100 dark:bg-gray-900 min-h-screen'>
-                <div className="space-y-4">
-                    <p className="text-md text-gray-600 dark:text-gray-400">
-                        Loading checkout session...
-                    </p>
-                </div>
-            </main>
-        );
-    }
-
-    if (!checkoutSession) {
-        // TODO: Redirect to cart
-        router.push('/cart');
-    }
-
     return (
         <main className='mx-auto max-w-3xl md:py-8 py-4 px-4 sm:px-6 bg-gray-100 dark:bg-gray-900 min-h-screen'>
             <div className="space-y-4">
@@ -136,7 +125,7 @@ export default function AddressPage() {
                         onAddressSubmit={handleShippingSubmit}
                         addressType="SHIPPING"
                         onFormValidityChange={setIsShippingFormValid}
-                        initialData={{ email: checkoutSession?.email || '' }}
+                        initialEmail={email}
                     />
                 </div>
 
@@ -162,7 +151,7 @@ export default function AddressPage() {
                                 onAddressSubmit={handleBillingSubmit}
                                 addressType="BILLING"
                                 onFormValidityChange={setIsBillingFormValid}
-                                initialData={{ email: checkoutSession?.email || '' }}
+                                initialEmail={email}
                             />
                         </div>
                     )}

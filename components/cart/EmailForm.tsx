@@ -3,31 +3,35 @@
 import { useState, useEffect } from 'react';
 
 interface EmailFormProps {
-    onEmailSubmit: (email: string) => void;
-    initialEmail: string;
+    onValidEmail: (email: string) => void;
+    initialEmail?: string;
 }
 
-export default function EmailForm({ onEmailSubmit, initialEmail }: EmailFormProps) {
-    const [emailInput, setEmailInput] = useState(initialEmail);
+export default function EmailForm({ onValidEmail, initialEmail = '' }: EmailFormProps) {
+    const [email, setEmail] = useState(initialEmail);
     const [isValid, setIsValid] = useState(true);
-
-    useEffect(() => {
-        if (initialEmail) {
-            setEmailInput(initialEmail);
-        }
-    }, [initialEmail]);
 
     const validateEmail = (email: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
 
+    useEffect(() => {
+        if (initialEmail) {
+            setEmail(initialEmail);
+            if (validateEmail(initialEmail)) {
+                setIsValid(true);
+                onValidEmail(initialEmail);
+            }
+        }
+    }, [initialEmail, onValidEmail]);
+
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newEmail = e.target.value;
-        setEmailInput(newEmail);
+        setEmail(newEmail);
         setIsValid(true);
         if (validateEmail(newEmail)) {
-            onEmailSubmit(newEmail);
+            onValidEmail(newEmail);
         }
     };
 
@@ -36,7 +40,7 @@ export default function EmailForm({ onEmailSubmit, initialEmail }: EmailFormProp
             <div className="space-y-1">
                 <input
                     type="email"
-                    value={emailInput}
+                    value={email}
                     onChange={handleEmailChange}
                     placeholder="Enter your email address"
                     className={`w-full border rounded-md px-3 py-2

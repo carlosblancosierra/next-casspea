@@ -6,19 +6,19 @@ import DiscountForm from './DiscountForm';
 import EmailForm from './EmailForm';
 import GiftMessage from './GiftMessage';
 import ShippingDateForm from './ShippingDateForm';
-import { useGetOrCreateSessionQuery, useUpdateSessionMutation } from '@/redux/features/checkout/checkoutApiSlice';
 import { useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { CartUpdate } from '@/types/carts';
 import { useAppSelector } from '@/redux/hooks';
 import { selectCart } from '@/redux/features/carts/cartSlice';
+import { useCreateSessionMutation, useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 
 export default function CartCheckout() {
-    const router = useRouter();
-    const [updateSession] = useUpdateSessionMutation();
-    const [updateCart] = useUpdateCartMutation();
-    const { data: checkoutSession } = useGetOrCreateSessionQuery();
-    console.log('checkoutSession', checkoutSession);
+
     const cart = useAppSelector(selectCart);
+    const router = useRouter();
+
+    const [updateSession] = useCreateSessionMutation();
+    const [updateCart] = useUpdateCartMutation();
     const [addShippingDate, setAddShippingDate] = useState(false);
     const [addGiftMessage, setAddGiftMessage] = useState(false);
     const [shippingDate, setShippingDate] = useState<string>('');
@@ -27,25 +27,23 @@ export default function CartCheckout() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // here, when load the page, get the session
+    const { data: checkoutSession, isLoading: isSessionLoading } = useGetSessionQuery();
+
+    // Update useEffect to handle loading state
     useEffect(() => {
-        if (checkoutSession?.email) {
+        if (!isSessionLoading && checkoutSession?.email) {
             setEmail(checkoutSession.email);
         }
-    }, [checkoutSession]);
-
-    const handleEmailSubmit = async (newEmail: string) => {
-        setEmail(newEmail);
-        try {
-            await updateSession({ email: newEmail }).unwrap();
-
-        } catch (err) {
-            console.error('Failed to update session with email:', err);
-        }
-    };
+    }, [checkoutSession, isSessionLoading]);
 
     if (!cart || cart.items.length === 0) {
         return null;
     }
+
+    const handleValidEmail = async (newEmail: string) => {
+        setEmail(newEmail);
+    };
 
     const formatCurrency = (value: string) => {
         return new Intl.NumberFormat('en-GB', {
@@ -62,7 +60,6 @@ export default function CartCheckout() {
         setError(null);
 
         try {
-            // First update cart with shipping date and gift message if provided
             if (addShippingDate || addGiftMessage) {
                 const cartUpdate: CartUpdate = {
                     shipping_date: addShippingDate ? shippingDate : undefined,
@@ -71,16 +68,9 @@ export default function CartCheckout() {
                 await updateCart(cartUpdate).unwrap();
             }
 
-            // Make sure the session is updated with email before redirecting
             await updateSession({ email }).unwrap();
 
-            // Use replace instead of push to prevent back button issues
-            router.replace('/checkout/address');
-
-            // Add a fallback navigation if router.replace doesn't work
-            setTimeout(() => {
-                window.location.href = '/checkout/address';
-            }, 100);
+            router.push(`/checkout/address`);
 
         } catch (err) {
             console.error('Checkout error:', err);
@@ -206,10 +196,7 @@ export default function CartCheckout() {
                     Enter your email address to continue to checkout
                 </p>
                 <div className="mt-6">
-                    <EmailForm
-                        onEmailSubmit={handleEmailSubmit}
-                        initialEmail={email}
-                    />
+                    <EmailForm initialEmail={email} onValidEmail={handleValidEmail} />
                 </div>
 
                 <div className="mt-6">
