@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/redux/hooks';
 import { selectCheckoutSession, selectHasAddresses } from '@/redux/features/checkout/checkoutSlice';
-import { useCreateStripeCheckoutSessionMutation, useUpdateShippingOptionMutation } from '@/redux/features/checkout/checkoutApiSlice';
+import { useCreateStripeCheckoutSessionMutation, useUpdateSessionMutation } from '@/redux/features/checkout/checkoutApiSlice';
 import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
 import { selectAllShippingOptions } from '@/redux/features/shipping/shippingSlice';
-import { ShippingOption } from '@/types/shipping';
 import { toast } from 'react-toastify';
 
 export default function CheckoutPage() {
@@ -17,11 +16,9 @@ export default function CheckoutPage() {
     const [selectedShipping, setSelectedShipping] = useState<string>('');
     const [isProcessing, setIsProcessing] = useState(false);
 
-    // API Mutations
-    const [updateShippingOption] = useUpdateShippingOptionMutation();
+    const [updateSession] = useUpdateSessionMutation();
     const [createStripeCheckoutSession] = useCreateStripeCheckoutSessionMutation();
 
-    // Fetch shipping options
     const { isLoading: isLoadingShipping, error: shippingError } = useGetShippingOptionsQuery();
     const shippingOptions = useAppSelector(selectAllShippingOptions);
 
@@ -37,13 +34,6 @@ export default function CheckoutPage() {
         }
     }, [checkoutSession, hasAddresses, router]);
 
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('en-GB', {
-            style: 'currency',
-            currency: 'GBP'
-        }).format(price);
-    };
-
     const handleProceedToPayment = async () => {
         if (!checkoutSession?.id) {
             toast.error('Invalid checkout session');
@@ -58,13 +48,10 @@ export default function CheckoutPage() {
         setIsProcessing(true);
 
         try {
-            // First, update the shipping option
-            await updateShippingOption({
-                checkoutSessionId: checkoutSession.id,
-                shippingOptionId: parseInt(selectedShipping)
+            await updateSession({
+                shipping_option_id: parseInt(selectedShipping)
             }).unwrap();
 
-            // If shipping update successful, create Stripe session
             const stripeSession = await createStripeCheckoutSession().unwrap();
 
             if (stripeSession?.url) {
@@ -74,13 +61,7 @@ export default function CheckoutPage() {
             }
         } catch (error: any) {
             console.error('Checkout process failed:', error);
-            if (error.status === 400) {
-                toast.error('Invalid shipping option selected');
-            } else if (error.status === 404) {
-                toast.error('Checkout session not found');
-            } else {
-                toast.error('Failed to proceed to payment. Please try again.');
-            }
+            toast.error('Failed to proceed to payment. Please try again.');
         } finally {
             setIsProcessing(false);
         }
@@ -92,27 +73,6 @@ export default function CheckoutPage() {
 
     return (
         <div className="max-w-2xl mx-auto py-8 px-4">
-            <h1 className="text-2xl font-bold mb-8 text-gray-900 dark:text-gray-100">
-                Confirm Order
-            </h1>
-
-            {/* Order Summary */}
-            <div className="mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                    Order Summary
-                </h2>
-                {/* Add your order summary components */}
-            </div>
-
-            {/* Delivery Details */}
-            <div className="mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                    Shipping Address
-                </h2>
-                {/* Add your address display components */}
-            </div>
-
-            {/* Shipping Options */}
             <div className="mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
                 <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
                     Shipping Method
@@ -125,9 +85,7 @@ export default function CheckoutPage() {
                 ) : (
                     <div className="space-y-4">
                         {shippingOptions.map((option) => (
-                            <label key={option.id} className="flex items-center p-4 border rounded-lg
-                                cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700
-                                transition-colors duration-150">
+                            <label key={option.id} className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
                                 <input
                                     type="radio"
                                     name="shipping"
@@ -142,7 +100,7 @@ export default function CheckoutPage() {
                                             {option.companyName} - {option.name}
                                         </span>
                                         <span className="font-medium text-gray-900 dark:text-gray-100">
-                                            {formatPrice(option.price)}
+                                            {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(option.price)}
                                         </span>
                                     </div>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -161,11 +119,7 @@ export default function CheckoutPage() {
             <button
                 onClick={handleProceedToPayment}
                 disabled={isProcessing || !selectedShipping || isLoadingShipping}
-                className="w-full bg-indigo-600 dark:bg-indigo-500 text-white py-3 px-4 rounded-md
-                    hover:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2
-                    focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300
-                    dark:disabled:bg-gray-700 disabled:cursor-not-allowed
-                    transition-colors duration-200"
+                className="w-full bg-indigo-600 dark:bg-indigo-500 text-white py-3 px-4 rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors duration-200"
             >
                 {isProcessing ? 'Processing...' : 'Proceed to Payment'}
             </button>

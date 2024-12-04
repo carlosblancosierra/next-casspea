@@ -10,14 +10,14 @@ import { useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { CartUpdate } from '@/types/carts';
 import { useAppSelector } from '@/redux/hooks';
 import { selectCart } from '@/redux/features/carts/cartSlice';
-import { useCreateSessionMutation, useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
+import { useUpdateSessionMutation, useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 
 export default function CartCheckout() {
 
     const cart = useAppSelector(selectCart);
     const router = useRouter();
 
-    const [updateSession] = useCreateSessionMutation();
+    const [updateSession] = useUpdateSessionMutation();
     const [updateCart] = useUpdateCartMutation();
     const [addShippingDate, setAddShippingDate] = useState(false);
     const [addGiftMessage, setAddGiftMessage] = useState(false);

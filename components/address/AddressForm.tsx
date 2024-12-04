@@ -46,6 +46,16 @@ const AddressForm: React.FC<AddressFormProps> = ({
         if (formRef.current && onFormReady) onFormReady(formRef.current);
     }, [onFormReady]);
 
+    useEffect(() => {
+        if (initialData || initialEmail) {
+            setFormData(prevData => ({
+                ...prevData,
+                ...initialData,
+                email: initialData?.email || initialEmail || prevData.email
+            }));
+        }
+    }, [initialData, initialEmail]);
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prevData => {
@@ -60,16 +70,6 @@ const AddressForm: React.FC<AddressFormProps> = ({
             }, 0);
         }
     };
-
-    useEffect(() => {
-        if (initialData || initialEmail) {
-            setFormData(prevData => ({
-                ...prevData,
-                ...initialData,
-                email: initialData?.email || initialEmail || prevData.email
-            }));
-        }
-    }, [initialData, initialEmail]);
 
     return (
         <form ref={formRef} className="space-y-3" data-type={addressType} noValidate>

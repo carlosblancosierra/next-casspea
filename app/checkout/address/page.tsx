@@ -21,9 +21,16 @@ export default function AddressPage() {
     const [isShippingFormValid, setIsShippingFormValid] = useState(false);
     const [isBillingFormValid, setIsBillingFormValid] = useState(true);
     const [email, setEmail] = useState('');
+
     useEffect(() => {
         if (checkoutSession?.email) {
             setEmail(checkoutSession.email);
+        }
+        if (checkoutSession?.billing_address) {
+            setBillingAddress(checkoutSession.billing_address);
+        }
+        if (checkoutSession?.shipping_address) {
+            setShippingAddress(checkoutSession.shipping_address);
         }
     }, [checkoutSession]);
 
@@ -87,14 +94,12 @@ export default function AddressPage() {
         } catch (err: any) {
             console.error('Error setting addresses:', err);
             if (err.data?.shipping_address) {
-                // Handle specific validation errors
                 const errors = Object.entries(err.data.shipping_address)
                     .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
                     .join('\n');
                 setError(`Shipping address validation failed:\n${errors}`);
                 toast.error('Please check shipping address details');
             } else if (err.data?.billing_address) {
-                // Handle billing address validation errors
                 const errors = Object.entries(err.data.billing_address)
                     .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
                     .join('\n');
@@ -126,6 +131,7 @@ export default function AddressPage() {
                         addressType="SHIPPING"
                         onFormValidityChange={setIsShippingFormValid}
                         initialEmail={email}
+                        initialData={checkoutSession?.shipping_address}
                     />
                 </div>
 
@@ -152,6 +158,7 @@ export default function AddressPage() {
                                 addressType="BILLING"
                                 onFormValidityChange={setIsBillingFormValid}
                                 initialEmail={email}
+                                initialData={checkoutSession?.billing_address}
                             />
                         </div>
                     )}

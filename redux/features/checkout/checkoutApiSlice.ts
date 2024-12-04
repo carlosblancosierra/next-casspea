@@ -20,7 +20,7 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
             },
         }),
 
-        createSession: builder.mutation<CheckoutSession, Partial<CheckoutSessionRequest>>({
+        updateSession: builder.mutation<CheckoutSession, Partial<CheckoutSessionRequest>>({
             query: (checkoutData) => ({
                 url: '/checkout/session/',
                 method: 'POST',
@@ -40,24 +40,15 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
 
         createStripeCheckoutSession: builder.mutation<any, void>({
             query: () => ({
-                url: '/checkout/create-stripe-session/',
+                url: '/checkout/stripe/create-session/',
                 method: 'POST'
             }),
         }),
-
-        updateShippingOption: builder.mutation<CheckoutSession, { shipping_option_id: string }>({
-            query: ({ shipping_option_id }) => ({
-                url: `/checkout/session/${shipping_option_id}/shipping-option/`,
-                method: 'POST',
-                body: { shipping_option_id }
-            }),
-        })
     })
 });
 
 export const {
     useCreateStripeCheckoutSessionMutation,
-    useUpdateShippingOptionMutation,
     useGetSessionQuery,
-    useCreateSessionMutation
+    useUpdateSessionMutation
 } = checkoutApiSlice;
