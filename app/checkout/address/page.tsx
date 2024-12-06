@@ -16,8 +16,8 @@ export default function AddressPage() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [useSameAddress, setUseSameAddress] = useState(true);
-    const [shippingAddress, setShippingAddress] = useState<Address | null>(null);
-    const [billingAddress, setBillingAddress] = useState<Address | null>(null);
+    const [shippingAddress, setShippingAddress] = useState<Address | undefined>(undefined);
+    const [billingAddress, setBillingAddress] = useState<Address | undefined>(undefined);
     const [isShippingFormValid, setIsShippingFormValid] = useState(false);
     const [isBillingFormValid, setIsBillingFormValid] = useState(true);
     const [email, setEmail] = useState('');
@@ -56,7 +56,9 @@ export default function AddressPage() {
 
     const isFormValid = isShippingFormValid && (useSameAddress || isBillingFormValid);
 
-    const handleSubmitClick = async () => {
+    const handleSubmitClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+
         if (!shippingAddress || !shippingAddress.street_address || !shippingAddress.city || !shippingAddress.postcode) {
             toast.error('Please complete all required shipping address fields');
             return;
@@ -131,7 +133,7 @@ export default function AddressPage() {
                         addressType="SHIPPING"
                         onFormValidityChange={setIsShippingFormValid}
                         initialEmail={email}
-                        initialData={checkoutSession?.shipping_address}
+                        initialData={checkoutSession?.shipping_address || undefined}
                     />
                 </div>
 
@@ -158,7 +160,7 @@ export default function AddressPage() {
                                 addressType="BILLING"
                                 onFormValidityChange={setIsBillingFormValid}
                                 initialEmail={email}
-                                initialData={checkoutSession?.billing_address}
+                                initialData={checkoutSession?.billing_address || undefined}
                             />
                         </div>
                     )}
