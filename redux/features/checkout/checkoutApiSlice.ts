@@ -1,6 +1,5 @@
 import { apiSlice } from '@/redux/services/apiSlice';
 import { CheckoutSession, CheckoutSessionRequest } from '@/types/checkout';
-import { setCheckoutSession } from './checkoutSlice';
 import { toast } from 'react-toastify';
 
 export const checkoutApiSlice = apiSlice.injectEndpoints({
@@ -11,7 +10,6 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    dispatch(setCheckoutSession(data));
                     console.log('checkout session', data);
                 } catch {
                     console.error('Error fetching checkout session');
@@ -28,7 +26,6 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    dispatch(setCheckoutSession(data));
                     console.log('checkout session', data);
                 } catch {
                     console.error('Error updating checkout session');

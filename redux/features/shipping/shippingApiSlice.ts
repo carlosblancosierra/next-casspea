@@ -1,6 +1,5 @@
 import { apiSlice } from '@/redux/services/apiSlice';
 import { ShippingCompany } from '@/types/shipping';
-import { setShippingCompanies } from '@/redux/features/shipping/shippingSlice';
 
 const shippingApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
