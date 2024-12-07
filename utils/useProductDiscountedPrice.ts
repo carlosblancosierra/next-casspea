@@ -1,10 +1,9 @@
-import { useAppSelector } from '@/redux/hooks';
-import { selectCart } from '@/redux/features/carts/cartSlice';
+import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import { DISCOUNT_TYPES } from '@/types/discounts';
 import { Product } from '@/types/products';
 
 export const useProductDiscountedPrice = (productId: number, product: Product) => {
-    const cart = useAppSelector(selectCart);
+    const { data: cart, isLoading, error } = useGetCartQuery();
 
     // If no cart or no discount, return original price
     if (!cart?.discount) {

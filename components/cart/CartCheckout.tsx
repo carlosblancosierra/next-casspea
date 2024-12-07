@@ -6,15 +6,13 @@ import DiscountForm from './DiscountForm';
 import EmailForm from './EmailForm';
 import GiftMessage from './GiftMessage';
 import ShippingDateForm from './ShippingDateForm';
-import { useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
+import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { CartUpdate } from '@/types/carts';
-import { useAppSelector } from '@/redux/hooks';
-import { selectCart } from '@/redux/features/carts/cartSlice';
 import { useUpdateSessionMutation, useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 
 export default function CartCheckout() {
 
-    const cart = useAppSelector(selectCart);
+    const { data: cart, isLoading, error: cartError } = useGetCartQuery();
     const router = useRouter();
 
     const [updateSession] = useUpdateSessionMutation();
@@ -26,6 +24,7 @@ export default function CartCheckout() {
     const [email, setEmail] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [addDiscount, setAddDiscount] = useState(false);
 
     // here, when load the page, get the session
     const { data: checkoutSession, isLoading: isSessionLoading } = useGetSessionQuery();
@@ -124,14 +123,6 @@ export default function CartCheckout() {
                 </dl>
             </div>
 
-            {/* Discount Section */}
-            <div className="border-b border-gray-900/10 pb-2 dark:border-gray-700">
-                <h2 className="text-base font-semibold text-gray-900 dark:text-gray-200">Discount Code</h2>
-                <div className="mt-2">
-                    <DiscountForm />
-                </div>
-            </div>
-
             {/* Optional Fields Section */}
             <div className="border-b border-gray-900/10 pb-4 dark:border-gray-700">
                 <div className="flex justify-between items-center">
@@ -183,6 +174,27 @@ export default function CartCheckout() {
                         {addGiftMessage && (
                             <div className="ml-6">
                                 <GiftMessage onGiftMessageChange={setGiftMessage} />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Discount Option - Updated */}
+                    <div className="mt-4">
+                        <label className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                checked={addDiscount}
+                                onChange={(e) => setAddDiscount(e.target.checked)}
+                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600
+                                    dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-indigo-500"
+                            />
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                Add Discount Code
+                            </span>
+                        </label>
+                        {addDiscount && (
+                            <div className="ml-6">
+                                <DiscountForm />
                             </div>
                         )}
                     </div>

@@ -6,11 +6,24 @@ import { ShippingCompany } from '@/types/shipping';
 
 interface CheckoutShippingOptionsProps {
     shippingCompanies: ShippingCompany[] | undefined;
+    selectedOptionId?: number;
+    onShippingOptionChange: (optionId: number) => Promise<void>;
 }
 
-const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({ shippingCompanies }) => {
-    const [selectedOption, setSelectedOption] = useState<string | null>(null);
-    const [updateSession] = useUpdateSessionMutation();
+const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
+    shippingCompanies,
+    selectedOptionId,
+    onShippingOptionChange
+}) => {
+    const [localSelectedOption, setLocalSelectedOption] = useState<string | null>(null);
+    const [isUpdating, setIsUpdating] = useState(false);
+
+    // Update local state when prop changes
+    useEffect(() => {
+        if (selectedOptionId) {
+            setLocalSelectedOption(selectedOptionId.toString());
+        }
+    }, [selectedOptionId]);
 
     const allShippingOptions = shippingCompanies?.flatMap(company =>
         company.shipping_options.map(option => ({
@@ -19,23 +32,24 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({ shipp
         }))
     ) || [];
 
+    // Set default option if none selected
     useEffect(() => {
-        if (allShippingOptions.length) {
-            setSelectedOption(allShippingOptions[0].id.toString());
+        if (allShippingOptions.length && !localSelectedOption) {
+            setLocalSelectedOption(allShippingOptions[0].id.toString());
+            onShippingOptionChange(allShippingOptions[0].id);
         }
-    }, [allShippingOptions]);
+    }, [allShippingOptions, localSelectedOption]);
 
     const handleShippingChange = async (optionId: string) => {
-        setSelectedOption(optionId);
-        const option = allShippingOptions.find(opt => opt.id.toString() === optionId);
+        if (isUpdating) return;
+
+        setIsUpdating(true);
+        setLocalSelectedOption(optionId);
 
         try {
-            await updateSession({
-                shipping_option_id: option?.id
-            }).unwrap();
-        } catch (err) {
-            toast.error('Failed to update shipping method');
-            console.error('Shipping update failed:', err);
+            await onShippingOptionChange(parseInt(optionId));
+        } finally {
+            setIsUpdating(false);
         }
     };
 
@@ -51,15 +65,18 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({ shipp
                 {allShippingOptions.map((option) => (
                     <label
                         key={option.id}
-                        className="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
+                        className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer
+                            ${isUpdating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50 dark:hover:bg-gray-700'}
+                            ${localSelectedOption === option.id.toString() ? 'border-indigo-500 ring-1 ring-indigo-500' : 'border-gray-200'}`}
                     >
                         <div className="flex items-center">
                             <input
                                 type="radio"
                                 name="shipping"
                                 value={option.id.toString()}
-                                checked={selectedOption === option.id.toString()}
+                                checked={localSelectedOption === option.id.toString()}
                                 onChange={() => handleShippingChange(option.id.toString())}
+                                disabled={isUpdating}
                                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
                             />
                             <div className="ml-3">

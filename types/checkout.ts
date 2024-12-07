@@ -2,8 +2,8 @@ import { Address } from './addresses';
 
 export type CheckoutSessionRequest = {
     email?: string;
-    shipping_address: Address | null;
-    billing_address: Address | null;
+    shipping_address?: Address | null;
+    billing_address?: Address | null;
     shipping_option_id?: number;
 }
 

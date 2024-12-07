@@ -15,14 +15,6 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: checkoutData,
             }),
-            async onQueryStarted(_, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    console.log('checkout session', data);
-                } catch {
-                    console.error('Error updating checkout session');
-                }
-            },
         }),
 
         createStripeCheckoutSession: builder.mutation<any, void>({

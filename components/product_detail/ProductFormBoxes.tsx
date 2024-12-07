@@ -8,7 +8,6 @@ import { CartItemBoxFlavorSelection, CartItemRequest } from '@/types/carts';
 import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice';
-import { setCart } from '@/redux/features/carts/cartSlice';
 
 // Importing sub-components
 import BoxSelection from './BoxSelection';
@@ -158,7 +157,6 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             };
             console.log("cartItem", cartItem);
             const response = await addToCart(cartItem).unwrap();
-            dispatch(setCart(response));
             toast.success('Added to cart!');
             router.push('/cart');
         } catch (error) {

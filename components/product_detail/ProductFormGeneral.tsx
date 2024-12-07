@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/redux/hooks';
-import { addCartItem } from '@/redux/features/carts/cartSlice';
 import { useRouter } from 'next/navigation';
 import { Product as ProductType } from '@/types/products';
 
@@ -22,7 +21,6 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
             active: true,
         };
 
-        dispatch(addCartItem(CartItem));
         toast.success(`${product.name} added to cart!`);
 
         setTimeout(() => {

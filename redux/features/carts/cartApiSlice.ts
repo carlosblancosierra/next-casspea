@@ -2,21 +2,13 @@
 
 import { apiSlice } from '@/redux/services/apiSlice';
 import { Cart, CartItem, CartItemRequest, CartUpdate, CartUpdateResponse } from '@/types/carts';
-import { setCart, addCartItem, updateCartItem, removeCartItem } from '@/redux/features/carts/cartSlice';
 
 const cartApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getCart: builder.query<Cart, void>({
             query: () => '/carts/',
             transformResponse: (response: Cart) => response,
-            async onQueryStarted(_, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    dispatch(setCart(data));
-                } catch (err) {
-                    console.error('Error fetching cart:', err);
-                }
-            },
+            providesTags: ['Cart'],
         }),
         updateCart: builder.mutation<CartUpdateResponse, CartUpdate>({
             query: (cart) => ({
@@ -24,14 +16,7 @@ const cartApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: cart,
             }),
-            async onQueryStarted(_, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    dispatch(setCart(data.cart));
-                } catch (err) {
-                    console.error('Error fetching cart:', err);
-                }
-            },
+            invalidatesTags: ['Cart'],
         }),
 
         addCartItem: builder.mutation<CartItem, CartItemRequest>({
@@ -40,16 +25,7 @@ const cartApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: cartItem,
             }),
-            transformResponse: (response: CartItem) => response,
-            async onQueryStarted(cartItem, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    // Optionally update the cart in the store
-                    dispatch(addCartItem(data));
-                } catch (err) {
-                    console.error('Error adding cart item:', err);
-                }
-            },
+            invalidatesTags: ['Cart'],
         }),
         updateCartItem: builder.mutation<CartItem, { id: number; cartItem: Partial<CartItem> }>({
             query: ({ id, cartItem }) => ({
@@ -57,30 +33,30 @@ const cartApiSlice = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: cartItem,
             }),
-            transformResponse: (response: CartItem) => response,
-            async onQueryStarted({ id, cartItem }, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    dispatch(updateCartItem(data));
-                } catch (err) {
-                    console.error('Error updating cart item:', err);
-                }
-            },
+            invalidatesTags: ['Cart'],
         }),
         deleteCartItem: builder.mutation<{ success: boolean }, number>({
             query: (id) => ({
                 url: `/carts/items/${id}/`,
                 method: 'DELETE',
             }),
-            async onQueryStarted(id, { dispatch, queryFulfilled }) {
-                try {
-                    await queryFulfilled;
-                    // Optionally update the cart in the store
-                    dispatch(removeCartItem(id));
-                } catch (err) {
-                    console.error('Error deleting cart item:', err);
-                }
-            },
+            invalidatesTags: ['Cart'],
+        }),
+        changeCartItemQuantity: builder.mutation<CartItem, { id: number; quantity: number }>({
+            query: ({ id, quantity }) => ({
+                url: `/carts/items/${id}/change-quantity/`,
+                method: 'PATCH',
+                body: { quantity }
+            }),
+            invalidatesTags: ['Cart'],
+        }),
+
+        removeCartItem: builder.mutation<void, number>({
+            query: (id) => ({
+                url: `/carts/items/${id}/remove/`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Cart'],
         }),
     }),
 });
@@ -91,7 +67,8 @@ export const {
     useAddCartItemMutation,
     useUpdateCartItemMutation,
     useDeleteCartItemMutation,
-
+    useChangeCartItemQuantityMutation,
+    useRemoveCartItemMutation,
 } = cartApiSlice;
 
 export default cartApiSlice;

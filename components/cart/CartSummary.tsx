@@ -1,9 +1,8 @@
 import React from 'react';
-import { useAppSelector } from '@/redux/hooks';
-import { selectCart } from '@/redux/features/carts/cartSlice';
+import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 
 const CartSummary: React.FC = () => {
-  const cart = useAppSelector(selectCart);
+  const { data: cart, isLoading, error } = useGetCartQuery();
 
   if (!cart || cart.items.length === 0) {
     return null;

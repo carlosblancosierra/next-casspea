@@ -40,6 +40,9 @@ export default function EmailForm({ onValidEmail, initialEmail = '' }: EmailForm
             <div className="space-y-1">
                 <input
                     type="email"
+                    name="email"
+                    id="email"
+                    autoComplete="email"
                     value={email}
                     onChange={handleEmailChange}
                     placeholder="Enter your email address"

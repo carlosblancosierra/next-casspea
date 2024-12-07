@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { Disclosure, Menu, Transition, DisclosureButton, DisclosurePanel, MenuItems, MenuItem, MenuButton } from '@headlessui/react'
 import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-// import { selectCart } from '@/redux/features/carts/cartSlice';
 import Image from 'next/image';
 
 const navigation = [
