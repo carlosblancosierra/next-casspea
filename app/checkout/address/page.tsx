@@ -99,20 +99,21 @@ export default function AddressPage() {
             console.log('Sending address request:', addressRequest);
 
             // Send the address request and await the response
-            const response = await setAddresses(addressRequest).unwrap();
-            console.log('Address set response:', response);
+            const response = await setAddresses(addressRequest).unwrap().then((response) => {
+                if (response.status === 200) {
+                    console.log('Address set response:', response);
+                    console.log('Navigating to /checkout/confirm');
+                    router.push('/checkout/confirm');
+                } else {
+                    // Handle unexpected successful responses
+                    console.log('Address set response:', response);
+                    console.error('Unexpected response status:', response.status);
+                    setError('Unexpected response from server.');
+                    toast.error('Unexpected response from server. Please try again.');
+                    router.push('/checkout/error');
+                }
+            });
 
-            // Assuming the API returns a status field to indicate success
-            if (response.status === 200) {
-                console.log('Navigating to /checkout/confirm');
-                router.push('/checkout/confirm');
-            } else {
-                // Handle unexpected successful responses
-                console.error('Unexpected response status:', response.status);
-                setError('Unexpected response from server.');
-                toast.error('Unexpected response from server. Please try again.');
-                router.push('/checkout/error');
-            }
         } catch (err: any) {
             console.error('Error setting addresses:', err);
 
