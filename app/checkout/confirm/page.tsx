@@ -4,14 +4,13 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/redux/hooks';
 import { selectCheckoutSession, selectHasAddresses } from '@/redux/features/checkout/checkoutSlice';
-import { useCreateStripeCheckoutSessionMutation, useUpdateSessionMutation } from '@/redux/features/checkout/checkoutApiSlice';
+import { useCreateStripeCheckoutSessionMutation, useGetSessionQuery, useUpdateSessionMutation } from '@/redux/features/checkout/checkoutApiSlice';
 import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
 import { selectAllShippingOptions } from '@/redux/features/shipping/shippingSlice';
 import { toast } from 'react-toastify';
 
 export default function CheckoutPage() {
     const router = useRouter();
-    const checkoutSession = useAppSelector(selectCheckoutSession);
     const hasAddresses = useAppSelector(selectHasAddresses);
     const [selectedShipping, setSelectedShipping] = useState<string>('');
     const [isProcessing, setIsProcessing] = useState(false);
@@ -21,18 +20,15 @@ export default function CheckoutPage() {
 
     const { isLoading: isLoadingShipping, error: shippingError } = useGetShippingOptionsQuery();
     const shippingOptions = useAppSelector(selectAllShippingOptions);
+    const { data: checkoutSession } = useGetSessionQuery();
 
     useEffect(() => {
         if (!checkoutSession) {
+            console.log('No checkout session found, redirecting to cart');
             router.push('/cart');
             return;
         }
-
-        if (!hasAddresses) {
-            router.push('/checkout/address');
-            return;
-        }
-    }, [checkoutSession, hasAddresses, router]);
+    }, [checkoutSession, router]);
 
     const handleProceedToPayment = async () => {
         if (!checkoutSession?.id) {
