@@ -18,17 +18,16 @@ export default function CheckoutPage() {
     const [updateSession] = useUpdateSessionMutation();
     const [createStripeCheckoutSession] = useCreateStripeCheckoutSessionMutation();
 
+    const { data: checkoutSession, isLoading: isLoadingSession, error: sessionError } = useGetSessionQuery();
     const { isLoading: isLoadingShipping, error: shippingError } = useGetShippingOptionsQuery();
     const shippingOptions = useAppSelector(selectAllShippingOptions);
-    const { data: checkoutSession } = useGetSessionQuery();
 
     useEffect(() => {
-        if (!checkoutSession) {
+        if (!isLoadingSession && !checkoutSession) {
             console.log('No checkout session found, redirecting to cart');
             router.push('/cart');
-            return;
         }
-    }, [checkoutSession, router]);
+    }, [checkoutSession, isLoadingSession, router]);
 
     const handleProceedToPayment = async () => {
         if (!checkoutSession?.id) {
@@ -63,21 +62,77 @@ export default function CheckoutPage() {
         }
     };
 
-    if (!checkoutSession || !hasAddresses) {
+    // Loading State: Wait for both session and shipping options to load
+    if (isLoadingSession || isLoadingShipping) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+                <p className="text-xl text-gray-700 dark:text-gray-300">Loading checkout information...</p>
+            </div>
+        );
+    }
+
+    // Error State: Handle errors in fetching session or shipping options
+    if (sessionError || shippingError) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+                <p className="text-xl text-red-600 dark:text-red-400">
+                    Failed to load checkout information. Please try again later.
+                </p>
+            </div>
+        );
+    }
+
+    // Ensure that the checkout session and shipping options exist
+    if (!checkoutSession || shippingOptions.length === 0 || !hasAddresses) {
         return null;
     }
 
+    // Extracting Products and Addresses from the Checkout Session
+    const { shipping_address, billing_address } = checkoutSession;
+
     return (
-        <div className="max-w-2xl mx-auto py-8 px-4">
+        <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            {/* Checkout Information */}
+            <div className="mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Order Summary</h2>
+
+                {shipping_address && (
+                    <>
+                        {/* Addresses */}
+                        <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Shipping Address */}
+                            <div>
+                                <h3 className="text-xl font-medium mb-2 text-gray-800 dark:text-gray-200">Shipping Address</h3>
+                                <p className="text-gray-700 dark:text-gray-300">{shipping_address.street_address}</p>
+                                <p className="text-gray-700 dark:text-gray-300">{shipping_address.city}, {shipping_address.postcode}</p>
+                                <p className="text-gray-700 dark:text-gray-300">{shipping_address.country}</p>
+                            </div>
+
+
+                            {billing_address && billing_address.street_address !== shipping_address.street_address && (
+                                <>
+                                    {/* Billing Address */}
+                                    <div>
+                                        <h3 className="text-xl font-medium mb-2 text-gray-800 dark:text-gray-200">Billing Address</h3>
+                                        <p className="text-gray-700 dark:text-gray-300">{billing_address.street_address}</p>
+                                        <p className="text-gray-700 dark:text-gray-300">{billing_address.city}, {billing_address.postcode}</p>
+                                        <p className="text-gray-700 dark:text-gray-300">{billing_address.country}</p>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </>
+                )}
+            </div>
+
+            {/* Shipping Method Selection */}
             <div className="mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
                 <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
                     Shipping Method
                 </h2>
 
-                {isLoadingShipping ? (
-                    <p className="text-gray-600 dark:text-gray-400">Loading shipping options...</p>
-                ) : shippingError ? (
-                    <p className="text-red-600 dark:text-red-400">Failed to load shipping options</p>
+                {shippingOptions.length === 0 ? (
+                    <p className="text-gray-600 dark:text-gray-400">No shipping options available.</p>
                 ) : (
                     <div className="space-y-4">
                         {shippingOptions.map((option) => (
@@ -88,7 +143,7 @@ export default function CheckoutPage() {
                                     value={option.id}
                                     checked={selectedShipping === option.id.toString()}
                                     onChange={(e) => setSelectedShipping(e.target.value)}
-                                    className="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                                    className="h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 focus:ring-indigo-500"
                                 />
                                 <div className="ml-3 flex-1">
                                     <div className="flex justify-between">
@@ -112,6 +167,7 @@ export default function CheckoutPage() {
                 )}
             </div>
 
+            {/* Proceed to Payment Button */}
             <button
                 onClick={handleProceedToPayment}
                 disabled={isProcessing || !selectedShipping || isLoadingShipping}
