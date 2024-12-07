@@ -9,7 +9,6 @@ const shippingApiSlice = apiSlice.injectEndpoints({
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    dispatch(setShippingCompanies(data));
                 } catch (err) {
                     console.error('Error fetching shipping options:', err);
                 }

@@ -13,9 +13,8 @@ const CheckoutConfirm = () => {
     const { data: session, isLoading, error } = useGetSessionQuery();
     const [createStripeSession] = useCreateStripeCheckoutSessionMutation();
 
-    // Redirect if no addresses are set
     useEffect(() => {
-        if (!isLoading && (!session?.shipping_address || !session?.billing_address)) {
+        if (!isLoading && session && (!session.shipping_address || !session.billing_address)) {
             toast.error('Please complete your address details first');
             router.push('/checkout/address');
         }
