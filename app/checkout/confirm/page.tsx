@@ -22,13 +22,6 @@ export default function CheckoutPage() {
     const { isLoading: isLoadingShipping, error: shippingError } = useGetShippingOptionsQuery();
     const shippingOptions = useAppSelector(selectAllShippingOptions);
 
-    useEffect(() => {
-        if (!isLoadingSession && !checkoutSession) {
-            console.log('No checkout session found, redirecting to cart');
-            router.push('/cart');
-        }
-    }, [checkoutSession, isLoadingSession, router]);
-
     const handleProceedToPayment = async () => {
         if (!checkoutSession?.id) {
             toast.error('Invalid checkout session');
