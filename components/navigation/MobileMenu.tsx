@@ -45,6 +45,10 @@ const accentColor = 'text-pink-600 dark:text-pink-500';
 const MobileMenu = () => {
     const pathname = usePathname();
 
+    if (pathname && pathname.startsWith('/checkout')) {
+        return null;
+    }
+
     const isActive = (path: string) => pathname === path;
 
     const getActiveClass = (isCurrentActive: boolean) =>
