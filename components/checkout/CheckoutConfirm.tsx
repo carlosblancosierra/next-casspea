@@ -19,8 +19,12 @@ const CheckoutConfirm = () => {
     useEffect(() => {
         if (!isLoading && !isShippingLoading && session) {
             if (!session.shipping_address || !session.billing_address) {
-                toast.error('Please complete your address details first');
-                router.push('/checkout/address');
+
+                // wait 1 second before redirecting
+                setTimeout(() => {
+                    toast.error('Error: Please try again');
+                    router.push('/checkout/address');
+                }, 1000);
             }
         }
     }, [session, isLoading, isShippingLoading, router]);
