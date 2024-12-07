@@ -14,8 +14,7 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
                     dispatch(setCheckoutSession(data));
                     console.log('checkout session', data);
                 } catch {
-                    // TODO: Handle error if needed
-                    toast.error('Error');
+                    console.error('Error fetching checkout session');
                 }
             },
         }),
@@ -32,8 +31,7 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
                     dispatch(setCheckoutSession(data));
                     console.log('checkout session', data);
                 } catch {
-                    // TODO: Handle error if needed
-                    toast.error('Error');
+                    console.error('Error updating checkout session');
                 }
             },
         }),
