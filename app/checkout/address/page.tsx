@@ -7,6 +7,8 @@ import { Address, AddressRequest } from '@/types/addresses';
 import { toast } from 'react-toastify';
 import { useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 import { useSetAddressesMutation } from '@/redux/features/addresses/addressApiSlice';
+import { redirect } from 'next/navigation'
+
 
 export default function AddressPage() {
     const router = useRouter();
@@ -91,7 +93,8 @@ export default function AddressPage() {
             console.log('Address set response:', response);
             if (response) {
                 console.log('Navigation to /checkout/confirm');
-                router.push('/checkout/confirm');
+                console.log(response);
+                redirect('/checkout/confirm');
             } else {
                 console.error('Unexpected response:', response);
                 setError('Failed to save addresses. Please try again.');
