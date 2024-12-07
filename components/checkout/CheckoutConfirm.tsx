@@ -6,19 +6,24 @@ import { useGetSessionQuery, useCreateStripeCheckoutSessionMutation } from '@/re
 import CheckoutDetails from './CheckoutDetails';
 import CheckoutShippingOptions from './CheckoutShippingOptions';
 import { toast } from 'react-toastify';
+import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
 
 const CheckoutConfirm = () => {
     const router = useRouter();
     const [isProcessing, setIsProcessing] = useState(false);
     const { data: session, isLoading, error } = useGetSessionQuery();
+    const { data: shippingCompanies, isLoading: isShippingLoading, error: shippingError } = useGetShippingOptionsQuery();
+
     const [createStripeSession] = useCreateStripeCheckoutSessionMutation();
 
     useEffect(() => {
-        if (!isLoading && session && (!session.shipping_address || !session.billing_address)) {
-            toast.error('Please complete your address details first');
-            router.push('/checkout/address');
+        if (!isLoading && !isShippingLoading && session) {
+            if (!session.shipping_address || !session.billing_address) {
+                toast.error('Please complete your address details first');
+                router.push('/checkout/address');
+            }
         }
-    }, [session, isLoading, router]);
+    }, [session, isLoading, isShippingLoading, router]);
 
     const handleProceedToPayment = async () => {
         if (isProcessing) return;
@@ -48,7 +53,7 @@ const CheckoutConfirm = () => {
     return (
         <div className="space-y-6">
             <CheckoutDetails session={session} />
-            <CheckoutShippingOptions />
+            <CheckoutShippingOptions shippingCompanies={shippingCompanies} />
 
             <button
                 onClick={handleProceedToPayment}

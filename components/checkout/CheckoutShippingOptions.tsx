@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react';
 import { useUpdateSessionMutation } from '@/redux/features/checkout/checkoutApiSlice';
 import { toast } from 'react-toastify';
 import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
+import { ShippingCompany } from '@/types/shipping';
 
-const CheckoutShippingOptions = () => {
-    const { data: shippingCompanies } = useGetShippingOptionsQuery();
+interface CheckoutShippingOptionsProps {
+    shippingCompanies: ShippingCompany[] | undefined;
+}
+
+const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({ shippingCompanies }) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [updateSession] = useUpdateSessionMutation();
 
