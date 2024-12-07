@@ -98,19 +98,10 @@ export default function AddressPage() {
             };
             console.log('Sending address request:', addressRequest);
 
-            try {
-                // Attempt to set addresses
-                const response = await setAddresses(addressRequest).unwrap();
-                console.log('Address set response:', response);
-                console.log('Navigating to /checkout/confirm');
-                router.push('/checkout/confirm');
-            } catch (error) {
-                // Handle errors
-                console.error('Unexpected response:', error);
-                setError('Unexpected response from server.');
-                toast.error('Unexpected response from server. Please try again.');
-                router.push('/checkout/error');
-            }
+            const response = await setAddresses(addressRequest).unwrap();
+            console.log('Address set response:', response);
+            console.log('Navigating to /checkout/confirm');
+            router.push('/checkout/confirm');
 
         } catch (err: any) {
             console.error('Error setting addresses:', err);
