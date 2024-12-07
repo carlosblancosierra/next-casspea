@@ -21,16 +21,18 @@ const CheckoutConfirm = () => {
     }, [session, isLoading, router]);
 
     const handleProceedToPayment = async () => {
+        if (isProcessing) return;
+
         try {
             setIsProcessing(true);
             const response = await createStripeSession().unwrap();
             if (response?.url) {
+                await new Promise(resolve => setTimeout(resolve, 500));
                 window.location.href = response.url;
             }
         } catch (err) {
             toast.error('Failed to create payment session');
             console.error('Payment session creation failed:', err);
-        } finally {
             setIsProcessing(false);
         }
     };
