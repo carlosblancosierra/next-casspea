@@ -86,10 +86,14 @@ export default function AddressPage() {
                     address_type: 'BILLING'
                 }
             };
+            console.log('Sending address request:', addressRequest);
             const response = await setAddresses(addressRequest).unwrap();
+            console.log('Address set response:', response);
             if (response) {
+                console.log('Navigation to /checkout/confirm');
                 router.push('/checkout/confirm');
             } else {
+                console.error('Unexpected response:', response);
                 setError('Failed to save addresses. Please try again.');
                 toast.error('Failed to save addresses. Please try again.');
             }
