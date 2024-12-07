@@ -7,7 +7,6 @@ import { Address, AddressRequest } from '@/types/addresses';
 import { toast } from 'react-toastify';
 import { useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 import { useSetAddressesMutation } from '@/redux/features/addresses/addressApiSlice';
-import { redirect } from 'next/navigation'
 
 
 export default function AddressPage() {
@@ -60,48 +59,64 @@ export default function AddressPage() {
 
     const handleSubmitClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        console.log('Submit button clicked');
 
+        // Validate Shipping Address
         if (!shippingAddress || !shippingAddress.street_address || !shippingAddress.city || !shippingAddress.postcode) {
             toast.error('Please complete all required shipping address fields');
+            console.error('Shipping address incomplete:', shippingAddress);
             return;
         }
 
+        // Validate Billing Address if not using the same as shipping
         if (!useSameAddress && (!billingAddress || !billingAddress.street_address || !billingAddress.city || !billingAddress.postcode)) {
             toast.error('Please complete all required billing address fields');
+            console.error('Billing address incomplete:', billingAddress);
             return;
         }
 
         setIsProcessing(true);
         setError(null);
+        console.log('Processing address submission');
 
         try {
+            // Prepare the address request payload
             const addressRequest: AddressRequest = {
                 shipping_address: {
                     ...shippingAddress,
                     address_type: 'SHIPPING'
                 },
-                billing_address: useSameAddress ? {
-                    ...shippingAddress,
-                    address_type: 'BILLING'
-                } : {
-                    ...billingAddress!,
-                    address_type: 'BILLING'
-                }
+                billing_address: useSameAddress
+                    ? {
+                        ...shippingAddress,
+                        address_type: 'BILLING'
+                    }
+                    : {
+                        ...billingAddress!,
+                        address_type: 'BILLING'
+                    }
             };
             console.log('Sending address request:', addressRequest);
+
+            // Send the address request and await the response
             const response = await setAddresses(addressRequest).unwrap();
             console.log('Address set response:', response);
-            if (response) {
-                console.log('Navigation to /checkout/confirm');
-                console.log(response);
-                redirect('/checkout/confirm');
+
+            // Assuming the API returns a status field to indicate success
+            if (response.status === 200) {
+                console.log('Navigating to /checkout/confirm');
+                router.push('/checkout/confirm');
             } else {
-                console.error('Unexpected response:', response);
-                setError('Failed to save addresses. Please try again.');
-                toast.error('Failed to save addresses. Please try again.');
+                // Handle unexpected successful responses
+                console.error('Unexpected response status:', response.status);
+                setError('Unexpected response from server.');
+                toast.error('Unexpected response from server. Please try again.');
+                router.push('/checkout/error');
             }
         } catch (err: any) {
             console.error('Error setting addresses:', err);
+
+            // Determine the type of error and set appropriate messages
             if (err.data?.shipping_address) {
                 const errors = Object.entries(err.data.shipping_address)
                     .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
@@ -117,9 +132,12 @@ export default function AddressPage() {
             } else {
                 setError('Failed to save addresses. Please try again.');
                 toast.error('Failed to save addresses. Please try again.');
+                // Redirect to the error page
+                router.push('/checkout/error');
             }
         } finally {
             setIsProcessing(false);
+            console.log('Finished processing address submission');
         }
     };
 
