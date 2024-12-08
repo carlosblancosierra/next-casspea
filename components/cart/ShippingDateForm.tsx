@@ -61,7 +61,13 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
                 useRange={false}
                 value={value}
                 onChange={(newValue) => {
-                    setValue(newValue);
+                    setValue(newValue ? {
+                        startDate: newValue.startDate ? new Date(newValue.startDate) : null,
+                        endDate: newValue.endDate ? new Date(newValue.endDate) : null
+                    } : {
+                        startDate: null,
+                        endDate: null
+                    });
                     if (newValue?.startDate) {
                         onShippingDateChange(newValue.startDate.toString());
                     }

@@ -17,6 +17,7 @@ module.exports = {
 				'my-eblue': '#00e4f9',
 				'my-brown': '#5b392e',
 				'my-grey': '#2B2C2E',
+				'my-red': '#F14C42',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

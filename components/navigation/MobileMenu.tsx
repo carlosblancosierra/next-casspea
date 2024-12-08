@@ -41,7 +41,7 @@ const menuItems: MenuItem[] = [
     },
 ];
 
-const accentColor = 'text-pink-600 dark:text-pink-500';
+const accentColor = 'text-my-red dark:text-my-red';
 
 const MobileMenu = () => {
     const pathname = usePathname();
@@ -64,7 +64,6 @@ const MobileMenu = () => {
     }
 
     const isActive = (path: string) => pathname?.startsWith(path) &&
-        // Special case for home page to avoid matching all routes
         (path === '/' ? pathname === '/' : true);
 
     const getActiveClass = (isCurrentActive: boolean) =>

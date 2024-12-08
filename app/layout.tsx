@@ -1,5 +1,5 @@
 import '@/styles/globals.css';
-import { Inter } from 'next/font/google';
+import { Inter, Playfair_Display } from 'next/font/google';
 import type { Metadata } from 'next';
 import Provider from '@/redux/provider';
 import { Footer, Navbar } from '@/components/common';
@@ -12,7 +12,7 @@ const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
 });
 
 const inter = Inter({ subsets: ['latin'] });
-
+const playfair = Playfair_Display({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'CassPea Premium Chocolates',
   description: 'Handcrafted premium chocolates and confectionery',
