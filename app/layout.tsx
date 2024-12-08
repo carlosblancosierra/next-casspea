@@ -6,6 +6,10 @@ import { Footer, Navbar } from '@/components/common';
 import { Setup } from '@/components/utils';
 import AnnouncementBar from '@/components/common/AnnouncementBar';
 import MobileMenu from '@/components/navigation/MobileMenu';
+import dynamic from 'next/dynamic';
+const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
+  ssr: false
+});
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,28 +25,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+      </head>
       <body
         className={`${inter.className} min-h-screen bg-white dark:bg-gray-900 dark:text-white flex flex-col relative`}
         suppressHydrationWarning
       >
         <Provider>
           <Setup />
-          <div className="flex flex-col min-h-screen">
+          <SnowEffect />
+          <div className="flex flex-col min-h-screen relative">
             <AnnouncementBar />
             <Navbar />
-
-            {/* Main content wrapper */}
             <main className="flex-grow pb-16 md:pb-0">
               {children}
             </main>
-
-            {/* Footer - hidden on mobile */}
             <div className="hidden md:block">
               <Footer />
             </div>
-
-            {/* Mobile menu - visible only on mobile */}
             <div className="block md:hidden">
               <MobileMenu />
             </div>

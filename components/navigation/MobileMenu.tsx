@@ -63,7 +63,9 @@ const MobileMenu = () => {
         return null;
     }
 
-    const isActive = (path: string) => pathname === path;
+    const isActive = (path: string) => pathname?.startsWith(path) &&
+        // Special case for home page to avoid matching all routes
+        (path === '/' ? pathname === '/' : true);
 
     const getActiveClass = (isCurrentActive: boolean) =>
         isCurrentActive
