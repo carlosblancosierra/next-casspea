@@ -77,7 +77,7 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
                     transition-colors duration-200"
                 containerClassName="relative w-full"
                 toggleClassName="absolute right-0 h-full px-3 text-gray-400 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
-                startWeekOn="mon"
+                startWeekOn="sun"
             />
             <p className="text-xs text-gray-500 dark:text-gray-400">
                 Shipping available Monday to Friday only
