@@ -16,8 +16,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
         <div className="md:py-8">
             <div id="product-info">
                 <div className="flex flex-col gap-y-2 md:gap-y-4 lg:max-w-[500px] mx-auto">
-                    <h2 className="text-2xl md:text-3xl font-bold">
-                        {product.name}
+                    <h2 className="text-2xl md:text-3xl font-extrabold font-playfair">
+                        {product.seo_title}
                     </h2>
                     <div className="space-y-1">
                         {discountedPrice ? (

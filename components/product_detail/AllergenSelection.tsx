@@ -11,8 +11,8 @@ interface AllergenSelectionProps {
     allergens: Allergen[];
     selectedAllergens: number[];
     onChange: (id: number) => void;
-    allergenOption: 'NONE' | 'SPECIFY';
-    setAllergenOption: (option: 'NONE' | 'SPECIFY') => void;
+    allergenOption: 'NONE' | 'SPECIFY' | null;
+    setAllergenOption: (option: 'NONE' | 'SPECIFY' | null) => void;
 }
 
 const AllergenSelection: React.FC<AllergenSelectionProps> = ({

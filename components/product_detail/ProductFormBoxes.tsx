@@ -24,7 +24,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [flavours, setFlavours] = useState<CartItemBoxFlavorSelection[]>([]);
     const [remainingChocolates, setRemainingChocolates] = useState<number>(maxChocolates);
     const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
-    const [allergenOption, setAllergenOption] = useState<'NONE' | 'SPECIFY'>('NONE');
+    const [allergenOption, setAllergenOption] = useState<'NONE' | 'SPECIFY' | null>(null);
     const [quantity, setQuantity] = useState<number>(1);
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -149,7 +149,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 box_customization: {
                     selection_type: selection === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX',
                     allergens: selectedAllergens,
-                    flavor_selections: selection === 'RANDOM' ? [] : flavours.map(flavour => ({
+                    flavor_selections: selection === 'RANDOM' ? null : flavours.map(flavour => ({
                         flavor: flavour.flavor.id,
                         quantity: flavour.quantity,
                     })),
@@ -167,6 +167,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     // Determine if "Add to Cart" button should be disabled
     const isAddToCartDisabled = () => {
         if (!selection) return true;
+        if (allergenOption === null) return true;
         if (selection === 'PICK_AND_MIX' && remainingChocolates > 0) return true;
         return false;
     };
@@ -269,7 +270,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                     selection={selection}
                     remainingChocolates={remainingChocolates}
                 />
-                {selection && !isLoading && (
+                {/* {selection && !isLoading && (
                     <p className="mt-2 text-xs text-center text-gray-500 dark:text-gray-400">
                         {selection === 'PICK_AND_MIX'
                             ? remainingChocolates === 0
@@ -277,7 +278,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 : `Fill your box with ${remainingChocolates} more chocolate${remainingChocolates > 1 ? 's' : ''}`
                             : 'Your surprise box is ready to be added to cart'}
                     </p>
-                )}
+                )} */}
             </div>
         </form>
     );
