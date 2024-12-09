@@ -149,7 +149,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 box_customization: {
                     selection_type: selection === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX',
                     allergens: selectedAllergens,
-                    flavor_selections: selection === 'RANDOM' ? null : flavours.map(flavour => ({
+                    flavor_selections: selection === 'RANDOM' ? [] : flavours.map(flavour => ({
                         flavor: flavour.flavor.id,
                         quantity: flavour.quantity,
                     })),
