@@ -69,7 +69,9 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
                         endDate: null
                     });
                     if (newValue?.startDate) {
-                        onShippingDateChange(newValue.startDate.toString());
+                        // Format the date as YYYY-MM-DD
+                        const formattedDate = newValue.startDate.toISOString().split('T')[0];
+                        onShippingDateChange(formattedDate);
                     }
                 }}
                 displayFormat="DD/MM/YYYY"
