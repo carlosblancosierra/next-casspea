@@ -8,6 +8,16 @@ export interface ProductCategory {
     updated?: string;
 }
 
+export interface ProductGalleryImage {
+    id: number;
+    image: string;
+    image_webp?: string;
+    thumbnail: string;
+    thumbnail_webp?: string;
+    alt_text?: string;
+    order?: number;
+}
+
 export interface Product {
     id: number;
     name: string;
@@ -35,6 +45,8 @@ export interface Product {
     image_webp?: string;
     thumbnail?: string;
     thumbnail_webp?: string;
+
+    gallery_images?: ProductGalleryImage[];
 
     created?: string;
     updated?: string;

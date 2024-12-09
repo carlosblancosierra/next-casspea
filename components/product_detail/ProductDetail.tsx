@@ -20,6 +20,8 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
     const product = useAppSelector((state: RootState) => selectProductBySlug(state, slug));
     const products = useAppSelector(selectBoxes);
     const relatedProducts = products.filter(p => p.id !== product?.id);
+    const galleryImagesUrls = product?.gallery_images?.map(image => image.image);
+    const images = [product?.image, ...(galleryImagesUrls || [])].filter((image): image is string => !!image);
 
     if (productsLoading) {
         return <div>Loading products...</div>;
@@ -45,7 +47,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
                 </div>
 
                 <div className="block w-full relative">
-                    <ImageGallery images={[product?.image || '']} />
+                    <ImageGallery images={images} />
                 </div>
 
                 <div className="flex flex-col top-48 py-0 w-full gap-y-12">
