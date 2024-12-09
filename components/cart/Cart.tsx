@@ -29,7 +29,7 @@ const Cart: React.FC = () => {
           <div className="space-y-8">
             <CartItemTable cartEntries={cart.items} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <CartSummary />
+              <div></div>
               <CartCheckout />
             </div>
           </div>
