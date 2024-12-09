@@ -17,7 +17,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
         if (newIndex >= 0 && newIndex < images.length) {
             setCurrentIndex(newIndex);
             controls.start({
-                x: `${-newIndex * 90}%`,
+                x: `${-newIndex * 100}%`,
                 transition: { duration: 0.5 }
             });
         }
@@ -31,10 +31,10 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
             } else if (info.offset.x < 0 && currentIndex < images.length - 1) {
                 slideImage(1);
             } else {
-                controls.start({ x: `${-currentIndex * 90}%` });
+                controls.start({ x: `${-currentIndex * 100}%` });
             }
         } else {
-            controls.start({ x: `${-currentIndex * 90}%` });
+            controls.start({ x: `${-currentIndex * 100}%` });
         }
     };
 
@@ -52,7 +52,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
                 {images.map((url, idx) => (
                     <motion.div
                         key={idx}
-                        className="min-w-[95%] pr-[5%]"
+                        className="min-w-full"
                     >
                         <div className="aspect-[4/5] relative rounded-lg shadow">
                             <Image
@@ -76,7 +76,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
                         onClick={() => {
                             setCurrentIndex(idx);
                             controls.start({
-                                x: `${-idx * 90}%`,
+                                x: `${-idx * 100}%`,
                                 transition: { duration: 0.5 }
                             });
                         }}

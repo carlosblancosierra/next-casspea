@@ -262,7 +262,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
 
             {/* Add to Cart Button */}
             <div className="sticky bottom-0 bg-white dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4
-                border-t border-gray-200 dark:border-gray-700 shadow-lg">
+                border-t border-gray-200 dark:border-gray-700">
                 <AddToCartButton
                     onClick={handleAddToCart}
                     isLoading={isLoading}
