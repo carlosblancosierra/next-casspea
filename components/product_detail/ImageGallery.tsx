@@ -1,34 +1,90 @@
+"use client"
+import React, { useState } from "react";
+import { motion, useAnimation } from "framer-motion";
 import Image from "next/image";
 
-type ImageGalleryProps = {
+interface ImageGalleryProps {
     images: string[];
-};
+    className?: string;
+}
 
-const ImageGallery = ({ images }: ImageGalleryProps) => {
+const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const controls = useAnimation();
+
+    const slideImage = (direction: number) => {
+        const newIndex = currentIndex + direction;
+        if (newIndex >= 0 && newIndex < images.length) {
+            setCurrentIndex(newIndex);
+            controls.start({
+                x: `${-newIndex * 90}%`,
+                transition: { duration: 0.5 }
+            });
+        }
+    };
+
+    const handleDragEnd = (event: any, info: any) => {
+        const swipeThreshold = 50;
+        if (Math.abs(info.offset.x) > swipeThreshold) {
+            if (info.offset.x > 0 && currentIndex > 0) {
+                slideImage(-1);
+            } else if (info.offset.x < 0 && currentIndex < images.length - 1) {
+                slideImage(1);
+            } else {
+                controls.start({ x: `${-currentIndex * 90}%` });
+            }
+        } else {
+            controls.start({ x: `${-currentIndex * 90}%` });
+        }
+    };
+
     return (
-        <div className="flex items-start relative">
-            <div className="flex flex-col flex-1 gap-y-4 md:px-10">
-                {images.map((url, index) => {
-                    return (
-                        <div
-                            className="relative aspect-[4/5] w-full overflow-hidden rounded-lg shadow" key={index}
-                        >
+        <div className={`relative overflow-hidden ${className}`}>
+            <motion.div
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={handleDragEnd}
+                animate={controls}
+                className="flex cursor-grab active:cursor-grabbing"
+                style={{ x: 0 }}
+            >
+                {images.map((url, idx) => (
+                    <motion.div
+                        key={idx}
+                        className="min-w-[95%] pr-[5%]"
+                    >
+                        <div className="aspect-[4/5] relative rounded-lg shadow">
                             <Image
                                 src={url}
-                                priority={index <= 2 ? true : false}
-                                className="absolute inset-0 rounded-rounded"
-                                width={0}
-                                height={0}
-                                sizes="100vw"
-                                alt={`Product image ${index + 1}`}
+                                priority={idx <= 2}
+                                className="rounded-lg"
+                                alt={`Product image ${idx + 1}`}
                                 fill
-                                style={{
-                                    objectFit: "cover",
-                                }}
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                                style={{ objectFit: "cover" }}
                             />
                         </div>
-                    );
-                })}
+                    </motion.div>
+                ))}
+            </motion.div>
+
+            <div className="mt-4 flex w-full justify-center gap-2">
+                {images.map((_, idx) => (
+                    <button
+                        key={idx}
+                        onClick={() => {
+                            setCurrentIndex(idx);
+                            controls.start({
+                                x: `${-idx * 90}%`,
+                                transition: { duration: 0.5 }
+                            });
+                        }}
+                        className={`h-3 w-3 rounded-full transition-colors ${idx === currentIndex ? "bg-indigo-600" : "bg-indigo-200"
+                            }`}
+                        aria-label={`Go to image ${idx + 1}`}
+                    />
+                ))}
             </div>
         </div>
     );

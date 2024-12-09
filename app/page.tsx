@@ -1,10 +1,16 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import HomeProducts from '@/components/home/HomeProducts';
-import HomeGallery from '@/components/home/HomeGallery';
-import FlavourCarousel from '@/components/flavours/FlavourCarousel';
+import { Suspense } from 'react';
 import { Playfair_Display } from 'next/font/google';
+import dynamic from 'next/dynamic';
+import ImageGallery from '@/components/product_detail/ImageGallery';
+
+// Dynamically import components that can load later
+const HomeProducts = dynamic(() => import('@/components/home/HomeProducts'));
+const HomeGallery = dynamic(() => import('@/components/home/HomeGallery'));
+const FlavourCarousel = dynamic(() => import('@/components/flavours/FlavourCarousel'));
+
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -12,16 +18,22 @@ export const metadata: Metadata = {
 	description: '',
 };
 
+// Loading placeholder component
+const LoadingSection = () => (
+	<div className="w-full h-48 animate-pulse bg-gray-200 dark:bg-gray-800 rounded-lg" />
+);
+
 export default function HomePage() {
 	return (
-		<main className='dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto mx-3'>
+		<main className='dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto px-3'>
 			<section className="dark:bg-gray-900">
 				<div className="grid grid-cols-1 lg:grid-cols-12 mpx-4 py-4 mx-auto lg:gap-8 xl:gap-0 lg:py-16 relative">
 					<div className="md:mr-10 lg:mt-[5vh] grid-cols-1 lg:col-span-6">
 						<h1 className={`${playfair.className} mb-2 text-5xl font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}>
 							London’s Finest Artisan Chocolates
 						</h1>
-						<h2 className="text-2xl md:text-2xl tracking-tight mb-2 dark:text-white">Celebrate Christmas with Our Signature Gift Boxes</h2>
+						<h2 className="text-2xl md:text-2xl tracking-tight mb-2 dark:text-white ">Celebrate
+							Christmas with Our Signature Gift Boxes</h2>
 						<p className="hidden md:block md:mb-6 font-light text-sm text-gray-500 lg:mb-8 md:text-base dark:text-gray-200">Share the love with CassPea Chocolates—perfect for personal indulgence, birthdays, corporate events, and special celebrations. With over 20 exquisite flavours, each handcrafted to perfection by our skilled chocolatiers, every bite is a work of art and a journey through inspired flavours.</p>
 						{/* Desktop buttons */}
 						<div className='hidden md:flex gap-2'>
@@ -44,30 +56,46 @@ export default function HomePage() {
 							className='w-full h-auto hidden md:block'
 							alt="CassPea Chocolates" />
 
-						<Image src="/home/christmas/hero1.jpg"
+						{/* <Image src="/home/christmas/hero1.jpg"
 							width={0}
 							height={0}
 							sizes='100vw'
 							priority
 							className='w-full h-auto block md:hidden'
-							alt="CassPea Chocolates" />
+							alt="CassPea Chocolates" /> */}
 
-						<p className="md:hidden md:mb-6 font-light text-sm text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">Share the love with CassPea Chocolates—perfect for personal indulgence, birthdays, corporate events, and special celebrations. With over 20 exquisite flavours, each handcrafted to perfection by our skilled chocolatiers, every bite is a work of art and a journey through inspired flavours.</p>
+						<ImageGallery images={
+							['/home/christmas/hero1.jpg',
+								'/home/hero-2.jpeg',
+								'/home/hero-3.jpeg',
+							]} className='block md:hidden' />
+
+						<p className="md:hidden md:mb-6 text-3xl font-bold mt-2 font-playfair lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">Share the love with CassPea Chocolates</p>
+						<p className="md:hidden md:mb-6 font-light text-md mt-2 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">Perfect for personal indulgence, birthdays, corporate events, and special celebrations. With over 20 exquisite flavours, each handcrafted to perfection by our skilled chocolatiers, every bite is a work of art and a journey through inspired flavours.</p>
+
 					</div>
 				</div>
 			</section>
-			<div>
-				<h2 className='text-center text-2xl font-bold mb-3'>Signature Boxes</h2>
-				<HomeProducts />
-			</div>
-			<div className='mt-10'>
-				<h2 className='text-center text-2xl font-bold'>Our Flavours</h2>
-				<FlavourCarousel />
-			</div>
-			<div className="mt-10">
-				<h2 className='text-center text-2xl font-bold mb-3'>Gallery</h2>
-				<HomeGallery />
-			</div>
+			<Suspense fallback={<LoadingSection />}>
+				<div>
+					<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Signature Boxes</h2>
+					<HomeProducts />
+				</div>
+			</Suspense>
+
+			<Suspense fallback={<LoadingSection />}>
+				<div className='mt-10'>
+					<h2 className='text-center text-2xl font-bold font-playfair'>Our Flavours</h2>
+					<FlavourCarousel />
+				</div>
+			</Suspense>
+
+			<Suspense fallback={<LoadingSection />}>
+				<div className="mt-10">
+					<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Gallery</h2>
+					<HomeGallery />
+				</div>
+			</Suspense>
 		</main>
 	);
 }
