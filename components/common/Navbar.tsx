@@ -9,11 +9,11 @@ import Image from 'next/image';
 
 const navigation = [
   { name: 'Store', href: '/store', current: false },
-  { name: 'Signature Boxes', href: '/store/signature-boxes', current: false },
-  { name: 'Advent Calendar', href: '/store/advent-calendar', current: false },
+  // { name: 'Signature Boxes', href: '/store', current: false },
+  // { name: 'Advent Calendar', href: '/store/advent-calendar', current: false },
   // { name: 'Snacks', href: '/store/snacks', current: false },
   { name: 'Flavours', href: '/flavours', current: false },
-  { name: 'Track', href: '/track', current: false },
+  { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false },
 ]
 
 function classNames(...classes: string[]) {
