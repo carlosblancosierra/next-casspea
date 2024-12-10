@@ -11,25 +11,24 @@ import CheckoutDetails from './CheckoutDetails';
 import CheckoutShippingOptions from './CheckoutShippingOptions';
 import { toast } from 'react-toastify';
 import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
+import Spinner from '@/components/common/Spinner';
+import CartItem from '@/components/cart/CartItem';
+import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
+import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
-    const [selectedShippingOption, setSelectedShippingOption] = useState<number | null>(null);
+    const [selectedShippingOption, setSelectedShippingOption] = useState<number | undefined>(undefined);
 
-    const { data: session, isLoading, error } = useGetSessionQuery(undefined, {
+    const { data: session, isLoading: sessionLoading, error: sessionError } = useGetSessionQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
+    const { data: cart, isLoading: cartLoading, error: cartError } = useGetCartQuery();
     const { data: shippingCompanies, isLoading: isShippingLoading } = useGetShippingOptionsQuery();
 
     const [createStripeSession] = useCreateStripeCheckoutSessionMutation();
     const [updateSession] = useUpdateSessionMutation();
 
-    // Set initial shipping option from session
-    useEffect(() => {
-        if (session?.shipping_option?.id) {
-            setSelectedShippingOption(session.shipping_option.id);
-        }
-    }, [session?.shipping_option?.id]);
 
     const handleProceedToPayment = async () => {
         if (isProcessing) return;
@@ -41,12 +40,10 @@ const CheckoutConfirm = () => {
         try {
             setIsProcessing(true);
 
-            // First, update the shipping option if it's different from the session
-            if (selectedShippingOption !== session?.shipping_option?.id) {
-                await updateSession({
-                    shipping_option_id: selectedShippingOption
-                }).unwrap();
-            }
+            await updateSession({
+                shipping_option_id: selectedShippingOption
+            }).unwrap();
+
 
             // Then create the Stripe session
             const response = await createStripeSession().unwrap();
@@ -61,35 +58,57 @@ const CheckoutConfirm = () => {
         }
     };
 
-    if (isLoading) {
-        return <div className="text-center">Loading checkout details...</div>;
+    if (sessionLoading || cartLoading) {
+        return (
+            <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[calc(80vh)] flex items-center justify-center">
+                    <Spinner className="mx-auto" />
+                </div>
+            </div>
+        );
     }
 
-    if (error) {
-        return <div className="text-red-500">Error loading checkout details</div>;
+    if (sessionError || cartError) {
+        return (
+            <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-red-500">Error loading checkout details</div>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="space-y-6">
-            <CheckoutDetails session={session} />
-            <CheckoutShippingOptions
-                shippingCompanies={shippingCompanies}
-                selectedOptionId={selectedShippingOption}
-                onShippingOptionChange={(optionId: number) => {
-                    setSelectedShippingOption(optionId);
-                }}
-            />
+        <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="space-y-6">
+                    <div className="space-y-4">
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Order Items</h2>
+                        {cart?.items?.map((item) => (
+                            <ReadOnlyCartItem key={item.id} entry={item} />
+                        ))}
+                    </div>
 
-            <button
-                onClick={handleProceedToPayment}
-                disabled={isProcessing || !selectedShippingOption}
-                className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md
-                    hover:bg-indigo-700 focus:outline-none focus:ring-2
-                    focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300
-                    disabled:cursor-not-allowed transition-colors duration-200"
-            >
-                {isProcessing ? 'Processing...' : 'Proceed to Payment'}
-            </button>
+                    <CheckoutDetails session={session} />
+                    <CheckoutShippingOptions
+                        shippingCompanies={shippingCompanies}
+                        selectedOptionId={selectedShippingOption}
+                        onShippingOptionChange={async (optionId: number) => {
+                            setSelectedShippingOption(optionId);
+                        }}
+                    />
+                    <button
+                        onClick={handleProceedToPayment}
+                        disabled={isProcessing || !selectedShippingOption}
+                        className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md
+                            hover:bg-indigo-700 focus:outline-none focus:ring-2
+                            focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300
+                            disabled:cursor-not-allowed transition-colors duration-200"
+                    >
+                        {isProcessing ? 'Processing...' : 'Proceed to Payment'}
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };
