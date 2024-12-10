@@ -1,14 +1,12 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface PaymentMethodsProps {
   size?: number;
   lg?: number;
 }
 
-const PaymentMethods: React.FC<PaymentMethodsProps> = ({ size = 12, lg = 16 }) => {
-  const sizeClass = `w-${size}`;
-  const lgClass = `lg:w-${lg}`;
-
+const PaymentMethods: React.FC<PaymentMethodsProps> = () => {
   const paymentMethods = [
     { src: "https://www.casspea.co.uk/static/images/payments/visa.png", alt: "Visa" },
     { src: "https://www.casspea.co.uk/static/images/payments/master.png", alt: "Mastercard" },
@@ -19,10 +17,17 @@ const PaymentMethods: React.FC<PaymentMethodsProps> = ({ size = 12, lg = 16 }) =
   ];
 
   return (
-    <div className="flex flex-wrap gap-1">
+    <div className="grid grid-cols-3 gap-1 md:mr-8">
       {paymentMethods.map((method, index) => (
-        <div key={index} className={`${sizeClass} ${lgClass}`}>
-          <img src={method.src} alt={method.alt} className="w-full h-auto" />
+        <div key={index}>
+          <Image
+            src={method.src}
+            alt={method.alt}
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="w-full h-auto"
+          />
         </div>
       ))}
     </div>

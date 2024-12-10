@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Product as ProductType } from '@/types/products';
 import FlavourPicker from './FlavourPicker';
@@ -51,7 +51,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     ];
 
     const handleAddFlavour = (flavour: FlavourType) => {
-        if (remainingChocolates <= 0) return;
+        if (remainingChocolates <= 0) {
+            toast.error('Not enough remaining chocolates for this selection.');
+            return;
+        }
         const existingFlavourIndex = flavours.findIndex(f => f.flavor.id === flavour.id);
         if (existingFlavourIndex !== -1) {
             handleFlavourChange(existingFlavourIndex, 'quantity', flavours[existingFlavourIndex].quantity + 1);
@@ -61,7 +64,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 quantity: 1,
             };
             setFlavours([...flavours, newFlavour]);
-            setRemainingChocolates(remainingChocolates - 1);
+            setRemainingChocolates(prev => prev - 1);
         }
     };
 
@@ -70,215 +73,148 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         newFlavours[index] = { ...newFlavours[index], [field]: value };
         setFlavours(newFlavours);
 
-        const totalQuantity = newFlavours.reduce((acc, curr) => acc + (curr.quantity as number), 0);
-        setRemainingChocolates(maxChocolates - totalQuantity);
+        if (field === 'quantity') {
+            setRemainingChocolates(prev => prev + flavours[index].quantity - Number(value));
+        }
     };
 
     const incrementQuantity = (index: number) => {
-        if (remainingChocolates > 0) {
-            handleFlavourChange(index, 'quantity', flavours[index].quantity + 1);
+        if (remainingChocolates <= 0) {
+            toast.error('No more chocolates remaining.');
+            return;
         }
+        handleFlavourChange(index, 'quantity', flavours[index].quantity + 1);
     };
 
     const decrementQuantity = (index: number) => {
-        if (flavours[index].quantity > 1) {
-            handleFlavourChange(index, 'quantity', flavours[index].quantity - 1);
-        } else {
+        if (flavours[index].quantity <= 1) {
             deleteFlavour(index);
+            return;
         }
+        handleFlavourChange(index, 'quantity', flavours[index].quantity - 1);
     };
 
     const deleteFlavour = (index: number) => {
+        const removedQuantity = flavours[index].quantity;
         const newFlavours = flavours.filter((_, i) => i !== index);
         setFlavours(newFlavours);
-
-        const totalQuantity = newFlavours.reduce((acc, curr) => acc + (curr.quantity as number), 0);
-        setRemainingChocolates(maxChocolates - totalQuantity);
+        setRemainingChocolates(prev => prev + removedQuantity);
     };
 
     const handleDeleteAllFlavours = () => {
+        const totalSelected = flavours.reduce((acc, curr) => acc + curr.quantity, 0);
         setFlavours([]);
-        setRemainingChocolates(maxChocolates);
-    };
-
-    const getProgressText = () => {
-        return remainingChocolates > 0
-            ? `Fill your box with ${remainingChocolates} more chocolate${remainingChocolates > 1 ? 's' : ''}`
-            : 'All chocolates selected!';
-    };
-
-    const handleAllergenChange = (id: number) => {
-        let updatedAllergens: number[];
-        if (selectedAllergens.includes(id)) {
-            updatedAllergens = selectedAllergens.filter(allergenId => allergenId !== id);
-        } else {
-            updatedAllergens = [...selectedAllergens, id];
-        }
-        setSelectedAllergens(updatedAllergens);
-
-        // Identify flavours to remove
-        const flavoursToRemove = flavours.filter(flavour =>
-            flavour.flavor.allergens?.some(allergen => updatedAllergens.includes(allergen.id))
-        );
-
-        if (flavoursToRemove.length > 0) {
-            // Remove conflicting flavours
-            const updatedFlavours = flavours.filter(flavour =>
-                !flavoursToRemove.includes(flavour)
-            );
-            setFlavours(updatedFlavours);
-
-            // Adjust remaining chocolates
-            const removedQuantity = flavoursToRemove.reduce((total, flavour) => total + flavour.quantity, 0);
-            setRemainingChocolates(prev => prev + removedQuantity);
-
-            // Optionally, notify the user
-            toast.warn('Some selected flavours were removed due to allergen changes.');
-        }
+        setRemainingChocolates(totalSelected + remainingChocolates);
     };
 
     const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setQuantity(Number(e.target.value));
     };
 
-    const handleAddToCart = async () => {
-        try {
-            const cartItem: CartItemRequest = {
-                product: product.id,
-                quantity,
-                box_customization: {
-                    selection_type: selection === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX',
-                    allergens: selectedAllergens,
-                    flavor_selections: selection === 'RANDOM' ? [] : flavours.map(flavour => ({
-                        flavor: flavour.flavor.id,
-                        quantity: flavour.quantity,
-                    })),
-                },
-            };
-            console.log("cartItem", cartItem);
-            const response = await addToCart(cartItem).unwrap();
-            toast.success('Added to cart!');
-            router.push('/cart');
-        } catch (error) {
-            toast.error('Failed to add to cart.');
+    const isAddToCartDisabled = () => {
+        return flavours.length === 0 || remainingChocolates > 0;
+    };
+
+    const getProgressText = () => {
+        if (remainingChocolates === 0) {
+            return `You have selected all ${maxChocolates} chocolates.`;
+        } else {
+            return `You can select ${remainingChocolates} more chocolate(s).`;
         }
     };
 
-    // Determine if "Add to Cart" button should be disabled
-    const isAddToCartDisabled = () => {
-        if (!selection) return true;
-        if (allergenOption === null) return true;
-        if (selection === 'PICK_AND_MIX' && remainingChocolates > 0) return true;
-        return false;
-    };
-
     return (
-        <form className="space-y-8">
-            {/* Box Selection Section */}
-            <div>
-                <div className="">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                        How would you like your box?
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Choose how you'd like to build your box of {maxChocolates} chocolates
-                    </p>
-                </div>
+        <form onSubmit={(e) => {
+            e.preventDefault();
+            // Handle form submission logic here
+        }}>
+            <div className="space-y-6">
+                {/* Box Selection */}
                 <BoxSelection
                     options={prebulids}
                     selected={selection}
                     onChange={setSelection}
-                    className="mt-4"
                 />
-            </div>
 
-            {/* Customization Options - Only shown after selection */}
-            {selection && (
-                <div className="space-y-6 border-t border-gray-200 dark:border-gray-700 pt-6">
-                    {/* Allergen Selection */}
-                    <AllergenSelection
-                        allergens={allergens}
-                        selectedAllergens={selectedAllergens}
-                        onChange={handleAllergenChange}
-                        allergenOption={allergenOption}
-                        setAllergenOption={setAllergenOption}
-                    />
+                {/* Conditionally render based on selection */}
+                {selection === 'RANDOM' ? (
+                    <p className="text-sm dark:text-gray-200">
+                        We will pick you {maxChocolates} amazing bonbons with your selected preferences.
+                    </p>
+                ) : (
+                    <>
+                        <div>
+                            <p className="text-sm dark:text-gray-200">Pick your flavours</p>
+                            {/* Render FlavourPicker */}
+                            <FlavourPicker
+                                flavours={flavours}
+                                remainingChocolates={remainingChocolates}
+                                maxChocolates={maxChocolates}
+                                handleAddFlavour={handleAddFlavour}
+                                handleFlavourChange={handleFlavourChange}
+                                incrementQuantity={incrementQuantity}
+                                decrementQuantity={decrementQuantity}
+                                deleteFlavour={deleteFlavour}
+                                handleDeleteAllFlavours={handleDeleteAllFlavours}
+                                selectedAllergens={selectedAllergens}
+                            />
+                        </div>
 
-                    {/* Flavour Selection Section */}
-                    {selection === 'RANDOM' ? (
-                        <p className="text-sm dark:text-gray-200">
-                            We will pick you {maxChocolates} amazing bonbons with your selected preferences.
-                        </p>
-                    ) : (
-                        <>
-                            <div>
-                                <p className="text-sm dark:text-gray-200">Pick your flavours</p>
-                                <FlavourPicker
-                                    flavours={flavours}
-                                    maxChocolates={maxChocolates}
-                                    remainingChocolates={remainingChocolates}
-                                    handleAddFlavour={handleAddFlavour}
-                                    handleFlavourChange={handleFlavourChange}
-                                    incrementQuantity={incrementQuantity}
-                                    decrementQuantity={decrementQuantity}
-                                    deleteFlavour={deleteFlavour}
-                                    handleDeleteAllFlavours={handleDeleteAllFlavours}
-                                    selectedAllergens={selectedAllergens}
-                                />
-                            </div>
+                        <div>
+                            <p className="text-sm mb-1 dark:text-gray-200">{getProgressText()}</p>
+                            <ProgressBar
+                                value={maxChocolates - remainingChocolates}
+                                max={maxChocolates}
+                            />
+                        </div>
+                    </>
+                )}
 
-                            <div>
-                                <p className="text-sm mb-1 dark:text-gray-200">{getProgressText()}</p>
-                                <ProgressBar
-                                    value={maxChocolates - remainingChocolates}
-                                    max={maxChocolates}
-                                />
-                            </div>
-                        </>
-                    )}
+                {/* Allergen Selection */}
+                <AllergenSelection
+                    allergens={allergens}
+                    selectedAllergens={selectedAllergens}
+                    setSelectedAllergens={setSelectedAllergens}
+                    allergenOption={allergenOption}
+                    setAllergenOption={setAllergenOption}
+                />
 
-                    {/* Quantity Selection */}
-                    <div>
-                        <label htmlFor="quantity"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                            Number of Boxes
-                        </label>
-                        <select
-                            id="quantity"
-                            name="quantity"
-                            value={quantity}
-                            onChange={handleQuantityChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
-                                bg-white dark:bg-gray-800 shadow-sm focus:border-indigo-500
-                                focus:ring-indigo-500"
-                        >
-                            {Array.from({ length: 10 }, (_, i) => (
-                                <option key={i + 1} value={i + 1}>{i + 1}</option>
-                            ))}
-                        </select>
-                    </div>
+                {/* Quantity Selection */}
+                <div>
+                    <label htmlFor="quantity"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                        Number of Boxes
+                    </label>
+                    <select
+                        id="quantity"
+                        name="quantity"
+                        value={quantity}
+                        onChange={handleQuantityChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
+                            bg-white dark:bg-gray-800 shadow-sm focus:border-indigo-500
+                            focus:ring-indigo-500"
+                    >
+                        {Array.from({ length: 10 }, (_, i) => (
+                            <option key={i + 1} value={i + 1}>{i + 1}</option>
+                        ))}
+                    </select>
                 </div>
-            )}
+            </div>
 
             {/* Add to Cart Button */}
             <div className="sticky bottom-0 bg-white dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4
                 border-t border-gray-200 dark:border-gray-700">
                 <AddToCartButton
-                    onClick={handleAddToCart}
+                    onClick={() => {
+                        // Handle adding to cart logic here
+                        // Example:
+                        // addToCart({ productId: product.id, flavours, quantity });
+                    }}
                     isLoading={isLoading}
                     isDisabled={isAddToCartDisabled()}
                     selection={selection}
                     remainingChocolates={remainingChocolates}
                 />
-                {/* {selection && !isLoading && (
-                    <p className="mt-2 text-xs text-center text-gray-500 dark:text-gray-400">
-                        {selection === 'PICK_AND_MIX'
-                            ? remainingChocolates === 0
-                                ? 'All chocolates selected! Ready to add to cart.'
-                                : `Fill your box with ${remainingChocolates} more chocolate${remainingChocolates > 1 ? 's' : ''}`
-                            : 'Your surprise box is ready to be added to cart'}
-                    </p>
-                )} */}
             </div>
         </form>
     );

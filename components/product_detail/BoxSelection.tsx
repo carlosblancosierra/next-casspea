@@ -1,6 +1,7 @@
 import React from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/24/outline';
+
 interface BoxOption {
     name: string;
     value: string;
@@ -17,7 +18,7 @@ interface BoxSelectionProps {
 const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange, className }) => {
     return (
         <RadioGroup value={selected} onChange={onChange} className={`space-y-4 ${className}`}>
-            {options.map((option) => (
+            {options?.map((option) => (
                 <RadioGroup.Option
                     key={option.value}
                     value={option.value}
