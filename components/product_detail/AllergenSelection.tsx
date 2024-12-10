@@ -10,7 +10,7 @@ interface Allergen {
 interface AllergenSelectionProps {
     allergens: Allergen[];
     selectedAllergens: number[];
-    onChange: (id: number) => void;
+    setSelectedAllergens: (allergens: number[]) => void;
     allergenOption: 'NONE' | 'SPECIFY' | null;
     setAllergenOption: (option: 'NONE' | 'SPECIFY' | null) => void;
 }
@@ -18,10 +18,18 @@ interface AllergenSelectionProps {
 const AllergenSelection: React.FC<AllergenSelectionProps> = ({
     allergens,
     selectedAllergens,
-    onChange,
+    setSelectedAllergens,
     allergenOption,
     setAllergenOption
 }) => {
+    const handleAllergenChange = (allergerId: number) => {
+        if (selectedAllergens.includes(allergerId)) {
+            setSelectedAllergens(selectedAllergens.filter(id => id !== allergerId));
+        } else {
+            setSelectedAllergens([...selectedAllergens, allergerId]);
+        }
+    };
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
@@ -122,7 +130,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                                 value={allergen.id}
                                 className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
                                 checked={selectedAllergens.includes(allergen.id)}
-                                onChange={() => onChange(allergen.id)}
+                                onChange={() => handleAllergenChange(allergen.id)}
                             />
                             <label
                                 htmlFor={`allergen-${allergen.id}`}

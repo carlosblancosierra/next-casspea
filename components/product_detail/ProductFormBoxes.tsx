@@ -112,7 +112,11 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     };
 
     const isAddToCartDisabled = () => {
-        return flavours.length === 0 || remainingChocolates > 0;
+        if (selection === 'RANDOM') {
+            return !selection || !allergenOption;
+        }
+
+        return !selection || !allergenOption || flavours.length === 0 || remainingChocolates > 0;
     };
 
     const getProgressText = () => {
@@ -123,61 +127,94 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         }
     };
 
+    const handleAddToCart = async () => {
+        try {
+            const cartItemRequest: CartItemRequest = {
+                product: product.id,
+                quantity: quantity,
+                box_customization: {
+                    selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
+                    allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
+                    flavor_selections: selection === 'PICK_AND_MIX' ? flavours.map(f => ({
+                        flavor: f.flavor.id,
+                        quantity: f.quantity
+                    })) : []
+                }
+            };
+
+            const response = await addToCart(cartItemRequest).unwrap();
+            toast.success('Added to cart successfully!');
+            router.push('/cart');
+        } catch (error) {
+            toast.error('Failed to add item to cart');
+            console.error('Add to cart error:', error);
+        }
+    };
+
     return (
         <form onSubmit={(e) => {
             e.preventDefault();
-            // Handle form submission logic here
         }}>
             <div className="space-y-6">
-                {/* Box Selection */}
                 <BoxSelection
                     options={prebulids}
                     selected={selection}
                     onChange={setSelection}
                 />
 
-                {/* Conditionally render based on selection */}
                 {selection === 'RANDOM' ? (
-                    <p className="text-sm dark:text-gray-200">
-                        We will pick you {maxChocolates} amazing bonbons with your selected preferences.
-                    </p>
+                    <>
+                        <p className="text-sm dark:text-gray-200">
+                            We will pick you {maxChocolates} amazing bonbons with your selected preferences.
+                        </p>
+
+                        <AllergenSelection
+                            allergens={allergens}
+                            selectedAllergens={selectedAllergens}
+                            setSelectedAllergens={setSelectedAllergens}
+                            allergenOption={allergenOption}
+                            setAllergenOption={setAllergenOption}
+                        />
+                    </>
                 ) : (
                     <>
-                        <div>
-                            <p className="text-sm dark:text-gray-200">Pick your flavours</p>
-                            {/* Render FlavourPicker */}
-                            <FlavourPicker
-                                flavours={flavours}
-                                remainingChocolates={remainingChocolates}
-                                maxChocolates={maxChocolates}
-                                handleAddFlavour={handleAddFlavour}
-                                handleFlavourChange={handleFlavourChange}
-                                incrementQuantity={incrementQuantity}
-                                decrementQuantity={decrementQuantity}
-                                deleteFlavour={deleteFlavour}
-                                handleDeleteAllFlavours={handleDeleteAllFlavours}
-                                selectedAllergens={selectedAllergens}
-                            />
-                        </div>
+                        <AllergenSelection
+                            allergens={allergens}
+                            selectedAllergens={selectedAllergens}
+                            setSelectedAllergens={setSelectedAllergens}
+                            allergenOption={allergenOption}
+                            setAllergenOption={setAllergenOption}
+                        />
 
-                        <div>
-                            <p className="text-sm mb-1 dark:text-gray-200">{getProgressText()}</p>
-                            <ProgressBar
-                                value={maxChocolates - remainingChocolates}
-                                max={maxChocolates}
-                            />
-                        </div>
+                        {allergenOption && (
+                            <>
+                                <div>
+                                    <p className="text-sm dark:text-gray-200">Pick your flavours</p>
+                                    <FlavourPicker
+                                        flavours={flavours}
+                                        remainingChocolates={remainingChocolates}
+                                        maxChocolates={maxChocolates}
+                                        handleAddFlavour={handleAddFlavour}
+                                        handleFlavourChange={handleFlavourChange}
+                                        incrementQuantity={incrementQuantity}
+                                        decrementQuantity={decrementQuantity}
+                                        deleteFlavour={deleteFlavour}
+                                        handleDeleteAllFlavours={handleDeleteAllFlavours}
+                                        selectedAllergens={selectedAllergens}
+                                    />
+                                </div>
+
+                                <div>
+                                    <p className="text-sm mb-1 dark:text-gray-200">{getProgressText()}</p>
+                                    <ProgressBar
+                                        value={maxChocolates - remainingChocolates}
+                                        max={maxChocolates}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </>
                 )}
-
-                {/* Allergen Selection */}
-                <AllergenSelection
-                    allergens={allergens}
-                    selectedAllergens={selectedAllergens}
-                    setSelectedAllergens={setSelectedAllergens}
-                    allergenOption={allergenOption}
-                    setAllergenOption={setAllergenOption}
-                />
 
                 {/* Quantity Selection */}
                 <div>
@@ -205,11 +242,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             <div className="sticky bottom-0 bg-white dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4
                 border-t border-gray-200 dark:border-gray-700">
                 <AddToCartButton
-                    onClick={() => {
-                        // Handle adding to cart logic here
-                        // Example:
-                        // addToCart({ productId: product.id, flavours, quantity });
-                    }}
+                    onClick={handleAddToCart}
                     isLoading={isLoading}
                     isDisabled={isAddToCartDisabled()}
                     selection={selection}
