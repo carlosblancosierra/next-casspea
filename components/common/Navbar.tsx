@@ -13,7 +13,7 @@ const navigation = [
   // { name: 'Advent Calendar', href: '/store/advent-calendar', current: false },
   // { name: 'Snacks', href: '/store/snacks', current: false },
   { name: 'Flavours', href: '/flavours', current: false },
-  { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false },
+  // { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false },  
 ]
 
 function classNames(...classes: string[]) {
@@ -52,7 +52,18 @@ export default function Nav() {
                       height={0}
                       sizes="100vw"
                       priority
-                      className='w-36 h-auto'
+                      className='w-36 h-auto block dark:hidden'
+                    />
+                  </Link>
+                  <Link href="/">
+                    <Image
+                      alt="CassPea Chocolates"
+                      src="/logos/logo-white-hat.png"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      priority
+                      className='w-36 h-auto dark:block hidden'
                     />
                   </Link>
                 </div>
