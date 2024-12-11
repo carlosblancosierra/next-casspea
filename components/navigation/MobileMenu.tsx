@@ -79,7 +79,7 @@ const MobileMenu = () => {
     return (
         <div className={`fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600 md:hidden ${isScrolled ? 'bg-opacity-80 dark:bg-opacity-80' : 'bg-opacity-100 dark:bg-opacity-100'
             }`}>
-            <div className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
+            <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
                 {menuItems.map(({ name, href, icon: Icon }) => (
                     <Link
                         key={name}
