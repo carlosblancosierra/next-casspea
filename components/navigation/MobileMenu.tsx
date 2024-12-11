@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CiShoppingCart, CiShoppingTag, CiShoppingBasket, CiHome } from "react-icons/ci";
+import { CiShoppingCart, CiShoppingTag, CiShoppingBasket, CiHome, CiCircleQuestion } from "react-icons/ci";
 import { PiPaintBrushThin } from "react-icons/pi";
 
 import { IconType } from 'react-icons';
@@ -38,6 +38,11 @@ const menuItems: MenuItem[] = [
         name: 'Cart',
         href: '/cart',
         icon: CiShoppingBasket,
+    },
+    {
+        name: 'Hel',
+        href: '/help',
+        icon: CiCircleQuestion,
     },
 ];
 
