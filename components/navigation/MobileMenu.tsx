@@ -40,7 +40,7 @@ const menuItems: MenuItem[] = [
         icon: CiShoppingBasket,
     },
     {
-        name: 'Hel',
+        name: 'Help',
         href: '/help',
         icon: CiCircleQuestion,
     },
