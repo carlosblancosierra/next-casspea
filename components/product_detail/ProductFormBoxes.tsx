@@ -80,7 +80,6 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
 
     const incrementQuantity = (index: number) => {
         if (remainingChocolates <= 0) {
-            toast.error('No more chocolates remaining.');
             return;
         }
         handleFlavourChange(index, 'quantity', flavours[index].quantity + 1);
