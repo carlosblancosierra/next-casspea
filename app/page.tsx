@@ -66,8 +66,8 @@ export default function HomePage() {
 
 						<ImageGallery images={
 							['/home/christmas/hero1.jpg',
-								'/home/hero-2.jpeg',
-								'/home/hero-3.jpeg',
+								'/home/christmas/hero2.jpg',
+								'/home/christmas/hero3.jpg',
 							]} className='block md:hidden' />
 
 						<p className="md:hidden md:mb-6 text-3xl font-bold mt-2 font-playfair lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">Share the love with CassPea Chocolates</p>
