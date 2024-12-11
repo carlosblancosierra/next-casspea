@@ -53,7 +53,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
                         key={idx}
                         className="min-w-[calc(100%-8px)] pr-2 box-border"
                     >
-                        <div className="aspect-[4/5] relative rounded-lg shadow overflow-hidden">
+                        <div className="aspect-[4/5]relative rounded-lg shadow overflow-hidden">
                             <Image
                                 src={url}
                                 priority={idx <= 2}
