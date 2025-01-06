@@ -84,7 +84,7 @@ const MobileMenu = () => {
                     <Link
                         key={name}
                         href={href}
-                        className={`inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group ${isActive(href) ? 'text-blue-600 dark:text-blue-500' : ''
+                        className={`inline-flex flex-col items-center justify-center px-3 hover:bg-gray-50 dark:hover:bg-gray-800 group ${isActive(href) ? 'text-blue-600 dark:text-blue-500' : ''
                             }`}
                     >
                         <Icon
