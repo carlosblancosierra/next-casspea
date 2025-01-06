@@ -110,7 +110,7 @@ const HelpPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                             <h3 className="font-bold text-indigo-600 dark:text-indigo-400">FREE SHIPPING</h3>
-                            <p className="text-gray-600 dark:text-gray-300">On all orders over £45</p>
+                            <p className="text-gray-600 dark:text-gray-300">On all orders over £50</p>
                         </div>
                         <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                             <h3 className="font-bold text-indigo-600 dark:text-indigo-400">10% OFF</h3>
