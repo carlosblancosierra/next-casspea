@@ -26,12 +26,9 @@ const Cart: React.FC = () => {
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {cart?.items && cart.items.length > 0 ? (
-          <div className="space-y-8">
+          <div className="md:grid md:grid-cols-[3fr,1fr] md:gap-8">
             <CartItemTable cartEntries={cart.items} />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div></div>
-              <CartCheckout />
-            </div>
+            <CartCheckout />
           </div>
         ) : (
           <p className="text-gray-500 dark:text-gray-400 text-center">Your cart is empty.</p>
