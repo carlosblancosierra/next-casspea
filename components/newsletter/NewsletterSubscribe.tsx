@@ -5,7 +5,8 @@ import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { useSubscribeToNewsletterMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 
-export default function NewsletterSubscribe() {
+export default function
+NewsletterSubscribe() {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [subscribeToNewsletter, { isLoading: apiLoading, isError, error }] = useSubscribeToNewsletterMutation();
