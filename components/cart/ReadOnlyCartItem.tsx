@@ -49,7 +49,7 @@ const ReadOnlyCartItem: React.FC<ReadOnlyCartItemProps> = ({ entry }) => {
                 </p>
 
                 <p className="flex flex-wrap items-center gap-2">
-                    <span className="items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+                    <span className="items-center rounded-md  px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
                         {entry.box_customization?.selection_type === 'PICK_AND_MIX' && 'Pick & Mix'}
                         {entry.box_customization?.selection_type === 'RANDOM' && 'Surprise Me'}
                     </span>
@@ -57,7 +57,7 @@ const ReadOnlyCartItem: React.FC<ReadOnlyCartItemProps> = ({ entry }) => {
                     {entry.box_customization?.allergens?.map((allergen) => (
                         <span
                             key={allergen.id}
-                            className="items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+                            className="items-center rounded-md  px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
                         >
                             {allergen.name} Free
                         </span>

@@ -51,7 +51,7 @@ export default function DiscountForm() {
     // If cart has an active discount code
     if (cart?.discount) {
         return (
-            <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded-md">
+            <div className="flex items-center justify-between  dark:bg-gray-700 px-3 py-2 rounded-md">
                 <span className="text-xs font-medium text-gray-900 dark:text-gray-100">
                     {cart.discount.code}
                 </span>

@@ -60,7 +60,7 @@ const CheckoutConfirm = () => {
 
     if (sessionLoading || cartLoading) {
         return (
-            <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+            <div className=" dark:bg-gray-900 min-h-screen py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[calc(80vh)] flex items-center justify-center">
                     <Spinner className="mx-auto" />
                 </div>
@@ -70,7 +70,7 @@ const CheckoutConfirm = () => {
 
     if (sessionError || cartError) {
         return (
-            <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+            <div className=" dark:bg-gray-900 min-h-screen py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-red-500">Error loading checkout details</div>
                 </div>
@@ -79,7 +79,7 @@ const CheckoutConfirm = () => {
     }
 
     return (
-        <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+        <div className=" dark:bg-gray-900 min-h-screen py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="space-y-6">
                     <div className="space-y-4">

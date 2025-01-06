@@ -79,7 +79,7 @@ export default function NewsletterSubscribe() {
                                         id="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50
+                                        className="block p-3 pl-10 w-full text-sm text-gray-900
                                             rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg
                                             focus:ring-indigo-500 focus:border-indigo-500
                                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400

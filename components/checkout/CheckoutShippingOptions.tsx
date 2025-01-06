@@ -66,7 +66,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     <label
                         key={option.id}
                         className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer
-                            ${isUpdating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50 dark:hover:bg-gray-700'}
+                            ${isUpdating ? 'opacity-50 cursor-not-allowed' : 'hover: dark:hover:bg-gray-700'}
                             ${localSelectedOption === option.id.toString() ? 'border-indigo-500 ring-1 ring-indigo-500' : 'border-gray-200'}`}
                     >
                         <div className="flex items-center">

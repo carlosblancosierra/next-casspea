@@ -65,7 +65,7 @@ const faqs = [
 
 const HelpPage = () => {
     return (
-        <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+        <div className=" dark:bg-gray-900 min-h-screen py-8">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Legacy Website Notice - Now at the top */}
                 <div className="bg-indigo-50 dark:bg-indigo-900/50 rounded-lg shadow-sm p-6 mb-8">
@@ -108,11 +108,11 @@ const HelpPage = () => {
                 {/* Quick Info Section */}
                 <section className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div className="text-center p-4  dark:bg-gray-700 rounded-lg">
                             <h3 className="font-bold text-indigo-600 dark:text-indigo-400">FREE SHIPPING</h3>
                             <p className="text-gray-600 dark:text-gray-300">On all orders over £50</p>
                         </div>
-                        <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div className="text-center p-4  dark:bg-gray-700 rounded-lg">
                             <h3 className="font-bold text-indigo-600 dark:text-indigo-400">10% OFF</h3>
                             <p className="text-gray-600 dark:text-gray-300">Subscribe to our newsletter</p>
                         </div>
