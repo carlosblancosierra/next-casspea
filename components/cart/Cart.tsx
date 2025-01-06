@@ -29,9 +29,6 @@ const Cart: React.FC = () => {
         {cart?.items && cart.items.length > 0 ? (
           <div className="md:grid md:grid-cols-[3fr,1fr] md:gap-8">
             <CartItemTable cartEntries={cart.items} />
-            <Link href="/store" className="text-blue-500 hover:underline">
-              Keep Shopping
-            </Link>
             <CartCheckout />
           </div>
         ) : (
