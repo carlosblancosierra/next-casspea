@@ -3,18 +3,19 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
+import { useSubscribeToNewsletterMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 
 export default function NewsletterSubscribe() {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [subscribeToNewsletter, { isLoading: apiLoading, isError, error }] = useSubscribeToNewsletterMutation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
         try {
-            // TODO: Implement newsletter subscription API call
-            // const response = await subscribeToNewsletter(email);
+            await subscribeToNewsletter({ email: email }).unwrap();
             toast.success('Thank you for subscribing!');
             setEmail('');
         } catch (error) {
