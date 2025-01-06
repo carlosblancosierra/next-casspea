@@ -7,6 +7,7 @@ import { Setup } from '@/components/utils';
 import AnnouncementBar from '@/components/common/AnnouncementBar';
 import MobileMenu from '@/components/navigation/MobileMenu';
 import dynamic from 'next/dynamic';
+import Script from 'next/script';
 const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
   ssr: false
 });
@@ -33,6 +34,31 @@ export default function RootLayout({
         className={`${inter.className} min-h-screen bg-white dark:bg-gray-900 dark:text-white flex flex-col relative`}
         suppressHydrationWarning
       >
+        <Script id="mouseflow" strategy="afterInteractive">
+          {`
+            window._mfq = window._mfq || [];
+            (function() {
+              var mf = document.createElement("script");
+              mf.type = "text/javascript"; mf.defer = true;
+              mf.src = "//cdn.mouseflow.com/projects/67089cbf-94d0-4a51-93a7-c17259e44fc6.js";
+              document.getElementsByTagName("head")[0].appendChild(mf);
+            })();
+          `}
+        </Script>
+
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-FBD3HVXC41"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-FBD3HVXC41');
+          `}
+        </Script>
+
         <Provider>
           <Setup />
           <SnowEffect />
