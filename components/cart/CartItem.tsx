@@ -11,23 +11,23 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
   const boxSize = entry.product.units_per_box;
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-[1.5fr,1.5fr,2fr] gap-4 border border-gray-200 bg-white p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+    <div className="grid grid-cols-2 md:grid-cols-[1fr,3fr] gap-4 border border-gray-200 bg-white p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
       {/* First Column: Product Image */}
-      <a href="#" className="col-span-1 md:col-span-1">
+      <a href="#" className="col-span-1">
         <img
-          className="w-full dark:hidden"
+          className="w-full max-w-[150px] dark:hidden"
           src={entry.product.image || 'https://via.placeholder.com/150'}
           alt={entry.product.name}
         />
         <img
-          className="w-full hidden dark:block"
+          className="w-full max-w-[150px] hidden dark:block"
           src={entry.product.image || 'https://via.placeholder.com/150'}
           alt={entry.product.name}
         />
       </a>
 
-      {/* Second Column: Product Info and Actions */}
-      <div className="col-span-1 space-y-4 md:order-3 md:col-span-1">
+      {/* Second Column: Product Info, Actions, and Flavour Grid */}
+      <div className="col-span-1 space-y-4">
         <a href="#" className="text-base font-medium text-gray-900 hover:underline dark:text-white">
           {entry.product.name}
         </a>
@@ -87,12 +87,12 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
             Remove
           </button> */}
         </div>
-      </div>
 
-      {/* Third Column: Flavour Selection Grid */}
-      <div className="col-span-2 md:order-2 px-6 md:col-span-1">
-        {entry.box_customization?.selection_type == 'PICK_AND_MIX' && (
-          <FlavourSelectionGrid flavours={entry.box_customization.flavor_selections || []} boxSize={boxSize} />
+        {/* Flavour Selection Grid - now in the same column */}
+        {entry.box_customization?.selection_type === 'PICK_AND_MIX' && (
+          <div className="mt-6">
+            <FlavourSelectionGrid flavours={entry.box_customization.flavor_selections || []} boxSize={boxSize} />
+          </div>
         )}
       </div>
     </div>
