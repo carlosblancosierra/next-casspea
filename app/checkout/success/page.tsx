@@ -5,8 +5,8 @@ import Link from 'next/link';
 
 const ConfirmPage: React.FC = () => {
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg text-center max-w-md">
+        <div className="flex items-center justify-center min-h-[100dvh] px-4 py-8 bg-gray-100 dark:bg-gray-900">
+            <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-lg text-center w-full max-w-md mx-auto">
                 <h1 className="text-3xl font-bold text-green-600">Order Placed Successfully!</h1>
                 <div className="mt-4 space-y-3">
                     <p className="text-gray-700 dark:text-gray-300">
