@@ -13,7 +13,7 @@ const navigation = [
   // { name: 'Advent Calendar', href: '/store/advent-calendar', current: false },
   // { name: 'Snacks', href: '/store/snacks', current: false },
   { name: 'Flavours', href: '/flavours', current: false },
-  // { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false },
+  { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false },
   { name: 'Help', href: '/help', current: false },
 ]
 
