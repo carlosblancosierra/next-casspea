@@ -40,12 +40,12 @@ export default function AnnouncementBar() {
           className="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
         />
       </div>
-      <div className="flex items-center justify-between gap-x-4 md:gap-x-6 max-w-screen-2xl mx-auto">
+      <div className="flex items-center justify-between gap-x-4 md:gap-x-6 max-w-screen-2xl mx-auto text-gray-900 dark:text-white">
         <div className="flex flex-1 justify-center items-center gap-x-4 md:gap-x-8">
-          <p className="text-sm leading-6 text-gray-900">
+          <p className="text-sm leading-6 ">
             Tel: 07859 790386 / email: info@casspea.co.uk
           </p>
-          <p className="text-sm leading-6 text-gray-900">
+          <p className="text-sm leading-6">
             Free Shipping over £50
           </p>
           <Link
