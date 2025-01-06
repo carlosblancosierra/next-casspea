@@ -251,12 +251,12 @@ export default function CartCheckout() {
 
                 <Link
                     href="/store"
-                    className="inline-flex items-center justify-center rounded-md bg-pink-600 px-4 py-3 text-sm font-semibold text-white"
+                    className="inline-flex items-center justify-center rounded-md bg-pink-600 px-4 py-3 text-sm font-semibold text-white w-full mt-4"
                 >
                     <span>Keep Shopping</span>
                 </Link>
 
-                <div className="mt-6">
+                <div className="mt-4">
                     <button
                         type="button"
                         onClick={handleCheckout}

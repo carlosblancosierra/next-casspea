@@ -17,7 +17,7 @@ const CartItemTable: React.FC<CartItemTableProps> = ({ cartEntries }) => {
       )}
       <Link
         href="/store"
-        className="inline-flex items-center justify-center rounded-md bg-pink-600 px-4 py-3 text-sm font-semibold text-white"
+        className="inline-flex items-center justify-center rounded-md bg-pink-600 px-4 py-3 text-sm font-semibold text-white w-full md:hidden"
       >
         <span>Keep Shopping</span>
       </Link>
