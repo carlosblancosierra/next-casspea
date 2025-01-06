@@ -48,7 +48,7 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src="/logos/logo-black-hat.png"
+                      src="/logos/black.png"
                       width={0}
                       height={0}
                       sizes="100vw"
@@ -59,7 +59,7 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src="/logos/logo-white-hat.png"
+                      src="/logos/white.png"
                       width={0}
                       height={0}
                       sizes="100vw"
