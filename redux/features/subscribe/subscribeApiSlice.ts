@@ -13,7 +13,7 @@ const subscribeApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         subscribeToNewsletter: builder.mutation<SubscribeResponse, SubscribeRequest>({
             query: (data) => ({
-                url: '/subscribe/',
+                url: '/leads/subscribe/',
                 method: 'POST',
                 body: data,
             }),
