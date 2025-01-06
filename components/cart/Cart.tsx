@@ -34,8 +34,11 @@ const Cart: React.FC = () => {
         ) : (
           <div className="flex flex-col items-center justify-center h-[calc(80vh)]">
             <p className="text-gray-500 dark:text-gray-400 text-center">Your cart is empty.</p>
-            <Link href="/store" className="text-blue-500 hover:underline">
-              Keep Shopping
+            <Link
+              href="/store"
+              className="inline-flex items-center justify-center rounded-md bg-pink-600 px-4 py-3 text-sm font-semibold text-white"
+            >
+              <span>Keep Shopping</span>
             </Link>
           </div>
         )}

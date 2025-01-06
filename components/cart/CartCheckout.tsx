@@ -8,6 +8,7 @@ import GiftMessage from './GiftMessage';
 import ShippingDateForm from './ShippingDateForm';
 import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { CartUpdate } from '@/types/carts';
+import Link from 'next/link';
 import { useUpdateSessionMutation, useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 
 export default function CartCheckout() {
@@ -247,6 +248,13 @@ export default function CartCheckout() {
                 <div className="mt-6">
                     <EmailForm initialEmail={email} onValidEmail={handleValidEmail} />
                 </div>
+
+                <Link
+                    href="/store"
+                    className="inline-flex items-center justify-center rounded-md bg-pink-600 px-4 py-3 text-sm font-semibold text-white"
+                >
+                    <span>Keep Shopping</span>
+                </Link>
 
                 <div className="mt-6">
                     <button

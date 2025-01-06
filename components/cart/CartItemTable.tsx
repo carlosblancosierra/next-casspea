@@ -15,8 +15,11 @@ const CartItemTable: React.FC<CartItemTableProps> = ({ cartEntries }) => {
       ) : (
         <p className="text-gray-500 dark:text-gray-400 text-center"></p>
       )}
-      <Link href="/store" className="text-blue-500 hover:underline bg-pink-500 px-4 py-2 rounded-md">
-        Keep Shopping
+      <Link
+        href="/store"
+        className="inline-flex items-center justify-center rounded-md bg-pink-600 px-4 py-3 text-sm font-semibold text-white"
+      >
+        <span>Keep Shopping</span>
       </Link>
     </div>
   );
