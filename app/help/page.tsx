@@ -67,22 +67,6 @@ const HelpPage = () => {
     return (
         <div className=" dark:bg-gray-900 min-h-screen py-8">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Legacy Website Notice - Now at the top */}
-                <div className="bg-indigo-50 dark:bg-indigo-900/50 rounded-lg shadow-sm p-6 mb-8">
-                    <h2 className="text-xl font-semibold text-indigo-900 dark:text-indigo-100 mb-2">🌟 Visit Our Original Website</h2>
-                    <p className="text-indigo-700 dark:text-indigo-300">
-                        While we're transitioning to our new platform, you can still visit our original website at{' '}
-                        <a
-                            href="https://www.casspea.co.uk"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-medium underline hover:text-indigo-900 dark:hover:text-indigo-100"
-                        >
-                            www.casspea.co.uk
-                        </a>
-                    </p>
-                </div>
-
                 {/* Contact Section */}
                 <section className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Contact Us</h2>
