@@ -114,7 +114,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 type="text"
                                 value={getFlavorQuantity(flavour.flavor.id)}
                                 readOnly
-                                className=" dark:bg-gray-800 border-x-0 border-gray-300 dark:border-gray-600 h-11 text-center text-gray-900 dark:text-gray-300 text-sm block w-[3rem] py-2.5"
+                                className=" dark:bg-gray-800 border-x-0 border-gray-300 dark:border-gray-600 h-11 text-center text-gray-900 dark:text-gray-300 text-base block w-[3rem] py-2.5"
                             />
                             <button
                                 type="button"

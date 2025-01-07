@@ -51,7 +51,7 @@ const AddressLookup: React.FC<AddressLookupProps> = ({ onPlaceSelect, addressErr
                 id="address-lookup"
                 placeholder="Start typing your address..."
                 className={clsx(
-                    "mt-0.5 block w-full rounded-md border text-sm",
+                    "mt-0.5 block w-full rounded-md border text-base",
                     addressError
                         ? "border-red-500"
                         : "border-gray-300 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600",
