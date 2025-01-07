@@ -9,7 +9,7 @@ interface CartItemTableProps {
 
 const CartItemTable: React.FC<CartItemTableProps> = ({ cartEntries }) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {cartEntries.length > 0 ? (
         cartEntries.map((entry) => <CartItem key={entry.id} entry={entry} />)
       ) : (
