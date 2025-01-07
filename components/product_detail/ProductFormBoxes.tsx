@@ -230,7 +230,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             bg-white dark:bg-gray-800 shadow-sm focus:border-indigo-500
                             focus:ring-indigo-500"
                     >
-                        {Array.from({ length: 10 }, (_, i) => (
+                        {Array.from({ length: 20 }, (_, i) => (
                             <option key={i + 1} value={i + 1}>{i + 1}</option>
                         ))}
                     </select>
@@ -238,7 +238,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             </div>
 
             {/* Add to Cart Button */}
-            <div className="sticky bottom-0 bg-white dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4
+            <div className="sticky bottom-[55px] bg-white dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4
                 border-t border-gray-200 dark:border-gray-700">
                 <AddToCartButton
                     onClick={handleAddToCart}
