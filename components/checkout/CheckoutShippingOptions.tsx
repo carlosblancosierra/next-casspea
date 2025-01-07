@@ -3,6 +3,7 @@ import { useUpdateSessionMutation } from '@/redux/features/checkout/checkoutApiS
 import { toast } from 'react-toastify';
 import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
 import { ShippingCompany } from '@/types/shipping';
+import { addBusinessDays, format } from 'date-fns';
 
 interface CheckoutShippingOptionsProps {
     shippingCompanies: ShippingCompany[] | undefined;
@@ -53,6 +54,21 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         }
     };
 
+    const getEstimatedDeliveryDates = (minDays: number, maxDays: number) => {
+        // Get next business day for shipping
+        const today = new Date();
+        const shippingDate = addBusinessDays(today, 1);
+
+        // Calculate delivery window
+        const minDeliveryDate = addBusinessDays(shippingDate, minDays);
+        const maxDeliveryDate = addBusinessDays(shippingDate, maxDays);
+
+        return {
+            shipping: format(shippingDate, 'EEE, d MMM'),
+            delivery: `${format(minDeliveryDate, 'EEE, d MMM')} - ${format(maxDeliveryDate, 'EEE, d MMM')}`
+        };
+    };
+
     if (!allShippingOptions.length) return null;
 
     return (
@@ -61,38 +77,48 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                 Shipping Options
             </h2>
 
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+                Orders will be shipped ASAP, usually within 24 hours. Delivery Date depends on the shipping option selected.
+            </p>
+
             <div className="space-y-4">
-                {allShippingOptions.map((option) => (
-                    <label
-                        key={option.id}
-                        className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer
-                            ${isUpdating ? 'opacity-50 cursor-not-allowed' : 'hover: dark:hover:bg-gray-700'}
-                            ${localSelectedOption === option.id.toString() ? 'border-indigo-500 ring-1 ring-indigo-500' : 'border-gray-200'}`}
-                    >
-                        <div className="flex items-center">
-                            <input
-                                type="radio"
-                                name="shipping"
-                                value={option.id.toString()}
-                                checked={localSelectedOption === option.id.toString()}
-                                onChange={() => handleShippingChange(option.id.toString())}
-                                disabled={isUpdating}
-                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
-                            />
-                            <div className="ml-3">
-                                <h3 className="font-medium text-gray-900 dark:text-gray-100">
-                                    {option.companyName} - {option.name}
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-400">
-                                    {option.estimated_days_min}-{option.estimated_days_max} days
-                                </p>
+                {allShippingOptions.map((option) => {
+                    const dates = getEstimatedDeliveryDates(option.estimated_days_min, option.estimated_days_max);
+                    return (
+                        <label
+                            key={option.id}
+                            className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer
+                                ${isUpdating ? 'opacity-50 cursor-not-allowed' : 'hover: dark:hover:bg-gray-700'}
+                                ${localSelectedOption === option.id.toString() ? 'border-indigo-500 ring-1 ring-indigo-500' : 'border-gray-200'}`}
+                        >
+                            <div className="flex items-center">
+                                <input
+                                    type="radio"
+                                    name="shipping"
+                                    value={option.id.toString()}
+                                    checked={localSelectedOption === option.id.toString()}
+                                    onChange={() => handleShippingChange(option.id.toString())}
+                                    disabled={isUpdating}
+                                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <div className="ml-3">
+                                    <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                                        {option.companyName} - {option.name}
+                                    </h3>
+                                    <p className="text-gray-600 dark:text-gray-400">
+                                        Ships: {dates.shipping}
+                                    </p>
+                                    <p className="text-gray-600 dark:text-gray-400">
+                                        Estimated Delivery: {dates.delivery}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="text-gray-500 dark:text-gray-400">
-                            {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(option.price)}
-                        </div>
-                    </label>
-                ))}
+                            <div className="text-gray-500 dark:text-gray-400">
+                                {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(option.price)}
+                            </div>
+                        </label>
+                    );
+                })}
             </div>
         </div>
     );

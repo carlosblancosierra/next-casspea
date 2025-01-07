@@ -154,7 +154,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         <form onSubmit={(e) => {
             e.preventDefault();
         }}>
-            <div className="space-y-6">
+            <div className="space-y-6 pb-6">
                 <BoxSelection
                     options={prebulids}
                     selected={selection}
