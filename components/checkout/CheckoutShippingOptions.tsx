@@ -55,17 +55,16 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     };
 
     const getEstimatedDeliveryDates = (minDays: number, maxDays: number) => {
-        // Get next business day for shipping
         const today = new Date();
         const shippingDate = addBusinessDays(today, 1);
-
-        // Calculate delivery window
         const minDeliveryDate = addBusinessDays(shippingDate, minDays);
         const maxDeliveryDate = addBusinessDays(shippingDate, maxDays);
 
         return {
             shipping: format(shippingDate, 'EEE, d MMM'),
-            delivery: `${format(minDeliveryDate, 'EEE, d MMM')} - ${format(maxDeliveryDate, 'EEE, d MMM')}`
+            delivery: minDays === maxDays
+                ? format(minDeliveryDate, 'EEE, d MMM')
+                : `${format(minDeliveryDate, 'EEE, d MMM')} - ${format(maxDeliveryDate, 'EEE, d MMM')}`
         };
     };
 
@@ -77,7 +76,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                 Shipping Options
             </h2>
 
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                 Orders will be shipped ASAP, usually within 24 hours. Delivery Date depends on the shipping option selected.
             </p>
 
@@ -105,10 +104,10 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     <h3 className="font-medium text-gray-900 dark:text-gray-100">
                                         {option.companyName} - {option.name}
                                     </h3>
-                                    <p className="text-gray-600 dark:text-gray-400">
+                                    <p className="text-gray-600 dark:text-gray-400 text-sm">
                                         Ships: {dates.shipping}
                                     </p>
-                                    <p className="text-gray-600 dark:text-gray-400">
+                                    <p className="text-gray-600 dark:text-gray-400 text-sm">
                                         Estimated Delivery: {dates.delivery}
                                     </p>
                                 </div>
