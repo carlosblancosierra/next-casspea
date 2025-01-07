@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { useSubscribeToNewsletterMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 
 export default function
-NewsletterSubscribe() {
+    NewsletterSubscribe() {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [subscribeToNewsletter, { isLoading: apiLoading, isError, error }] = useSubscribeToNewsletterMutation();
@@ -80,7 +80,7 @@ NewsletterSubscribe() {
                                         id="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="block p-3 pl-10 w-full text-sm text-gray-900
+                                        className="block p-3 pl-10 w-full text-base text-gray-900
                                             rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg
                                             focus:ring-indigo-500 focus:border-indigo-500
                                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
