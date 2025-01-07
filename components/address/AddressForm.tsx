@@ -85,7 +85,14 @@ const AddressForm: React.FC<AddressFormProps> = ({
                 <FormInput id="last_name" name="last_name" label="Last Name" value={formData.last_name || ''} onChange={handleInputChange} required />
             </FormSection>
             {/* <FormInput id="email" name="email" type="email" label="Email Address" value={formData.email || ''} onChange={handleInputChange} required /> */}
-            <FormInput id="phone" name="phone" type="tel" label="Phone Number" value={formData.phone} onChange={handleInputChange} />
+            <FormInput
+                id="phone"
+                name="phone"
+                type="tel"
+                label="Phone Number (Optional)"
+                value={formData.phone || ''}
+                onChange={handleInputChange}
+            />
             <FormInput id="street_address" name="street_address" label="Street Address" value={formData.street_address} onChange={handleInputChange} required />
             <FormInput id="street_address2" name="street_address2" label="Address Line 2" value={formData.street_address2 || ''} onChange={handleInputChange} />
             <FormSection>
