@@ -82,7 +82,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                     className={({ active, checked }) =>
                         `${checked
                             ? 'bg-indigo-50 dark:bg-indigo-900 border-indigo-600'
-                            : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'
+                            : 'border-gray-300 dark:border-gray-600'
                         }
                         relative rounded-lg border px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
                     }
