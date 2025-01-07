@@ -104,6 +104,9 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     <h3 className="font-medium text-gray-900 dark:text-gray-100">
                                         {option.companyName} - {option.name}
                                     </h3>
+                                    <p className="text-gray-900 dark:text-gray-100 dark:text-gray-400 text-base">
+                                        {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(option.price)}
+                                    </p>
                                     <p className="text-gray-600 dark:text-gray-400 text-sm">
                                         Ships: {dates.shipping}
                                     </p>
@@ -111,9 +114,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                         Estimated Delivery: {dates.delivery}
                                     </p>
                                 </div>
-                            </div>
-                            <div className="text-gray-500 dark:text-gray-400">
-                                {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(option.price)}
                             </div>
                         </label>
                     );
