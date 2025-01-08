@@ -75,7 +75,7 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
                     }
                 }}
                 displayFormat="DD/MM/YYYY"
-                placeholder="Select delivery date"
+                placeholder="Select Shipping Date"
                 startFrom={getTomorrow()}
                 disabledDates={getDisabledDates()}
                 readOnly={true}
