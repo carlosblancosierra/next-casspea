@@ -53,7 +53,7 @@ const ConfirmPage: React.FC = () => {
 
                         <div className="mt-8">
                             <Link
-                                href="/store"
+                                href="/shop-now/"
                                 className="inline-flex items-center justify-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 transition-colors"
                             >
                                 Continue Shopping

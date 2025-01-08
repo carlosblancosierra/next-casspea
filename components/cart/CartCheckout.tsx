@@ -250,7 +250,7 @@ export default function CartCheckout() {
                 </div>
 
                 <Link
-                    href="/store"
+                    href="/shop-now/"
                     className="inline-flex items-center justify-center rounded-md bg-pink-600 px-4 py-3 text-sm font-semibold text-white w-full mt-4"
                 >
                     <span>Keep Shopping</span>

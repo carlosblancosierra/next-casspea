@@ -11,7 +11,7 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
             <ol role="list" className="flex space-x-2 py-2">
                 <li>
                     <div className="flex items-center">
-                        <a href="/store" className="mr-2 text-sm text-gray-900 dark:text-gray-400">Store</a>
+                        <a href="/shop-now/" className="mr-2 text-sm text-gray-900 dark:text-gray-400">Store</a>
                         <svg
                             fill="currentColor"
                             width={16}
@@ -26,7 +26,7 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
                 </li>
                 <li>
                     <div className="flex items-center">
-                        <a href="/store" className="mr-2 text-sm text-gray-900 dark:text-gray-400">
+                        <a href="/shop-now/" className="mr-2 text-sm text-gray-900 dark:text-gray-400">
                             {product.category?.name}
                         </a>
                         <svg
