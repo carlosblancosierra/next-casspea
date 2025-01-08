@@ -13,7 +13,7 @@ const navigation = [
   // { name: 'Advent Calendar', href: '/store/advent-calendar', current: false },
   // { name: 'Snacks', href: '/store/snacks', current: false },
   { name: 'Flavours', href: '/flavours', current: false },
-  { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false },
+  { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false, external: true },
   { name: 'Help', href: '/help', current: false },
 ]
 
@@ -74,6 +74,8 @@ export default function Nav() {
                       <Link
                         key={item.name}
                         href={item.href}
+                        target={item.external ? '_blank' : undefined}
+                        rel={item.external ? 'noopener noreferrer' : undefined}
                         className={classNames(
                           item.current
                             ? 'bg-gray-900 text-white'
@@ -108,17 +110,21 @@ export default function Nav() {
           <DisclosurePanel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
               {navigation.map((item) => (
-                <DisclosureButton
+                <Link
                   key={item.name}
-                  as="Link"
                   href={item.href}
-                  className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
+                  target={item.external ? '_blank' : undefined}
+                  rel={item.external ? 'noopener noreferrer' : undefined}
                 >
-                  {item.name}
-                </DisclosureButton>
+                  <DisclosureButton
+                    className={classNames(
+                      item.current ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white',
+                      'block w-full rounded-md px-3 py-2 text-base font-medium text-left'
+                    )}
+                  >
+                    {item.name}
+                  </DisclosureButton>
+                </Link>
               ))}
             </div>
           </DisclosurePanel>
