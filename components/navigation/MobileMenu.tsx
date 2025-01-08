@@ -26,7 +26,7 @@ const menuItems: MenuItem[] = [
     },
     {
         name: 'Store',
-        href: '/store',
+        href: '/shop-now',
         icon: CiShoppingCart,
     },
     // {
