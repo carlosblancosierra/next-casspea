@@ -8,7 +8,7 @@ import AnnouncementBar from '@/components/common/AnnouncementBar';
 import MobileMenu from '@/components/navigation/MobileMenu';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
-import { useDiscountCode } from '@/hooks/useDiscountCode';
+import LayoutWrapper from '@/components/common/LayoutWrapper';
 
 const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
   ssr: false
@@ -16,16 +16,11 @@ const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
 
 const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ subsets: ['latin'] });
+
 export const metadata: Metadata = {
   title: 'CassPea Premium Chocolates',
   description: 'Handcrafted premium chocolates and confectionery',
 };
-
-'use client';
-function LayoutWrapper({ children }: { children: React.ReactNode }) {
-  useDiscountCode();
-  return <>{children}</>;
-}
 
 export default function RootLayout({
   children,
