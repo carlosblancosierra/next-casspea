@@ -8,6 +8,8 @@ import AnnouncementBar from '@/components/common/AnnouncementBar';
 import MobileMenu from '@/components/navigation/MobileMenu';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
+import { useDiscountCode } from '@/hooks/useDiscountCode';
+
 const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
   ssr: false
 });
@@ -18,6 +20,12 @@ export const metadata: Metadata = {
   title: 'CassPea Premium Chocolates',
   description: 'Handcrafted premium chocolates and confectionery',
 };
+
+'use client';
+function LayoutWrapper({ children }: { children: React.ReactNode }) {
+  useDiscountCode();
+  return <>{children}</>;
+}
 
 export default function RootLayout({
   children,
@@ -62,19 +70,21 @@ export default function RootLayout({
         <Provider>
           <Setup />
           <SnowEffect />
-          <div className="flex flex-col min-h-screen relative">
-            <AnnouncementBar />
-            <Navbar />
-            <main className="flex-grow pb-16 md:pb-0">
-              {children}
-            </main>
-            <div className="hidden md:block">
-              <Footer />
+          <LayoutWrapper>
+            <div className="flex flex-col min-h-screen relative">
+              <AnnouncementBar />
+              <Navbar />
+              <main className="flex-grow pb-16 md:pb-0">
+                {children}
+              </main>
+              <div className="hidden md:block">
+                <Footer />
+              </div>
+              <div className="block md:hidden">
+                <MobileMenu />
+              </div>
             </div>
-            <div className="block md:hidden">
-              <MobileMenu />
-            </div>
-          </div>
+          </LayoutWrapper>
         </Provider>
       </body>
     </html>
