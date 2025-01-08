@@ -32,8 +32,9 @@ export default function HomePage() {
 						<h1 className={`${playfair.className} mb-2 text-5xl font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}>
 							London’s Finest Artisan Chocolates
 						</h1>
-						<h2 className="text-2xl md:text-2xl tracking-tight mb-2 dark:text-white ">Celebrate
-							Christmas with Our Signature Gift Boxes</h2>
+						<h2 className="text-2xl md:text-2xl tracking-tight mb-2 dark:text-white ">
+							Celebrate Every Occasion with Our Signature Gift Boxes
+						</h2>
 						<p className="hidden md:block md:mb-6 font-light text-sm text-gray-500 lg:mb-8 md:text-base dark:text-gray-200">Share the love with CassPea Chocolates—perfect for personal indulgence, birthdays, corporate events, and special celebrations. With over 20 exquisite flavours, each handcrafted to perfection by our skilled chocolatiers, every bite is a work of art and a journey through inspired flavours.</p>
 						{/* Desktop buttons */}
 						<div className='hidden md:flex gap-2'>
@@ -66,9 +67,9 @@ export default function HomePage() {
 
 						<ImageGallery images={
 							['/home/christmas/hero1.jpg',
-								'/home/christmas/hero2.jpg',
-								'/home/christmas/hero3.jpg',
-								'/home/hero-1.jpg'
+								'/home/hero-1.jpg',
+								'/home/hero-2.jpeg',
+								'/home/mobile-hero-1.png'
 							]} className='block md:hidden' />
 
 						<p className="md:hidden md:mb-6 text-3xl font-bold mt-2 font-playfair lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">Share the love with CassPea Chocolates</p>
