@@ -98,11 +98,18 @@ export default function OrderList() {
                                                     )}
                                                 </div>
                                                 {(item.box_customization.flavor_selections?.length ?? 0) > 0 && (
-                                                    <div className="text-sm text-gray-500">
-                                                        Flavors: {item.box_customization.flavor_selections?.
+                                                    <div className="text-xs text-gray-500">
+                                                        Flavors:<br/>
+                                                        {item.box_customization.flavor_selections?.
                                                             filter(f => f.flavor_name && f.quantity)
                                                             .map(f => `${f.flavor_name} (x${f.quantity})`)
-                                                            .join(', ') || 'None specified'}
+                                                            .join('\n')
+                                                            .split('\n')
+                                                            .map((line, i) => (
+                                                                <span key={i}>
+                                                                    {line}<br/>
+                                                                </span>
+                                                            )) || 'None specified'}
                                                     </div>
                                                 )}
                                             </>
