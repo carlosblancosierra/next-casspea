@@ -8,12 +8,12 @@ interface PaymentMethodsProps {
 
 const PaymentMethods: React.FC<PaymentMethodsProps> = () => {
   const paymentMethods = [
-    { src: "https://www.casspea.co.uk/static/images/payments/visa.png", alt: "Visa" },
-    { src: "https://www.casspea.co.uk/static/images/payments/master.png", alt: "Mastercard" },
-    { src: "https://www.casspea.co.uk/static/images/payments/google.png", alt: "Google Pay" },
-    { src: "https://www.casspea.co.uk/static/images/payments/apple.png", alt: "Apple Pay" },
-    { src: "https://www.casspea.co.uk/static/images/payments/amex.png", alt: "Amex" },
-    { src: "https://www.casspea.co.uk/static/images/payments/diners.png", alt: "Diners Club" },
+    { src: "https://casspea-static-eu.s3.eu-west-1.amazonaws.com/static/images/payments/visa.png", alt: "Visa" },
+    { src: "https://casspea-static-eu.s3.eu-west-1.amazonaws.com/static/images/payments/master.png", alt: "Mastercard" },
+    { src: "https://casspea-static-eu.s3.eu-west-1.amazonaws.com/static/images/payments/google.png", alt: "Google Pay" },
+    { src: "https://casspea-static-eu.s3.eu-west-1.amazonaws.com/static/images/payments/apple.png", alt: "Apple Pay" },
+    { src: "https://casspea-static-eu.s3.eu-west-1.amazonaws.com/static/images/payments/amex.png", alt: "Amex" },
+    { src: "https://casspea-static-eu.s3.eu-west-1.amazonaws.com/static/images/payments/diners.png", alt: "Diners Club" },
   ];
 
   return (
