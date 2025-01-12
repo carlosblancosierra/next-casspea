@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { useResetPasswordConfirmMutation } from '@/redux/features/authApiSlice';
+import { useResetPasswordConfirmMutation } from '@/redux/features/auth/authApiSlice';
 import { toast } from 'react-toastify';
 
 export default function useResetPasswordConfirm(uid: string, token: string) {

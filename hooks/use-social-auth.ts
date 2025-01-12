@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAppDispatch } from '@/redux/hooks';
-import { setAuth } from '@/redux/features/authSlice';
+import { setAuth } from '@/redux/features/auth/authSlice';
 import { toast } from 'react-toastify';
 
 export default function useSocialAuth(authenticate: any, provider: string) {
