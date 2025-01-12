@@ -10,7 +10,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
 
     return (
         <Link
-            href={`/store/${product.slug}`}
+            href={`/shop-now/${product.slug}`}
             className="block group relative shadow-lg rounded-lg p-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:opacity-90 transition-opacity"
         >
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700 lg:aspect-none group-hover:opacity-75 lg:h-80">
