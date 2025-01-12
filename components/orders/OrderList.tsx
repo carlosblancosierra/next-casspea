@@ -57,6 +57,28 @@ const formatCurrency = (amount?: string): string => {
     }
 };
 
+const getDayTotals = (orders: Order[]) => {
+    const products: Record<string, number> = {};
+    const flavors: Record<string, number> = {};
+
+    orders.forEach(order => {
+        order.checkout_session?.cart?.items?.forEach(item => {
+            // Sum products
+            const productName = item.product || 'Unknown Product';
+            products[productName] = (products[productName] || 0) + (item.quantity || 1);
+
+            // Sum flavors
+            item.box_customization?.flavor_selections?.forEach(flavor => {
+                if (flavor.flavor_name && flavor.quantity) {
+                    flavors[flavor.flavor_name] = (flavors[flavor.flavor_name] || 0) + flavor.quantity;
+                }
+            });
+        });
+    });
+
+    return { products, flavors };
+};
+
 export default function OrderList() {
     const [filters, setFilters] = useState<OrdersQueryParams>({});
     const [expandedFlavors, setExpandedFlavors] = useState<Set<string>>(new Set());
@@ -91,8 +113,17 @@ export default function OrderList() {
                     <div className="overflow-hidden">
                         {Object.entries(groupedOrders).map(([date, dateOrders]: [string, Order[]]) => (
                             <div key={date} className="mb-8">
-                                <h3 className="text-xl font-semibold mb-4">{date}</h3>
+                                <h3 className="text-sm font-semibold mb-4">{date}</h3>
                                 <table className="min-w-full text-left text-sm font-light">
+                                    <colgroup>
+                                        <col className="w-[15%]" />
+                                        <col className="w-[10%]" />
+                                        <col className="w-[25%]" />
+                                        <col className="w-[10%]" />
+                                        <col className="w-[15%]" />
+                                        <col className="w-[15%]" />
+                                        <col className="w-[10%]" />
+                                    </colgroup>
                                     <thead className="border-b font-medium dark:border-neutral-500">
                                         <tr>
                                             <th scope="col" className="px-6 py-4">Order Details</th>
@@ -170,6 +201,34 @@ export default function OrderList() {
                                                 </tr>
                                             );
                                         })}
+                                        <tr className="bg-gray-50">
+                                            <td colSpan={7} className="px-6 py-4">
+                                                <div className="font-medium mb-2">Day Summary:</div>
+                                                {(() => {
+                                                    const { products, flavors } = getDayTotals(dateOrders);
+                                                    return (
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            <div>
+                                                                <div className="font-medium text-sm">Products:</div>
+                                                                {Object.entries(products).map(([name, qty]) => (
+                                                                    <div key={name} className="text-sm">
+                                                                        {name}: {qty}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            <div>
+                                                                <div className="font-medium text-sm">Flavors:</div>
+                                                                {Object.entries(flavors).map(([name, qty]) => (
+                                                                    <div key={name} className="text-sm">
+                                                                        {name}: {qty}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })()}
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
