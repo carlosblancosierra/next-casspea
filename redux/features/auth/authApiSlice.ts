@@ -22,6 +22,15 @@ const authApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: { email, password },
             }),
+            async onQueryStarted(_, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    localStorage.setItem('access', data.access);
+                    localStorage.setItem('refresh', data.refresh);
+                } catch {
+                    // Handle error if needed
+                }
+            },
         }),
         verify: builder.mutation({
             query: ({ token }) => ({

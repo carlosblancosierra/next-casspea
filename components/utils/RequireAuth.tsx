@@ -3,21 +3,14 @@
 import { redirect } from 'next/navigation';
 import { useAppSelector } from '@/redux/hooks';
 import { Spinner } from '@/components/common';
+import { selectIsAuthenticated } from '@/redux/features/auth/authSlice';
 
 interface Props {
 	children: React.ReactNode;
 }
 
 export default function RequireAuth({ children }: Props) {
-	const { isLoading, isAuthenticated } = useAppSelector(state => state.auth);
-
-	if (isLoading) {
-		return (
-			<div className='flex justify-center my-8'>
-				<Spinner lg />
-			</div>
-		);
-	}
+	const isAuthenticated = useAppSelector(selectIsAuthenticated)
 
 	if (!isAuthenticated) {
 		redirect('/auth/login');
