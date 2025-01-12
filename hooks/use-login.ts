@@ -29,11 +29,14 @@ export default function useLogin() {
 		login({ email, password })
 			.unwrap()
 			.then(() => {
+				console.log('Before dispatch - Setting auth state');
 				dispatch(setAuth());
+				console.log('After dispatch - Auth state should be updated');
 				toast.success('Logged in');
 				router.push('/orders');
 			})
-			.catch(() => {
+			.catch((error) => {
+				console.error('Login error:', error);
 				toast.error('Failed to log in');
 			});
 	};
