@@ -24,20 +24,32 @@ interface CartItem {
     box_customization?: BoxCustomization;
 }
 
-interface Order {
-    order_id?: string;
-    created?: string;
-    checkout_session?: {
-        payment_status?: string;
-        shipping_address?: Address;
-        cart?: {
-            items?: CartItem[];
-            discount?: string | null;
-            gift_message?: string | null;
-            shipping_date?: string | null;
-            discounted_total?: string;
-        };
+interface ShippingOption {
+    id: number;
+    name: string;
+    price: string;
+}
+
+interface CheckoutSession {
+    payment_status?: string;
+    shipping_address?: Address;
+    shipping_option: ShippingOption;
+    total_with_shipping: number;
+    cart: {
+        items: CartItem[];
+        discount?: string | null;
+        gift_message?: string | null;
+        shipping_date?: string | null;
+        discounted_total?: string;
     };
+}
+
+interface Order {
+    id: number;
+    order_id: string;
+    created: string;
+    status: string;
+    checkout_session: CheckoutSession;
 }
 
 const formatDate = (dateString?: string): { date: string, time: string } => {
@@ -170,10 +182,10 @@ const ShippingBadge = ({ date }: { date?: string | null }) => {
 
 interface OrderCardProps {
     order: Order;
-    onSelect: (order: Order) => void;
+    onSelect?: (order: Order) => void;
 }
 
-const OrderCard = ({ order }: { order: Order }) => {
+const OrderCard = ({ order }: OrderCardProps) => {
     const { time } = formatDate(order.created);
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
@@ -206,55 +218,39 @@ const OrderCard = ({ order }: { order: Order }) => {
                         </dd>
                     </div>
 
-                    {/* Items Section */}
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Items</dt>
-                        <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-                            {order.checkout_session?.cart?.items?.map((item, index) => (
-                                <div key={index} className="mb-2">
-                                    <div className="font-medium">{item.product?.name} {item.quantity && `(x${item.quantity})`}</div>
-                                    {item.box_customization && (
-                                        <div className="text-sm text-gray-500">
-                                            {formatSelectionType(item.box_customization.selection_type)}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </dd>
-                    </div>
-
                     {/* Shipping Date */}
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping Date</dt>
                         <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-                            <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
+                            {order.checkout_session.cart.shipping_date || 'Not specified'}
                         </dd>
                     </div>
 
-                    {/* Shipping Address */}
+                    {/* Shipping Option */}
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Delivery Address</dt>
+                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping Option</dt>
                         <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-                            {formatShippingAddress(order.checkout_session?.shipping_address)}
+                            {order.checkout_session.shipping_option.name} - £{order.checkout_session.shipping_option.price}
+                        </dd>
+                    </div>
+
+                    {/* Summary */}
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Summary</dt>
+                        <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                            Pick & Mix: {order.checkout_session.cart.items.some(item =>
+                                item.box_customization?.selection_type === 'PICK_AND_MIX') ? '✓' : '0'},
+                            Random: {order.checkout_session.cart.items.some(item =>
+                                item.box_customization?.selection_type === 'RANDOM') ? '✓' : '0'}
                         </dd>
                     </div>
 
                     {/* Discount if present */}
-                    {order.checkout_session?.discount && (
+                    {order.checkout_session.cart.discount && (
                         <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Discount Applied</dt>
                             <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-                                {order.checkout_session.discount}
-                            </dd>
-                        </div>
-                    )}
-
-                    {/* Gift Message if present */}
-                    {order.checkout_session?.cart?.gift_message && (
-                        <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Gift Message</dt>
-                            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-                                {order.checkout_session.cart.gift_message}
+                                {order.checkout_session.cart.discount}
                             </dd>
                         </div>
                     )}
@@ -263,7 +259,7 @@ const OrderCard = ({ order }: { order: Order }) => {
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-gray-50 dark:bg-gray-900">
                         <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Order Total</dt>
                         <dd className="mt-1 text-sm font-semibold text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-                            £{(order.checkout_session?.amount_total / 100).toFixed(2)}
+                            £{order.checkout_session.total_with_shipping}
                         </dd>
                     </div>
                 </dl>
