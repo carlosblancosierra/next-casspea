@@ -63,27 +63,39 @@ const formatCurrency = (amount?: string): string => {
 const getDayTotals = (orders: Order[]) => {
     const products: Record<string, number> = {};
     const flavors: Record<string, number> = {};
-    const randomBoxes: Record<string, number> = {}; // Key will be allergen string or 'no-allergens'
+    const randomBoxes: Record<string, number> = {};
 
     orders.forEach(order => {
         order.checkout_session?.cart?.items?.forEach(item => {
             const boxCustomization = item.box_customization;
             const quantity = item.quantity || 1;
+            const productName = item.product?.name || 'Unknown Product';
+            const chocolatesPerBox = item.product?.units_per_box || 0;
+            const totalChocolates = chocolatesPerBox * quantity;
+
+            // Product counting
+            products[productName] = (products[productName] || 0) + quantity;
 
             if (boxCustomization?.selection_type === 'RANDOM') {
-                const allergenKey = boxCustomization.allergens?.length
-                    ? `allergens: ${boxCustomization.allergens.sort().join(', ')}`
-                    : 'no-allergens';
-                randomBoxes[allergenKey] = (randomBoxes[allergenKey] || 0) + quantity;
-            } else {
-                // Regular product counting
-                const productName = item.product || 'Unknown Product';
-                products[productName] = (products[productName] || 0) + quantity;
-
-                // Flavor counting for non-random boxes
+                // Handle random boxes with allergens
+                if (boxCustomization.allergens && boxCustomization.allergens.length > 0) {
+                    // Convert allergen IDs to names (you'll need to provide the mapping)
+                    const allergenNames = boxCustomization.allergens
+                        .map(id => getAllergenName(id))
+                        .sort()
+                        .join(' and ');
+                    const key = `Random (${allergenNames} Free)`;
+                    randomBoxes[key] = (randomBoxes[key] || 0) + totalChocolates;
+                } else {
+                    // No allergens
+                    randomBoxes['Random'] = (randomBoxes['Random'] || 0) + totalChocolates;
+                }
+            } else if (boxCustomization?.selection_type === 'PICK_AND_MIX') {
+                // Flavor counting for pick & mix boxes
                 boxCustomization?.flavor_selections?.forEach(flavor => {
                     if (flavor.flavor_name && flavor.quantity) {
-                        flavors[flavor.flavor_name] = (flavors[flavor.flavor_name] || 0) + flavor.quantity;
+                        flavors[flavor.flavor_name] = (flavors[flavor.flavor_name] || 0) +
+                            (flavor.quantity * quantity);
                     }
                 });
             }
@@ -91,6 +103,17 @@ const getDayTotals = (orders: Order[]) => {
     });
 
     return { products, flavors, randomBoxes };
+};
+
+// Helper function to convert allergen IDs to names
+const getAllergenName = (id: number): string => {
+    const allergenMap: Record<number, string> = {
+        1: 'Gluten',
+        2: 'Nut',
+        3: 'Dairy'
+        // Add other allergen mappings as needed
+    };
+    return allergenMap[id] || 'Unknown';
 };
 
 const formatSelectionType = (type?: string): string => {
@@ -335,7 +358,7 @@ const DaySummary = ({ dateOrders }: { dateOrders: Order[] }) => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                                     {Object.entries(randomBoxes).map(([key, qty]) => (
                                         <div key={key}>
-                                            {key === 'no-allergens'
+                                            {key === 'Random'
                                                 ? `Random: ${qty}`
                                                 : `${key}: ${qty}`}
                                         </div>
