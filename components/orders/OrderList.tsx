@@ -25,17 +25,23 @@ interface CartItem {
 }
 
 interface Order {
-    order_id?: string;
-    created?: string;
-    checkout_session?: {
-        payment_status?: string;
-        shipping_address?: Address;
-        cart?: {
-            items?: CartItem[];
+    order_id: string;
+    created: string;
+    checkout_session: {
+        payment_status: string;
+        shipping_address: Address;
+        shipping_option: {
+            id: number;
+            name: string;
+            price: string;
+        };
+        total_with_shipping: number;
+        cart: {
+            items: CartItem[];
             discount?: string | null;
             gift_message?: string | null;
             shipping_date?: string | null;
-            discounted_total?: string;
+            discounted_total: string;
         };
     };
 }
@@ -68,8 +74,10 @@ const getDayTotals = (orders: Order[]) => {
     const products: Record<string, number> = {};
     const flavors: Record<string, number> = {};
     const randomBoxes: Record<string, number> = {};
+    let dayTotal = 0;
 
     orders.forEach(order => {
+        dayTotal += order.checkout_session.total_with_shipping;
         order.checkout_session?.cart?.items?.forEach(item => {
             const boxCustomization = item.box_customization;
             const quantity = item.quantity || 1;
@@ -106,7 +114,7 @@ const getDayTotals = (orders: Order[]) => {
         });
     });
 
-    return { products, flavors, randomBoxes };
+    return { products, flavors, randomBoxes, dayTotal };
 };
 
 // Helper function to convert allergen IDs to names
@@ -259,11 +267,19 @@ const OrderCard = ({ order }: { order: Order }) => {
                         </div>
                     )}
 
+                    {/* Shipping Option */}
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping Option</dt>
+                        <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                            {order.checkout_session.shipping_option.name} - £{order.checkout_session.shipping_option.price}
+                        </dd>
+                    </div>
+
                     {/* Order Total */}
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-gray-50 dark:bg-gray-900">
                         <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Order Total</dt>
                         <dd className="mt-1 text-sm font-semibold text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-                            £{(order.checkout_session?.amount_total / 100).toFixed(2)}
+                            £{order.checkout_session.total_with_shipping.toFixed(2)}
                         </dd>
                     </div>
                 </dl>
@@ -342,11 +358,22 @@ const DayHeader = ({
     );
 };
 
-const DaySection = ({ date, orders }: { date: string; orders: Order[] }) => {
+const DaySection = ({ date, orders }: { date: string, orders: Order[] }) => {
+    const { products, flavors, randomBoxes, dayTotal } = getDayTotals(orders);
     const [isExpanded, setIsExpanded] = useState(false);
 
     return (
-        <div className="mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div className="px-4 py-5 sm:px-6">
+                <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+                        {date}
+                    </h3>
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        Total: £{dayTotal.toFixed(2)}
+                    </span>
+                </div>
+            </div>
             <DayHeader
                 date={date}
                 orders={orders}
