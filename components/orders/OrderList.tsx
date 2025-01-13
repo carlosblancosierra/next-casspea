@@ -79,6 +79,30 @@ const getDayTotals = (orders: Order[]) => {
     return { products, flavors };
 };
 
+const formatSelectionType = (type?: string): string => {
+    switch (type) {
+        case 'RANDOM':
+            return 'Surprise Me';
+        case 'PICK_AND_MIX':
+            return 'Pick & Mix';
+        default:
+            return type || 'Not specified';
+    }
+};
+
+const formatShippingAddress = (address?: Address): string => {
+    if (!address) return '-';
+    const parts = [
+        `${address.first_name} ${address.last_name}`,
+        address.phone,
+        address.street_address,
+        address.street_address2,
+        [address.city, address.county, address.postcode].filter(Boolean).join(', ')
+    ].filter(Boolean);
+
+    return parts.join(' • ');
+};
+
 export default function OrderList() {
     const [filters, setFilters] = useState<OrdersQueryParams>({});
     const [expandedFlavors, setExpandedFlavors] = useState<Set<string>>(new Set());
@@ -113,7 +137,7 @@ export default function OrderList() {
                     <div className="overflow-hidden">
                         {Object.entries(groupedOrders).map(([date, dateOrders]: [string, Order[]]) => (
                             <div key={date} className="mb-8">
-                                <h3 className="text-sm font-semibold mb-4">{date}</h3>
+                                <h3 className="text-xl font-semibold mb-4">{date}</h3>
                                 <table className="min-w-full text-left text-sm font-light">
                                     <colgroup>
                                         <col className="w-[15%]" />
@@ -156,8 +180,8 @@ export default function OrderList() {
                                                                     <>
                                                                         <div className="text-sm text-gray-600">
                                                                             Type: {item.box_customization.selection_type || 'Not specified'}
-                                                                            {(item.box_customization.allergens?.length ?? 0) > 0 && (
-                                                                                <span> | Allergens: {item.box_customization.allergens?.join(', ')}</span>
+                                                                            {item.box_customization.allergens && item.box_customization.allergens.length > 0 && (
+                                                                                <span> | Allergens: {item.box_customization.allergens.join(', ')}</span>
                                                                             )}
                                                                         </div>
                                                                         {(item.box_customization.flavor_selections?.length ?? 0) > 0 && (
@@ -201,7 +225,7 @@ export default function OrderList() {
                                                 </tr>
                                             );
                                         })}
-                                        <tr className="bg-gray-50">
+                                        <tr className="bg-gray-50 dark:bg-gray-800">
                                             <td colSpan={7} className="px-6 py-4">
                                                 <div className="font-medium mb-2">Day Summary:</div>
                                                 {(() => {
