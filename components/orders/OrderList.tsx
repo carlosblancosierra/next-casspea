@@ -181,10 +181,10 @@ interface OrderCardProps {
     onSelect: (order: Order) => void;
 }
 
-const OrderCard = ({ order }: { order: Order }) => {
+const OrderCard = ({ order, onSelect }: { order: Order, onSelect: (order: Order) => void }) => {
     const { time } = formatDate(order.created);
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
             {/* Header with Order ID and Status */}
             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex justify-between items-center">
@@ -314,12 +314,14 @@ const DayHeader = ({
     date,
     orders,
     isExpanded,
-    onToggle
+    onToggle,
+    dayTotal
 }: {
     date: string;
     orders: Order[];
     isExpanded: boolean;
     onToggle: () => void;
+    dayTotal: number;
 }) => {
     const totalSales = orders.reduce((sum, order) => {
         const amount = order.checkout_session?.cart?.discounted_total || '0';
@@ -364,25 +366,16 @@ const DaySection = ({ date, orders }: { date: string, orders: Order[] }) => {
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-            <div className="px-4 py-5 sm:px-6">
-                <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
-                        {date}
-                    </h3>
-                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                        Total: £{dayTotal.toFixed(2)}
-                    </span>
-                </div>
-            </div>
             <DayHeader
                 date={date}
                 orders={orders}
                 isExpanded={isExpanded}
                 onToggle={() => setIsExpanded(!isExpanded)}
+                dayTotal={dayTotal}
             />
 
             {isExpanded && (
-                <div className="mt-4 space-y-4 pl-8">
+                <div className="mt-4 space-y-4 px-4">
                     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                         {orders.map((order: Order) => (
                             <OrderCard key={order.order_id} order={order} onSelect={() => { }} />
