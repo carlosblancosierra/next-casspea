@@ -74,10 +74,13 @@ const getDayTotals = (orders: Order[]) => {
     const products: Record<string, number> = {};
     const flavors: Record<string, number> = {};
     const randomBoxes: Record<string, number> = {};
-    let dayTotal = 0;
+
+    // Calculate day total by summing total_with_shipping from each order
+    const dayTotal = orders.reduce((total, order) => {
+        return total + order.checkout_session.total_with_shipping;
+    }, 0);
 
     orders.forEach(order => {
-        dayTotal += order.checkout_session.total_with_shipping;
         order.checkout_session?.cart?.items?.forEach(item => {
             const boxCustomization = item.box_customization;
             const quantity = item.quantity || 1;
