@@ -164,74 +164,83 @@ const ShippingBadge = ({ date }: { date?: string | null }) => {
     );
 };
 
-const OrderCard = ({ order }: { order: Order }) => {
-    const { date, time } = formatDate(order.created);
+interface OrderCardProps {
+    order: Order;
+    onSelect: (order: Order) => void;
+}
+
+const OrderCard: React.FC<OrderCardProps> = ({ order, onSelect }) => {
+    if (!order || !order.checkout_session) {
+        return null; // Return null if order or session is missing
+    }
+
+    const { checkout_session } = order;
+    const firstItem = checkout_session.cart?.items?.[0];
+
+    // Safely access nested properties
+    const productName = firstItem?.product?.name || 'Unknown Product';
+    const quantity = firstItem?.quantity || 0;
+    const shippingDate = checkout_session.cart?.shipping_date || 'No date set';
+    const shippingName = checkout_session.shipping_address?.full_name || 'No name provided';
+    const shippingPostcode = checkout_session.shipping_address?.postcode || 'No postcode';
+    const giftMessage = checkout_session.cart?.gift_message || null;
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-            <dl className="divide-y divide-gray-200 dark:divide-gray-700">
-                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Order ID</dt>
-                    <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0 flex items-center gap-2">
-                        {order.order_id}
-                        <PaymentStatus status={order.checkout_session?.payment_status} />
-                    </dd>
+        <div
+            className="p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => onSelect(order)}
+        >
+            <div className="space-y-2">
+                <div className="flex justify-between items-start">
+                    <div>
+                        <h3 className="font-medium">{order.order_id}</h3>
+                        <p className="text-sm text-gray-600">{shippingDate}</p>
+                    </div>
+                    <OrderStatusBadge status={order.status} />
                 </div>
 
-                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Time</dt>
-                    <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">{time}</dd>
+                <div className="text-sm">
+                    <p>
+                        <span className="font-medium">Product:</span> {productName} x {quantity}
+                    </p>
+                    <p>
+                        <span className="font-medium">Delivery to:</span> {shippingName}
+                    </p>
+                    <p>
+                        <span className="font-medium">Postcode:</span> {shippingPostcode}
+                    </p>
                 </div>
 
-                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Items</dt>
-                    <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">
-                        {order.checkout_session?.cart?.items?.map((item, index) => (
-                            <div key={index} className="mb-2">
-                                <div className="font-medium">{item.product} (x{item.quantity})</div>
-                                {item.box_customization && (
-                                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                                        {formatSelectionType(item.box_customization.selection_type)}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </dd>
-                </div>
-
-                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Shipping Date</dt>
-                    <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">
-                        <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
-                    </dd>
-                </div>
-
-                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Shipping Address</dt>
-                    <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">
-                        {formatShippingAddress(order.checkout_session?.shipping_address)}
-                    </dd>
-                </div>
-
-                {order.checkout_session?.cart?.discount && (
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Discount</dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">
-                            {order.checkout_session.cart.discount}
-                        </dd>
+                {giftMessage && (
+                    <div className="mt-2 text-sm">
+                        <p className="font-medium">Gift Message:</p>
+                        <p className="text-gray-600 line-clamp-2">{giftMessage}</p>
                     </div>
                 )}
-
-                {order.checkout_session?.cart?.gift_message && (
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Gift Message</dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">
-                            {order.checkout_session.cart.gift_message}
-                        </dd>
-                    </div>
-                )}
-            </dl>
+            </div>
         </div>
+    );
+};
+
+// Separate component for status badge
+const OrderStatusBadge: React.FC<{ status: string }> = ({ status }) => {
+    const getStatusColor = (status: string) => {
+        switch (status?.toLowerCase()) {
+            case 'processing':
+                return 'bg-blue-100 text-blue-800';
+            case 'shipped':
+                return 'bg-green-100 text-green-800';
+            case 'delivered':
+                return 'bg-gray-100 text-gray-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
+        }
+    };
+
+    return (
+        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(status)}`}>
+            {status || 'Unknown'}
+        </span>
     );
 };
 
@@ -299,7 +308,7 @@ const DaySection = ({ date, orders }: { date: string; orders: Order[] }) => {
                 <div className="mt-4 space-y-4 pl-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                         {orders.map((order: Order) => (
-                            <OrderCard key={order.order_id} order={order} />
+                            <OrderCard key={order.order_id} order={order} onSelect={() => {}} />
                         ))}
                     </div>
                     <DaySummary dateOrders={orders} />
