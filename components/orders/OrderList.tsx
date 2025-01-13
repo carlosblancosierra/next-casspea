@@ -1,4 +1,5 @@
 import { useGetOrdersQuery, OrdersQueryParams } from '@/redux/features/orders/ordersApiSlice';
+import { Address } from '@/types/addresses';
 import { useState } from 'react';
 
 interface FlavorSelection {
@@ -23,6 +24,7 @@ interface Order {
     created?: string;
     checkout_session?: {
         payment_status?: string;
+        shipping_address?: Address;
         cart?: {
             items?: CartItem[];
             discount?: string | null;
@@ -103,6 +105,30 @@ const formatShippingAddress = (address?: Address): string => {
     return parts.join(' • ');
 };
 
+const PaymentStatus = ({ status }: { status?: string }) => {
+    if (status === 'paid') return null;
+    return (
+        <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+            UNPAID
+        </span>
+    );
+};
+
+const ShippingBadge = ({ date }: { date?: string | null }) => {
+    if (!date) {
+        return (
+            <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700">
+                ASAP
+            </span>
+        );
+    }
+    return (
+        <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-900/30 dark:text-green-400 dark:ring-green-500/30">
+            {new Date(date).toLocaleDateString()}
+        </span>
+    );
+};
+
 export default function OrderList() {
     const [filters, setFilters] = useState<OrdersQueryParams>({});
     const [expandedFlavors, setExpandedFlavors] = useState<Set<string>>(new Set());
@@ -151,12 +177,9 @@ export default function OrderList() {
                                     <thead className="border-b font-medium dark:border-neutral-500">
                                         <tr>
                                             <th scope="col" className="px-6 py-4">Order Details</th>
-                                            <th scope="col" className="px-6 py-4">Payment Status</th>
                                             <th scope="col" className="px-6 py-4">Items</th>
-                                            <th scope="col" className="px-6 py-4">Discount</th>
                                             <th scope="col" className="px-6 py-4">Gift Message</th>
                                             <th scope="col" className="px-6 py-4">Shipping Date</th>
-                                            <th scope="col" className="px-6 py-4">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -165,10 +188,17 @@ export default function OrderList() {
                                             return (
                                                 <tr key={order.order_id || orderIndex} className="border-b dark:border-neutral-500">
                                                     <td className="px-6 py-4">
-                                                        <div className="font-medium">{order.order_id || '-'}</div>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="font-medium">{order.order_id || '-'}</span>
+                                                            <PaymentStatus status={order.checkout_session?.payment_status} />
+                                                        </div>
                                                         <div className="text-xs text-gray-500">{time}</div>
+                                                        {order.checkout_session?.cart?.discount && (
+                                                            <div className="text-xs text-gray-600">
+                                                                Discount: {order.checkout_session.cart.discount}
+                                                            </div>
+                                                        )}
                                                     </td>
-                                                    <td className="whitespace-nowrap px-6 py-4">{order.checkout_session?.payment_status || '-'}</td>
                                                     <td className="px-6 py-4">
                                                         {order.checkout_session?.cart?.items?.map((item, itemIndex) => (
                                                             <div key={itemIndex} className="mb-2">
@@ -179,7 +209,7 @@ export default function OrderList() {
                                                                 {item.box_customization && (
                                                                     <>
                                                                         <div className="text-sm text-gray-600">
-                                                                            Type: {item.box_customization.selection_type || 'Not specified'}
+                                                                            Type: {formatSelectionType(item.box_customization.selection_type)}
                                                                             {item.box_customization.allergens && item.box_customization.allergens.length > 0 && (
                                                                                 <span> | Allergens: {item.box_customization.allergens.join(', ')}</span>
                                                                             )}
@@ -210,17 +240,16 @@ export default function OrderList() {
                                                             </div>
                                                         )) || 'No items'}
                                                     </td>
-                                                    <td className="px-6 py-4">{order.checkout_session?.cart?.discount || '-'}</td>
                                                     <td className="px-6 py-4">
                                                         {order.checkout_session?.cart?.gift_message || '-'}
                                                     </td>
                                                     <td className="px-6 py-4">
-                                                        {order.checkout_session?.cart?.shipping_date ?
-                                                            new Date(order.checkout_session.cart.shipping_date).toLocaleDateString() :
-                                                            '-'}
-                                                    </td>
-                                                    <td className="px-6 py-4">
-                                                        {formatCurrency(order.checkout_session?.cart?.discounted_total)}
+                                                        <div className="flex flex-col gap-2">
+                                                            <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
+                                                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                                {formatShippingAddress(order.checkout_session?.shipping_address)}
+                                                            </div>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             );
