@@ -15,7 +15,11 @@ interface BoxCustomization {
 }
 
 interface CartItem {
-    product?: string;
+    product?: {
+        name: string;
+        id: number;
+        // ... other product fields
+    };
     quantity?: number;
     box_customization?: BoxCustomization;
 }
@@ -169,54 +173,57 @@ interface OrderCardProps {
     onSelect: (order: Order) => void;
 }
 
-const OrderCard: React.FC<OrderCardProps> = ({ order, onSelect }) => {
-    if (!order || !order.checkout_session) {
-        return null; // Return null if order or session is missing
-    }
-
-    const { checkout_session } = order;
-    const firstItem = checkout_session.cart?.items?.[0];
-
-    // Safely access nested properties
-    const productName = firstItem?.product?.name || 'Unknown Product';
-    const quantity = firstItem?.quantity || 0;
-    const shippingDate = checkout_session.cart?.shipping_date || 'No date set';
-    const shippingName = checkout_session.shipping_address?.full_name || 'No name provided';
-    const shippingPostcode = checkout_session.shipping_address?.postcode || 'No postcode';
-    const giftMessage = checkout_session.cart?.gift_message || null;
-
+const OrderCard = ({ order }: { order: Order }) => {
+    const { time } = formatDate(order.created);
     return (
-        <div
-            className="p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-            onClick={() => onSelect(order)}
-        >
-            <div className="space-y-2">
-                <div className="flex justify-between items-start">
-                    <div>
-                        <h3 className="font-medium">{order.order_id}</h3>
-                        <p className="text-sm text-gray-600">{shippingDate}</p>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-4">
+            {/* Header */}
+            <div className="flex justify-between items-start mb-3">
+                <div>
+                    <div className="flex items-center gap-2">
+                        <span className="font-medium">{order.order_id || '-'}</span>
+                        <PaymentStatus status={order.checkout_session?.payment_status} />
                     </div>
-                    <OrderStatusBadge status={order.status} />
+                    <div className="text-xs text-gray-500">{time}</div>
+                </div>
+                <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
+            </div>
+
+            {/* Content Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Items Section */}
+                <div>
+                    <h4 className="font-medium text-sm mb-2">Items</h4>
+                    {order.checkout_session?.cart?.items?.map((item, itemIndex) => (
+                        <div key={itemIndex} className="mb-2">
+                            <div>
+                                <strong>{item.product?.name || 'Unknown Product'}</strong>
+                                {item.quantity && ` (x${item.quantity})`}
+                            </div>
+                            {item.box_customization && (
+                                <div className="text-sm text-gray-600">
+                                    Type: {formatSelectionType(item.box_customization.selection_type)}
+                                </div>
+                            )}
+                        </div>
+                    )) || 'No items'}
                 </div>
 
-                <div className="text-sm">
-                    <p>
-                        <span className="font-medium">Product:</span> {productName} x {quantity}
-                    </p>
-                    <p>
-                        <span className="font-medium">Delivery to:</span> {shippingName}
-                    </p>
-                    <p>
-                        <span className="font-medium">Postcode:</span> {shippingPostcode}
-                    </p>
-                </div>
-
-                {giftMessage && (
-                    <div className="mt-2 text-sm">
-                        <p className="font-medium">Gift Message:</p>
-                        <p className="text-gray-600 line-clamp-2">{giftMessage}</p>
+                {/* Shipping & Gift Message */}
+                <div>
+                    <h4 className="font-medium text-sm mb-2">Delivery Details</h4>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        {formatShippingAddress(order.checkout_session?.shipping_address)}
                     </div>
-                )}
+                    {order.checkout_session?.cart?.gift_message && (
+                        <>
+                            <h4 className="font-medium text-sm mb-1 mt-3">Gift Message</h4>
+                            <div className="text-sm text-gray-600">
+                                {order.checkout_session.cart.gift_message}
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
@@ -308,7 +315,7 @@ const DaySection = ({ date, orders }: { date: string; orders: Order[] }) => {
                 <div className="mt-4 space-y-4 pl-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                         {orders.map((order: Order) => (
-                            <OrderCard key={order.order_id} order={order} onSelect={() => {}} />
+                            <OrderCard key={order.order_id} order={order} onSelect={() => { }} />
                         ))}
                     </div>
                     <DaySummary dateOrders={orders} />
