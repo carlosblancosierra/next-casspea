@@ -181,16 +181,31 @@ const OrderCard = ({ order }: { order: Order }) => {
             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex justify-between items-center">
                     <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                        Order {order.order_id}
+                        Order Details
                     </h3>
                     <PaymentStatus status={order.checkout_session?.payment_status} />
                 </div>
-                <p className="mt-1 text-sm text-gray-500">{time}</p>
             </div>
 
             {/* Order Details */}
             <div className="border-t border-gray-100 dark:border-gray-700">
                 <dl className="divide-y divide-gray-100 dark:divide-gray-700">
+                    {/* Order ID */}
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Order ID</dt>
+                        <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                            {order.order_id}
+                        </dd>
+                    </div>
+
+                    {/* Order Time */}
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Order Time</dt>
+                        <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                            {time}
+                        </dd>
+                    </div>
+
                     {/* Items Section */}
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Items</dt>
@@ -208,16 +223,31 @@ const OrderCard = ({ order }: { order: Order }) => {
                         </dd>
                     </div>
 
-                    {/* Shipping Details */}
+                    {/* Shipping Date */}
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Delivery</dt>
+                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping Date</dt>
                         <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-                            {formatShippingAddress(order.checkout_session?.shipping_address)}
-                            <div className="mt-2">
-                                <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
-                            </div>
+                            <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
                         </dd>
                     </div>
+
+                    {/* Shipping Address */}
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Delivery Address</dt>
+                        <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                            {formatShippingAddress(order.checkout_session?.shipping_address)}
+                        </dd>
+                    </div>
+
+                    {/* Discount if present */}
+                    {order.checkout_session?.discount && (
+                        <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Discount Applied</dt>
+                            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                                {order.checkout_session.discount}
+                            </dd>
+                        </div>
+                    )}
 
                     {/* Gift Message if present */}
                     {order.checkout_session?.cart?.gift_message && (
@@ -228,6 +258,14 @@ const OrderCard = ({ order }: { order: Order }) => {
                             </dd>
                         </div>
                     )}
+
+                    {/* Order Total */}
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-gray-50 dark:bg-gray-900">
+                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Order Total</dt>
+                        <dd className="mt-1 text-sm font-semibold text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                            £{(order.checkout_session?.amount_total / 100).toFixed(2)}
+                        </dd>
+                    </div>
                 </dl>
             </div>
         </div>
