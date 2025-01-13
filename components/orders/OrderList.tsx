@@ -176,54 +176,59 @@ interface OrderCardProps {
 const OrderCard = ({ order }: { order: Order }) => {
     const { time } = formatDate(order.created);
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-4">
-            {/* Header */}
-            <div className="flex justify-between items-start mb-3">
-                <div>
-                    <div className="flex items-center gap-2">
-                        <span className="font-medium">{order.order_id || '-'}</span>
-                        <PaymentStatus status={order.checkout_session?.payment_status} />
-                    </div>
-                    <div className="text-xs text-gray-500">{time}</div>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+            {/* Header with Order ID and Status */}
+            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex justify-between items-center">
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                        Order {order.order_id}
+                    </h3>
+                    <PaymentStatus status={order.checkout_session?.payment_status} />
                 </div>
-                <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
+                <p className="mt-1 text-sm text-gray-500">{time}</p>
             </div>
 
-            {/* Content Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Items Section */}
-                <div>
-                    <h4 className="font-medium text-sm mb-2">Items</h4>
-                    {order.checkout_session?.cart?.items?.map((item, itemIndex) => (
-                        <div key={itemIndex} className="mb-2">
-                            <div>
-                                <strong>{item.product?.name || 'Unknown Product'}</strong>
-                                {item.quantity && ` (x${item.quantity})`}
-                            </div>
-                            {item.box_customization && (
-                                <div className="text-sm text-gray-600">
-                                    Type: {formatSelectionType(item.box_customization.selection_type)}
+            {/* Order Details */}
+            <div className="border-t border-gray-100 dark:border-gray-700">
+                <dl className="divide-y divide-gray-100 dark:divide-gray-700">
+                    {/* Items Section */}
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Items</dt>
+                        <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                            {order.checkout_session?.cart?.items?.map((item, index) => (
+                                <div key={index} className="mb-2">
+                                    <div className="font-medium">{item.product?.name} {item.quantity && `(x${item.quantity})`}</div>
+                                    {item.box_customization && (
+                                        <div className="text-sm text-gray-500">
+                                            {formatSelectionType(item.box_customization.selection_type)}
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
-                    )) || 'No items'}
-                </div>
-
-                {/* Shipping & Gift Message */}
-                <div>
-                    <h4 className="font-medium text-sm mb-2">Delivery Details</h4>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                        {formatShippingAddress(order.checkout_session?.shipping_address)}
+                            ))}
+                        </dd>
                     </div>
-                    {order.checkout_session?.cart?.gift_message && (
-                        <>
-                            <h4 className="font-medium text-sm mb-1 mt-3">Gift Message</h4>
-                            <div className="text-sm text-gray-600">
-                                {order.checkout_session.cart.gift_message}
+
+                    {/* Shipping Details */}
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Delivery</dt>
+                        <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                            {formatShippingAddress(order.checkout_session?.shipping_address)}
+                            <div className="mt-2">
+                                <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
                             </div>
-                        </>
+                        </dd>
+                    </div>
+
+                    {/* Gift Message if present */}
+                    {order.checkout_session?.cart?.gift_message && (
+                        <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Gift Message</dt>
+                            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                                {order.checkout_session.cart.gift_message}
+                            </dd>
+                        </div>
                     )}
-                </div>
+                </dl>
             </div>
         </div>
     );
@@ -335,55 +340,43 @@ const DaySummary = ({ dateOrders }: { dateOrders: Order[] }) => {
             </div>
 
             <div className="border-t border-gray-200 dark:border-gray-700">
-                <dl className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {/* Products Section */}
-                    <div className="px-4 py-5 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Products</dt>
-                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                                {Object.entries(products).map(([name, qty]) => (
-                                    <div key={name}>
-                                        {name}: {qty}
-                                    </div>
-                                ))}
-                            </div>
-                        </dd>
+                <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+                    {/* Products Column */}
+                    <div className="p-4">
+                        <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 mb-2">Products</h4>
+                        <div className="space-y-1">
+                            {Object.entries(products).map(([name, qty]) => (
+                                <div key={name} className="text-sm text-gray-900 dark:text-gray-100">
+                                    {name}: {qty}
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
-                    {/* Pick & Mix Flavors Section */}
-                    {Object.keys(flavors).length > 0 && (
-                        <div className="px-4 py-5 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Pick & Mix Flavors</dt>
-                            <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                                    {Object.entries(flavors).map(([name, qty]) => (
-                                        <div key={name}>
-                                            {name}: {qty}
-                                        </div>
-                                    ))}
+                    {/* Pick & Mix Column */}
+                    <div className="p-4">
+                        <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 mb-2">Pick & Mix Flavors</h4>
+                        <div className="space-y-1">
+                            {Object.entries(flavors).map(([name, qty]) => (
+                                <div key={name} className="text-sm text-gray-900 dark:text-gray-100">
+                                    {name}: {qty}
                                 </div>
-                            </dd>
+                            ))}
                         </div>
-                    )}
+                    </div>
 
-                    {/* Random Boxes Section */}
-                    {Object.keys(randomBoxes).length > 0 && (
-                        <div className="px-4 py-5 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Other Flavors</dt>
-                            <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                                    {Object.entries(randomBoxes).map(([key, qty]) => (
-                                        <div key={key}>
-                                            {key === 'Random'
-                                                ? `Random: ${qty}`
-                                                : `${key}: ${qty}`}
-                                        </div>
-                                    ))}
+                    {/* Random Boxes Column */}
+                    <div className="p-4">
+                        <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 mb-2">Other Flavors</h4>
+                        <div className="space-y-1">
+                            {Object.entries(randomBoxes).map(([key, qty]) => (
+                                <div key={key} className="text-sm text-gray-900 dark:text-gray-100">
+                                    {key === 'Random' ? `Random: ${qty}` : `${key}: ${qty}`}
                                 </div>
-                            </dd>
+                            ))}
                         </div>
-                    )}
-                </dl>
+                    </div>
+                </div>
             </div>
         </div>
     );
