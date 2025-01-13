@@ -418,11 +418,16 @@ const DaySummary = ({ dateOrders }: { dateOrders: Order[] }) => {
                     <div className="p-4">
                         <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 mb-2">Pick & Mix Flavors</h4>
                         <div className="space-y-1">
-                            {Object.entries(flavors).map(([name, qty]) => (
-                                <div key={name} className="text-sm text-gray-900 dark:text-gray-100">
-                                    {name}: {qty}
+                            {Object.entries(flavors).length > 0 ?
+                                Object.entries(flavors).map(([name, qty]) => (
+                                    <div key={name} className="text-sm text-gray-900 dark:text-gray-100">
+                                        {name}: {qty}
+                                    </div>
+                                )) :
+                                <div className="text-sm text-gray-900 dark:text-gray-100">
+                                    No Pick & Mix Flavors
                                 </div>
-                            ))}
+                            }
                         </div>
                     </div>
 
@@ -430,11 +435,16 @@ const DaySummary = ({ dateOrders }: { dateOrders: Order[] }) => {
                     <div className="p-4">
                         <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 mb-2">Other Flavors</h4>
                         <div className="space-y-1">
-                            {Object.entries(randomBoxes).map(([key, qty]) => (
-                                <div key={key} className="text-sm text-gray-900 dark:text-gray-100">
-                                    {key === 'Random' ? `Random: ${qty}` : `${key}: ${qty}`}
+                            {Object.entries(randomBoxes).length > 0 ?
+                                Object.entries(randomBoxes).map(([key, qty]) => (
+                                    <div key={key} className="text-sm text-gray-900 dark:text-gray-100">
+                                        {key === 'Random' ? `Random: ${qty}` : `${key}: ${qty}`}
+                                    </div>
+                                )) :
+                                <div className="text-sm text-gray-900 dark:text-gray-100">
+                                    No Random Boxes
                                 </div>
-                            ))}
+                            }
                         </div>
                     </div>
                 </div>
