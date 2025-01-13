@@ -327,8 +327,8 @@ const DayHeader = ({
     dayTotal: number;
 }) => {
     const totalSales = orders.reduce((sum, order) => {
-        const amount = order.checkout_session?.cart?.discounted_total || '0';
-        return sum + parseFloat(amount);
+        const amount = order.checkout_session?.total_with_shipping || 0;
+        return sum + amount;
     }, 0);
 
     return (
