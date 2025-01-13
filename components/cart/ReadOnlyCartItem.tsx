@@ -45,7 +45,7 @@ const ReadOnlyCartItem: React.FC<ReadOnlyCartItemProps> = ({ entry }) => {
                 </p>
 
                 <p className="text-base font-bold text-gray-900 dark:text-white">
-                    ${(parseFloat(entry.discounted_price || entry.base_price) * entry.quantity).toFixed(2)}
+                    £{(parseFloat(entry.discounted_price || entry.base_price) * entry.quantity).toFixed(2)}
                 </p>
 
                 <p className="flex flex-wrap items-center gap-2">

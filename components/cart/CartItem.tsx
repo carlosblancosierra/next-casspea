@@ -79,7 +79,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
               ))}
             </p>
 
-            <p className="text-base font-bold text-gray-900 dark:text-white">${entry.product.base_price}</p>
+            <p className="text-base font-bold text-gray-900 dark:text-white">£{entry.product.base_price}</p>
 
             {/* Quantity Controls with Remove Button */}
             <div className="flex items-center space-x-2">
