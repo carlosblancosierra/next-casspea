@@ -62,23 +62,34 @@ const formatCurrency = (amount?: string): string => {
 const getDayTotals = (orders: Order[]) => {
     const products: Record<string, number> = {};
     const flavors: Record<string, number> = {};
+    const randomBoxes: Record<string, number> = {}; // Key will be allergen string or 'no-allergens'
 
     orders.forEach(order => {
         order.checkout_session?.cart?.items?.forEach(item => {
-            // Sum products
-            const productName = item.product || 'Unknown Product';
-            products[productName] = (products[productName] || 0) + (item.quantity || 1);
+            const boxCustomization = item.box_customization;
+            const quantity = item.quantity || 1;
 
-            // Sum flavors
-            item.box_customization?.flavor_selections?.forEach(flavor => {
-                if (flavor.flavor_name && flavor.quantity) {
-                    flavors[flavor.flavor_name] = (flavors[flavor.flavor_name] || 0) + flavor.quantity;
-                }
-            });
+            if (boxCustomization?.selection_type === 'RANDOM') {
+                const allergenKey = boxCustomization.allergens?.length
+                    ? `allergens: ${boxCustomization.allergens.sort().join(', ')}`
+                    : 'no-allergens';
+                randomBoxes[allergenKey] = (randomBoxes[allergenKey] || 0) + quantity;
+            } else {
+                // Regular product counting
+                const productName = item.product || 'Unknown Product';
+                products[productName] = (products[productName] || 0) + quantity;
+
+                // Flavor counting for non-random boxes
+                boxCustomization?.flavor_selections?.forEach(flavor => {
+                    if (flavor.flavor_name && flavor.quantity) {
+                        flavors[flavor.flavor_name] = (flavors[flavor.flavor_name] || 0) + flavor.quantity;
+                    }
+                });
+            }
         });
     });
 
-    return { products, flavors };
+    return { products, flavors, randomBoxes };
 };
 
 const formatSelectionType = (type?: string): string => {
@@ -129,6 +140,99 @@ const ShippingBadge = ({ date }: { date?: string | null }) => {
     );
 };
 
+const OrderCard = ({ order }: { order: Order }) => {
+    const { time } = formatDate(order.created);
+    return (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-4">
+            {/* Header */}
+            <div className="flex justify-between items-start mb-3">
+                <div>
+                    <div className="flex items-center gap-2">
+                        <span className="font-medium">{order.order_id || '-'}</span>
+                        <PaymentStatus status={order.checkout_session?.payment_status} />
+                    </div>
+                    <div className="text-xs text-gray-500">{time}</div>
+                </div>
+                <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
+            </div>
+
+            {/* Content Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Items Section */}
+                <div>
+                    <h4 className="font-medium text-sm mb-2">Items</h4>
+                    {order.checkout_session?.cart?.items?.map((item, itemIndex) => (
+                        <div key={itemIndex} className="mb-2">
+                            <div>
+                                <strong>{item.product || 'Unknown Product'}</strong>
+                                {item.quantity && ` (x${item.quantity})`}
+                            </div>
+                            {item.box_customization && (
+                                <div className="text-sm text-gray-600">
+                                    Type: {formatSelectionType(item.box_customization.selection_type)}
+                                </div>
+                            )}
+                        </div>
+                    )) || 'No items'}
+                </div>
+
+                {/* Shipping & Gift Message */}
+                <div>
+                    <h4 className="font-medium text-sm mb-2">Delivery Details</h4>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        {formatShippingAddress(order.checkout_session?.shipping_address)}
+                    </div>
+                    {order.checkout_session?.cart?.gift_message && (
+                        <>
+                            <h4 className="font-medium text-sm mb-1 mt-3">Gift Message</h4>
+                            <div className="text-sm text-gray-600">
+                                {order.checkout_session.cart.gift_message}
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const DaySummary = ({ dateOrders }: { dateOrders: Order[] }) => {
+    const { products, flavors, randomBoxes } = getDayTotals(dateOrders);
+
+    return (
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mt-4">
+            <div className="font-medium mb-2">Day Summary:</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <div className="font-medium text-sm mb-2">Products:</div>
+                    {Object.entries(products).map(([name, qty]) => (
+                        <div key={name} className="text-sm">
+                            {name}: {qty}
+                        </div>
+                    ))}
+
+                    {/* Random boxes section */}
+                    {Object.entries(randomBoxes).map(([key, qty]) => (
+                        <div key={key} className="text-sm">
+                            {key === 'no-allergens'
+                                ? `${qty} random`
+                                : `${qty} random (${key})`}
+                        </div>
+                    ))}
+                </div>
+                <div>
+                    <div className="font-medium text-sm mb-2">Flavors:</div>
+                    {Object.entries(flavors).map(([name, qty]) => (
+                        <div key={name} className="text-sm">
+                            {name}: {qty}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
 export default function OrderList() {
     const [filters, setFilters] = useState<OrdersQueryParams>({});
     const [expandedFlavors, setExpandedFlavors] = useState<Set<string>>(new Set());
@@ -157,138 +261,20 @@ export default function OrderList() {
     }, {});
 
     return (
-        <div className="flex flex-col">
-            <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                    <div className="overflow-hidden">
-                        {Object.entries(groupedOrders).map(([date, dateOrders]: [string, Order[]]) => (
-                            <div key={date} className="mb-8">
-                                <h3 className="text-xl font-semibold mb-4">{date}</h3>
-                                <table className="min-w-full text-left text-sm font-light">
-                                    <colgroup>
-                                        <col className="w-[15%]" />
-                                        <col className="w-[10%]" />
-                                        <col className="w-[25%]" />
-                                        <col className="w-[10%]" />
-                                        <col className="w-[15%]" />
-                                        <col className="w-[15%]" />
-                                        <col className="w-[10%]" />
-                                    </colgroup>
-                                    <thead className="border-b font-medium dark:border-neutral-500">
-                                        <tr>
-                                            <th scope="col" className="px-6 py-4">Order Details</th>
-                                            <th scope="col" className="px-6 py-4">Items</th>
-                                            <th scope="col" className="px-6 py-4">Gift Message</th>
-                                            <th scope="col" className="px-6 py-4">Shipping Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {dateOrders.map((order: Order, orderIndex: number) => {
-                                            const { time } = formatDate(order.created);
-                                            return (
-                                                <tr key={order.order_id || orderIndex} className="border-b dark:border-neutral-500">
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex items-center gap-2">
-                                                            <span className="font-medium">{order.order_id || '-'}</span>
-                                                            <PaymentStatus status={order.checkout_session?.payment_status} />
-                                                        </div>
-                                                        <div className="text-xs text-gray-500">{time}</div>
-                                                        {order.checkout_session?.cart?.discount && (
-                                                            <div className="text-xs text-gray-600">
-                                                                Discount: {order.checkout_session.cart.discount}
-                                                            </div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-6 py-4">
-                                                        {order.checkout_session?.cart?.items?.map((item, itemIndex) => (
-                                                            <div key={itemIndex} className="mb-2">
-                                                                <div>
-                                                                    <strong>{item.product || 'Unknown Product'}</strong>
-                                                                    {item.quantity && ` (x${item.quantity})`}
-                                                                </div>
-                                                                {item.box_customization && (
-                                                                    <>
-                                                                        <div className="text-sm text-gray-600">
-                                                                            Type: {formatSelectionType(item.box_customization.selection_type)}
-                                                                            {item.box_customization.allergens && item.box_customization.allergens.length > 0 && (
-                                                                                <span> | Allergens: {item.box_customization.allergens.join(', ')}</span>
-                                                                            )}
-                                                                        </div>
-                                                                        {(item.box_customization.flavor_selections?.length ?? 0) > 0 && (
-                                                                            <div className="text-xs text-gray-500">
-                                                                                <button
-                                                                                    onClick={() => toggleFlavors(order.order_id || '')}
-                                                                                    className="text-blue-600 hover:text-blue-800"
-                                                                                >
-                                                                                    {expandedFlavors.has(order.order_id || '') ? 'Hide' : 'Show'} Flavors
-                                                                                </button>
-                                                                                {expandedFlavors.has(order.order_id || '') && (
-                                                                                    <div className="mt-2 ml-2">
-                                                                                        {item.box_customization.flavor_selections?.
-                                                                                            filter(f => f.flavor_name && f.quantity)
-                                                                                            .map((f, i) => (
-                                                                                                <div key={i}>
-                                                                                                    {f.flavor_name} (x{f.quantity})
-                                                                                                </div>
-                                                                                            ))}
-                                                                                    </div>
-                                                                                )}
-                                                                            </div>
-                                                                        )}
-                                                                    </>
-                                                                )}
-                                                            </div>
-                                                        )) || 'No items'}
-                                                    </td>
-                                                    <td className="px-6 py-4">
-                                                        {order.checkout_session?.cart?.gift_message || '-'}
-                                                    </td>
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex flex-col gap-2">
-                                                            <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
-                                                            <div className="text-sm text-gray-600 dark:text-gray-400">
-                                                                {formatShippingAddress(order.checkout_session?.shipping_address)}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                        <tr className="bg-gray-50 dark:bg-gray-800">
-                                            <td colSpan={7} className="px-6 py-4">
-                                                <div className="font-medium mb-2">Day Summary:</div>
-                                                {(() => {
-                                                    const { products, flavors } = getDayTotals(dateOrders);
-                                                    return (
-                                                        <div className="grid grid-cols-2 gap-4">
-                                                            <div>
-                                                                <div className="font-medium text-sm">Products:</div>
-                                                                {Object.entries(products).map(([name, qty]) => (
-                                                                    <div key={name} className="text-sm">
-                                                                        {name}: {qty}
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                            <div>
-                                                                <div className="font-medium text-sm">Flavors:</div>
-                                                                {Object.entries(flavors).map(([name, qty]) => (
-                                                                    <div key={name} className="text-sm">
-                                                                        {name}: {qty}
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })()}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {Object.entries(groupedOrders).map(([date, dateOrders]: [string, Order[]]) => (
+                <div key={date} className="mb-8">
+                    <h3 className="text-xl font-semibold mb-4">{date}</h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                        {dateOrders.map((order: Order) => (
+                            <OrderCard key={order.order_id} order={order} />
                         ))}
                     </div>
+
+                    {/* Day Summary Card */}
+                    <DaySummary dateOrders={dateOrders} />
                 </div>
-            </div>
+            ))}
         </div>
     );
 }
