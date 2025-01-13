@@ -1,6 +1,7 @@
 import { useGetOrdersQuery, OrdersQueryParams } from '@/redux/features/orders/ordersApiSlice';
 import { Address } from '@/types/addresses';
 import { useState } from 'react';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 
 interface FlavorSelection {
     flavor_name?: string;
@@ -141,57 +142,103 @@ const ShippingBadge = ({ date }: { date?: string | null }) => {
 };
 
 const OrderCard = ({ order }: { order: Order }) => {
-    const { time } = formatDate(order.created);
+    const { date, time } = formatDate(order.created);
+
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-4">
-            {/* Header */}
-            <div className="flex justify-between items-start mb-3">
-                <div>
-                    <div className="flex items-center gap-2">
-                        <span className="font-medium">{order.order_id || '-'}</span>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+            <dl className="divide-y divide-gray-200 dark:divide-gray-700">
+                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Order ID</dt>
+                    <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0 flex items-center gap-2">
+                        {order.order_id}
                         <PaymentStatus status={order.checkout_session?.payment_status} />
-                    </div>
-                    <div className="text-xs text-gray-500">{time}</div>
+                    </dd>
                 </div>
-                <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
-            </div>
 
-            {/* Content Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Items Section */}
-                <div>
-                    <h4 className="font-medium text-sm mb-2">Items</h4>
-                    {order.checkout_session?.cart?.items?.map((item, itemIndex) => (
-                        <div key={itemIndex} className="mb-2">
-                            <div>
-                                <strong>{item.product || 'Unknown Product'}</strong>
-                                {item.quantity && ` (x${item.quantity})`}
+                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Time</dt>
+                    <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">{time}</dd>
+                </div>
+
+                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Items</dt>
+                    <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">
+                        {order.checkout_session?.cart?.items?.map((item, index) => (
+                            <div key={index} className="mb-2">
+                                <div className="font-medium">{item.product} (x{item.quantity})</div>
+                                {item.box_customization && (
+                                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                                        {formatSelectionType(item.box_customization.selection_type)}
+                                    </div>
+                                )}
                             </div>
-                            {item.box_customization && (
-                                <div className="text-sm text-gray-600">
-                                    Type: {formatSelectionType(item.box_customization.selection_type)}
-                                </div>
-                            )}
-                        </div>
-                    )) || 'No items'}
+                        ))}
+                    </dd>
                 </div>
 
-                {/* Shipping & Gift Message */}
-                <div>
-                    <h4 className="font-medium text-sm mb-2">Delivery Details</h4>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Shipping Date</dt>
+                    <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">
+                        <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
+                    </dd>
+                </div>
+
+                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Shipping Address</dt>
+                    <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">
                         {formatShippingAddress(order.checkout_session?.shipping_address)}
-                    </div>
-                    {order.checkout_session?.cart?.gift_message && (
-                        <>
-                            <h4 className="font-medium text-sm mb-1 mt-3">Gift Message</h4>
-                            <div className="text-sm text-gray-600">
-                                {order.checkout_session.cart.gift_message}
-                            </div>
-                        </>
-                    )}
+                    </dd>
                 </div>
-            </div>
+
+                {order.checkout_session?.cart?.discount && (
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Discount</dt>
+                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">
+                            {order.checkout_session.cart.discount}
+                        </dd>
+                    </div>
+                )}
+
+                {order.checkout_session?.cart?.gift_message && (
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Gift Message</dt>
+                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2 sm:mt-0">
+                            {order.checkout_session.cart.gift_message}
+                        </dd>
+                    </div>
+                )}
+            </dl>
+        </div>
+    );
+};
+
+const DaySection = ({ date, orders }: { date: string; orders: Order[] }) => {
+    const [isExpanded, setIsExpanded] = useState(true);
+
+    return (
+        <div className="mb-8">
+            <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="w-full flex items-center justify-between text-left p-4 bg-gray-50 dark:bg-gray-800 rounded-lg mb-4"
+            >
+                <h3 className="text-xl font-semibold">{date}</h3>
+                {isExpanded ? (
+                    <ChevronUpIcon className="h-5 w-5" />
+                ) : (
+                    <ChevronDownIcon className="h-5 w-5" />
+                )}
+            </button>
+
+            {isExpanded && (
+                <>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                        {orders.map((order: Order) => (
+                            <OrderCard key={order.order_id} order={order} />
+                        ))}
+                    </div>
+                    <DaySummary dateOrders={orders} />
+                </>
+            )}
         </div>
     );
 };
@@ -200,34 +247,61 @@ const DaySummary = ({ dateOrders }: { dateOrders: Order[] }) => {
     const { products, flavors, randomBoxes } = getDayTotals(dateOrders);
 
     return (
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mt-4">
-            <div className="font-medium mb-2">Day Summary:</div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <div className="font-medium text-sm mb-2">Products:</div>
-                    {Object.entries(products).map(([name, qty]) => (
-                        <div key={name} className="text-sm">
-                            {name}: {qty}
-                        </div>
-                    ))}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm mt-4">
+            <div className="px-4 py-5 sm:px-6">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Day Summary</h3>
+            </div>
 
-                    {/* Random boxes section */}
-                    {Object.entries(randomBoxes).map(([key, qty]) => (
-                        <div key={key} className="text-sm">
-                            {key === 'no-allergens'
-                                ? `${qty} random`
-                                : `${qty} random (${key})`}
+            <div className="border-t border-gray-200 dark:border-gray-700">
+                <dl className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {/* Products Section */}
+                    <div className="px-4 py-5 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Products</dt>
+                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                {Object.entries(products).map(([name, qty]) => (
+                                    <div key={name}>
+                                        {name}: {qty}
+                                    </div>
+                                ))}
+                            </div>
+                        </dd>
+                    </div>
+
+                    {/* Pick & Mix Flavors Section */}
+                    {Object.keys(flavors).length > 0 && (
+                        <div className="px-4 py-5 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Pick & Mix Flavors</dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                    {Object.entries(flavors).map(([name, qty]) => (
+                                        <div key={name}>
+                                            {name}: {qty}
+                                        </div>
+                                    ))}
+                                </div>
+                            </dd>
                         </div>
-                    ))}
-                </div>
-                <div>
-                    <div className="font-medium text-sm mb-2">Flavors:</div>
-                    {Object.entries(flavors).map(([name, qty]) => (
-                        <div key={name} className="text-sm">
-                            {name}: {qty}
+                    )}
+
+                    {/* Random Boxes Section */}
+                    {Object.keys(randomBoxes).length > 0 && (
+                        <div className="px-4 py-5 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Other Flavors</dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                    {Object.entries(randomBoxes).map(([key, qty]) => (
+                                        <div key={key}>
+                                            {key === 'no-allergens'
+                                                ? `Random: ${qty}`
+                                                : `${key}: ${qty}`}
+                                        </div>
+                                    ))}
+                                </div>
+                            </dd>
                         </div>
-                    ))}
-                </div>
+                    )}
+                </dl>
             </div>
         </div>
     );
@@ -235,25 +309,13 @@ const DaySummary = ({ dateOrders }: { dateOrders: Order[] }) => {
 
 export default function OrderList() {
     const [filters, setFilters] = useState<OrdersQueryParams>({});
-    const [expandedFlavors, setExpandedFlavors] = useState<Set<string>>(new Set());
     const { data: orders, isLoading, error } = useGetOrdersQuery(filters);
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error loading orders</div>;
     if (!orders?.length) return <div>No orders found</div>;
 
-    const toggleFlavors = (orderId: string) => {
-        const newExpanded = new Set(expandedFlavors);
-        if (expandedFlavors.has(orderId)) {
-            newExpanded.delete(orderId);
-        } else {
-            newExpanded.add(orderId);
-        }
-        setExpandedFlavors(newExpanded);
-    };
-
-    // Group orders by date
-    const groupedOrders: Record<string, Order[]> = orders.reduce((acc: { [key: string]: Order[] }, order: Order) => {
+    const groupedOrders = orders.reduce((acc: { [key: string]: Order[] }, order: Order) => {
         const dateStr = formatDate(order.created).date;
         if (!acc[dateStr]) acc[dateStr] = [];
         acc[dateStr].push(order);
@@ -262,18 +324,8 @@ export default function OrderList() {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {Object.entries(groupedOrders).map(([date, dateOrders]: [string, Order[]]) => (
-                <div key={date} className="mb-8">
-                    <h3 className="text-xl font-semibold mb-4">{date}</h3>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-                        {dateOrders.map((order: Order) => (
-                            <OrderCard key={order.order_id} order={order} />
-                        ))}
-                    </div>
-
-                    {/* Day Summary Card */}
-                    <DaySummary dateOrders={dateOrders} />
-                </div>
+            {Object.entries(groupedOrders).map(([date, dateOrders]) => (
+                <DaySection key={date} date={date} orders={dateOrders} />
             ))}
         </div>
     );
