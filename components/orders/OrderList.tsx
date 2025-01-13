@@ -1,7 +1,7 @@
 import { useGetOrdersQuery, OrdersQueryParams } from '@/redux/features/orders/ordersApiSlice';
 import { Address } from '@/types/addresses';
 import { useState } from 'react';
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
+import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, DocumentTextIcon, CurrencyPoundIcon } from '@heroicons/react/20/solid';
 
 interface FlavorSelection {
     flavor_name?: string;
@@ -212,32 +212,75 @@ const OrderCard = ({ order }: { order: Order }) => {
     );
 };
 
-const DaySection = ({ date, orders }: { date: string; orders: Order[] }) => {
-    const [isExpanded, setIsExpanded] = useState(true);
+const DayHeader = ({
+    date,
+    orders,
+    isExpanded,
+    onToggle
+}: {
+    date: string;
+    orders: Order[];
+    isExpanded: boolean;
+    onToggle: () => void;
+}) => {
+    const totalSales = orders.reduce((sum, order) => {
+        const amount = order.checkout_session?.cart?.discounted_total || '0';
+        return sum + parseFloat(amount);
+    }, 0);
 
     return (
-        <div className="mb-8">
-            <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full flex items-center justify-between text-left p-4 bg-gray-50 dark:bg-gray-800 rounded-lg mb-4"
-            >
-                <h3 className="text-xl font-semibold">{date}</h3>
-                {isExpanded ? (
-                    <ChevronUpIcon className="h-5 w-5" />
-                ) : (
-                    <ChevronDownIcon className="h-5 w-5" />
-                )}
-            </button>
+        <button
+            onClick={onToggle}
+            className="w-full flex items-center gap-4 text-left p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+            <div className="flex items-center gap-3 flex-1">
+                <ChevronRightIcon
+                    className={`h-5 w-5 text-gray-500 transition-transform ${isExpanded ? 'transform rotate-90' : ''
+                        }`}
+                />
+                <span className="font-semibold text-gray-900 dark:text-gray-100">
+                    {date}
+                </span>
+                <div className="hidden sm:flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                    <span className="flex items-center gap-1">
+                        <DocumentTextIcon className="h-4 w-4" />
+                        {orders.length} orders
+                    </span>
+                    <span className="flex items-center gap-1">
+                        <CurrencyPoundIcon className="h-4 w-4" />
+                        {formatCurrency(totalSales.toString())}
+                    </span>
+                </div>
+            </div>
+            <div className="sm:hidden flex flex-col items-end text-sm text-gray-500 dark:text-gray-400">
+                <span>{orders.length} orders</span>
+                <span>{formatCurrency(totalSales.toString())}</span>
+            </div>
+        </button>
+    );
+};
+
+const DaySection = ({ date, orders }: { date: string; orders: Order[] }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    return (
+        <div className="mb-4">
+            <DayHeader
+                date={date}
+                orders={orders}
+                isExpanded={isExpanded}
+                onToggle={() => setIsExpanded(!isExpanded)}
+            />
 
             {isExpanded && (
-                <>
+                <div className="mt-4 space-y-4 pl-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                         {orders.map((order: Order) => (
                             <OrderCard key={order.order_id} order={order} />
                         ))}
                     </div>
                     <DaySummary dateOrders={orders} />
-                </>
+                </div>
             )}
         </div>
     );
@@ -311,11 +354,25 @@ export default function OrderList() {
     const [filters, setFilters] = useState<OrdersQueryParams>({});
     const { data: orders, isLoading, error } = useGetOrdersQuery(filters);
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error loading orders</div>;
-    if (!orders?.length) return <div>No orders found</div>;
+    if (isLoading) return (
+        <div className="flex justify-center items-center min-h-[200px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
+        </div>
+    );
 
-    const groupedOrders = orders.reduce((acc: { [key: string]: Order[] }, order: Order) => {
+    if (error) return (
+        <div className="text-center text-red-600 dark:text-red-400">
+            Error loading orders
+        </div>
+    );
+
+    if (!orders?.length) return (
+        <div className="text-center text-gray-500 dark:text-gray-400">
+            No orders found
+        </div>
+    );
+
+    const groupedOrders = orders.reduce<Record<string, Order[]>>((acc, order: Order) => {
         const dateStr = formatDate(order.created).date;
         if (!acc[dateStr]) acc[dateStr] = [];
         acc[dateStr].push(order);
@@ -323,10 +380,14 @@ export default function OrderList() {
     }, {});
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {Object.entries(groupedOrders).map(([date, dateOrders]) => (
-                <DaySection key={date} date={date} orders={dateOrders} />
-            ))}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="space-y-4">
+                {Object.entries(groupedOrders)
+                    .sort(([dateA], [dateB]) => new Date(dateB).getTime() - new Date(dateA).getTime())
+                    .map(([date, dateOrders]) => (
+                        <DaySection key={date} date={date} orders={dateOrders} />
+                    ))}
+            </div>
         </div>
     );
 }
