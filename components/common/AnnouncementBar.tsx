@@ -15,7 +15,7 @@ export default function AnnouncementBar() {
   }
 
   return (
-    <div className="hidden md:block relative isolate overflow-hidden  px-6 py-2.5 sm:px-3.5">
+    <div className="relative isolate overflow-hidden px-6 py-2.5 sm:px-3.5">
       <div
         aria-hidden="true"
         className="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
@@ -40,17 +40,17 @@ export default function AnnouncementBar() {
           className="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
         />
       </div>
-      <div className="flex items-center justify-between gap-x-4 md:gap-x-6 max-w-screen-2xl mx-auto text-gray-900 dark:text-white">
-        <div className="flex flex-1 justify-center items-center gap-x-4 md:gap-x-8">
-          <p className="text-sm leading-6 ">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-x-6 max-w-screen-2xl mx-auto text-gray-900 dark:text-white">
+        <div className="flex flex-col md:flex-row flex-1 justify-center items-center gap-y-2 md:gap-x-8 w-full">
+          <p className="text-sm leading-6 w-full md:w-auto text-center">
             Tel: 07859 790386 / email: info@casspea.co.uk
           </p>
-          <p className="text-sm leading-6">
+          <p className="text-sm leading-6 w-full md:w-auto text-center">
             Free Shipping over £50
           </p>
           <Link
             href="/subscribe"
-            className="rounded-full bg-gray-900 px-3.5 py-1 text-sm text-white shadow-sm hover:bg-gray-800"
+            className="w-full md:w-auto text-center rounded-full bg-gray-900 px-3.5 py-1 text-sm text-white shadow-sm hover:bg-gray-800"
           >
             Subscribe for 10% off <span aria-hidden="true">&rarr;</span>
           </Link>
@@ -58,7 +58,7 @@ export default function AnnouncementBar() {
 
         <button
           type="button"
-          className="p-2 hover:bg-gray-100 rounded-full"
+          className="absolute top-2 right-2 md:relative md:top-auto md:right-auto p-2 hover:bg-gray-100 rounded-full"
           onClick={handleClose}
         >
           <span className="sr-only">Dismiss</span>

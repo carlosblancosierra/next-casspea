@@ -10,49 +10,60 @@ export default function AboutUsPage() {
         <main className="dark:bg-gray-900 min-h-screen py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Who Are We Section */}
-                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16">
-                    <div className="order-2 lg:order-1">
-                        <h2 className={`${playfair.className} text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white`}>
-                            WHO ARE WE
-                        </h2>
-                        <p className="text-gray-600 dark:text-gray-300">
-                            We are a new company, created by a team of dedicated chefs with over a decade of experience in the chocolate
-                            industry. We have worked in some amazing kitchens around the world, which taught us discipline and perfection in
-                            our craft. We want you to enjoy eating our chocolates as much as we enjoy making them.
-                        </p>
-                    </div>
-                    <div className="order-1 lg:order-2">
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-2 items-center mb-2">
+                    <div className="order-1 lg:order-1">
                         <Image
-                            src="/about/banner-1.jpg"
+                            src="/girl.jpeg"
                             alt="About Us"
-                            width={600}
-                            height={400}
-                            className="rounded-lg shadow-lg w-full h-auto"
+                            width={2000}
+                            height={2000}
+                            className="w-full h-auto"
                         />
+                    </div>
+
+                    <div className="order-1 lg:order-2">
+                        <h2 className={`mt-2 text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white`}>
+                            About Us
+                        </h2>
+                        <p className="text-gray-600 dark:text-gray-300 md:p-10">
+                            We are a new company, created by a team of dedicated chefs with over a decade of experience in the chocolate
+                            industry. <span className="text-pink-500 font-bold">We have worked in some amazing kitchens around the world, which taught us discipline and perfection in
+                                our craft.</span> We want you to enjoy eating our chocolates as much as we enjoy making them.
+                        </p>
                     </div>
                 </section>
 
                 {/* CassPea Story Section */}
-                <section className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-16">
-                    <Image
-                        src="/logo.png"
-                        alt="CassPea Logo"
-                        width={200}
-                        height={100}
-                        className="mx-auto mb-6"
-                    />
-                    <p className="text-gray-600 dark:text-gray-300 text-center">
-                        CassPea (which incidentally has nothing to do with peas) is a combination of my daughters' names. The project really
-                        started about 7 years ago when as newly weds, my wife and I opened a small chocolate shop in Mexico city. With
-                        little experience and a lot of passion we worked endlessly to establish a quality brand in Mexico. After 5 years
-                        we decided to relocate back to the UK and start our lives with our little ones. After almost a year of being
-                        back we decided that the time was right to start our enterprise again in London.
-                    </p>
+                <section className="relative bg-[url('../public/bg-lot-1.jpeg')] bg-cover bg-center dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-16 mb-4 my-4">
+                    <div className="absolute inset-0 bg-black/70 rounded-lg"></div>
+                    <div className="relative">
+                        <Image
+                            src="/logos/pink.png"
+                            alt="CassPea Logo"
+                            width={200}
+                            height={100}
+                            className="mx-auto mb-6"
+                        />
+                        <p className="text-white">
+                            CassPea (which incidentally has nothing to do with peas) is a combination of my daughters' names. The project really
+                            started about 7 years ago when as newly weds, my wife and I opened a small chocolate shop in Mexico city.
+                        </p>
+
+                        <p className="text-white mt-6">
+                            With little experience and a lot of passion we worked endlessly to establish a quality brand in Mexico. After 5 years
+                            we decided to relocate back to the UK and start our lives with our little ones.
+                        </p>
+
+                        <p className="text-white mt-6">
+                            After almost a year of being
+                            back we decided that the time was right to start our enterprise again in London.
+                        </p>
+                    </div>
                 </section>
 
                 {/* Company Objective Section */}
-                <section className="mb-16">
-                    <h2 className={`${playfair.className} text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white`}>
+                <section className="my-8">
+                    <h2 className={`text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white`}>
                         Company's Objective
                     </h2>
                     <p className="text-center text-gray-600 dark:text-gray-300">
@@ -65,7 +76,7 @@ export default function AboutUsPage() {
                 {/* Mission & Vision Section */}
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
                     <div className="bg-indigo-50 dark:bg-gray-800 p-8 rounded-lg">
-                        <h2 className={`${playfair.className} text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white`}>
+                        <h2 className={`text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white`}>
                             Mission
                         </h2>
                         <p className="text-gray-600 dark:text-gray-300">
@@ -74,7 +85,7 @@ export default function AboutUsPage() {
                         </p>
                     </div>
                     <div className="bg-pink-50 dark:bg-gray-800 p-8 rounded-lg">
-                        <h2 className={`${playfair.className} text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white`}>
+                        <h2 className={`text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white`}>
                             Vision
                         </h2>
                         <p className="text-gray-600 dark:text-gray-300">
@@ -88,36 +99,36 @@ export default function AboutUsPage() {
 
                 {/* Values Section */}
                 <section>
-                    <h2 className={`${playfair.className} text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white`}>
+                    <h2 className={`text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white`}>
                         Values
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
                         {[
                             {
                                 title: "Creativity & Innovation",
-                                image: "/about/values/1.jpg",
+                                image: "/48-paint.jpeg",
                                 description: "We believe that food should be fun and interesting. This is why we believe that creativity and innovation are key to the success of the company and its ability to achieve their mission and vision."
                             },
                             {
                                 title: "Free Expression",
-                                image: "/about/values/2.jpg",
+                                image: "/snacks-pass.jpeg",
                                 description: "One thing that promotes creativity is the exchange of ideas, and for that to happen we need people to feel comfortable making mistakes and exploring their ideas in a respectful and nurturing environment."
                             },
                             {
                                 title: "Fun",
-                                image: "/about/values/3.jpg",
+                                image: "/fun.jpg",
                                 description: "We believe that if you have fun and enjoy what you do, you are more likely to make something extraordinary. If we can incorporate this value into our culture, it would make it easier to achieve our other values, our mission and vision."
                             }
                         ].map((value, index) => (
-                            <div key={index} className="text-center">
+                            <div key={index} className="">
                                 <Image
                                     src={value.image}
                                     alt={value.title}
-                                    width={100}
-                                    height={100}
-                                    className="mx-auto mb-4"
+                                    width={1000}
+                                    height={1000}
+                                    className="w-full h-auto"
                                 />
-                                <h3 className={`${playfair.className} text-xl font-bold mb-4 text-gray-900 dark:text-white`}>
+                                <h3 className={`text-xl font-bold mb-4 text-gray-900 dark:text-white`}>
                                     {value.title}
                                 </h3>
                                 <p className="text-gray-600 dark:text-gray-300">
