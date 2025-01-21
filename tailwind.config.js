@@ -21,6 +21,10 @@ module.exports = {
 				'my-brown': '#5b392e',
 				'my-grey': '#2B2C2E',
 				'my-red': '#F14C42',
+				'primary': '#D62026',
+				'primary-2': '#F14C42',
+				'primary-dark': '#991519',
+				'primary-light': '#F14C42',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

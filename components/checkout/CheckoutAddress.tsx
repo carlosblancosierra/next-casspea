@@ -86,7 +86,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
                         id="sameAsShipping"
                         checked={sameAsShipping}
                         onChange={handleCheckboxChange}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-primary focus:ring-primary-2 border-gray-300 rounded"
                     />
                     <label htmlFor="sameAsShipping" className="ml-2 block text-sm text-gray-900">
                         Billing address same as shipping?
@@ -112,7 +112,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
 
             <button
                 onClick={handleSubmit}
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
             >
                 Continue to Payment
             </button>

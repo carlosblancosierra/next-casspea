@@ -15,7 +15,7 @@ const ErrorPage: React.FC = () => {
                     Please try again or contact our support team for assistance.
                 </p>
                 <div className="mt-6 flex justify-center space-x-4">
-                    <Link href="/checkout/address" className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700">
+                    <Link href="/checkout/address" className="inline-block bg-primary text-white px-6 py-3 rounded-md hover:bg-primary">
                         Retry Order
                     </Link>
                     <Link href="/cart" className="inline-block bg-gray-600 text-white px-6 py-3 rounded-md hover:bg-gray-700">

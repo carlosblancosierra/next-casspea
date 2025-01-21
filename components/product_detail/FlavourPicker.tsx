@@ -142,7 +142,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                 disabled={remainingChocolates <= 0}
                 className={`mt-4 cursor-pointer group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium focus:outline-none
                 ${remainingChocolates > 0
-                        ? 'bg-indigo-500 dark:bg-indigo-600 text-white border-gray-300 dark:border-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-700'
+                        ? 'bg-primary-2 dark:bg-primary text-white border-gray-300 dark:border-primary hover:bg-primary dark:hover:bg-primary'
                         : 'bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed border-gray-300 dark:border-gray-600'
                     }`}
             >
@@ -204,9 +204,9 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             type="button"
                                             onClick={() => handleDecrement(flavour)}
                                             disabled={getFlavorQuantity(flavour.id) === 0}
-                                            className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500
+                                            className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-2
                                             ${getFlavorQuantity(flavour.id) > 0
-                                                    ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                                                    ? 'bg-primary text-white hover:bg-primary'
                                                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                                 }`}
                                         >
@@ -219,9 +219,9 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             type="button"
                                             onClick={() => addFlavour(flavour)}
                                             disabled={remainingChocolates <= 0 && getFlavorQuantity(flavour.id) === 0}
-                                            className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500
+                                            className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-2
                                             ${remainingChocolates > 0 || getFlavorQuantity(flavour.id) > 0
-                                                    ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                                                    ? 'bg-primary text-white hover:bg-primary'
                                                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                                 }`}
                                         >
@@ -248,7 +248,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 {/* Progress bar */}
                                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                                     <div
-                                        className="bg-indigo-600 h-2.5 rounded-full transition-all duration-300"
+                                        className="bg-primary h-2.5 rounded-full transition-all duration-300"
                                         style={{ width: `${((maxChocolates - remainingChocolates) / maxChocolates) * 100}%` }}
                                     ></div>
                                 </div>
@@ -262,7 +262,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+                                    className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary transition-colors"
                                 >
                                     Done
                                 </button>

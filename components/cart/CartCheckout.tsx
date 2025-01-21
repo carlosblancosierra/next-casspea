@@ -146,7 +146,7 @@ export default function CartCheckout() {
                                     }
                                     setAddShippingDate(e.target.checked);
                                 }}
-                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-indigo-500"
+                                className="rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-primary-2"
                             />
                             <span className="text-sm font-medium text-gray-900 dark:text-white">
                                 Add Shipping Date
@@ -205,7 +205,7 @@ export default function CartCheckout() {
                                 type="checkbox"
                                 checked={addGiftMessage}
                                 onChange={(e) => setAddGiftMessage(e.target.checked)}
-                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-indigo-500"
+                                className="rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-primary-2"
                             />
                             <span className="text-sm font-medium text-gray-900 dark:text-white">Add Gift Message</span>
                         </label>
@@ -223,8 +223,8 @@ export default function CartCheckout() {
                                 type="checkbox"
                                 checked={addDiscount}
                                 onChange={(e) => setAddDiscount(e.target.checked)}
-                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600
-                                    dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-indigo-500"
+                                className="rounded border-gray-300 text-primary focus:ring-primary
+                                    dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-primary-2"
                             />
                             <span className="text-sm font-medium text-gray-900 dark:text-white">
                                 Add Discount Code
@@ -261,11 +261,11 @@ export default function CartCheckout() {
                         type="button"
                         onClick={handleCheckout}
                         disabled={!email || isProcessing}
-                        className="w-full rounded-md bg-indigo-600 px-4 py-3 text-sm font-semibold text-white
-                            shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2
-                            focus-visible:outline-offset-2 focus-visible:outline-indigo-600
-                            disabled:bg-gray-300 dark:disabled:bg-gray-700 dark:bg-indigo-500
-                            dark:hover:bg-indigo-600 dark:focus-visible:outline-indigo-500
+                        className="w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-white
+                            shadow-sm hover:bg-primary-2 focus-visible:outline focus-visible:outline-2
+                            focus-visible:outline-offset-2 focus-visible:outline-primary
+                            disabled:bg-gray-300 dark:disabled:bg-gray-700 dark:bg-primary-2
+                            dark:hover:bg-primary dark:focus-visible:outline-primary-2
                             disabled:cursor-not-allowed transition-colors duration-200"
                     >
                         {isProcessing ? 'Processing...' : 'Continue to checkout'}

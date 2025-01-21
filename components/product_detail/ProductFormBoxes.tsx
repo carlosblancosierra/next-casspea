@@ -227,8 +227,8 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         value={quantity}
                         onChange={handleQuantityChange}
                         className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
-                            bg-white dark:bg-gray-800 shadow-sm focus:border-indigo-500
-                            focus:ring-indigo-500"
+                            bg-white dark:bg-gray-800 shadow-sm focus:border-primary-2
+                            focus:ring-primary-2"
                     >
                         {Array.from({ length: 20 }, (_, i) => (
                             <option key={i + 1} value={i + 1}>{i + 1}</option>

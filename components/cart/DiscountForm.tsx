@@ -87,8 +87,8 @@ export default function DiscountForm() {
                     <button
                         type="submit"
                         disabled={isValidating || !discountCode}
-                        className="bg-indigo-600 dark:bg-indigo-500 text-white text-xs px-4 py-2 rounded-md
-                            hover:bg-indigo-500 dark:hover:bg-indigo-400
+                        className="bg-primary dark:bg-primary-2 text-white text-xs px-4 py-2 rounded-md
+                            hover:bg-primary-2 dark:hover:bg-primary-2
                             disabled:bg-gray-300 dark:disabled:bg-gray-600
                             disabled:cursor-not-allowed"
                     >

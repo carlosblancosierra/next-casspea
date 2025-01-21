@@ -40,7 +40,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                     value="NONE"
                     className={({ active, checked }) =>
                         `${checked
-                            ? 'bg-indigo-50 dark:bg-indigo-900 border-indigo-600'
+                            ? 'bg-primary-light dark:bg-indigo-900 border-primary'
                             : 'border-gray-300 dark:border-gray-600'
                         }
                         relative rounded-lg border px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
@@ -53,14 +53,14 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                                     <div className="text-sm">
                                         <RadioGroup.Label
                                             as="p"
-                                            className={`font-medium ${checked ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-900 dark:text-gray-100'
+                                            className={`font-medium ${checked ? 'text-primary dark:text-primary-2' : 'text-gray-900 dark:text-gray-100'
                                                 }`}
                                         >
                                             No Allergens
                                         </RadioGroup.Label>
                                         <RadioGroup.Description
                                             as="span"
-                                            className={`inline ${checked ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400'
+                                            className={`inline ${checked ? 'text-primary dark:text-primary-2' : 'text-gray-500 dark:text-gray-400'
                                                 }`}
                                         >
                                             I have no allergies.
@@ -68,7 +68,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                                     </div>
                                 </div>
                                 {checked && (
-                                    <div className="shrink-0 text-indigo-600 dark:text-indigo-400">
+                                    <div className="shrink-0 text-primary dark:text-primary-2">
                                         <CheckIcon className="h-6 w-6" />
                                     </div>
                                 )}
@@ -81,7 +81,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                     value="SPECIFY"
                     className={({ active, checked }) =>
                         `${checked
-                            ? 'bg-indigo-50 dark:bg-indigo-900 border-indigo-600'
+                            ? 'bg-primary-light dark:bg-indigo-900 border-primary'
                             : 'border-gray-300 dark:border-gray-600'
                         }
                         relative rounded-lg border px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
@@ -94,14 +94,14 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                                     <div className="text-sm">
                                         <RadioGroup.Label
                                             as="p"
-                                            className={`font-medium ${checked ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-900 dark:text-gray-100'
+                                            className={`font-medium ${checked ? 'text-primary dark:text-primary-2' : 'text-gray-900 dark:text-gray-100'
                                                 }`}
                                         >
                                             Specify Allergens
                                         </RadioGroup.Label>
                                         <RadioGroup.Description
                                             as="span"
-                                            className={`inline ${checked ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400'
+                                            className={`inline ${checked ? 'text-primary dark:text-primary-2' : 'text-gray-500 dark:text-gray-400'
                                                 }`}
                                         >
                                             Select one or more allergens you need to avoid.
@@ -109,7 +109,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                                     </div>
                                 </div>
                                 {checked && (
-                                    <div className="shrink-0 text-indigo-600 dark:text-indigo-400">
+                                    <div className="shrink-0 text-primary dark:text-primary-2">
                                         <CheckIcon className="h-6 w-6" />
                                     </div>
                                 )}
@@ -128,7 +128,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                                 id={`allergen-${allergen.id}`}
                                 name={`${allergen.id}-free`}
                                 value={allergen.id}
-                                className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                                className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary-2 dark:bg-gray-700 dark:border-gray-600"
                                 checked={selectedAllergens.includes(allergen.id)}
                                 onChange={() => handleAllergenChange(allergen.id)}
                             />

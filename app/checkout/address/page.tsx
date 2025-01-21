@@ -159,8 +159,8 @@ export default function AddressPage() {
                             type="checkbox"
                             checked={useSameAddress}
                             onChange={(e) => setUseSameAddress(e.target.checked)}
-                            className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-indigo-600
-                                dark:text-indigo-400 focus:ring-indigo-500"
+                            className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-primary
+                                dark:text-primary-2 focus:ring-primary-2"
                         />
                         <span className="text-sm text-gray-900 dark:text-gray-200">
                             Billing address is the same as shipping address
@@ -190,9 +190,9 @@ export default function AddressPage() {
                 <button
                     onClick={handleSubmitClick}
                     disabled={isProcessing || !isFormValid}
-                    className="w-full bg-indigo-600 dark:bg-indigo-500 text-white dark:text-gray-100 py-3 px-4 rounded-md
-                        hover:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2
-                        focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 dark:disabled:bg-gray-700
+                    className="w-full bg-primary dark:bg-primary-2 text-white dark:text-gray-100 py-3 px-4 rounded-md
+                        hover:bg-primary dark:hover:bg-primary focus:outline-none focus:ring-2
+                        focus:ring-primary-2 focus:ring-offset-2 disabled:bg-gray-300 dark:disabled:bg-gray-700
                         disabled:cursor-not-allowed transition-colors duration-200"
                 >
                     {isProcessing ? 'Processing...' : 'Continue to Review Order'}

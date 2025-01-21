@@ -82,9 +82,9 @@ export default function
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="block p-3 pl-10 w-full text-base text-gray-900
                                             rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg
-                                            focus:ring-indigo-500 focus:border-indigo-500
+                                            focus:ring-primary-2 focus:border-primary-2
                                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-                                            dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                                            dark:text-white dark:focus:ring-primary-2 dark:focus:border-primary-2"
                                         placeholder="Enter your email"
                                         required
                                     />
@@ -94,10 +94,10 @@ export default function
                                         type="submit"
                                         disabled={isLoading}
                                         className="py-3 px-5 w-full text-sm font-medium text-center text-white
-                                            rounded-lg border cursor-pointer bg-indigo-600 border-indigo-600
-                                            sm:rounded-none sm:rounded-r-lg hover:bg-indigo-700
-                                            focus:ring-4 focus:ring-indigo-300 dark:bg-indigo-600
-                                            dark:hover:bg-indigo-700 dark:focus:ring-indigo-800
+                                            rounded-lg border cursor-pointer bg-primary border-primary
+                                            sm:rounded-none sm:rounded-r-lg hover:bg-primary-light
+                                            focus:ring-4 focus:ring-primary-light dark:bg-primary dark:hover:bg-primary-light
+                                            dark:focus:ring-primary dark:focus:ring-primary
                                             disabled:bg-gray-300 dark:disabled:bg-gray-600
                                             disabled:cursor-not-allowed transition-colors duration-200"
                                     >
@@ -109,7 +109,7 @@ export default function
                                 We care about the protection of your data.{' '}
                                 <a
                                     href="/privacy-policy"
-                                    className="font-medium text-indigo-600 dark:text-indigo-500 hover:underline"
+                                    className="font-medium text-primary dark:text-primary hover:underline"
                                 >
                                     Read our Privacy Policy
                                 </a>.

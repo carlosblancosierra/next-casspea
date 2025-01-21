@@ -79,7 +79,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
                                 transition: { duration: 0.5 }
                             });
                         }}
-                        className={`h-3 w-3 rounded-full transition-colors ${idx === currentIndex ? "bg-indigo-600" : "bg-indigo-200"
+                        className={`h-3 w-3 rounded-full transition-colors ${idx === currentIndex ? "bg-primary" : "bg-primary-light"
                             }`}
                         aria-label={`Go to image ${idx + 1}`}
                     />

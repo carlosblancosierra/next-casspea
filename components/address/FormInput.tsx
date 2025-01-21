@@ -45,7 +45,7 @@ const FormInput: React.FC<FormInputProps> = ({
                 readOnly ? " dark:bg-gray-700" : "bg-white dark:bg-gray-800",
                 "text-gray-900 dark:text-gray-100",
                 "border-gray-300 dark:border-gray-600",
-                "shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                "shadow-sm focus:border-primary-2 focus:ring-primary-2"
             )}
         />
     </div>

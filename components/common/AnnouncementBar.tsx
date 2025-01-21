@@ -50,7 +50,7 @@ export default function AnnouncementBar() {
           </p>
           <Link
             href="/subscribe"
-            className="w-full md:w-auto text-center rounded-full bg-gray-900 px-3.5 py-1 text-sm text-white shadow-sm hover:bg-gray-800"
+            className="w-full md:w-auto text-center rounded-full bg-primary-dark px-3.5 py-1 text-sm text-white shadow-sm hover:bg-primary-light"
           >
             Subscribe for 10% off <span aria-hidden="true">&rarr;</span>
           </Link>
@@ -62,7 +62,7 @@ export default function AnnouncementBar() {
           onClick={handleClose}
         >
           <span className="sr-only">Dismiss</span>
-          <XMarkIcon aria-hidden="true" className="h-5 w-5 text-gray-900" />
+          <XMarkIcon aria-hidden="true" className="h-5 w-5 text-gray-900 dark:text-white" />
         </button>
       </div>
     </div>

@@ -55,7 +55,7 @@ const AddressLookup: React.FC<AddressLookupProps> = ({ onPlaceSelect, addressErr
                     addressError
                         ? "border-red-500"
                         : "border-gray-300 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600",
-                    "shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    "shadow-sm focus:border-primary-2 focus:ring-primary-2"
                 )}
                 required
             />

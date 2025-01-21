@@ -73,13 +73,13 @@ const HelpPage = () => {
                     <div className="space-y-2 text-gray-600 dark:text-gray-300">
                         <p>
                             <span className="font-medium">Tel:</span>{' '}
-                            <a href="tel:07859790386" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+                            <a href="tel:07859790386" className="hover:text-primary dark:hover:text-primary-2">
                                 07859 790386
                             </a>
                         </p>
                         <p>
                             <span className="font-medium">Email:</span>{' '}
-                            <a href="mailto:info@casspea.co.uk" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+                            <a href="mailto:info@casspea.co.uk" className="hover:text-primary dark:hover:text-primary-2">
                                 info@casspea.co.uk
                             </a>
                         </p>
@@ -93,11 +93,11 @@ const HelpPage = () => {
                 <section className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="text-center p-4  dark:bg-gray-700 rounded-lg">
-                            <h3 className="font-bold text-indigo-600 dark:text-indigo-400">FREE SHIPPING</h3>
+                            <h3 className="font-bold text-primary dark:text-primary-2">FREE SHIPPING</h3>
                             <p className="text-gray-600 dark:text-gray-300">On all orders over £50</p>
                         </div>
                         <div className="text-center p-4  dark:bg-gray-700 rounded-lg">
-                            <h3 className="font-bold text-indigo-600 dark:text-indigo-400">10% OFF</h3>
+                            <h3 className="font-bold text-primary dark:text-primary-2">10% OFF</h3>
                             <p className="text-gray-600 dark:text-gray-300">Subscribe to our newsletter</p>
                         </div>
                     </div>

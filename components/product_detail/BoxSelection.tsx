@@ -24,9 +24,9 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                     value={option.value}
                     className={({ checked, active }) => `
                         relative block cursor-pointer rounded-lg border px-6 py-4
-                        ${checked ? 'border-indigo-600 ring-2 ring-indigo-600' : 'border-gray-300 dark:border-gray-600'}
-                        ${active ? 'ring-2 ring-indigo-600' : ''}
-                        hover:border-indigo-600
+                        ${checked ? 'border-primary ring-2 ring-primary' : 'border-gray-300 dark:border-gray-600'}
+                        ${active ? 'ring-2 ring-primary' : ''}
+                        hover:border-primary
                     `}
                 >
                     {({ checked }) => (
@@ -36,7 +36,7 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                                     <div className="text-sm">
                                         <RadioGroup.Label
                                             as="p"
-                                            className={`font-medium ${checked ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-900 dark:text-gray-100'
+                                            className={`font-medium ${checked ? 'text-primary dark:text-primary-2' : 'text-gray-900 dark:text-gray-100'
                                                 }`}
                                         >
                                             {option.name}
@@ -47,7 +47,7 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                                     </div>
                                 </div>
                                 {checked && (
-                                    <div className="shrink-0 text-indigo-600 dark:text-indigo-400">
+                                    <div className="shrink-0 text-primary dark:text-primary-2">
                                         <CheckIcon className="h-6 w-6" />
                                     </div>
                                 )}

@@ -35,7 +35,7 @@ export default function Page() {
 					Don&apos;t have an account?{' '}
 					<Link
 						href='/auth/register'
-						className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
+						className='font-semibold leading-6 text-primary hover:text-primary'
 					>
 						Register here
 					</Link>

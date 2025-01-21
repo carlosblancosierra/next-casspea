@@ -88,7 +88,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                             key={option.id}
                             className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer
                                 ${isUpdating ? 'opacity-50 cursor-not-allowed' : 'hover: dark:hover:bg-gray-700'}
-                                ${localSelectedOption === option.id.toString() ? 'border-indigo-500 ring-1 ring-indigo-500' : 'border-gray-200'}`}
+                                ${localSelectedOption === option.id.toString() ? 'border-primary-2 ring-1 ring-primary-2' : 'border-gray-200'}`}
                         >
                             <div className="flex items-center">
                                 <input
@@ -98,7 +98,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     checked={localSelectedOption === option.id.toString()}
                                     onChange={() => handleShippingChange(option.id.toString())}
                                     disabled={isUpdating}
-                                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                    className="h-4 w-4 text-primary focus:ring-primary-2"
                                 />
                                 <div className="ml-3">
                                     <h3 className="font-medium text-gray-900 dark:text-gray-100">

@@ -75,7 +75,7 @@ export default function AboutUsPage() {
 
                 {/* Mission & Vision Section */}
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-                    <div className="bg-indigo-50 dark:bg-gray-800 p-8 rounded-lg">
+                    <div className="bg-primary-light dark:bg-gray-800 p-8 rounded-lg">
                         <h2 className={`text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white`}>
                             Mission
                         </h2>

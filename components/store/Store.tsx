@@ -34,7 +34,7 @@ export default function Store() {
             type="button"
             onClick={() => setSelectedCategory(category)}
             className={`${selectedCategory === category
-              ? 'text-white bg-blue-700 border-blue-600 dark:bg-blue-500 dark:border-blue-500'
+              ? 'text-white bg-primary border-primary dark:bg-primary dark:border-primary'
               : 'text-gray-900 bg-white border border-gray-200 dark:text-white dark:bg-gray-800 dark:border-gray-700'
               } hover:bg-blue-700 hover:text-white dark:hover:bg-blue-600 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 rounded-full
               text-xs px-3 py-2

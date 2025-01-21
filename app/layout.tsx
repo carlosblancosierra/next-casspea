@@ -10,7 +10,11 @@ import dynamic from 'next/dynamic';
 import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
 
-const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
+// const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
+//   ssr: false
+// });
+
+const HeartEffect = dynamic(() => import('@/components/common/HeartEffect'), {
   ssr: false
 });
 
@@ -64,7 +68,7 @@ export default function RootLayout({
 
         <Provider>
           <Setup />
-          <SnowEffect />
+          <HeartEffect />
           <LayoutWrapper>
             <div className="flex flex-col min-h-screen relative">
               <AnnouncementBar />
