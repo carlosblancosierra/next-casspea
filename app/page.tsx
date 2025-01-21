@@ -66,10 +66,13 @@ export default function HomePage() {
 							alt="CassPea Chocolates" /> */}
 
 						<ImageGallery images={
-							['/valentines/2.jpg',
+							[
+								'/valentines/corazon2-2.jpeg',
+								'/valentines/2.jpg',
+								'/valentines/3.jpg',
+								'/valentines/4.jpg',
+								'/valentines/5.jpg',
 								'/valentines/1.jpg',
-								// '/valentines/3.jpg',
-								// '/valentines/4.jpg'
 							]} className='block md:hidden' />
 
 						<p className="md:hidden md:mb-6 text-3xl font-bold mt-2 font-playfair lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">Share the love with CassPea Chocolates</p>
