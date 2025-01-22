@@ -1,3 +1,5 @@
+import { CartItemRequest } from "@/types/carts";
+
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/redux/hooks';
@@ -13,19 +15,27 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const handleAddToCart = () => {
-        const CartItem = {
-            id: product.id,
-            product,
-            quantity,
-            active: true,
-        };
+    // Use the same mutation from cartApiSlice
+    const [addToCart, { isLoading }] = useAddCartItemMutation();
 
-        toast.success(`${product.name} added to cart!`);
+    const handleAddToCart = async () => {
+        try {
+            // Build the payload required by your backend
+            const cartItemRequest: CartItemRequest = {
+                product: product.id,
+                quantity,
+            };
 
-        setTimeout(() => {
+            // Actually call the mutation
+            await addToCart(cartItemRequest).unwrap();
+
+            // Feedback to user, then redirect to cart
+            toast.success(`${product.name} added to cart!`);
             router.push('/cart');
-        }, 1000);
+        } catch (error) {
+            toast.error('Failed to add item to cart');
+            console.error('Add to cart error:', error);
+        }
     };
 
     return (
