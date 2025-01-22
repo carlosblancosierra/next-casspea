@@ -8,6 +8,7 @@ import ImageGallery from '@/components/product_detail/ImageGallery';
 
 // Dynamically import components that can load later
 const HomeProducts = dynamic(() => import('@/components/home/HomeProducts'));
+const HomeValentines = dynamic(() => import('@/components/home/HomeValentines'));
 const HomeGallery = dynamic(() => import('@/components/home/HomeGallery'));
 const FlavourCarousel = dynamic(() => import('@/components/flavours/FlavourCarousel'));
 
@@ -81,6 +82,13 @@ export default function HomePage() {
 					</div>
 				</div>
 			</section>
+			<Suspense fallback={<LoadingSection />}>
+				<div>
+					<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Valentines Day</h2>
+					<HomeValentines />
+				</div>
+			</Suspense>
+
 			<Suspense fallback={<LoadingSection />}>
 				<div>
 					<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Signature Boxes</h2>
