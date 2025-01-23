@@ -42,6 +42,12 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
     return (
         <form>
             <div className="mt-4">
+                <p className="text-2xl md:text-2xl tracking-tight mb-2 dark:text-white ">
+                    Shipping starts from February 5th to 7th, just in time for Valentine&apos;s Day! 
+                    Pre-order now to ensure your gift arrives on time.</p>
+                <p className="text-2xl md:text-2xl tracking-tight mb-2 text-primary">
+                    Use Code <span className="font-bold">ValentinesPreorder</span> for 15% off until 31st January at midnight
+                </p>
                 <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                     Quantity
                 </label>
