@@ -42,7 +42,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
                     <ProductInfo product={product} />
 
                     <div className="hidden md:block">
-                        <ProductAccordion isSignatureBox={isSignatureBox} />
+                        <ProductAccordion isSignatureBox={isSignatureBox} product={product} />
                     </div>
                 </div>
 
@@ -61,7 +61,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
                 </div>
 
                 <div className="block md:hidden mt-10">
-                    <ProductAccordion isSignatureBox={isSignatureBox} />
+                    <ProductAccordion isSignatureBox={isSignatureBox} product={product} />
                 </div>
             </div>
 

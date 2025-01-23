@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiCheckCircle, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import PaymentMethods from '../common/PaymentMethods';
-
+import { Product } from '@/types/products';
 const AccordionItem = ({ i, expanded, setExpanded, title, content }) => {
   const isOpen = i === expanded;
 
@@ -57,7 +57,7 @@ const AccordionItem = ({ i, expanded, setExpanded, title, content }) => {
   );
 };
 
-export const Example = ({ isSignatureBox }: { isSignatureBox: boolean }) => {
+export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, product: Product }) => {
   const [expanded, setExpanded] = useState<false | number>(2);
 
   const accordionItems = [
@@ -67,12 +67,14 @@ export const Example = ({ isSignatureBox }: { isSignatureBox: boolean }) => {
         <div className="grid grid-cols-2 gap-8 px-2 pt-2 pb-4">
           <div>
             <span className="font-semibold text-xs">Pieces</span>
-            <p className='text-sm'>9 Bonbons</p>
+            <p className='text-sm'>{product.units_per_box} {isSignatureBox ? 'Bonbons' : 'units'}</p>
           </div>
-          <div>
-            <span className="font-semibold text-xs">Weight</span>
-            <p className='text-sm'>135 grams</p>
-          </div>
+          {product.weight && (
+            <div>
+              <span className="font-semibold text-xs">Weight</span>
+              <p className='text-sm'>{product.weight} grams</p>
+            </div>
+          )}
           <div>
             <span className="font-semibold text-xs">City of origin</span>
             <p className='text-sm'>London</p>
@@ -125,7 +127,7 @@ export const Example = ({ isSignatureBox }: { isSignatureBox: boolean }) => {
             <div>
               <span className="font-semibold text-sm">Customize Your Box</span>
               <p className="text-xs">
-                Choose your box size, select any allergens to avoid, and pick your favourite flavours. Can’t decide? Let us choose for you with our curated selection!
+                Choose your box size, select any allergens to avoid, and pick your favourite flavours. Can't decide? Let us choose for you with our curated selection!
               </p>
             </div>
           </div>
