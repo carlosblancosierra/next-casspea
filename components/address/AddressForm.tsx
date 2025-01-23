@@ -34,7 +34,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
         city: '',
         county: '',
         postcode: '',
-        country: 'United Kingdom',
+        country: addressType === 'SHIPPING' ? 'United Kingdom' : '',
         place_id: '',
         formatted_address: '',
         latitude: 0,
@@ -101,7 +101,15 @@ const AddressForm: React.FC<AddressFormProps> = ({
             </FormSection>
             <FormSection>
                 <FormInput id="postcode" name="postcode" label="Postcode" value={formData.postcode} onChange={handleInputChange} required />
-                <FormInput id="country" name="country" label="Country" value={formData.country} readOnly />
+                <FormInput 
+                    id="country" 
+                    name="country" 
+                    label="Country" 
+                    value={formData.country} 
+                    onChange={handleInputChange}
+                    readOnly={addressType === 'SHIPPING'}
+                    required
+                />
             </FormSection>
         </form>
     );
