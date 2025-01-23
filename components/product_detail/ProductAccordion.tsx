@@ -93,22 +93,22 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
           <div className="flex items-start gap-x-2">
             <FiCheckCircle />
             <div>
-              <span className="font-semibold text-sm">Regular</span>
-              <p className="text-xs">Just return your product and we&apos;ll refund your money. No questions asked – we&apos;ll do our best to make sure your return is hassle-free.</p>
+              <span className="font-semibold text-sm">Royal Mail Tracked 48®</span>
+              <p className="text-xs">Shipping within 24 hours, Aims to deliver in two to three working days</p>
             </div>
           </div>
           <div className="flex items-start gap-x-2">
             <FiCheckCircle />
             <div>
-              <span className="font-semibold text-sm">Priority</span>
-              <p className="text-xs">Get priority shipping with faster processing times.</p>
+              <span className="font-semibold text-sm">Royal Mail Tracked 24®</span>
+              <p className="text-xs">Shipping within 24 hours, Next working day delivery aim</p>
             </div>
           </div>
           <div className="flex items-start gap-x-2">
             <FiCheckCircle />
             <div>
-              <span className="font-semibold text-sm">Next Day Guaranteed</span>
-              <p className="text-xs">Guaranteed next-day delivery.</p>
+              <span className="font-semibold text-sm">Royal Mail Special Delivery</span>
+              <p className="text-xs">Shipping same day for orders placed before 11 am. Delivery within 24 hours</p>
             </div>
           </div>
         </div>
