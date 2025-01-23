@@ -21,8 +21,7 @@ const HomeProducts: React.FC<HomeProductsProps> = ({
 		<section className="dark:bg-gray-900">
 			<div
 				className={`grid gap-x-2 gap-y-2 mt-2 mx-auto max-w-7xl
-					grid-cols-2 sm:grid-cols-4 place-items-center
-					${valentines.length <= 2 ? 'md:grid-cols-2 lg:grid-cols-2 justify-items-center' : ''}`}
+					grid-cols-2 sm:grid-cols-4 sm:place-items-center sm:col-start-2`}
 			>
 				<AnimatePresence>
 					{valentines.map((product) => (
