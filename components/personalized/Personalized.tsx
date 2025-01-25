@@ -43,7 +43,7 @@ export default function Personalized() {
             {templates?.map((template) => (
                 <Link 
                     key={template.slug} 
-                    href={`/personalized/${template.slug}`}
+                    href={`/personalised/${template.slug}`}
                     className="block p-4 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow"
                 >
                     <div className="aspect-square mb-4">

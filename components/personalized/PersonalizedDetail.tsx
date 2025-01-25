@@ -34,8 +34,6 @@ export default function PersonalizedDetail({ slug }: PersonalizedDetailProps) {
         return initialSelections;
     });
 
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const controls = useAnimation();
 
     if (isLoading) return <div>Loading template...</div>;
     if (error) return <div>Error loading template</div>;
