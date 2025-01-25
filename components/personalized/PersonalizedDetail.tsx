@@ -19,21 +19,12 @@ export default function PersonalizedDetail({ slug }: PersonalizedDetailProps) {
     if (!template) return <div>Template not found</div>;
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-            <div className="space-y-6">
-                <h1 className="text-2xl font-bold">{template.title}</h1>
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <h2 className="text-lg font-medium mb-2">Top View</h2>
-                        <CustomChocolate layers={chosenLayers} view="top" />
-                    </div>
-                    <div>
-                        <h2 className="text-lg font-medium mb-2">Side View</h2>
-                        <CustomChocolate layers={chosenLayers} view="side" />
-                    </div>
-                </div>
-            </div>
-            <div className="sticky top-4">
+        <div className="">
+            {/* <div className="sticky top-4">
+                <CustomChocolate layers={chosenLayers} />
+            </div> */}
+            <div>
+                <h1 className="text-2xl font-bold mb-4">{template.title}</h1>
                 <PersonalizedForm 
                     template={template} 
                     onLayersChange={setChosenLayers}
