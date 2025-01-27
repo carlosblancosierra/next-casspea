@@ -37,6 +37,11 @@ export const selectBoxes = createSelector(
     (products) => products.filter(p => p.category?.slug === 'signature-boxes') || []
 );
 
+export const selectValentines = createSelector(
+    [selectAllProducts],
+    (products) => products.filter(p => p.category?.slug === 'valentines-day') || []
+);
+
 export const selectSnacks = createSelector(
     [selectAllProducts],
     (products) => products.filter(p => p.category?.slug === 'snacks') || []

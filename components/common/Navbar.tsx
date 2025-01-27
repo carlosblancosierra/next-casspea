@@ -15,6 +15,11 @@ const navigation = [
   { name: 'About Us', href: '/about-us', current: false },
 ]
 
+const mobileNav = [
+  ...navigation,
+  { name: 'Log in', href: '/orders', current: false },
+]
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
@@ -107,7 +112,7 @@ export default function Nav() {
 
           <DisclosurePanel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
+              {mobileNav.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}

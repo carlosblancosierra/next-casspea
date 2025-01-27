@@ -73,7 +73,7 @@ export default function RootLayout({
             <div className="flex flex-col min-h-screen relative">
               <AnnouncementBar />
               <Navbar />
-              <main className="flex-grow pb-16 md:pb-0">
+              <main className="flex-grow pb-16 md:pb-0 mx-4">
                 {children}
               </main>
               <div className="hidden md:block">
