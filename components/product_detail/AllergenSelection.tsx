@@ -38,83 +38,63 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
             <RadioGroup value={allergenOption} onChange={setAllergenOption} className="space-y-3">
                 <RadioGroup.Option
                     value="NONE"
-                    className={({ active, checked }) =>
+                    className={({ checked }) =>
                         `${checked
-                            ? 'bg-primary-light dark:bg-indigo-900 border-primary'
-                            : 'border-gray-300 dark:border-gray-600'
+                            ? 'bg-primary text-white'
+                            : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'
                         }
-                        relative rounded-lg border px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
+                        relative rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
                     }
                 >
                     {({ checked }) => (
-                        <>
-                            <div className="flex items-center justify-between w-full">
-                                <div className="flex items-center">
-                                    <div className="text-sm">
-                                        <RadioGroup.Label
-                                            as="p"
-                                            className={`font-medium ${checked ? 'text-primary dark:text-primary-2' : 'text-gray-900 dark:text-gray-100'
-                                                }`}
-                                        >
-                                            No Allergens
-                                        </RadioGroup.Label>
-                                        <RadioGroup.Description
-                                            as="span"
-                                            className={`inline ${checked ? 'text-primary dark:text-primary-2' : 'text-gray-500 dark:text-gray-400'
-                                                }`}
-                                        >
-                                            I have no allergies.
-                                        </RadioGroup.Description>
-                                    </div>
+                        <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center">
+                                <div className="text-sm">
+                                    <RadioGroup.Label as="p" className="font-medium">
+                                        No Allergens
+                                    </RadioGroup.Label>
+                                    <RadioGroup.Description as="span" className={`inline ${checked ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}>
+                                        I have no allergies.
+                                    </RadioGroup.Description>
                                 </div>
-                                {checked && (
-                                    <div className="shrink-0 text-primary dark:text-primary-2">
-                                        <CheckIcon className="h-6 w-6" />
-                                    </div>
-                                )}
                             </div>
-                        </>
+                            {checked && (
+                                <div className="shrink-0 text-white">
+                                    <CheckIcon className="h-6 w-6" />
+                                </div>
+                            )}
+                        </div>
                     )}
                 </RadioGroup.Option>
 
                 <RadioGroup.Option
                     value="SPECIFY"
-                    className={({ active, checked }) =>
+                    className={({ checked }) =>
                         `${checked
-                            ? 'bg-primary-light dark:bg-indigo-900 border-primary'
-                            : 'border-gray-300 dark:border-gray-600'
+                            ? 'bg-primary text-white'
+                            : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'
                         }
-                        relative rounded-lg border px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
+                        relative rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
                     }
                 >
                     {({ checked }) => (
-                        <>
-                            <div className="flex items-center justify-between w-full">
-                                <div className="flex items-center">
-                                    <div className="text-sm">
-                                        <RadioGroup.Label
-                                            as="p"
-                                            className={`font-medium ${checked ? 'text-primary dark:text-primary-2' : 'text-gray-900 dark:text-gray-100'
-                                                }`}
-                                        >
-                                            Specify Allergens
-                                        </RadioGroup.Label>
-                                        <RadioGroup.Description
-                                            as="span"
-                                            className={`inline ${checked ? 'text-primary dark:text-primary-2' : 'text-gray-500 dark:text-gray-400'
-                                                }`}
-                                        >
-                                            Select one or more allergens you need to avoid.
-                                        </RadioGroup.Description>
-                                    </div>
+                        <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center">
+                                <div className="text-sm">
+                                    <RadioGroup.Label as="p" className="font-medium">
+                                        Specify Allergens
+                                    </RadioGroup.Label>
+                                    <RadioGroup.Description as="span" className={`inline ${checked ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}>
+                                        Select one or more allergens you need to avoid.
+                                    </RadioGroup.Description>
                                 </div>
-                                {checked && (
-                                    <div className="shrink-0 text-primary dark:text-primary-2">
-                                        <CheckIcon className="h-6 w-6" />
-                                    </div>
-                                )}
                             </div>
-                        </>
+                            {checked && (
+                                <div className="shrink-0 text-white">
+                                    <CheckIcon className="h-6 w-6" />
+                                </div>
+                            )}
+                        </div>
                     )}
                 </RadioGroup.Option>
             </RadioGroup>

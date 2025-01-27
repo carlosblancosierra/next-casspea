@@ -22,11 +22,13 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                 <RadioGroup.Option
                     key={option.value}
                     value={option.value}
-                    className={({ checked, active }) => `
+                    className={({ checked }) => `
                         relative block cursor-pointer rounded-lg border px-6 py-4
-                        ${checked ? 'border-primary ring-2 ring-primary' : 'border-gray-300 dark:border-gray-600'}
-                        ${active ? 'ring-2 ring-primary' : ''}
-                        hover:border-primary
+                        ${checked
+                            ? 'bg-primary border-primary text-white'
+                            : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100'
+                        }
+                        hover:border-primary transition-colors duration-200
                     `}
                 >
                     {({ checked }) => (
@@ -36,18 +38,20 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                                     <div className="text-sm">
                                         <RadioGroup.Label
                                             as="p"
-                                            className={`font-medium ${checked ? 'text-primary dark:text-primary-2' : 'text-gray-900 dark:text-gray-100'
-                                                }`}
+                                            className="font-medium"
                                         >
                                             {option.name}
                                         </RadioGroup.Label>
-                                        <RadioGroup.Description as="span" className="text-gray-500 dark:text-gray-400">
+                                        <RadioGroup.Description
+                                            as="span"
+                                            className={checked ? 'text-white' : 'text-gray-500 dark:text-gray-400'}
+                                        >
                                             {option.description}
                                         </RadioGroup.Description>
                                     </div>
                                 </div>
                                 {checked && (
-                                    <div className="shrink-0 text-primary dark:text-primary-2">
+                                    <div className="shrink-0 text-white">
                                         <CheckIcon className="h-6 w-6" />
                                     </div>
                                 )}
