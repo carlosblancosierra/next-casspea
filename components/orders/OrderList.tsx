@@ -43,6 +43,7 @@ interface Order {
             shipping_date?: string | null;
             discounted_total: string;
         };
+        email?: string | null;
     };
 }
 
@@ -229,6 +230,12 @@ const OrderCard = ({ order, onSelect }: { order: Order, onSelect: (order: Order)
                                             {formatSelectionType(item.box_customization.selection_type)}
                                         </div>
                                     )}
+                                    {/* Flavours */}
+                                    {item.box_customization?.flavor_selections?.map((flavor, index) => (
+                                        <div key={index} className="text-sm text-gray-500">
+                                            {flavor.flavor_name}
+                                        </div>
+                                    ))}
                                 </div>
                             ))}
                         </dd>
@@ -256,6 +263,16 @@ const OrderCard = ({ order, onSelect }: { order: Order, onSelect: (order: Order)
                             <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Discount Applied</dt>
                             <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
                                 {order.checkout_session.discount}
+                            </dd>
+                        </div>
+                    )}
+
+                    {/* Email*/}
+                    {order.checkout_session?.email && (
+                        <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Email</dt>
+                            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                                {order.checkout_session.email}
                             </dd>
                         </div>
                     )}
