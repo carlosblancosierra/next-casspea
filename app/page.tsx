@@ -31,7 +31,7 @@ export default function HomePage() {
 				<div className="grid grid-cols-1 lg:grid-cols-12 mpx-4 py-4 mx-auto lg:gap-8 xl:gap-0 lg:py-16 relative">
 					<div className="md:mr-10 lg:mt-[5vh] grid-cols-1 lg:col-span-6">
 						<h1 className={`${playfair.className} mb-2 text-5xl font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}>
-							London’s Finest Artisan Chocolates
+							London's Finest Artisan Chocolates
 						</h1>
 						<h2 className="text-2xl md:text-2xl tracking-tight mb-2 dark:text-white ">
 							Celebrate the love this Valentine's Day with our luxurious chocolates
@@ -83,7 +83,7 @@ export default function HomePage() {
 				</div>
 			</section>
 			<Suspense fallback={<LoadingSection />}>
-				<div>
+				<div className="w-full md:w-[60%] mx-auto">
 					<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Valentines Day</h2>
 					<HomeValentines />
 				</div>
