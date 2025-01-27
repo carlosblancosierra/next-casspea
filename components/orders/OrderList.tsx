@@ -187,6 +187,8 @@ interface OrderCardProps {
 
 const OrderCard = ({ order, onSelect }: { order: Order, onSelect: (order: Order) => void }) => {
     const { time } = formatDate(order.created);
+    const [openFlavors, setOpenFlavors] = useState<Record<number, boolean>>({});
+
     return (
         <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
             {/* Header with Order ID and Status */}
@@ -231,11 +233,21 @@ const OrderCard = ({ order, onSelect }: { order: Order, onSelect: (order: Order)
                                         </div>
                                     )}
                                     {/* Flavours */}
-                                    {item.box_customization?.flavor_selections?.map((flavor, index) => (
-                                        <div key={index} className="text-sm text-gray-500">
-                                            {flavor.flavor_name}
-                                        </div>
-                                    ))}
+                                    <div className="flex flex-col">
+                                        <button
+                                            onClick={() => setOpenFlavors(prev => ({ ...prev, [item.product?.id || 0]: !prev[item.product?.id || 0] }))}
+                                            className="text-sm text-gray-700 hover:text-gray-900 flex items-center gap-1"
+                                        >
+                                            Flavors {openFlavors[item.product?.id || 0] ? '▼' : '▶'}
+                                        </button>
+
+                                        {openFlavors[item.product?.id || 0] && item.box_customization?.flavor_selections?.map((flavor, index) => (
+                                            <div key={index} className="text-sm text-gray-500 pl-4 flex justify-between">
+                                                <span>{flavor.flavor_name}</span>
+                                                <span className="text-gray-400">×{flavor.quantity}</span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             ))}
                         </dd>
