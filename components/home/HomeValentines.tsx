@@ -6,10 +6,10 @@ import ProductCard from '@/components/store/ProductCard';
 import { selectAllProducts, selectValentines } from '@/redux/features/products/productSlice';
 import { useAppSelector } from '@/redux/hooks';
 
-interface HomeProductsProps {
+interface HomeValentinesProps {
 }
 
-const HomeProducts: React.FC<HomeProductsProps> = ({
+const HomeValentines: React.FC<HomeValentinesProps> = ({
 }) => {
 	const valentines = useAppSelector(selectValentines);
 	const productVariants = {
@@ -20,8 +20,8 @@ const HomeProducts: React.FC<HomeProductsProps> = ({
 	return (
 		<section className="dark:bg-gray-900">
 			<div
-				className={`grid gap-x-2 gap-y-2 mt-2 mx-auto max-w-7xl
-					grid-cols-2 sm:grid-cols-4 sm:place-items-center sm:col-start-2`}
+				className={`grid gap-x-4 gap-y-4 mt-2 mx-auto
+					grid-cols-2 place-items-center`}
 			>
 				<AnimatePresence>
 					{valentines.map((product) => (
@@ -33,6 +33,7 @@ const HomeProducts: React.FC<HomeProductsProps> = ({
 							layout
 							variants={productVariants}
 							transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+							className="w-full"
 						>
 							<ProductCard product={product} />
 						</motion.div>
@@ -43,5 +44,5 @@ const HomeProducts: React.FC<HomeProductsProps> = ({
 	);
 }
 
-export default HomeProducts;
+export default HomeValentines;
 
