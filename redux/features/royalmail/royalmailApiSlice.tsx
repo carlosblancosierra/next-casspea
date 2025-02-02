@@ -68,7 +68,10 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
             }
           };
         }
-      }
+      },
+      // Add invalidation if needed
+      invalidatesTags: (result) => 
+        result && !('error' in result) ? ['Orders'] : []
     }),
   }),
 });

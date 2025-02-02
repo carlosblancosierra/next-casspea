@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { useGetOrdersQuery, OrdersQueryParams } from '@/redux/features/orders/ordersApiSlice';
 import { Order } from '@/types/orders';
 import DaySection from './DaySection';
-import { useCreateRoyalMailOrderMutation, useDownloadRoyalMailLabelMutation } from '@/redux/features/royalmail/royalmailApiSlice';
+import { useCreateRoyalMailOrderMutation } from '@/redux/features/royalmail/royalmailApiSlice';
 import { toast } from 'react-toastify';
 import { formatDate } from './ordersUtils';
+import axios from 'axios';
 
 export default function OrderList() {
     const [filters, setFilters] = useState<OrdersQueryParams>({});
     const { data: orders, isLoading, error } = useGetOrdersQuery(filters);
     const [createRoyalMailOrder] = useCreateRoyalMailOrderMutation();
-    const [downloadRoyalMailLabel] = useDownloadRoyalMailLabelMutation();
 
     const handleCreateShipping = async (order_id: string) => {
         try {
@@ -24,7 +24,16 @@ export default function OrderList() {
 
     const handleDownloadLabel = async (order_id: string) => {
         try {
-            const blob = await downloadRoyalMailLabel({ order_id }).unwrap();
+            const response = await axios({
+                url: `/api/royalmail/orders/${order_id}/label/`,
+                method: 'GET',
+                responseType: 'blob',
+                headers: {
+                    'Accept': 'application/pdf',
+                },
+            });
+
+            const blob = new Blob([response.data], { type: 'application/pdf' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -33,10 +42,17 @@ export default function OrderList() {
             a.click();
             a.remove();
             window.URL.revokeObjectURL(url);
+            
             toast.success('Label downloaded successfully');
         } catch (error: any) {
-            console.error(error);
-            toast.error('Error downloading shipping label');
+            console.error('Download failed:', error);
+            if (error.response?.status === 404) {
+                toast.error('Order not found');
+            } else if (error.response?.status === 400) {
+                toast.error('No shipping label available for this order');
+            } else {
+                toast.error('Failed to download shipping label');
+            }
         }
     };
 
