@@ -27,70 +27,33 @@ export default function OrderList() {
             const token = localStorage.getItem('access');
             const csrfToken = getCookie('csrftoken');
 
-            console.log('Making request with:', {
-                url: `${process.env.NEXT_PUBLIC_HOST}/api/royalmail/orders/${order_id}/label/`,
-                token: token ? 'exists' : 'missing',
-                csrfToken: csrfToken ? 'exists' : 'missing'
-            });
-
-            const response = await axios({
-                url: `${process.env.NEXT_PUBLIC_HOST}/api/royalmail/orders/${order_id}/label/`,
-                method: 'GET',
-                responseType: 'blob',
-                headers: {
-                    'Accept': 'application/pdf, application/octet-stream',
-                    'Authorization': token ? `Bearer ${token}` : '',
-                    'X-CSRFToken': csrfToken || '',
-                },
-                withCredentials: true,
-            });
-
-            console.log('Response headers:', response.headers);
-
-            const blob = new Blob([response.data], { type: 'application/pdf' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `shipping_label_${order_id}.pdf`;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
+            // Create a temporary form to make an authenticated POST request
+            const form = document.createElement('form');
+            form.method = 'GET';
+            form.action = `${process.env.NEXT_PUBLIC_HOST}/api/royalmail/orders/${order_id}/label/`;
             
-            toast.success('Label downloaded successfully');
+            // Add authentication headers as hidden fields
+            const authInput = document.createElement('input');
+            authInput.type = 'hidden';
+            authInput.name = 'Authorization';
+            authInput.value = `Bearer ${token}`;
+            form.appendChild(authInput);
+
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'X-CSRFToken';
+            csrfInput.value = csrfToken || '';
+            form.appendChild(csrfInput);
+
+            // Submit the form
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+            
+            toast.success('Download started');
         } catch (error: any) {
-            console.error('Full error details:', {
-                status: error.response?.status,
-                statusText: error.response?.statusText,
-                headers: error.response?.headers,
-                data: error.response?.data,
-            });
-            
-            if (error.response) {
-                switch (error.response.status) {
-                    case 404:
-                        toast.error('Order or label not found');
-                        break;
-                    case 400:
-                        toast.error('No shipping label available for this order');
-                        break;
-                    case 401:
-                        toast.error('Please log in to download the label');
-                        break;
-                    case 403:
-                        toast.error('You do not have permission to download this label');
-                        break;
-                    case 406:
-                        toast.error('Invalid request format');
-                        break;
-                    default:
-                        toast.error('Failed to download shipping label');
-                }
-            } else if (error.request) {
-                toast.error('No response from server');
-            } else {
-                toast.error('Error setting up download request');
-            }
+            console.error('Download failed:', error);
+            toast.error('Failed to start download');
         }
     };
 
