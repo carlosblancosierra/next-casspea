@@ -26,30 +26,40 @@ export default function OrderList() {
         try {
             const token = localStorage.getItem('access');
             const csrfToken = getCookie('csrftoken');
-
-            // Create a temporary form to make an authenticated POST request
-            const form = document.createElement('form');
-            form.method = 'GET';
-            form.action = `${process.env.NEXT_PUBLIC_HOST}/api/royalmail/orders/${order_id}/label/`;
+    
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_HOST}/api/royalmail/orders/${order_id}/label/`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'X-CSRFToken': csrfToken || '',
+                    },
+                }
+            );
+    
+            if (!response.ok) {
+                throw new Error('Failed to fetch label');
+            }
+    
+            // Get the filename from the Content-Disposition header if available
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const filenameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/);
+            const filename = filenameMatch ? filenameMatch[1] : `shipping_label_${order_id}.pdf`;
+    
+            // Convert the response to a blob
+            const blob = await response.blob();
             
-            // Add authentication headers as hidden fields
-            const authInput = document.createElement('input');
-            authInput.type = 'hidden';
-            authInput.name = 'Authorization';
-            authInput.value = `Bearer ${token}`;
-            form.appendChild(authInput);
-
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = 'X-CSRFToken';
-            csrfInput.value = csrfToken || '';
-            form.appendChild(csrfInput);
-
-            // Submit the form
-            document.body.appendChild(form);
-            form.submit();
-            document.body.removeChild(form);
-            
+            // Create a download link and trigger it
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+    
             toast.success('Download started');
         } catch (error: any) {
             console.error('Download failed:', error);
