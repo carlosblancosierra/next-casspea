@@ -244,8 +244,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       setIsCreating(true);
                       try {
                         await onCreateShipping(order.order_id);
-                        window.location.reload();
-                      } catch (error) {
+                      } finally {
                         setIsCreating(false);
                       }
                     }}

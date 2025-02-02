@@ -18,7 +18,8 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
         url: `/royalmail/orders/${order_id}/create/`,
         method: 'POST',
       }),
-      // Optional: Display toast notifications on success/error.
+      // Invalidate the orders cache to trigger a refetch
+      invalidatesTags: ['Orders'],
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           await queryFulfilled;

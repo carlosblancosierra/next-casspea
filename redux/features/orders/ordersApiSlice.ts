@@ -17,6 +17,7 @@ const ordersApiSlice = apiSlice.injectEndpoints({
                 url: '/orders/',
                 params: params || undefined,
             }),
+            providesTags: ['Orders'],
         }),
     }),
 });
