@@ -6,7 +6,7 @@ import { useCreateRoyalMailOrderMutation, useLazyDownloadRoyalMailLabelQuery } f
 import { toast } from 'react-toastify';
 import { formatDate } from './ordersUtils';
 
-const OrderList: React.FC = () => {
+export default function OrderList() {
     const [filters, setFilters] = useState<OrdersQueryParams>({});
     const { data: orders, isLoading, error } = useGetOrdersQuery(filters);
     const [createRoyalMailOrder] = useCreateRoyalMailOrderMutation();
@@ -15,7 +15,7 @@ const OrderList: React.FC = () => {
     const handleCreateShipping = async (order_id: string) => {
         try {
             await createRoyalMailOrder({ order_id }).unwrap();
-            // toast is already shown via mutation's onQueryStarted if configured, add extra feedback if needed.
+            // Additional feedback via toast is shown in the mutation's onQueryStarted if configured.
         } catch (error: any) {
             console.error(error);
             toast.error('Error creating shipping order');
@@ -56,7 +56,7 @@ const OrderList: React.FC = () => {
         );
     }
 
-    if (!orders || orders.length === 0) {
+    if (!orders || !orders.length) {
         return (
             <div className="text-center text-gray-500 dark:text-gray-400">
                 No orders found
@@ -64,7 +64,6 @@ const OrderList: React.FC = () => {
         );
     }
 
-    // Group orders by date (using the formatted date)
     const groupedOrders = orders.reduce<Record<string, Order[]>>((acc, order: Order) => {
         const dateStr = formatDate(order.created).date;
         if (!acc[dateStr]) acc[dateStr] = [];
@@ -89,7 +88,5 @@ const OrderList: React.FC = () => {
             </div>
         </div>
     );
-};
-
-export default OrderList;
+}
     
