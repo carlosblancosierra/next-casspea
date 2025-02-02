@@ -25,7 +25,7 @@ export default function OrderList() {
     const handleDownloadLabel = async (order_id: string) => {
         try {
             const response = await axios({
-                url: `/api/royalmail/orders/${order_id}/label/`,
+                url: `https://api.casspea.co.uk/api/royalmail/orders/${order_id}/label/`,
                 method: 'GET',
                 responseType: 'blob',
                 headers: {
