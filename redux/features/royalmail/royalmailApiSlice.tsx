@@ -42,12 +42,28 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
             },
           });
 
+          // For attachment downloads, the type might be 'text/html' initially
+          // We'll check the Content-Disposition header instead
+          const contentType = response.headers['content-type'];
+          const contentDisposition = response.headers['content-disposition'];
+          
+          if (!contentDisposition?.includes('attachment') || !contentType?.includes('pdf')) {
+            throw new Error('Invalid response format - Expected PDF attachment');
+          }
+
           return { data: response.data };
         } catch (error: any) {
+          // Handle specific error cases
+          const errorMessage = error.response?.status === 404
+            ? `Label not found for order ${order_id}`
+            : 'Failed to download shipping label';
+
+          toast.error(errorMessage);
+          
           return {
             error: {
-              status: error.response?.status,
-              data: error.response?.data || 'Failed to download label'
+              status: error.response?.status || 500,
+              data: errorMessage
             }
           };
         }
