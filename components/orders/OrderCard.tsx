@@ -55,6 +55,7 @@ const OrderStatusBadge: React.FC<{ status: string }> = ({ status }) => {
 const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownloadLabel }) => {
   const { time } = formatDate(order.created);
   const [openFlavors, setOpenFlavors] = useState<Record<number, boolean>>({});
+  const [isCreating, setIsCreating] = useState(false);
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
@@ -114,12 +115,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                     </button>
                     {openFlavors[item.product?.id || 0] &&
                       item.box_customization?.flavor_selections?.map((flavor, index) => (
-                        <div key={index} className="text-sm text-gray-500 pl-4 flex justify-between">
+                        <div
+                          key={index}
+                          className="text-sm text-gray-500 pl-4 flex justify-between"
+                        >
                           <span>{flavor.flavor_name}</span>
                           <span className="text-gray-400">×{flavor.quantity}</span>
                         </div>
-                      ))
-                    }
+                      ))}
                   </div>
                 </div>
               ))}
@@ -193,10 +196,22 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                 </button>
               ) : (
                 <button
-                  onClick={() => onCreateShipping(order.order_id)}
-                  className="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-2 rounded"
+                  onClick={async () => {
+                    if (isCreating) return;
+                    setIsCreating(true);
+                    try {
+                      await onCreateShipping(order.order_id);
+                      window.location.reload();
+                    } catch (error) {
+                      setIsCreating(false);
+                    }
+                  }}
+                  disabled={isCreating}
+                  className={`bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-2 rounded ${
+                    isCreating ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
-                  Create Shipping Order
+                  {isCreating ? 'Creating...' : 'Create Shipping Order'}
                 </button>
               )}
             </dd>

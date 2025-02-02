@@ -72,7 +72,7 @@ export default function OrderList() {
     }, {});
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto lg:px-8 py-6">
             <div className="space-y-4">
                 {Object.entries(groupedOrders)
                     .sort(([dateA], [dateB]) => new Date(dateB).getTime() - new Date(dateA).getTime())
