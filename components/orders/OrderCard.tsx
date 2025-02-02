@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 import { Order } from '@/types/orders';
 import { formatDate, formatSelectionType, formatShippingAddress } from './ordersUtils';
 
@@ -60,14 +61,13 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
   return (
     <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
       {/* Header with Order ID and Status */}
-      <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex justify-between items-center">
-          <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-            Order Details
-          </h3>
-          <PaymentStatus status={order.checkout_session?.payment_status} />
-        </div>
+      <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+          Order Details
+        </h3>
+        <PaymentStatus status={order.checkout_session?.payment_status} />
       </div>
+
       {/* Order Details */}
       <div className="border-t border-gray-100 dark:border-gray-700">
         <dl className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -99,14 +99,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       {formatSelectionType(item.box_customization.selection_type)}
                     </div>
                   )}
+
                   {/* Flavours */}
                   <div className="flex flex-col">
                     <button
                       onClick={() =>
                         setOpenFlavors(prev => ({
                           ...prev,
-                          [item.product?.id || 0]:
-                            !prev[item.product?.id || 0]
+                          [item.product?.id || 0]: !prev[item.product?.id || 0]
                         }))
                       }
                       className="text-sm text-gray-700 hover:text-gray-900 flex items-center gap-1"
@@ -114,9 +114,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       Flavors {openFlavors[item.product?.id || 0] ? '▼' : '▶'}
                     </button>
                     {openFlavors[item.product?.id || 0] &&
-                      item.box_customization?.flavor_selections?.map((flavor, index) => (
+                      item.box_customization?.flavor_selections?.map((flavor, i) => (
                         <div
-                          key={index}
+                          key={i}
                           className="text-sm text-gray-500 pl-4 flex justify-between"
                         >
                           <span>{flavor.flavor_name}</span>
@@ -145,7 +145,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           {/* Discount if present */}
           {order.checkout_session?.discount && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Discount Applied</dt>
+              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">
+                Discount Applied
+              </dt>
               <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
                 {order.checkout_session.discount}
               </dd>
@@ -163,7 +165,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           {/* Gift Message if present */}
           {order.checkout_session?.cart?.gift_message && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Gift Message</dt>
+              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">
+                Gift Message
+              </dt>
               <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
                 {order.checkout_session.cart.gift_message}
               </dd>
@@ -173,7 +177,8 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping Option</dt>
             <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-              {order.checkout_session.shipping_option.name} - £{order.checkout_session.shipping_option.price}
+              {order.checkout_session.shipping_option.name} - £
+              {order.checkout_session.shipping_option.price}
             </dd>
           </div>
           {/* Order Total */}
@@ -183,6 +188,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
               £{order.checkout_session.total_with_shipping.toFixed(2)}
             </dd>
           </div>
+
           {/* Shipping Actions */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping</dt>
@@ -190,8 +196,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
               {order.shipping_order_id ? (
                 <button
                   onClick={() => onDownloadLabel(order.order_id)}
-                  className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-2 rounded"
+                  className="inline-flex items-center gap-1 px-3 py-2 rounded bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                 >
+                  <ArrowDownTrayIcon className="h-5 w-5" />
                   Download Label
                 </button>
               ) : (
@@ -207,10 +214,11 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                     }
                   }}
                   disabled={isCreating}
-                  className={`bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-2 rounded ${
+                  className={`inline-flex items-center gap-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
                     isCreating ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
+                  <PlusIcon className="h-5 w-5" />
                   {isCreating ? 'Creating...' : 'Create Shipping Order'}
                 </button>
               )}

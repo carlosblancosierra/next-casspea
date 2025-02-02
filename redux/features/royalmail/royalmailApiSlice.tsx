@@ -32,9 +32,14 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
     downloadRoyalMailLabel: builder.query<Blob, { order_id: string }>({
       query: ({ order_id }) => ({
         url: `/royalmail/orders/${order_id}/label/`,
-        method: 'GET'
+        method: 'GET',
+        // Important: ensure RTK Query parses the response as a Blob
+        responseHandler: (response) => response.blob(),
+        headers: {
+          Accept: 'application/pdf',
+        },
       }),
-      transformResponse: async (response: Response) => response.blob(),
+      transformResponse: (response: Blob) => response,
     }),
   }),
 });
