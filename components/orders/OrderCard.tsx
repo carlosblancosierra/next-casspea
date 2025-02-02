@@ -189,38 +189,78 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
             </dd>
           </div>
 
-          {/* Shipping Actions */}
+          {/* Shipping Details & Actions */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping</dt>
-            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0 flex gap-2">
+            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">
+              Shipping Details
+            </dt>
+            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
               {order.shipping_order_id ? (
-                <button
-                  onClick={() => onDownloadLabel(order.order_id)}
-                  className="inline-flex items-center gap-1 px-3 py-2 rounded bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                >
-                  <ArrowDownTrayIcon className="h-5 w-5" />
-                  Download Label
-                </button>
+                <div className="space-y-3">
+                  {/* Shipping Order ID */}
+                  <div>
+                    <span className="font-medium">Shipping Order ID: </span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      {order.shipping_order_id}
+                    </span>
+                  </div>
+
+                  {/* Tracking Number if available */}
+                  {order.tracking_number && (
+                    <div>
+                      <span className="font-medium">Tracking Number: </span>
+                      <span className="text-gray-600 dark:text-gray-400">
+                        {order.tracking_number}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Download Label Button */}
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => onDownloadLabel(order.order_id)}
+                      className="inline-flex items-center gap-1 px-3 py-2 rounded bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      <ArrowDownTrayIcon className="h-5 w-5" />
+                      Download Label
+                    </button>
+                    {order.tracking_number && (
+                      <a
+                        href={`https://www.royalmail.com/track-your-item#/tracking-results/${order.tracking_number}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 px-3 py-2 rounded bg-blue-50 dark:bg-blue-900 border border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-200 hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors"
+                      >
+                        Track Package
+                      </a>
+                    )}
+                  </div>
+                </div>
               ) : (
-                <button
-                  onClick={async () => {
-                    if (isCreating) return;
-                    setIsCreating(true);
-                    try {
-                      await onCreateShipping(order.order_id);
-                      window.location.reload();
-                    } catch (error) {
-                      setIsCreating(false);
-                    }
-                  }}
-                  disabled={isCreating}
-                  className={`inline-flex items-center gap-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
-                    isCreating ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                >
-                  <PlusIcon className="h-5 w-5" />
-                  {isCreating ? 'Creating...' : 'Create Shipping Order'}
-                </button>
+                <div>
+                  <button
+                    onClick={async () => {
+                      if (isCreating) return;
+                      setIsCreating(true);
+                      try {
+                        await onCreateShipping(order.order_id);
+                        window.location.reload();
+                      } catch (error) {
+                        setIsCreating(false);
+                      }
+                    }}
+                    disabled={isCreating}
+                    className={`inline-flex items-center gap-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
+                      isCreating ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    <PlusIcon className="h-5 w-5" />
+                    {isCreating ? 'Creating...' : 'Create Shipping Order'}
+                  </button>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    No shipping order created yet
+                  </p>
+                </div>
               )}
             </dd>
           </div>

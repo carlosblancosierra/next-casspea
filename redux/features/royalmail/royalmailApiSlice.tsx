@@ -29,23 +29,21 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
     }),
 
     // Query to download the Royal Mail shipping label PDF
-    downloadRoyalMailLabel: builder.query<Blob, { order_id: string }>({
+    downloadRoyalMailLabel: builder.mutation<Blob, { order_id: string }>({
       query: ({ order_id }) => ({
         url: `/royalmail/orders/${order_id}/label/`,
         method: 'GET',
-        // Important: ensure RTK Query parses the response as a Blob
-        responseHandler: (response) => response.blob(),
+        responseHandler: async (response) => response.blob(),
         headers: {
-          Accept: 'application/pdf',
+          'Accept': 'application/pdf',
+          'Content-Type': 'application/pdf',
         },
       }),
-      transformResponse: (response: Blob) => response,
     }),
   }),
 });
 
 export const {
   useCreateRoyalMailOrderMutation,
-  useDownloadRoyalMailLabelQuery,
-  useLazyDownloadRoyalMailLabelQuery
+  useDownloadRoyalMailLabelMutation,
 } = royalMailApiSlice;

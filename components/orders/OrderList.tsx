@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useGetOrdersQuery, OrdersQueryParams } from '@/redux/features/orders/ordersApiSlice';
 import { Order } from '@/types/orders';
 import DaySection from './DaySection';
-import { useCreateRoyalMailOrderMutation, useLazyDownloadRoyalMailLabelQuery } from '@/redux/features/royalmail/royalmailApiSlice';
+import { useCreateRoyalMailOrderMutation, useDownloadRoyalMailLabelMutation } from '@/redux/features/royalmail/royalmailApiSlice';
 import { toast } from 'react-toastify';
 import { formatDate } from './ordersUtils';
 
@@ -10,7 +10,7 @@ export default function OrderList() {
     const [filters, setFilters] = useState<OrdersQueryParams>({});
     const { data: orders, isLoading, error } = useGetOrdersQuery(filters);
     const [createRoyalMailOrder] = useCreateRoyalMailOrderMutation();
-    const [downloadRoyalMailLabel] = useLazyDownloadRoyalMailLabelQuery();
+    const [downloadRoyalMailLabel] = useDownloadRoyalMailLabelMutation();
 
     const handleCreateShipping = async (order_id: string) => {
         try {
