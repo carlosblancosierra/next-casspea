@@ -1,4 +1,5 @@
 import { apiSlice } from '@/redux/services/apiSlice';
+import axios from 'axios';
 import { toast } from 'react-toastify';
 
 export const royalMailApiSlice = apiSlice.injectEndpoints({
@@ -30,15 +31,27 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
 
     // Query to download the Royal Mail shipping label PDF
     downloadRoyalMailLabel: builder.mutation<Blob, { order_id: string }>({
-      query: ({ order_id }) => ({
-        url: `/royalmail/orders/${order_id}/label/`,
-        method: 'GET',
-        responseHandler: async (response) => response.blob(),
-        headers: {
-          'Accept': 'application/pdf',
-          'Content-Type': 'application/pdf',
-        },
-      }),
+      queryFn: async ({ order_id }) => {
+        try {
+          const response = await axios({
+            url: `/api/royalmail/orders/${order_id}/label/`,
+            method: 'GET',
+            responseType: 'blob',
+            headers: {
+              'Accept': 'application/pdf',
+            },
+          });
+
+          return { data: response.data };
+        } catch (error: any) {
+          return {
+            error: {
+              status: error.response?.status,
+              data: error.response?.data || 'Failed to download label'
+            }
+          };
+        }
+      }
     }),
   }),
 });
