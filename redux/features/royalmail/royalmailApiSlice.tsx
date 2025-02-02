@@ -32,11 +32,9 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
     downloadRoyalMailLabel: builder.query<Blob, { order_id: string }>({
       query: ({ order_id }) => ({
         url: `/royalmail/orders/${order_id}/label/`,
-        method: 'GET',
+        method: 'GET'
       }),
-      transformResponse: async (response: any) => {
-        return await response.blob();
-      },
+      transformResponse: async (response: Response) => response.blob(),
     }),
   }),
 });
