@@ -2,50 +2,9 @@ import { useGetOrdersQuery, OrdersQueryParams } from '@/redux/features/orders/or
 import { Address } from '@/types/addresses';
 import { useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, DocumentTextIcon, CurrencyPoundIcon } from '@heroicons/react/20/solid';
-
-interface FlavorSelection {
-    flavor_name?: string;
-    quantity?: number;
-}
-
-interface BoxCustomization {
-    selection_type?: string;
-    allergens?: number[];
-    flavor_selections?: FlavorSelection[];
-}
-
-interface CartItem {
-    product?: {
-        name: string;
-        id: number;
-        // ... other product fields
-    };
-    quantity?: number;
-    box_customization?: BoxCustomization;
-}
-
-interface Order {
-    order_id: string;
-    created: string;
-    checkout_session: {
-        payment_status: string;
-        shipping_address: Address;
-        shipping_option: {
-            id: number;
-            name: string;
-            price: string;
-        };
-        total_with_shipping: number;
-        cart: {
-            items: CartItem[];
-            discount?: string | null;
-            gift_message?: string | null;
-            shipping_date?: string | null;
-            discounted_total: string;
-        };
-        email?: string | null;
-    };
-}
+import { Order } from '@/types/orders';
+import { useCreateRoyalMailOrderMutation, useLazyDownloadRoyalMailLabelQuery } from '@/redux/features/royalmail/royalmailApiSlice';
+import { toast } from 'react-toastify';
 
 const formatDate = (dateString?: string): { date: string, time: string } => {
     if (!dateString) return { date: '-', time: '-' };
@@ -485,6 +444,36 @@ const DaySummary = ({ dateOrders }: { dateOrders: Order[] }) => {
 export default function OrderList() {
     const [filters, setFilters] = useState<OrdersQueryParams>({});
     const { data: orders, isLoading, error } = useGetOrdersQuery(filters);
+    const [createRoyalMailOrder, { isLoading: isCreating }] = useCreateRoyalMailOrderMutation();
+    const [downloadRoyalMailLabel, { isLoading: isDownloading }] = useLazyDownloadRoyalMailLabelQuery();
+
+    const handleCreateShipping = async (order_id: string) => {
+        try {
+            await createRoyalMailOrder({ order_id }).unwrap();
+            // Toast messages are already shown in the mutation's onQueryStarted; add extra feedback if needed.
+        } catch (error: any) {
+            console.error(error);
+            toast.error('Error creating shipping order');
+        }
+    };
+
+    const handleDownloadLabel = async (order_id: string) => {
+        try {
+            const blob = await downloadRoyalMailLabel({ order_id }).unwrap();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `shipping_label_${order_id}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            toast.success('Label downloaded successfully');
+        } catch (error: any) {
+            console.error(error);
+            toast.error('Error downloading shipping label');
+        }
+    };
 
     if (isLoading) return (
         <div className="flex justify-center items-center min-h-[200px]">
@@ -523,3 +512,4 @@ export default function OrderList() {
         </div>
     );
 }
+    
