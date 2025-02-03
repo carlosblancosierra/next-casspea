@@ -4,9 +4,17 @@ import Link from 'next/link';
 import { useProductDiscountedPrice } from '@/utils/useProductDiscountedPrice';
 import Image from 'next/image';
 
-export default function ProductCard({ product }: { product: ProductType }) {
+interface ProductCardProps {
+    product: ProductType;
+    useAlternateImage?: boolean;
+}
 
+export default function ProductCard({ product, useAlternateImage = false }: ProductCardProps) {
     const { discountedPrice, discount_percentage } = useProductDiscountedPrice(product.id, product);
+    // Use the alternate image if available and requested
+    const displayImage = useAlternateImage && product.gallery_images && product.gallery_images.length > 0 
+        ? product.gallery_images[0].image 
+        : product.image;
 
     return (
         <Link
@@ -14,10 +22,10 @@ export default function ProductCard({ product }: { product: ProductType }) {
             className="block group relative shadow-lg rounded-lg p-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:opacity-90 transition-opacity"
         >
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                {product.image && (
+                {displayImage && (
                     <Image
                         alt={product.name}
-                        src={product.image || '/images/default-product.png'}
+                        src={displayImage || '/images/default-product.png'}
                         width={0}
                         height={0}
                         sizes="100vw"

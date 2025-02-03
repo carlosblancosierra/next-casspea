@@ -19,14 +19,14 @@ const HomeValentines: React.FC<HomeValentinesProps> = ({
 
 	return (
 		<section className="dark:bg-gray-900">
-			<div
-				className={`grid gap-x-4 gap-y-4 mt-2 mx-auto
-					grid-cols-2 place-items-center`}
+			<div className={`grid gap-x-4 gap-y-4 mt-2 mx-auto
+				grid-cols-2 md:grid-cols-4 place-items-center`}
 			>
 				<AnimatePresence>
-					{valentines.map((product) => (
+					{valentines.flatMap((product) => [
+						// First instance with primary image
 						<motion.div
-							key={product.name}
+							key={`${product.name}-1`}
 							initial="hidden"
 							animate="visible"
 							exit="hidden"
@@ -35,9 +35,22 @@ const HomeValentines: React.FC<HomeValentinesProps> = ({
 							transition={{ type: 'spring', stiffness: 300, damping: 30 }}
 							className="w-full"
 						>
-							<ProductCard product={product} />
+							<ProductCard product={product} useAlternateImage={false} />
+						</motion.div>,
+						// Second instance with alternate image
+						<motion.div
+							key={`${product.name}-2`}
+							initial="hidden"
+							animate="visible"
+							exit="hidden"
+							layout
+							variants={productVariants}
+							transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+							className="w-full"
+						>
+							<ProductCard product={product} useAlternateImage={true} />
 						</motion.div>
-					))}
+					])}
 				</AnimatePresence>
 			</div>
 		</section>
