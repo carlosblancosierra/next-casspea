@@ -91,7 +91,7 @@ export default function HomePage() {
 
 			<Suspense fallback={<LoadingSection />}>
 				<div>
-					<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Signature Boxes</h2>
+					<h2 className='text-center text-2xl font-bold mb-3 font-playfair md:mt-4'>Signature Boxes</h2>
 					<HomeProducts />
 				</div>
 			</Suspense>
