@@ -83,14 +83,14 @@ export default function HomePage() {
 				</div>
 			</section>
 			<Suspense fallback={<LoadingSection />}>
-				<div className="w-full md:w-[60%] mx-auto">
+				<div>
 					<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Valentines Day</h2>
 					<HomeValentines />
 				</div>
 			</Suspense>
 
 			<Suspense fallback={<LoadingSection />}>
-				<div>
+				<div className='mt-5'>
 					<h2 className='text-center text-2xl font-bold mb-3 font-playfair md:mt-4'>Signature Boxes</h2>
 					<HomeProducts />
 				</div>
