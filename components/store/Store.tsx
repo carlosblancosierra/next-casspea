@@ -1,32 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
 import ProductCard from './ProductCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '@/types/products';
 
 export default function Store() {
-	const { data, isLoading, error } = useGetActiveProductsQuery();
-	const products = data ?? [];
+	const { data, isLoading, error } = useGetActiveProductsQuery<Product[]>();
 
-	if (isLoading) return <div>Loading...</div>;
-	if (error) return <div>Error:</div>;
+	useEffect(() => {
+		console.log("Store - isLoading:", isLoading);
+		console.log("Store - error:", error);
+		console.log("Store - data:", data);
+	}, [isLoading, error, data]);
 
-	const categories = [
-		'All',
-		...Array.from(
-			new Set(
-				products
-					.map((product: Product) => product?.category?.name)
-					.filter((name): name is string => Boolean(name))
-			)
-		).reverse(),
-	];
+	if (isLoading || !data) {
+		console.log("Store: Still loading or data is not available");
+		return <div>Loading...</div>;
+	}
 
-	const [selectedCategory, setSelectedCategory] = useState('All');
+	const products: Product[] = data;
+
+	if (products.length === 0) {
+		console.log("Store: No products found, products array is empty", products);
+		return <div>No products found</div>;
+	}
+
+	let categories: string[] = [];
+	if (products.length > 0) {
+		categories = [
+			'All',
+			...Array.from(
+				new Set(
+					products
+						.map((product: Product) => product?.category?.name)
+						.filter((name): name is string => Boolean(name))
+				)
+			).reverse(),
+		];
+	}
+
+	const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
 	const filteredProducts: Product[] = selectedCategory === 'All'
 		? products
 		: products.filter((product: Product) => product?.category?.name === selectedCategory);
+
+	useEffect(() => {
+		console.log("Store: Selected Category:", selectedCategory);
+		console.log("Store: Categories:", categories);
+		console.log("Store: Filtered Products:", filteredProducts);
+	}, [selectedCategory, categories, filteredProducts]);
 
 	const productVariants = {
 		hidden: { opacity: 0, scale: 0.8 },
@@ -45,7 +68,10 @@ export default function Store() {
 					<motion.button
 						key={category}
 						type="button"
-						onClick={() => setSelectedCategory(category)}
+						onClick={() => {
+							console.log("Store: Setting selected category:", category);
+							setSelectedCategory(category);
+						}}
 						className={`${
 							selectedCategory === category
 								? 'text-white bg-primary border-primary dark:bg-primary dark:border-primary'
