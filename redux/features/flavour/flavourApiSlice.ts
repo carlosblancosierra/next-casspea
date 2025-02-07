@@ -6,6 +6,8 @@ const flavourApiSlice = apiSlice.injectEndpoints({
         getFlavours: builder.query<Flavour[], void>({
             query: () => '/flavours/',
             transformResponse: (response: Flavour[]) => response,
+            // Cache for 5 minutes (300 seconds)
+            keepUnusedDataFor: 300,
         }),
     }),
 });
