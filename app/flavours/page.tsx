@@ -12,7 +12,7 @@ export default function FlavoursPage() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <Spinner />
+                <Spinner md />
             </div>
         );
     }

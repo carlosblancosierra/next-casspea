@@ -13,8 +13,16 @@ const HomeProducts: React.FC<HomeProductsProps> = ({
 
 	const { data: products, isLoading, error } = useGetActiveProductsQuery();
 
-	if (isLoading) return <Spinner className="mx-auto" />;
-	if (error) return <div>Error:</div>;
+	if (isLoading) return (
+		<div className="flex items-center justify-center min-h-screen">
+            <Spinner md />
+        </div>
+	);
+	if (error) return (
+		<div className="flex items-center justify-center min-h-screen">
+            <div>Error:</div>
+        </div>
+	);
 
 	const boxes = products?.filter((product) => product.category?.slug === "signature-boxes") ?? [];
 

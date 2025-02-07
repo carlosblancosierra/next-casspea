@@ -32,7 +32,9 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     selectedAllergens
 }) => {
     const { data: availableFlavours, isLoading, error } = useGetFlavoursQuery();
-    if (isLoading) return <Spinner className="mx-auto" />;
+    if (isLoading) return <div className="flex items-center justify-center min-h-screen">
+                <Spinner md />
+            </div>;
     if (error) return <div>Error:</div>;
 
     const [isModalOpen, setIsModalOpen] = useState(false);

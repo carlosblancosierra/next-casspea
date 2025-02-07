@@ -16,7 +16,11 @@ export default function FlavourCarousel() {
   const controls = useAnimation();
   const [page, setPage] = React.useState(0);
   const { data: flavours, isLoading, error } = useGetFlavoursQuery();
-  if (isLoading) return <Spinner className="mx-auto" />;
+  if (isLoading) return (
+    <div className="flex items-center justify-center min-h-screen">
+        <Spinner md />
+    </div>
+  );
   if (error) return <div>Error:</div>;
 
   const CAROUSEL_LENGTH = flavours?.length ?? 0;

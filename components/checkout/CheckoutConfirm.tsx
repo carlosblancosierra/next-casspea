@@ -62,7 +62,9 @@ const CheckoutConfirm = () => {
         return (
             <div className=" dark:bg-gray-900 min-h-screen py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[calc(80vh)] flex items-center justify-center">
-                    <Spinner className="mx-auto" />
+                    <div className="flex items-center justify-center min-h-screen">
+                        <Spinner md />
+                    </div>
                 </div>
             </div>
         );

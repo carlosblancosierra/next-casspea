@@ -16,7 +16,9 @@ export default function Store() {
 
 	if (isLoading || !data) {
 		console.log("Store: Still loading or data is not available");
-		return <Spinner className="mx-auto" />;
+		return <div className="flex items-center justify-center min-h-screen">
+                <Spinner md />
+            </div>;
 	}
 
 	const products: Product[] = data;

@@ -10,7 +10,11 @@ interface HomeValentinesProps {}
 const HomeValentines: React.FC<HomeValentinesProps> = () => {
 	const { data: products, isLoading, error } = useGetActiveProductsQuery();
 
-	if (isLoading) return <Spinner className="mx-auto" />;
+	if (isLoading) return (
+		<div className="flex items-center justify-center min-h-screen">
+            <Spinner md />
+        </div>
+		);
 	if (error) return <div>Error:</div>;
 
 	const valentines: Product[] = products?.filter(
