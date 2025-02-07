@@ -8,10 +8,12 @@ interface CartItemTableProps {
 }
 
 const CartItemTable: React.FC<CartItemTableProps> = ({ cartEntries }) => {
+  const sortedEntries = [...cartEntries].sort((a, b) => a.id - b.id);
+  
   return (
     <div className="space-y-5">
-      {cartEntries.length > 0 ? (
-        cartEntries.map((entry) => <CartItem key={entry.id} entry={entry} />)
+      {sortedEntries.length > 0 ? (
+        sortedEntries.map((entry) => <CartItem key={entry.id} entry={entry} />)
       ) : (
         <p className="text-gray-500 dark:text-gray-400 text-center"></p>
       )}
