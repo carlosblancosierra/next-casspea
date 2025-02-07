@@ -23,7 +23,6 @@ function getCookie(name: string) {
 	return cookieValue;
 }
 
-
 const mutex = new Mutex();
 const baseQuery = fetchBaseQuery({
 	baseUrl: `${process.env.NEXT_PUBLIC_HOST}/api`,
@@ -88,9 +87,39 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 	return result;
 };
 
+const baseQueryWithCsrf: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
+	// First run through our reauth logic.
+	let result = await baseQueryWithReauth(args, api, extraOptions);
+
+	// Check for a 403 error that might be a CSRF verification failure.
+	if (result.error && result.error.status === 403) {
+		// For Django, CSRF errors typically come as { "detail": "CSRF Failed: ..." }
+		const errorDetails = (result.error.data as any)?.detail || '';
+		if (typeof errorDetails === 'string' && errorDetails.toLowerCase().includes('csrf')) {
+			console.warn("CSRF error detected:", errorDetails);
+			
+			// Delete the existing CSRF cookie (if it's not HttpOnly)
+			document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+			
+			// Request a fresh CSRF token via your /csrf/ endpoint.
+			const csrfResult = await baseQuery({ url: '/csrf/', method: 'GET' }, api, extraOptions);
+			if (csrfResult.data) {
+				// The new CSRF token should be set via the Set-Cookie header from your backend.
+				// Retry the original request with the hopefully updated CSRF token.
+				result = await baseQueryWithReauth(args, api, extraOptions);
+			} else {
+				console.error("Unable to refresh CSRF token.", csrfResult.error);
+			}
+		}
+	}
+	
+	return result;
+};
+
 export const apiSlice = createApi({
 	reducerPath: 'api',
-	baseQuery: baseQueryWithReauth,
+	// Use the new middleware function as our baseQuery.
+	baseQuery: baseQueryWithCsrf,
 	tagTypes: ['Cart', 'CheckoutSession', 'Addresses', 'Templates', 'Flavours', 'Products', 'UserDesigns', 'Orders'],
 	endpoints: builder => ({}),
 });
