@@ -3,6 +3,7 @@ import { useGetActiveProductsQuery } from '@/redux/features/products/productApiS
 import ProductCard from './ProductCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '@/types/products';
+import Spinner from "@/components/common/Spinner";
 
 export default function Store() {
 	const { data, isLoading, error } = useGetActiveProductsQuery();
@@ -15,7 +16,7 @@ export default function Store() {
 
 	if (isLoading || !data) {
 		console.log("Store: Still loading or data is not available");
-		return <div>Loading...</div>;
+		return <Spinner className="mx-auto" />;
 	}
 
 	const products: Product[] = data;

@@ -9,7 +9,7 @@ import { Flavour } from '@/types/flavours';
 export default function FlavoursPage() {
     const { data: flavours, isLoading, error } = useGetFlavoursQuery();
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <Spinner className="mx-auto" />;
     if (error) return <div>Error:</div>;
 
     return (
@@ -34,13 +34,6 @@ export default function FlavoursPage() {
                         />
                     ))}
                 </div>
-
-                {/* Empty State */}
-                {flavours?.length === 0 && (
-                    <div className="text-center text-gray-500 dark:text-gray-400 py-12">
-                        No flavours available at the moment
-                    </div>
-                )}
             </div>
         </div>
     );

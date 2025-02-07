@@ -4,6 +4,7 @@ import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';;
 import { Flavour as FlavourType } from '@/types/flavours';
 import Image from 'next/image';
 import { CartItemBoxFlavorSelection } from '@/types/carts';
+import Spinner from "@/components/common/Spinner";
 import { toast } from 'react-toastify';
 
 interface FlavourPickerProps {
@@ -31,7 +32,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     selectedAllergens
 }) => {
     const { data: availableFlavours, isLoading, error } = useGetFlavoursQuery();
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <Spinner className="mx-auto" />;
     if (error) return <div>Error:</div>;
 
     const [isModalOpen, setIsModalOpen] = useState(false);

@@ -4,7 +4,7 @@ import { motion, useAnimation } from "framer-motion";
 import { wrap } from "popmotion";
 import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 import FlavourCard from "./FlavourCard";
-
+import Spinner from "@/components/common/Spinner";
 const swipeConfidenceThreshold = 10000;
 const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity;
@@ -16,7 +16,7 @@ export default function FlavourCarousel() {
   const controls = useAnimation();
   const [page, setPage] = React.useState(0);
   const { data: flavours, isLoading, error } = useGetFlavoursQuery();
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Spinner className="mx-auto" />;
   if (error) return <div>Error:</div>;
 
   const CAROUSEL_LENGTH = flavours?.length ?? 0;

@@ -4,8 +4,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from '@/components/store/ProductCard';
 import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
-import { ProductCategory, Product } from '@/types/products';
-
+import Spinner from "@/components/common/Spinner";
 interface HomeProductsProps {
 }
 
@@ -14,7 +13,7 @@ const HomeProducts: React.FC<HomeProductsProps> = ({
 
 	const { data: products, isLoading, error } = useGetActiveProductsQuery();
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) return <Spinner className="mx-auto" />;
 	if (error) return <div>Error:</div>;
 
 	const boxes = products?.filter((product) => product.category?.slug === "signature-boxes") ?? [];
