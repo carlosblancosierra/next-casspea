@@ -249,7 +249,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
 
                         {/* Sticky footer for both mobile and desktop */}
                         <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t dark:border-gray-700 p-4 shadow-lg">
-                            <div className="max-w-[90vw] mx-auto space-y-3">
+                            <div className="max-w-[95vw] mx-auto space-y-3">
                                 {/* Progress bar */}
                                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                                     <div
