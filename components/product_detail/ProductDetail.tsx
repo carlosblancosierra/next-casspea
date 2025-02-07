@@ -43,7 +43,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 	const relatedProducts = products.filter((p) => p.id !== product.id);
 
 	return (
-		<div className="max-w-[90vw] mx-auto">
+		<div className="max-w-[95vw] mx-auto">
 			<ProductBreadcrumb product={product} />
 			<div className="grid grid-cols-1 md:grid-cols-[20%,1fr,30%] gap-2 py-2 relative">
 				<div>

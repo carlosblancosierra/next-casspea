@@ -25,7 +25,7 @@ export default function FlavoursPage() {
     }
 
     return (
-        <div className=" dark:bg-gray-900 min-h-screen py-8">
+        <div className=" dark:bg-gray-900 min-h-screen">
             <div className="max-w-7xl mx-auto px-0">
                 {/* Header */}
                 <div className="text-center mb-8">
