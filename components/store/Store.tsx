@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '@/types/products';
 
 export default function Store() {
-	const { data, isLoading, error } = useGetActiveProductsQuery<Product[]>();
+	const { data, isLoading, error } = useGetActiveProductsQuery();
 
 	useEffect(() => {
 		console.log("Store - isLoading:", isLoading);
