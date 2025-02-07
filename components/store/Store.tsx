@@ -5,14 +5,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '@/types/products';
 
 export default function Store() {
-	const { data: products, isLoading, error } = useGetActiveProductsQuery();
+	const { data, isLoading, error } = useGetActiveProductsQuery();
+	const products = data ?? [];
 
 	if (isLoading) return <div>Loading...</div>;
 	if (error) return <div>Error:</div>;
 
 	const categories = [
 		'All',
-		...Array.from(new Set(products.map((product: Product) => product?.category?.name))).reverse(),
+		...Array.from(
+			new Set(
+				products
+					.map((product: Product) => product?.category?.name)
+					.filter((name): name is string => Boolean(name))
+			)
+		).reverse(),
 	];
 
 	const [selectedCategory, setSelectedCategory] = useState('All');

@@ -10,9 +10,13 @@ import ProductFormGeneral from './ProductFormGeneral';
 import FlavourGrid from '../flavours/FlavourCarousel';
 import Reviews from '../common/Reviews';
 import ProductCard from '../store/ProductCard';
+import { Product } from '@/types/products';
 
 const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
-	const { data: products, isLoading, error } = useGetProductsQuery();
+	// Explicitly provide the type for the query result
+	const { data, isLoading, error } = useGetProductsQuery();
+	// Default to an empty array if data is undefined
+	const products: Product[] = data ?? [];
 
 	if (isLoading) {
 		return <div>Loading products...</div>;
@@ -22,17 +26,17 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 		return <div>Error loading products.</div>;
 	}
 
-	const product = products?.find((p) => p.slug === slug);
+	const product = products.find((p) => p.slug === slug);
 
 	if (!product) {
 		notFound();
 	}
 
 	// Check if the product belongs to the "Signature Boxes" category
-	const isSignatureBox = product?.category?.id === 1;
+	const isSignatureBox = product.category?.id === 1;
 
-	const galleryImagesUrls = product?.gallery_images?.map((image) => image.image);
-	const images = [product?.image, ...(galleryImagesUrls || [])].filter(
+	const galleryImagesUrls = product.gallery_images?.map((image) => image.image);
+	const images = [product.image, ...(galleryImagesUrls || [])].filter(
 		(image): image is string => !!image
 	);
 
