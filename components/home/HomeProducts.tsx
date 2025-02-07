@@ -3,15 +3,22 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from '@/components/store/ProductCard';
-import { selectAllProducts, selectBoxes } from '@/redux/features/products/productSlice';
-import { useAppSelector } from '@/redux/hooks';
+import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
+import { ProductCategory, Product } from '@/types/products';
 
 interface HomeProductsProps {
 }
 
 const HomeProducts: React.FC<HomeProductsProps> = ({
 }) => {
-	const boxes = useAppSelector(selectBoxes);
+
+	const { data: products, isLoading, error } = useGetActiveProductsQuery();
+
+	if (isLoading) return <div>Loading...</div>;
+	if (error) return <div>Error:</div>;
+
+	const boxes = products?.filter((product) => product.category?.slug === "signature-boxes") ?? [];
+
 	const productVariants = {
 		hidden: { opacity: 0, scale: 0.8 },
 		visible: { opacity: 1, scale: 1 },
@@ -20,13 +27,13 @@ const HomeProducts: React.FC<HomeProductsProps> = ({
 	return (
 		<section className="dark:bg-gray-900">
 			<div
-				className={`grid gap-x-2 gap-y-2 mt-2 justify-center ${boxes.length < 3
+				className={`grid gap-x-2 gap-y-2 mt-2 justify-center ${boxes?.length < 3
 					? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
 					: 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
 					}`}
 			>
 				<AnimatePresence>
-					{boxes.map((product) => (
+					{boxes?.map((product) => (
 						<motion.div
 							key={product.name}
 							initial="hidden"

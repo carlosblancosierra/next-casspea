@@ -1,22 +1,11 @@
 import { apiSlice } from '@/redux/services/apiSlice';
 import { Product, ProductCategory } from '@/types/products';
-import { setProducts } from '@/redux/features/products/productSlice';
-import { useAppDispatch } from '@/redux/hooks';
 
 const productApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getProducts: builder.query<Product[], void>({
             query: () => '/products/',
             transformResponse: (response: Product[]) => response,
-            async onQueryStarted(_, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    console.log('products data', data);
-                    dispatch(setProducts(data));
-                } catch (err) {
-                    console.error('Error fetching products:', err);
-                }
-            },
         }),
 
         // Get single product

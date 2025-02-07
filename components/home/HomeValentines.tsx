@@ -1,17 +1,22 @@
 "use client";
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from '@/components/store/ProductCard';
-import { selectAllProducts, selectValentines } from '@/redux/features/products/productSlice';
-import { useAppSelector } from '@/redux/hooks';
+import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
+import { Product } from '@/types/products';
 
-interface HomeValentinesProps {
-}
+interface HomeValentinesProps {}
 
-const HomeValentines: React.FC<HomeValentinesProps> = ({
-}) => {
-	const valentines = useAppSelector(selectValentines);
+const HomeValentines: React.FC<HomeValentinesProps> = () => {
+	const { data: products, isLoading, error } = useGetActiveProductsQuery();
+
+	if (isLoading) return <div>Loading...</div>;
+	if (error) return <div>Error:</div>;
+
+	const valentines: Product[] = products?.filter(
+		(product) => product.category?.slug === "valentines-day"
+	) ?? [];
+
 	const productVariants = {
 		hidden: { opacity: 0, scale: 0.8 },
 		visible: { opacity: 1, scale: 1 },
@@ -19,12 +24,11 @@ const HomeValentines: React.FC<HomeValentinesProps> = ({
 
 	return (
 		<section className="dark:bg-gray-900">
-			<div className={`grid gap-x-4 gap-y-4 mt-2 mx-auto
-				grid-cols-2 md:grid-cols-4 place-items-center`}
+			<div
+				className={`grid gap-x-4 gap-y-4 mt-2 mx-auto grid-cols-2 md:grid-cols-4 place-items-center`}
 			>
 				<AnimatePresence>
 					{valentines.flatMap((product) => [
-						// First instance with primary image
 						<motion.div
 							key={`${product.name}-1`}
 							initial="hidden"
@@ -37,7 +41,6 @@ const HomeValentines: React.FC<HomeValentinesProps> = ({
 						>
 							<ProductCard product={product} useAlternateImage={false} />
 						</motion.div>,
-						// Second instance with alternate image
 						<motion.div
 							key={`${product.name}-2`}
 							initial="hidden"
