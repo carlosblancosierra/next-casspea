@@ -2,7 +2,6 @@
 
 import { redirect } from 'next/navigation';
 import { useAppSelector } from '@/redux/hooks';
-import { Spinner } from '@/components/common';
 import { selectIsAuthenticated } from '@/redux/features/auth/authSlice';
 
 interface Props {

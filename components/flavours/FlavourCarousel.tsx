@@ -2,10 +2,9 @@
 import React from "react";
 import { motion, useAnimation } from "framer-motion";
 import { wrap } from "popmotion";
-import { selectAllFlavours } from '@/redux/features/flavour/flavourSlice';
-import { useAppSelector } from '@/redux/hooks';
+import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 import FlavourCard from "./FlavourCard";
-
+import Spinner from "@/components/common/Spinner";
 const swipeConfidenceThreshold = 10000;
 const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity;
@@ -16,9 +15,15 @@ export default function FlavourCarousel() {
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const controls = useAnimation();
   const [page, setPage] = React.useState(0);
-  const availableFlavours = useAppSelector(selectAllFlavours);
+  const { data: flavours, isLoading, error } = useGetFlavoursQuery();
+  if (isLoading) return (
+    <div className="flex items-center justify-center min-h-screen">
+        <Spinner md />
+    </div>
+  );
+  if (error) return <div>Error:</div>;
 
-  const CAROUSEL_LENGTH = availableFlavours.length;
+  const CAROUSEL_LENGTH = flavours?.length ?? 0;
   const GAP = 15;
   const gapSum = (CAROUSEL_LENGTH - 1) * GAP;
 
@@ -36,7 +41,7 @@ export default function FlavourCarousel() {
     return index * childWidth + index * GAP;
   };
 
-  if (availableFlavours.length === 0) return null;
+  if (flavours?.length === 0) return null;
 
   return (
     <div
@@ -135,7 +140,7 @@ export default function FlavourCarousel() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <FlavourCard flavour={availableFlavours[index]} />
+              {flavours?.[index] && <FlavourCard flavour={flavours?.[index]} />}
             </motion.div>
           ))}
       </motion.div>

@@ -11,9 +11,11 @@ const Cart: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className=" dark:bg-gray-900 min-h-screen py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[calc(80vh)] flex items-center justify-center">
-          <Spinner className="mx-auto" />
+      <div className=" dark:bg-gray-900 min-h-screen">
+        <div className="max-w-7xl mx-auto px-0 h-[calc(80vh)] flex items-center justify-center">
+          <div className="flex items-center justify-center min-h-screen">
+                <Spinner md />
+            </div>
         </div>
       </div>
     );
@@ -24,8 +26,8 @@ const Cart: React.FC = () => {
   }
 
   return (
-    <div className=" dark:bg-gray-900 min-h-screen py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className=" dark:bg-gray-900 min-h-screen">
+      <div className="max-w-7xl mx-auto px-0">
         {cart?.items && cart.items.length > 0 ? (
           <div className="md:grid md:grid-cols-[3fr,1fr] md:gap-8">
             <CartItemTable cartEntries={cart.items} />

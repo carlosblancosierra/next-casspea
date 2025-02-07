@@ -60,9 +60,11 @@ const CheckoutConfirm = () => {
 
     if (sessionLoading || cartLoading) {
         return (
-            <div className=" dark:bg-gray-900 min-h-screen py-8">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[calc(80vh)] flex items-center justify-center">
-                    <Spinner className="mx-auto" />
+            <div className=" dark:bg-gray-900 min-h-screen">
+                <div className="max-w-7xl mx-auto px-0 h-[calc(80vh)] flex items-center justify-center">
+                    <div className="flex items-center justify-center min-h-screen">
+                        <Spinner md />
+                    </div>
                 </div>
             </div>
         );
@@ -70,8 +72,8 @@ const CheckoutConfirm = () => {
 
     if (sessionError || cartError) {
         return (
-            <div className=" dark:bg-gray-900 min-h-screen py-8">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className=" dark:bg-gray-900 min-h-screen">
+                <div className="max-w-7xl mx-auto px-0">
                     <div className="text-red-500">Error loading checkout details</div>
                 </div>
             </div>
@@ -79,8 +81,8 @@ const CheckoutConfirm = () => {
     }
 
     return (
-        <div className=" dark:bg-gray-900 min-h-screen py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className=" dark:bg-gray-900 min-h-screen">
+            <div className="max-w-7xl mx-auto px-0">
                 <div className="space-y-6">
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Order Items</h2>

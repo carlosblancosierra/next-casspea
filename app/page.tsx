@@ -26,7 +26,7 @@ const LoadingSection = () => (
 
 export default function HomePage() {
 	return (
-		<main className='dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto px-3'>
+		<main className='dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto'>
 			<section className="dark:bg-gray-900">
 				<div className="grid grid-cols-1 lg:grid-cols-12 mpx-4 py-4 mx-auto lg:gap-8 xl:gap-0 lg:py-16 relative">
 					<div className="md:mr-10 lg:mt-[5vh] grid-cols-1 lg:col-span-6">

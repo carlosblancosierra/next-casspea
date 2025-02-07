@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FiPlus, FiMinus, FiTrash, FiX } from "react-icons/fi";
-import { selectAllFlavours } from '@/redux/features/flavour/flavourSlice';
-import { useAppSelector } from '@/redux/hooks';
+import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';;
 import { Flavour as FlavourType } from '@/types/flavours';
 import Image from 'next/image';
 import { CartItemBoxFlavorSelection } from '@/types/carts';
+import Spinner from "@/components/common/Spinner";
 import { toast } from 'react-toastify';
 
 interface FlavourPickerProps {
@@ -31,7 +31,12 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     handleDeleteAllFlavours,
     selectedAllergens
 }) => {
-    const availableFlavours = useAppSelector(selectAllFlavours);
+    const { data: availableFlavours, isLoading, error } = useGetFlavoursQuery();
+    if (isLoading) return <div className="flex items-center justify-center min-h-screen">
+                <Spinner md />
+            </div>;
+    if (error) return <div>Error:</div>;
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -168,7 +173,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                     <div className="relative bg-white dark:bg-gray-800 p-6 rounded-lg max-w-[90vw] w-full max-h-[85vh] mx-auto shadow-lg overflow-y-auto">
                         <h2 className="text-center text-sm font-semibold mb-1 dark:text-gray-300">Select a Flavour</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                            {getFilteredFlavours().map((flavour) => (
+                            {getFilteredFlavours()?.map((flavour) => (
                                 <div key={flavour.id} className="flavour-card border dark:border-gray-700 px-3 py-2 rounded-lg flex flex-col justify-between dark:bg-gray-800">
                                     <div className="flex items-center gap-2">
                                         <div className="flex-shrink-0 relative w-16 h-16">
@@ -244,7 +249,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
 
                         {/* Sticky footer for both mobile and desktop */}
                         <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t dark:border-gray-700 p-4 shadow-lg">
-                            <div className="max-w-[90vw] mx-auto space-y-3">
+                            <div className="max-w-[95vw] mx-auto space-y-3">
                                 {/* Progress bar */}
                                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                                     <div
