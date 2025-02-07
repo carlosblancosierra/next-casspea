@@ -9,8 +9,20 @@ import { Flavour } from '@/types/flavours';
 export default function FlavoursPage() {
     const { data: flavours, isLoading, error } = useGetFlavoursQuery();
 
-    if (isLoading) return <Spinner className="mx-auto" />;
-    if (error) return <div>Error:</div>;
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <Spinner />
+            </div>
+        );
+    }
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div>Error:</div>
+            </div>
+        );
+    }
 
     return (
         <div className=" dark:bg-gray-900 min-h-screen py-8">
