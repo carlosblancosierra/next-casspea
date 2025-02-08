@@ -23,7 +23,7 @@ export default function Page({ params }: { params: { product_slug: string } }) {
 							<ol className="mt-4 space-y-1 list-decimal list-inside">
 								<li className="font-bold text-pink-500 dark:text-pink-500">For Signature Boxes, select your box size</li>
 								<li className="font-bold text-green-500 dark:text-green-500">Choose a Surprise Box or Pick and Mix your own from our succulent flavours</li>
-								<li className="font-bold text-red-500 dark:text-red-500">Select a shipping date - FREE delivery for orders over £45</li>
+								<li className="font-bold text-red-500 dark:text-red-500">Select a shipping date - FREE delivery for orders over £50</li>
 								<li className="font-bold text-orange-500 dark:text-orange-400">Pay securely online</li>
 								<li className="font-bold text-purple-500 dark:text-purple-500">Receive your chocolates and enjoy!</li>
 							</ol>
