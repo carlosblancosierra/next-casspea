@@ -45,29 +45,44 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                 <p className="text-xl md:text-2xl tracking-tight mb-2 dark:text-white ">
                     Shipping starts from February 5th to 7th, just in time for Valentine&apos;s Day!
                     Pre-order now to ensure your gift arrives on time.</p>
-                <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    Quantity
-                </label>
-                <select
-                    id="quantity"
-                    name="quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 shadow-sm focus:border-primary-2 focus:ring-primary-2 sm:text-sm"
-                >
-                    {Array.from({ length: 10 }, (_, i) => (
-                        <option key={i + 1} value={i + 1}>{i + 1}</option>
-                    ))}
-                </select>
+                
+                {!product.sold_out && (
+                    <>
+                        <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                            Quantity
+                        </label>
+                        <select
+                            id="quantity"
+                            name="quantity"
+                            value={quantity}
+                            onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 shadow-sm focus:border-primary-2 focus:ring-primary-2 sm:text-sm"
+                        >
+                            {Array.from({ length: 10 }, (_, i) => (
+                                <option key={i + 1} value={i + 1}>{i + 1}</option>
+                            ))}
+                        </select>
+                    </>
+                )}
             </div>
 
-            <button
-                type="button"
-                onClick={handleAddToCart}
-                className="mt-8 w-full py-3 rounded bg-primary-2 text-white dark:bg-primary cursor-pointer flex items-center justify-center text-sm gap-2"
-            >
-                Add to Cart
-            </button>
+            {product.sold_out ? (
+                <button
+                    type="button"
+                    disabled
+                    className="mt-8 w-full py-3 rounded bg-gray-400 text-white cursor-not-allowed flex items-center justify-center text-sm gap-2"
+                >
+                    Sold Out
+                </button>
+            ) : (
+                <button
+                    type="button"
+                    onClick={handleAddToCart}
+                    className="mt-8 w-full py-3 rounded bg-primary-2 text-white dark:bg-primary cursor-pointer flex items-center justify-center text-sm gap-2"
+                >
+                    Add to Cart
+                </button>
+            )}
         </form>
     );
 };

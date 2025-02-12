@@ -8,14 +8,14 @@ import Spinner from "@/components/common/Spinner";
 export default function Store() {
 	const { data, isLoading, error } = useGetActiveProductsQuery();
 
-	useEffect(() => {
-		console.log("Store - isLoading:", isLoading);
-		console.log("Store - error:", error);
-		console.log("Store - data:", data);
-	}, [isLoading, error, data]);
+	// useEffect(() => {
+	// 	console.log("Store - isLoading:", isLoading);
+	// 	console.log("Store - error:", error);
+	// 	console.log("Store - data:", data);
+	// }, [isLoading, error, data]);
 
 	if (isLoading || !data) {
-		console.log("Store: Still loading or data is not available");
+		// console.log("Store: Still loading or data is not available");
 		return <div className="flex items-center justify-center min-h-screen">
                 <Spinner md />
             </div>;
