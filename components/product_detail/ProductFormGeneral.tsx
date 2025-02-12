@@ -43,8 +43,8 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
         <form>
             <div className="mt-4">
                 <p className="text-xl md:text-2xl tracking-tight mb-2 dark:text-white ">
-                    Shipping starts from February 5th to 7th, just in time for Valentine&apos;s Day!
-                    Pre-order now to ensure your gift arrives on time.</p>
+                    Thank you for your orders, our Valentine's Chocolate Hearts are Sold Out! Might return later in the year.
+                </p>
                 
                 {!product.sold_out && (
                     <>
