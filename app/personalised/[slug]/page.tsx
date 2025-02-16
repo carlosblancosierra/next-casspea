@@ -8,7 +8,7 @@ export default function Page() {
 	return (
 		<>
 			<main className='mx-auto max-w-screen-2xl'>
-				<PersonalizedDetail slug={params.slug} />
+				<PersonalizedDetail slug={params.slug as string} />
 			</main>
 		</>
 	);

@@ -7,12 +7,18 @@ import CustomChocolate from './CustomChocolate';
 import ColorSelectionModal from './ColorSelectionModal';
 import { motion, useAnimation } from "framer-motion";
 
+interface OrderDetails {
+    quantity: number;
+    selectedFlavours: number[];
+}
+
 interface PersonalizedFormProps {
     template: ChocolateTemplateDetail;
     onLayersChange: (layers: UserChosenLayer[]) => void;
+    orderDetails: OrderDetails;
 }
 
-export default function PersonalizedForm({ template, onLayersChange }: PersonalizedFormProps) {
+export default function PersonalizedForm({ template, onLayersChange, orderDetails }: PersonalizedFormProps) {
     const [selectedColors, setSelectedColors] = useState<Record<number, string>>(() => {
         const initialSelections: Record<number, string> = {};
         template.layers.forEach(slot => {
@@ -94,6 +100,8 @@ export default function PersonalizedForm({ template, onLayersChange }: Personali
         try {
             await createDesign({
                 template_slug: template.slug,
+                quantity: orderDetails.quantity,
+                selected_flavours: orderDetails.selectedFlavours,
                 chosen_layers: Object.entries(selectedColors).map(([order, colorSlug]) => ({
                     layer_type: template.layers[parseInt(order) - 1].layer_type.name,
                     color_slug: colorSlug,

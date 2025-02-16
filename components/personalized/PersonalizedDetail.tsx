@@ -3,6 +3,7 @@
 import { useGetTemplateDetailQuery } from '@/redux/features/personalized/personalizedApiSlice';
 import CustomChocolate from './CustomChocolate';
 import PersonalizedForm from './PersonalizedForm';
+import PersonalizedQuantities from './PersonalizedQuantities';
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
@@ -34,6 +35,8 @@ export default function PersonalizedDetail({ slug }: PersonalizedDetailProps) {
         return initialSelections;
     });
 
+    // Lift order details state (quantity and selected flavours)
+    const [orderDetails, setOrderDetails] = useState({ quantity: 50, selectedFlavours: [] as number[] });
 
     if (isLoading) return <div>Loading template...</div>;
     if (error) return <div>Error loading template</div>;
@@ -49,6 +52,11 @@ export default function PersonalizedDetail({ slug }: PersonalizedDetailProps) {
                 <PersonalizedForm 
                     template={template} 
                     onLayersChange={setSelectedColors}
+                    orderDetails={orderDetails}
+                />
+                <PersonalizedQuantities 
+                    orderDetails={orderDetails}
+                    setOrderDetails={setOrderDetails}
                 />
             </div>
         </div>
