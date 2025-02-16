@@ -1,8 +1,6 @@
 'use client'
 
-import { Fragment } from 'react'
-import { useSelector } from 'react-redux';
-import { Disclosure, Menu, Transition, DisclosureButton, DisclosurePanel, MenuItems, MenuItem, MenuButton } from '@headlessui/react'
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import Image from 'next/image';
@@ -10,6 +8,7 @@ import Image from 'next/image';
 const navigation = [
   { name: 'Store', href: '/shop-now', current: false },
   { name: 'Flavours', href: '/flavours', current: false },
+  { name: 'Personalised', href: '/personalised', current: false },
   { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false, external: true },
   { name: 'Help', href: '/help', current: false },
   { name: 'About Us', href: '/about-us', current: false },

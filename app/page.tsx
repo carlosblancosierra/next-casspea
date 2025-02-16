@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 import { Playfair_Display } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import ImageGallery from '@/components/product_detail/ImageGallery';
+import PersonalisedHome from '@/components/personalized/PersonalisedHome';
 
 // Dynamically import components that can load later
 const HomeProducts = dynamic(() => import('@/components/home/HomeProducts'));
@@ -100,6 +101,13 @@ export default function HomePage() {
 				</div>
 			</Suspense>
 
+			<Suspense fallback={<LoadingSection />}>
+				<div className='mt-10'>
+					<h2 className='text-center text-2xl font-bold font-playfair'>Personalised Chocolates</h2>
+					<PersonalisedHome />
+				</div>
+			</Suspense>
+			
 			<Suspense fallback={<LoadingSection />}>
 				<div className="mt-10">
 					<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Gallery</h2>
