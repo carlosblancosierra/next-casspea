@@ -17,6 +17,11 @@ interface BoxSelectionProps {
 
 const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange, className }) => {
     return (
+        <>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+               1- Box Type Selection
+            </h3>
+    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Please choose your box type.</p>
         <RadioGroup value={selected} onChange={onChange} className={`space-y-4 ${className}`}>
             {options?.map((option) => (
                 <RadioGroup.Option
@@ -61,6 +66,7 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                 </RadioGroup.Option>
             ))}
         </RadioGroup>
+        </>
     );
 };
 

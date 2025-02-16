@@ -63,6 +63,8 @@ export default function RootLayout({
             gtag('config', 'G-FBD3HVXC41');
           `}
         </Script>
+
+        <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="7ef907d7-ea0d-4a43-beec-ca187e2ea5cd" data-blockingmode="auto" type="text/javascript"></script>
         <Provider>
           <Setup />
           {/* <HeartEffect /> */}

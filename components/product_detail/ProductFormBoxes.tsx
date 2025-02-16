@@ -155,6 +155,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             e.preventDefault();
         }}>
             <div className="space-y-6 pb-6">
+                <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Order your Box</h2>
                 <BoxSelection
                     options={prebulids}
                     selected={selection}
@@ -188,7 +189,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         {allergenOption && (
                             <>
                                 <div>
-                                    <p className="text-sm dark:text-gray-200">Pick your flavours</p>
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">3- Pick your flavours</h3>
                                     <FlavourPicker
                                         flavours={flavours}
                                         remainingChocolates={remainingChocolates}
@@ -219,7 +220,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 <div>
                     <label htmlFor="quantity"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                        Number of Boxes
+                        Finally - Number of Boxes
                     </label>
                     <select
                         id="quantity"
