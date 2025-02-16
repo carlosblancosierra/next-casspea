@@ -86,6 +86,14 @@ const personalizedApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['UserDesigns']
     }),
+
+    sendRequest: builder.mutation<void, CreateDesignRequest>({
+      query: (design) => ({
+        url: '/personalized/send-request/',
+        method: 'POST',
+        body: design,
+      }),
+    }),
   }),
 });
 
@@ -97,6 +105,7 @@ export const {
   useCreateUserDesignMutation,
   useUpdateUserDesignMutation,
   useDeleteUserDesignMutation,
+  useSendRequestMutation,
 } = personalizedApiSlice;
 
 export default personalizedApiSlice;

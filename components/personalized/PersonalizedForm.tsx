@@ -2,7 +2,7 @@
 
 import { ChocolateTemplateDetail, LayerTypeColor, UserChosenLayer } from '@/types/personalized';
 import { useState, useEffect } from 'react';
-import { useCreateUserDesignMutation } from '@/redux/features/personalized/personalizedApiSlice';
+import { useSendRequestMutation } from '@/redux/features/personalized/personalizedApiSlice';
 import CustomChocolate from './CustomChocolate';
 import ColorSelectionModal from './ColorSelectionModal';
 import { motion, useAnimation } from "framer-motion";
@@ -30,7 +30,11 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
     const [activeLayer, setActiveLayer] = useState<number | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const controls = useAnimation();
-    const [createDesign] = useCreateUserDesignMutation();
+    const [sendRequest] = useSendRequestMutation();
+
+    // New state for email and comments.
+    const [email, setEmail] = useState('');
+    const [comments, setComments] = useState('');
 
     const getPreviewLayers = (previewColor: LayerTypeColor): UserChosenLayer[] => {
         if (!activeLayer) return [];
@@ -96,20 +100,27 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
         setActiveLayer(null);
     };
 
+    // New submit function, sending a custom payload.
     const handleSubmit = async () => {
+        const customDesignNames = template.layers.map(slot => {
+            const color = slot.layer_type.colors.find(c => c.slug === selectedColors[slot.order]);
+            return color?.name || '';
+        });
         try {
-            await createDesign({
+
+            const payload = {
                 template_slug: template.slug,
+                email,
+                comments,
+                custom_design_names: customDesignNames,
+                flavours: orderDetails.selectedFlavours,
                 quantity: orderDetails.quantity,
-                selected_flavours: orderDetails.selectedFlavours,
-                chosen_layers: Object.entries(selectedColors).map(([order, colorSlug]) => ({
-                    layer_type: template.layers[parseInt(order) - 1].layer_type.name,
-                    color_slug: colorSlug,
-                    order: parseInt(order),
-                })),
-            }).unwrap();
+            }
+
+            console.log(payload);
+            await sendRequest(payload).unwrap();
         } catch (error) {
-            console.error('Failed to create design:', error);
+            console.error('Failed to send request:', error);
         }
     };
 
@@ -232,14 +243,41 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                         </div>
                     ))}
                 </div>
-                
-                <button
-                    onClick={handleSubmit}
-                    className="w-full bg-primary dark:bg-primary-2 text-white py-3 px-4 rounded-md
-                        hover:bg-primary-dark dark:hover:bg-primary-2-dark transition-colors"
-                >
-                    Save Design
-                </button>
+                {/* New email and comments fields with Request button */}
+                <div className="space-y-4">
+                    <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                            Email
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="your.email@example.com"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 shadow-sm focus:outline-none focus:border-primary focus:ring-primary sm:text-sm"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="comments" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                            Comments
+                        </label>
+                        <textarea
+                            id="comments"
+                            value={comments}
+                            onChange={(e) => setComments(e.target.value)}
+                            placeholder="Any special requests?"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 shadow-sm focus:outline-none focus:border-primary focus:ring-primary sm:text-sm"
+                            rows={3}
+                        ></textarea>
+                    </div>
+                    <button
+                        onClick={handleSubmit}
+                        className="w-full bg-primary dark:bg-primary-2 text-white py-3 px-4 rounded-md hover:bg-primary-dark dark:hover:bg-primary-2-dark transition-colors"
+                    >
+                        Request Chocolates
+                    </button>
+                </div>
             </div>
 
             {activeLayer && (
