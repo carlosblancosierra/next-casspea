@@ -40,6 +40,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
 
     return (
         <div className={`relative overflow-hidden ${className}`}>
+            {/* Main Carousel */}
             <motion.div
                 drag="x"
                 dragElastic={0.2}
@@ -68,7 +69,37 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
                 ))}
             </motion.div>
 
-            <div className="mt-4 flex w-full justify-center gap-2">
+            {/* Thumbnail Carousel */}
+            <div className="my-4 grid grid-cols-4 gap-2">
+                {images.map((url, idx) => (
+                    <button
+                        key={idx}
+                        onClick={() => {
+                            setCurrentIndex(idx);
+                            controls.start({
+                                x: `${-idx * 100}%`,
+                                transition: { duration: 0.5 }
+                            });
+                        }}
+                        className={`relative aspect-square rounded-md overflow-hidden ${
+                            idx === currentIndex 
+                                ? "ring-2 ring-primary" 
+                                : "ring-1 ring-gray-200 hover:ring-primary/50"
+                        }`}
+                    >
+                        <Image
+                            src={url}
+                            alt={`Thumbnail ${idx + 1}`}
+                            fill
+                            sizes="(max-width: 768px) 25vw, 10vw"
+                            className="object-cover"
+                        />
+                    </button>
+                ))}
+            </div>
+
+            {/* Dots (Optional - you can remove if not needed with thumbnails) */}
+            {/* <div className="mt-4 flex w-full justify-center gap-2">
                 {images.map((_, idx) => (
                     <button
                         key={idx}
@@ -79,12 +110,13 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
                                 transition: { duration: 0.5 }
                             });
                         }}
-                        className={`h-3 w-3 rounded-full transition-colors ${idx === currentIndex ? "bg-primary" : "bg-primary-light"
-                            }`}
+                        className={`h-3 w-3 rounded-full transition-colors ${
+                            idx === currentIndex ? "bg-primary" : "bg-primary-light"
+                        }`}
                         aria-label={`Go to image ${idx + 1}`}
                     />
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 };

@@ -67,14 +67,11 @@ export default function HomePage() {
 							alt="CassPea Chocolates" /> */}
 
 						<ImageGallery images={
-							[
-								'/valentines/corazon2-2.jpeg',
-								'/valentines/2.jpg',
-								'/valentines/3.jpg',
-								'/valentines/4.jpg',
-								'/valentines/5.jpg',
-								'/valentines/1.jpg',
-							]} className='block md:hidden' />
+							['/home/christmas/hero1.jpg',
+								'/home/hero-1.jpg',
+								'/home/hero-2.jpeg',
+								'/home/mobile-hero-1.png'
+						]} className='block md:hidden' />
 
 						<p className="md:hidden md:mb-6 text-3xl font-bold mt-2 font-playfair lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">Share the love with CassPea Chocolates</p>
 						<p className="md:hidden md:mb-6 font-light text-md mt-2 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">Perfect for personal indulgence, birthdays, corporate events, and special celebrations. With over 20 exquisite flavours, each handcrafted to perfection by our skilled chocolatiers, every bite is a work of art and a journey through inspired flavours.</p>
