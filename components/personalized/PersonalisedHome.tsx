@@ -39,7 +39,7 @@ export default function Personalized() {
     if (error) return <div>Error loading templates</div>;
 
     return (
-        <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
             {templates?.map((template) => (
                 <Link 
                     key={template.slug} 
