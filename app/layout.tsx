@@ -6,9 +6,9 @@ import { Footer, Navbar } from '@/components/common';
 import { Setup } from '@/components/utils';
 import AnnouncementBar from '@/components/common/AnnouncementBar';
 import MobileMenu from '@/components/navigation/MobileMenu';
+import dynamic from 'next/dynamic';
 import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
-import { GoogleTagManager } from '@next/third-parties/google'
 
 // const HeartEffect = dynamic(() => import('@/components/common/HeartEffect'), {
 //   ssr: false
@@ -51,7 +51,27 @@ export default function RootLayout({
           `}
         </Script>
 
-        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID || ''} />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID}');
+          `}
+        </Script>
+
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-FBD3HVXC41"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-FBD3HVXC41');
+          `}
+        </Script>
 
         <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="7ef907d7-ea0d-4a43-beec-ca187e2ea5cd" data-blockingmode="auto" type="text/javascript"></script>
         <Provider>
