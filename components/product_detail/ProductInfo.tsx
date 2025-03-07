@@ -50,17 +50,20 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                                     <StarIcon className='absolute inset-0 h-5 w-5 flex-shrink-0 text-gray-200 [clip-path:inset(0_0_0_48%)]' />
                                 </div>
                             </div> */}
-                            <Image
-                                src="/home/stars-4.5.svg"
-                                alt="Trustpilot Starts 4.3"
-                                width={200}
-                                height={100}
-                                className="mx-auto mb-6"
-                            />
-                            <a href="https://uk.trustpilot.com/review/www.casspea.co.uk" className="ml-3 text-xs font-medium">
-                                4.3 out of 5 stars (30 Reviews)
-                            </a>
-                            
+                            <div className="w-1/2">
+                                <Image
+                                    src="/home/stars-4.5.svg"
+                                    alt="Trustpilot Starts 4.3"
+                                    width={200}
+                                    height={100}
+                                    className="mx-auto mb-6"
+                                />
+                            </div>
+                            <div className="w-1/2">
+                                <a href="https://uk.trustpilot.com/review/www.casspea.co.uk" className="ml-3 text-xs font-medium">
+                                    4.3 out of 5 stars (30 Reviews)
+                                </a>
+                            </div>
                         </div>
                     </div>
 
