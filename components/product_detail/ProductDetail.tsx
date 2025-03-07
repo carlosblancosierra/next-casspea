@@ -45,7 +45,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 	return (
 		<div className="max-w-[95vw] mx-auto">
 			<ProductBreadcrumb product={product} />
-			<div className="grid grid-cols-1 md:grid-cols-[20%,1fr,30%] gap-2 py-2 relative">
+			<div className="grid grid-cols-1 md:grid-cols-[30%,1fr,30%] xl:grid-cols-[20%,1fr,30%] gap-2 py-2 relative">
 				<div>
 					<ProductInfo product={product} />
 

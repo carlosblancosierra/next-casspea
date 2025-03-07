@@ -79,10 +79,10 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
             <span className="font-semibold text-xs">City of origin</span>
             <p className='text-sm'>London</p>
           </div>
-          <div>
+          {/* <div>
             <span className="font-semibold text-xs">Dimensions</span>
             <p className='text-sm'>10x10 cm</p>
-          </div>
+          </div> */}
         </div>
       )
     },

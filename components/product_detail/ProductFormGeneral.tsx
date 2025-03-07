@@ -43,7 +43,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
         <form>
             <div className="mt-4">
                 <p className="text-xl md:text-2xl tracking-tight mb-2 dark:text-white ">
-                    Easter eggs orders start shipping on April 5th
+                    Preorder your easter eggs and save, shipping orders with eggs start shipping on April 5th.
                 </p>
                 
                 {!product.sold_out && (
