@@ -9,8 +9,8 @@ import PersonalisedHome from '@/components/personalized/PersonalisedHome';
 
 // Dynamically import components that can load later
 const HomeProducts = dynamic(() => import('@/components/home/HomeProducts'));
-const HomeValentines = dynamic(() => import('@/components/home/HomeValentines'));
 const HomeGallery = dynamic(() => import('@/components/home/HomeGallery'));
+const HomeEasterEggs = dynamic(() => import('@/components/home/HomeEasterEggs'));
 const FlavourCarousel = dynamic(() => import('@/components/flavours/FlavourCarousel'));
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
@@ -29,7 +29,7 @@ export default function HomePage() {
 	return (
 		<main className='dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto'>
 			<section className="dark:bg-gray-900">
-				<div className="grid grid-cols-1 lg:grid-cols-12 mpx-4 py-4 mx-auto lg:gap-8 xl:gap-0 lg:py-16 relative">
+				<div className="grid grid-cols-1 lg:grid-cols-12 mpx-4 mx-auto lg:gap-8 xl:gap-0 lg:pb-8 relative">
 					<div className="md:mr-10 lg:mt-[5vh] grid-cols-1 lg:col-span-6">
 						<h1 className={`${playfair.className} mb-2 text-5xl font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}>
 							London's Finest Artisan Chocolates
@@ -86,6 +86,10 @@ export default function HomePage() {
 					<HomeValentines />
 				</div>
 			</Suspense> */}
+
+			<Suspense fallback={<LoadingSection />}>
+				<HomeEasterEggs />
+			</Suspense>
 
 			<Suspense fallback={<LoadingSection />}>
 				<div className='mt-5'>
