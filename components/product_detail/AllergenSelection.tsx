@@ -32,17 +32,17 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
 
     return (
         <div className="rounded-lg shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            {/* <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                 2- Allergens
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">If you have any allergies, please select the allergens you are allergic to.</p>
+            </h3> */}
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">2. If you have any allergies, please select the allergens you are allergic to.</p>
             <RadioGroup value={allergenOption} onChange={setAllergenOption} className="space-y-3">
                 <RadioGroup.Option
                     value="NONE"
                     className={({ checked }) =>
                         `${checked
                             ? 'bg-primary text-white'
-                            : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'
+                            : 'bg-white dark:bg-transparent text-gray-900 dark:text-gray-100'
                         }
                         relative rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
                     }
@@ -73,7 +73,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                     className={({ checked }) =>
                         `${checked
                             ? 'bg-primary text-white'
-                            : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'
+                            : 'bg-white dark:bg-transparent text-gray-900 dark:text-gray-100'
                         }
                         relative rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
                     }

@@ -18,10 +18,10 @@ interface BoxSelectionProps {
 const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange, className }) => {
     return (
         <>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            {/* <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                1- Box Type Selection
-            </h3>
-    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Please choose your box type.</p>
+            </h3> */}
+    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">1. Choose your box type.</p>
         <RadioGroup value={selected} onChange={onChange} className={`space-y-4 ${className}`}>
             {options?.map((option) => (
                 <RadioGroup.Option
@@ -31,7 +31,7 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                         relative block cursor-pointer rounded-lg border px-6 py-4
                         ${checked
                             ? 'bg-primary border-primary text-white'
-                            : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100'
+                            : 'bg-white dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100'
                         }
                         hover:border-primary transition-colors duration-200
                     `}

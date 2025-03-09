@@ -43,7 +43,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
     }, [preorderFinishDate]);
 
     return (
-        <div className="md:py-8">
+        <div className="md:pb-4">
             <div id="product-info">
                 <div className="flex flex-col gap-y-2 md:gap-y-4 lg:max-w-[500px] mx-auto">
                     {product.preorder && (

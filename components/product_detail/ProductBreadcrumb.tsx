@@ -29,7 +29,7 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
                         <a href="/shop-now/" className="mr-2 text-sm text-gray-900 dark:text-gray-400">
                             {product.category?.name}
                         </a>
-                        <svg
+                        {/* <svg
                             fill="currentColor"
                             width={16}
                             height={20}
@@ -38,7 +38,7 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
                             className="h-5 w-4 text-gray-300 dark:text-gray-500"
                         >
                             <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                        </svg>
+                        </svg> */}
                     </div>
                 </li>
                 {/* <li className="text-sm">

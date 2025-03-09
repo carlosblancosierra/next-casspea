@@ -154,8 +154,8 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         <form onSubmit={(e) => {
             e.preventDefault();
         }}>
-            <div className="space-y-6 pb-6">
-                <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Order your Box</h2>
+            <div className="space-y-6 pb-6 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
+                <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Create your Signature Box</h2>
                 <BoxSelection
                     options={prebulids}
                     selected={selection}
@@ -220,7 +220,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 <div>
                     <label htmlFor="quantity"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                        Finally - Number of Boxes
+                        3. Number of Boxes
                     </label>
                     <select
                         id="quantity"
@@ -228,7 +228,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         value={quantity}
                         onChange={handleQuantityChange}
                         className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
-                            bg-white dark:bg-gray-800 shadow-sm focus:border-primary-2
+                            bg-white dark:bg-transparent shadow-sm focus:border-primary-2
                             focus:ring-primary-2"
                     >
                         {Array.from({ length: 20 }, (_, i) => (
@@ -239,8 +239,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             </div>
 
             {/* Add to Cart Button */}
-            <div className="sticky bottom-[55px] bg-white dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4
-                border-t border-gray-200 dark:border-gray-700">
+            <div className="sticky md:static bottom-[55px] md:bottom-auto bg-white dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
                 <AddToCartButton
                     onClick={handleAddToCart}
                     isLoading={isLoading}
