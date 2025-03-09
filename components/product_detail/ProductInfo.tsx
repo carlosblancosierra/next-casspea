@@ -59,7 +59,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                                     className="mx-auto mb-6"
                                 />
                             </div>
-                            <div className="w-1/2">
+                            <div className="w-full">
                                 <a href="https://uk.trustpilot.com/review/www.casspea.co.uk" className="ml-3 text-xs font-medium">
                                     4.3 out of 5 stars (30 Reviews)
                                 </a>
