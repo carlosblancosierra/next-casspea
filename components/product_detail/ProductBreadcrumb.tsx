@@ -41,11 +41,11 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
                         </svg>
                     </div>
                 </li>
-                <li className="text-sm">
+                {/* <li className="text-sm">
                     <a aria-current="page" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300">
                         {product.name_short || product.slug.split('-').join(' ')}
                     </a>
-                </li>
+                </li> */}
             </ol>
         </nav>
     );

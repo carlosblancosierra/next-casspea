@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@plugin "daisyui";
 
 .opacity-0 {
     opacity: 0;

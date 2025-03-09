@@ -46,6 +46,10 @@ export interface Product {
     thumbnail?: string;
     thumbnail_webp?: string;
 
+    preorder?: boolean;
+    preorder_finish_date?: string;
+    preorder_price?: string;
+    
     gallery_images?: ProductGalleryImage[];
 
     created?: string;

@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
+		"dev": "next dev --port 3005",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint"
@@ -39,6 +39,7 @@
 	"devDependencies": {
 		"@types/node": "^20.10.5",
 		"@types/react": "^18.2.45",
+		"daisyui": "^5.0.0",
 		"typescript": "^5.3.3"
 	}
 }
