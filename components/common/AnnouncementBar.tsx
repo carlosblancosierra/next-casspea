@@ -46,7 +46,8 @@ export default function AnnouncementBar() {
             Tel: 07859 790386 / email: info@casspea.co.uk
           </p>
           <p className="text-sm leading-6 w-full md:w-auto text-center">
-            Free Shipping over £50
+            {/* Free Shipping over £50 */}
+            Order by 2pm on Wednesday for Mother’s Day delivery.
           </p>
           <Link
             href="/subscribe"
