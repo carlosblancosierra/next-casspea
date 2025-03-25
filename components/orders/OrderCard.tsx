@@ -114,6 +114,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                     </div>
                   )}
 
+                
                   {/* Flavours */}
                   <div className="flex flex-col">
                     <button
@@ -125,7 +126,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       }
                       className="text-sm text-gray-700 hover:text-gray-900 flex items-center gap-1"
                     >
-                      Flavors {openFlavors[item.product?.id || 0] ? '▼' : '▶'}
+                      Flavours {openFlavors[item.product?.id || 0] ? '▼' : '▶'}
                     </button>
                     {openFlavors[item.product?.id || 0] &&
                       item.box_customization?.flavor_selections?.map((flavor, i) => (
@@ -133,7 +134,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                           key={i}
                           className="text-sm text-gray-500 pl-4 flex justify-between"
                         >
-                          <span>{flavor.flavor_name}</span>
+                          <span>{flavor.flavor.name}</span>
                           <span className="text-gray-400">×{flavor.quantity}</span>
                         </div>
                       ))}
