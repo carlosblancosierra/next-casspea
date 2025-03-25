@@ -28,7 +28,7 @@ const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders }) => {
                     </div>
                     {/* Pick & Mix Column */}
                     <div className="p-4">
-                        <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 mb-2">Pick & Mix Flavors</h4>
+                        <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 mb-2">Pick & Mix Flavours</h4>
                         <div className="space-y-1">
                             {Object.entries(flavors).length > 0 ?
                                 Object.entries(flavors).map(([name, qty]) => (
@@ -37,14 +37,14 @@ const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders }) => {
                                     </div>
                                 )) :
                                 <div className="text-sm text-gray-900 dark:text-gray-100">
-                                    No Pick & Mix Flavors
+                                    No Pick & Mix Flavours
                                 </div>
                             }
                         </div>
                     </div>
                     {/* Random Boxes Column */}
                     <div className="p-4">
-                        <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 mb-2">Other Flavors</h4>
+                        <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 mb-2">Other Flavours</h4>
                         <div className="space-y-1">
                             {Object.entries(randomBoxes).length > 0 ?
                                 Object.entries(randomBoxes).map(([key, qty]) => (
