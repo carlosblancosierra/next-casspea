@@ -100,6 +100,20 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                     </div>
                   )}
 
+                  {/* Allergens */}
+                  {item.box_customization?.allergens && item.box_customization?.allergens?.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {item.box_customization.allergens.map((allergen) => (
+                        <span
+                          key={allergen.id}
+                          className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+                        >
+                          {allergen.name} Free
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
                   {/* Flavours */}
                   <div className="flex flex-col">
                     <button
@@ -124,6 +138,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                         </div>
                       ))}
                   </div>
+
                 </div>
               ))}
             </dd>
