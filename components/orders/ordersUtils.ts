@@ -79,7 +79,7 @@ export const getDayTotals = (orders: Order[]) => {
                 // Handle random boxes with allergens
                 if (boxCustomization.allergens && boxCustomization.allergens.length > 0) {
                     const allergenNames = boxCustomization.allergens
-                        .map(id => getAllergenName(id))
+                        .map(allergen => allergen.name)
                         .sort()
                         .join(' and ');
                     const key = `Random (${allergenNames} Free)`;
