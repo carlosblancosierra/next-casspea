@@ -109,37 +109,6 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                             </p>
                         )}
                     </div>
-                    {/* Reviews */}
-                    <div className="">
-                        <h3 className="sr-only">Reviews</h3>
-                        <div className="">
-                            {/* <div className="flex items-center">
-                                <StarIcon className='h-5 w-5 flex-shrink-0 text-yellow-400' />
-                                <StarIcon className='h-5 w-5 flex-shrink-0 text-yellow-400' />
-                                <StarIcon className='h-5 w-5 flex-shrink-0 text-yellow-400' />
-                                <StarIcon className='h-5 w-5 flex-shrink-0 text-yellow-400' />
-                                <div className="relative inline-flex">
-                                    <StarIcon className='h-5 w-5 flex-shrink-0 text-yellow-400 [clip-path:inset(0_50%_0_0)]' />
-                                    <StarIcon className='absolute inset-0 h-5 w-5 flex-shrink-0 text-gray-200 [clip-path:inset(0_0_0_48%)]' />
-                                </div>
-                            </div> */}
-                            <div className="w-1/2">
-                                <Image
-                                    src="/home/stars-4.5.svg"
-                                    alt="Trustpilot Starts 4.3"
-                                    width={200}
-                                    height={100}
-                                    className="mx-auto mb-1"
-                                />
-                            </div>
-                            <div className="w-full">
-                                <a href="https://uk.trustpilot.com/review/www.casspea.co.uk" className="text-xs font-medium">
-                                    4.3 out of 5 stars (30 Reviews)
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
                     <p className="font-normal text-sm">
                         {product.description}
                     </p>

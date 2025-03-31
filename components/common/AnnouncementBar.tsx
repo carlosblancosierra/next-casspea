@@ -1,6 +1,7 @@
 "use client";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link'
 
 export default function AnnouncementBar() {
@@ -43,11 +44,26 @@ export default function AnnouncementBar() {
       <div className="flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-x-6 max-w-screen-2xl mx-auto text-gray-900 dark:text-white">
         <div className="flex flex-col md:flex-row flex-1 justify-center items-center gap-y-2 md:gap-x-8 w-full">
           <p className="text-sm leading-6 w-full md:w-auto text-center">
+          <div className="">
+            <div className="flex flex-row items-center gap-x-2 justify-center">
+                <Image
+                    src="/home/stars-4.5.svg"
+                    alt="Trustpilot Starts 4.3"
+                    width={100}
+                    height={100}
+                    className="inline-block"
+                />
+                <a href="https://uk.trustpilot.com/review/www.casspea.co.uk" className="text-sm font-medium inline-block">
+                    4.4 on Trustpilot
+                </a>
+            </div>
+            </div>
+          </p>
+          <p className="text-sm leading-6 w-full md:w-auto text-center">
             Tel: 07859 790386 / email: info@casspea.co.uk
           </p>
           <p className="text-sm leading-6 w-full md:w-auto text-center">
-            {/* Free Shipping over £50 */}
-            Order by 2pm on Wednesday for Mother’s Day delivery.
+            Free Shipping over £50
           </p>
           <Link
             href="/subscribe"
