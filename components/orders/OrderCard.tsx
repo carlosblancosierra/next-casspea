@@ -106,7 +106,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       {item.box_customization.allergens.map((allergen) => (
                         <span
                           key={allergen.id}
-                          className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+                          className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-orange-600 ring-1 ring-inset ring-orange-500/10"
                         >
                           {allergen.name} Free
                         </span>
