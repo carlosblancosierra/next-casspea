@@ -35,17 +35,17 @@ export default function OrderList() {
             start_date: startDate.toISOString().split('T')[0],
             end_date: endDate.toISOString().split('T')[0],
         });
-    }, [page, startDate, endDate]);
+    }, [page]);
 
-    const { data: orders, isLoading, error, isError } = useGetOrdersQuery(filters);
+    const { data: orders, isLoading, isFetching, error } = useGetOrdersQuery(filters);
     const [createRoyalMailOrder] = useCreateRoyalMailOrderMutation();
 
-    // Set isPageLoading to false when data is loaded or when there's an error
+    // Set isPageLoading to false when data is loaded
     useEffect(() => {
-        if (!isLoading || isError) {
+        if (!isLoading && !isFetching) {
             setIsPageLoading(false);
         }
-    }, [isLoading, isError]);
+    }, [isLoading, isFetching]);
 
     const handleCreateShipping = async (order_id: string) => {
         try {
@@ -118,7 +118,7 @@ export default function OrderList() {
         return cookieValue;
     }
 
-    if (isLoading || isPageLoading) {
+    if (isLoading || isFetching || isPageLoading) {
         return (
             <div className="flex justify-center items-center min-h-[200px]">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
