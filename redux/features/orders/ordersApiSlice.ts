@@ -2,8 +2,8 @@ import { apiSlice } from '@/redux/services/apiSlice';
 
 export interface OrdersQueryParams {
     status?: string;
-    created_after?: string;
-    created_before?: string;
+    start_date?: string;
+    end_date?: string;
     min_total?: number;
     max_total?: number;
     search?: string;

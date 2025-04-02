@@ -1,14 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGetOrdersQuery, OrdersQueryParams } from '@/redux/features/orders/ordersApiSlice';
 import { Order } from '@/types/orders';
 import DaySection from './DaySection';
 import { useCreateRoyalMailOrderMutation } from '@/redux/features/royalmail/royalmailApiSlice';
 import { toast } from 'react-toastify';
 import { formatDate } from './ordersUtils';
-import axios from 'axios';
 
 export default function OrderList() {
+    // Fix today's date for a stable reference
+    const [today] = useState(new Date());
+
+    // Pagination state: each page represents a 10-day interval.
+    // Page 0: from today - 10 days to today.
+    // Page 1: from today - 20 days to today - 10 days, and so on.
+    const [page, setPage] = useState(0);
+    const pageSize = 7; // days
+
+    // Calculate the current date range using the fixed "today"
+    const endDate = new Date(today.getTime());
+    endDate.setDate(today.getDate() - (page * pageSize));
+
+    const startDate = new Date(today.getTime());
+    startDate.setDate(today.getDate() - ((page + 1) * pageSize));
+
+    // Set up filters using the created_after and created_before parameters
     const [filters, setFilters] = useState<OrdersQueryParams>({});
+
+    // Update the filters whenever the page changes.
+    useEffect(() => {
+        setFilters({
+            start_date: startDate.toISOString(),
+            end_date: endDate.toISOString(),
+        });
+    }, [page]);
+
     const { data: orders, isLoading, error } = useGetOrdersQuery(filters);
     const [createRoyalMailOrder] = useCreateRoyalMailOrderMutation();
 
@@ -26,7 +51,7 @@ export default function OrderList() {
         try {
             const token = localStorage.getItem('access');
             const csrfToken = getCookie('csrftoken');
-    
+
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_HOST}/api/royalmail/orders/${order_id}/label/`,
                 {
@@ -37,16 +62,16 @@ export default function OrderList() {
                     },
                 }
             );
-    
+
             if (!response.ok) {
                 throw new Error('Failed to fetch label');
             }
-    
+
             // Get the filename from the Content-Disposition header if available
             const contentDisposition = response.headers.get('Content-Disposition');
             const filenameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/);
             const filename = filenameMatch ? filenameMatch[1] : `shipping_label_${order_id}.pdf`;
-    
+
             // Convert the response to a blob
             const blob = await response.blob();
             
@@ -59,7 +84,7 @@ export default function OrderList() {
             a.click();
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
-    
+
             toast.success('Download started');
         } catch (error: any) {
             console.error('Download failed:', error);
@@ -102,7 +127,7 @@ export default function OrderList() {
     if (!orders || !orders.length) {
         return (
             <div className="text-center text-gray-500 dark:text-gray-400">
-                No orders found
+                No orders found for selected date range
             </div>
         );
     }
@@ -116,6 +141,10 @@ export default function OrderList() {
 
     return (
         <div className="max-w-7xl mx-auto lg:px-8 py-6">
+            {/* Display the current date range */}
+            <div className="mb-4 text-center font-semibold">
+                Showing orders from {startDate.toLocaleDateString()} to {endDate.toLocaleDateString()}
+            </div>
             <div className="space-y-4">
                 {Object.entries(groupedOrders)
                     .sort(([dateA], [dateB]) => new Date(dateB).getTime() - new Date(dateA).getTime())
@@ -129,7 +158,22 @@ export default function OrderList() {
                         />
                     ))}
             </div>
+            {/* Pagination buttons */}
+            <div className="flex justify-between mt-4">
+                <button
+                    onClick={() => setPage(page + 1)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                    Load Previous 10 Days
+                </button>
+                <button
+                    onClick={() => page > 0 && setPage(page - 1)}
+                    disabled={page === 0}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                >
+                    Load Next 10 Days
+                </button>
+            </div>
         </div>
     );
 }
-    
