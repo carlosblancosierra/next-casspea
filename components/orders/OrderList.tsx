@@ -32,8 +32,8 @@ export default function OrderList() {
     useEffect(() => {
         setIsPageLoading(true);
         setFilters({
-            start_date: startDate.toISOString(),
-            end_date: endDate.toISOString(),
+            start_date: startDate.toISOString().split('T')[0],
+            end_date: endDate.toISOString().split('T')[0],
         });
     }, [page]);
 
