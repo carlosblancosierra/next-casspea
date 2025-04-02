@@ -35,17 +35,17 @@ export default function OrderList() {
             start_date: startDate.toISOString().split('T')[0],
             end_date: endDate.toISOString().split('T')[0],
         });
-    }, [page]);
+    }, [page, startDate, endDate]);
 
-    const { data: orders, isLoading, error } = useGetOrdersQuery(filters);
+    const { data: orders, isLoading, error, isError } = useGetOrdersQuery(filters);
     const [createRoyalMailOrder] = useCreateRoyalMailOrderMutation();
 
-    // Set isPageLoading to false when data is loaded
+    // Set isPageLoading to false when data is loaded or when there's an error
     useEffect(() => {
-        if (!isLoading) {
+        if (!isLoading || isError) {
             setIsPageLoading(false);
         }
-    }, [isLoading]);
+    }, [isLoading, isError]);
 
     const handleCreateShipping = async (order_id: string) => {
         try {
