@@ -9,10 +9,12 @@ import { formatDate } from './ordersUtils';
 export default function OrderList() {
     // Fix today's date for a stable reference
     const [today] = useState(new Date());
+    // Add isPageLoading state
+    const [isPageLoading, setIsPageLoading] = useState(false);
 
-    // Pagination state: each page represents a 10-day interval.
-    // Page 0: from today - 10 days to today.
-    // Page 1: from today - 20 days to today - 10 days, and so on.
+    // Pagination state: each page represents a 7-day interval.
+    // Page 0: from today - 7 days to today.
+    // Page 1: from today - 14 days to today - 7 days, and so on.
     const [page, setPage] = useState(0);
     const pageSize = 7; // days
 
@@ -28,6 +30,7 @@ export default function OrderList() {
 
     // Update the filters whenever the page changes.
     useEffect(() => {
+        setIsPageLoading(true);
         setFilters({
             start_date: startDate.toISOString(),
             end_date: endDate.toISOString(),
@@ -36,6 +39,13 @@ export default function OrderList() {
 
     const { data: orders, isLoading, error } = useGetOrdersQuery(filters);
     const [createRoyalMailOrder] = useCreateRoyalMailOrderMutation();
+
+    // Set isPageLoading to false when data is loaded
+    useEffect(() => {
+        if (!isLoading) {
+            setIsPageLoading(false);
+        }
+    }, [isLoading]);
 
     const handleCreateShipping = async (order_id: string) => {
         try {
@@ -108,7 +118,7 @@ export default function OrderList() {
         return cookieValue;
     }
 
-    if (isLoading) {
+    if (isLoading || isPageLoading) {
         return (
             <div className="flex justify-center items-center min-h-[200px]">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
@@ -163,15 +173,16 @@ export default function OrderList() {
                 <button
                     onClick={() => setPage(page + 1)}
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                    disabled={isPageLoading}
                 >
-                    Load Previous 10 Days
+                    Load Previous 7 Days
                 </button>
                 <button
                     onClick={() => page > 0 && setPage(page - 1)}
-                    disabled={page === 0}
+                    disabled={page === 0 || isPageLoading}
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
                 >
-                    Load Next 10 Days
+                    Load Next 7 Days
                 </button>
             </div>
         </div>
