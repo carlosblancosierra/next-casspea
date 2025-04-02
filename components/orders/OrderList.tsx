@@ -178,7 +178,7 @@ export default function OrderList() {
                     Load Previous 7 Days
                 </button>
                 <button
-                    onClick={() => page > 0 && setPage(page - 1)}
+                    onClick={() => setPage(page - 1)}
                     disabled={page === 0 || isPageLoading}
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
                 >
