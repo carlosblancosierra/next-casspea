@@ -46,7 +46,7 @@ const menuItems: MenuItem[] = [
     },
 ];
 
-const accentColor = 'text-my-red dark:text-my-red';
+const accentColor = 'text-primary-dark dark:text-primary-dark';
 
 const MobileMenu = () => {
     const pathname = usePathname();
