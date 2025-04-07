@@ -9,7 +9,7 @@ interface FlavourCardProps {
 const FlavourCard: React.FC<FlavourCardProps> = ({ flavour }) => {
     return (
         <div
-            className="border p-4 rounded-lg flex-shrink-0 bg-white shadow-md dark:bg-gray-800 dark:text-white dark:border-gray-700"
+            className="border p-4 rounded-lg flex-shrink-0 bg-main-bg shadow-md dark:bg-gray-800 dark:text-white dark:border-gray-700"
             style={{ overflow: 'hidden' }}
         >
             <div className="mx-10">

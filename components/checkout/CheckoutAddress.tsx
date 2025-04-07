@@ -71,7 +71,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
 
     return (
         <div className="space-y-8">
-            <div className="bg-white p-6 rounded-lg shadow dark:bg-gray-800">
+            <div className="main-bg p-6 rounded-lg shadow dark:bg-gray-800">
                 <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Shipping Address</h2>
                 <AddressForm
                     onAddressSubmit={handleShippingSubmit}
@@ -79,7 +79,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
                 />
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="main-bg p-6 rounded-lg shadow">
                 <div className="flex items-center mb-4">
                     <input
                         type="checkbox"

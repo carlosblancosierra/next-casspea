@@ -255,7 +255,7 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="your.email@example.com"
-                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 shadow-sm focus:outline-none focus:border-primary focus:ring-primary sm:text-sm"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-gray-700 shadow-sm focus:outline-none focus:border-primary focus:ring-primary sm:text-sm"
                         />
                     </div>
                     <div>
@@ -267,7 +267,7 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                             value={comments}
                             onChange={(e) => setComments(e.target.value)}
                             placeholder="Any special requests?"
-                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 shadow-sm focus:outline-none focus:border-primary focus:ring-primary sm:text-sm"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-gray-700 shadow-sm focus:outline-none focus:border-primary focus:ring-primary sm:text-sm"
                             rows={3}
                         ></textarea>
                     </div>

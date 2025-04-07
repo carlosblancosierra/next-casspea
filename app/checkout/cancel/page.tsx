@@ -6,7 +6,7 @@ import Link from 'next/link';
 const ErrorPage: React.FC = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg text-center">
+            <div className="main-bg dark:bg-gray-800 p-8 rounded-lg shadow-lg text-center">
                 <h1 className="text-3xl font-bold text-red-600">Order Failed</h1>
                 <p className="mt-4 text-gray-700 dark:text-gray-300">
                     Unfortunately, your order could not be processed at this time.

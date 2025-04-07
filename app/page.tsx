@@ -31,16 +31,16 @@ export default function HomePage() {
 			<section className="dark:bg-gray-900">
 				<div className="grid grid-cols-1 lg:grid-cols-12 mpx-4 mx-auto lg:gap-8 xl:gap-0 lg:pb-8 relative">
 					<div className="md:mr-10 lg:mt-[5vh] grid-cols-1 lg:col-span-6">
-						<h1 className={`${playfair.className} mb-2 text-5xl font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}>
+						<h1 className={`${playfair.className} mb-2 text-5xl text-primary-text font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}>
 							London's Finest Artisan Chocolates
 						</h1>
-						<h2 className="text-2xl md:text-2xl tracking-tight mb-2 dark:text-white ">
+						<h2 className="text-2xl md:text-2xl tracking-tight mb-2 dark:text-white text-primary-text">
 							Celebrate Every Occasion with Our Signature Gift Boxes
 						</h2>
 						<p className="hidden md:block md:mb-6 font-light text-sm text-gray-500 lg:mb-8 md:text-base dark:text-gray-200">Share the love with CassPea Chocolates—perfect for personal indulgence, birthdays, corporate events, and special celebrations. With over 20 exquisite flavours, each handcrafted to perfection by our skilled chocolatiers, every bite is a work of art and a journey through inspired flavours.</p>
 						{/* Desktop buttons */}
 						<div className='hidden md:flex gap-2'>
-							<Link href="/shop-now/" className="inline-flex items-center justify-center px-8 py-4 mr-3 text-xl font-medium text-center text-white rounded-lg bg-primary hover:bg-primary focus:ring-4 focus:ring-primary-light">
+							<Link href="/shop-now/" className="inline-flex items-center justify-center px-8 py-4 mr-3 text-xl font-medium text-primary-button-text rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light">
 								Shop Now
 								<svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
 							</Link>
@@ -68,10 +68,10 @@ export default function HomePage() {
 							alt="CassPea Chocolates" /> */}
 
 						<ImageGallery images={
-							['/home/christmas/hero1.jpg',
-								'/home/hero-1.jpg',
-								'/home/hero-2.jpeg',
-								'/home/mobile-hero-1.png'
+							['/home/easter/1.jpg',
+								'/home/easter/2.jpg',
+								'/home/easter/3.jpg',
+								'/home/easter/4.jpg'
 						]} className='block md:hidden' />
 
 						<p className="md:hidden md:mb-6 text-3xl font-bold mt-2 font-playfair lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">Share the love with CassPea Chocolates</p>

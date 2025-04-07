@@ -141,7 +141,7 @@ export default function AddressPage() {
                 </div>
 
                 {/* Shipping Address Form */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                <div className="main-bg dark:bg-gray-800 p-6 rounded-lg shadow">
                     <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-gray-100">Shipping Address</h2>
                     <AddressForm
                         onAddressSubmit={handleShippingSubmit}
@@ -153,7 +153,7 @@ export default function AddressPage() {
                 </div>
 
                 {/* Billing Address Option */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                <div className="main-bg dark:bg-gray-800 p-6 rounded-lg shadow">
                     <label className="flex items-center space-x-3">
                         <input
                             type="checkbox"

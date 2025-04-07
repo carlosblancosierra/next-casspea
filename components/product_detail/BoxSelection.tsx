@@ -31,7 +31,7 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                         relative block cursor-pointer rounded-lg border px-6 py-4
                         ${checked
                             ? 'bg-primary border-primary text-white'
-                            : 'bg-white dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100'
+                            : 'main-bg dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100'
                         }
                         hover:border-primary transition-colors duration-200
                     `}

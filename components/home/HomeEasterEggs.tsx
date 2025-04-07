@@ -8,7 +8,7 @@ interface HomeEasterEggsProps {}
 const HomeEasterEggs: React.FC<HomeEasterEggsProps> = () => {
 
 	return (
-		<section className="py-4 bg-white dark:bg-gray-900">
+		<section className="py-4 bg-main-bg dark:bg-gray-900">
 			<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Easter Eggs</h2>
 
 			<div className="max-w-4xl mx-auto">

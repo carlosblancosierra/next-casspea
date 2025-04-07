@@ -23,7 +23,7 @@ const ReadOnlyCartItem: React.FC<ReadOnlyCartItemProps> = ({ entry }) => {
     };
 
     return (
-        <div className="grid grid-cols-[1fr,3fr] gap-4 border border-gray-200 bg-white p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+        <div className="grid grid-cols-[1fr,3fr] gap-4 border border-gray-200 bg-main-bg p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
             {/* Product Image */}
             <div className="col-span-1">
                 <img

@@ -50,7 +50,7 @@ export default function PersonalizedQuantities({ orderDetails, setOrderDetails }
   };
 
   return (
-    <div className="p-4 space-y-6 bg-white dark:bg-gray-800 rounded shadow">
+    <div className="p-4 space-y-6 bg-main-bg dark:bg-gray-800 rounded shadow">
       <div>
         <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
           Quantity
@@ -62,7 +62,7 @@ export default function PersonalizedQuantities({ orderDetails, setOrderDetails }
             type="number"
             value={quantity}
             onChange={handleInputChange}
-            className="w-24 text-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 shadow-sm focus:outline-none focus:border-primary focus:ring-primary"
+            className="w-24 text-center rounded-md border border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-gray-700 shadow-sm focus:outline-none focus:border-primary focus:ring-primary"
           />
           <button onClick={handleIncrement} className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded">+</button>
         </div>

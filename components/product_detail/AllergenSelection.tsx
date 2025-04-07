@@ -42,7 +42,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                     className={({ checked }) =>
                         `${checked
                             ? 'bg-primary text-white'
-                            : 'bg-white dark:bg-transparent text-gray-900 dark:text-gray-100'
+                            : 'main-bg dark:bg-transparent text-gray-900 dark:text-gray-100'
                         }
                         relative rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
                     }
@@ -73,7 +73,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                     className={({ checked }) =>
                         `${checked
                             ? 'bg-primary text-white'
-                            : 'bg-white dark:bg-transparent text-gray-900 dark:text-gray-100'
+                            : 'main-bg dark:bg-transparent text-gray-900 dark:text-gray-100'
                         }
                         relative rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
                     }

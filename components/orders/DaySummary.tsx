@@ -9,7 +9,7 @@ interface DaySummaryProps {
 const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders }) => {
     const { products, flavors, randomBoxes } = getDayTotals(dateOrders);
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm mt-4">
+        <div className="main-bg dark:bg-gray-800 rounded-lg shadow-sm mt-4">
             <div className="px-4 py-5 sm:px-6">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Day Summary</h3>
             </div>

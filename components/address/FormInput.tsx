@@ -42,7 +42,7 @@ const FormInput: React.FC<FormInputProps> = ({
             placeholder={placeholder}
             className={clsx(
                 "mt-0.5 block w-full rounded-md border text-base",
-                readOnly ? " dark:bg-gray-700" : "bg-white dark:bg-gray-800",
+                readOnly ? " dark:bg-gray-700" : "main-bg dark:bg-gray-800",
                 "text-gray-900 dark:text-gray-100",
                 "border-gray-300 dark:border-gray-600",
                 "shadow-sm focus:border-primary-2 focus:ring-primary-2"

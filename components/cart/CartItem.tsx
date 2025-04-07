@@ -41,7 +41,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-[1fr,3fr] gap-4 border border-gray-200 bg-white p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+      <div className="grid grid-cols-2 md:grid-cols-[1fr,3fr] gap-4 border border-gray-200 bg-main-bg p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
         {/* First Column: Product Image */}
         <a href="#" className="col-span-1">
           <img
@@ -138,7 +138,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
       {isDeleteModalOpen && (
         <div className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="relative w-full max-w-md max-h-full">
-            <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <div className="relative bg-main-bg rounded-lg shadow dark:bg-gray-700">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 className="text-xl font-medium text-gray-900 dark:text-white">
                   Remove Item
@@ -173,7 +173,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
                 <button
                   onClick={() => setIsDeleteModalOpen(false)}
                   type="button"
-                  className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                  className="text-gray-500 bg-main-bg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                 >
                   Cancel
                 </button>

@@ -54,7 +54,7 @@ const ProductConfirm: React.FC<ProductConfirmProps> = ({ flavours, isVisible, on
 
   return (
     <div className="fixed inset-0 bg-gray-800 dark:bg-gray-900 bg-opacity-75 flex items-center justify-center md:max-h-[80vh] z-50">
-      <div className="bg-white dark:bg-gray-800 dark:text-white p-6 rounded-lg shadow-lg text-center md:w-[50vw]">
+      <div className="main-bg dark:bg-gray-800 dark:text-white p-6 rounded-lg shadow-lg text-center md:w-[50vw]">
         <h2 className="text-xl md:text-2xl font-bold mb-4 dark:text-gray-200">Creating your Unique Selection</h2>
         <div className={`grid gap-4 ${getGridCols(totalChocolates)}`}>
           {images}

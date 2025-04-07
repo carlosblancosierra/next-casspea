@@ -84,7 +84,7 @@ export default function CartCheckout() {
     return (
         <div className="space-y-4 mt-4">
             {/* Order Summary - Moved to top */}
-            <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6 px-5">
+            <div className="space-y-4 rounded-lg border border-gray-200 bg-main-bg p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6 px-5">
                 <p className="text-xl font-semibold text-gray-900 dark:text-white">Order summary</p>
 
                 <div className="space-y-4">
@@ -163,7 +163,7 @@ export default function CartCheckout() {
                     {showModal && (
                         <div className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex items-center justify-center bg-black bg-opacity-50">
                             <div className="relative w-full max-w-md max-h-full">
-                                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                <div className="relative bg-main-bg rounded-lg shadow dark:bg-gray-700">
                                     <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                         <h3 className="text-xl font-medium text-gray-900 dark:text-white">
                                             Shipping Date Information

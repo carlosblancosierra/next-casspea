@@ -170,7 +170,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                     className="fixed inset-0 bg-gray-600 dark:bg-gray-900 bg-opacity-50 dark:bg-opacity-80 flex items-center justify-center overflow-auto z-[100]"
                     onClick={handleModalClick}
                 >
-                    <div className="relative bg-white dark:bg-gray-800 p-6 rounded-lg max-w-[90vw] w-full max-h-[85vh] mx-auto shadow-lg overflow-y-auto">
+                    <div className="relative bg-main-bg dark:bg-gray-800 p-6 rounded-lg max-w-[90vw] w-full max-h-[85vh] mx-auto shadow-lg overflow-y-auto">
                         <h2 className="text-center text-sm font-semibold mb-1 dark:text-gray-300">Select a Flavour</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                             {getFilteredFlavours()?.map((flavour) => (
@@ -248,7 +248,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                         </button>
 
                         {/* Sticky footer for both mobile and desktop */}
-                        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t dark:border-gray-700 p-4 shadow-lg">
+                        <div className="fixed bottom-0 left-0 right-0 bg-main-bg dark:bg-gray-800 border-t dark:border-gray-700 p-4 shadow-lg">
                             <div className="max-w-[95vw] mx-auto space-y-3">
                                 {/* Progress bar */}
                                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">

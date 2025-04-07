@@ -71,7 +71,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     if (!allShippingOptions.length) return null;
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow dark:bg-gray-800">
+        <div className="main-bg p-6 rounded-lg shadow dark:bg-gray-800">
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
                 Shipping Options
             </h2>

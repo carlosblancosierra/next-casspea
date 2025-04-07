@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 const ConfirmPage: React.FC = () => {
     return (
-        <section className="bg-white dark:bg-gray-900">
+        <section className="main-bg dark:bg-gray-900">
             <div className="px-4 mx-auto lg:py-16 lg:px-6 gap-4">
                 <div className="grid lg:grid-cols-2 gap-2 items-center">
                     {/* Image Section */}

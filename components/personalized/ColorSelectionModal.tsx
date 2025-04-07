@@ -66,10 +66,10 @@ export default function ColorSelectionModal({
             onClick={onClose}
         >
             <div 
-                className="bg-white dark:bg-gray-800 p-6 w-[95vw] max-w-[95vw] max-h-[90vh] overflow-y-auto"
+                className="main-bg dark:bg-gray-800 p-6 w-[95vw] max-w-[95vw] max-h-[90vh] overflow-y-auto"
                 onClick={e => e.stopPropagation()}
             >
-                <div className="sticky top-0 bg-white dark:bg-gray-800 pb-4 mb-4 border-b">
+                <div className="sticky top-0 bg-main-bg dark:bg-gray-800 pb-4 mb-4 border-b">
                     <div className="flex justify-between items-center">
                         <h2 className="text-xl font-bold">Select {layer.layer_type.name}</h2>
                         <button

@@ -228,7 +228,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         value={quantity}
                         onChange={handleQuantityChange}
                         className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
-                            bg-white dark:bg-transparent shadow-sm focus:border-primary-2
+                            bg-main-bg dark:bg-transparent shadow-sm focus:border-primary-2
                             focus:ring-primary-2"
                     >
                         {Array.from({ length: 20 }, (_, i) => (
@@ -239,7 +239,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             </div>
 
             {/* Add to Cart Button */}
-            <div className="sticky md:static bottom-[55px] md:bottom-auto bg-white dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="sticky md:static bottom-[55px] md:bottom-auto bg-main-bg dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
                 <AddToCartButton
                     onClick={handleAddToCart}
                     isLoading={isLoading}

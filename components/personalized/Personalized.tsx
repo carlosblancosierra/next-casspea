@@ -44,7 +44,7 @@ export default function Personalized() {
                 <Link 
                     key={template.slug} 
                     href={`/personalised/${template.slug}`}
-                    className="block p-4 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow"
+                    className="block p-4 bg-main-bg dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow"
                 >
                     <div className="aspect-square mb-4">
                         <CustomChocolate 

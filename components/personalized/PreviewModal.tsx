@@ -24,7 +24,7 @@ export default function PreviewModal({ layers, onClose }: PreviewModalProps) {
             onClick={onClose}
         >
             <div 
-                className="bg-white dark:bg-gray-800 p-4 rounded-lg max-w-2xl w-full mx-4"
+                className="main-bg dark:bg-gray-800 p-4 rounded-lg max-w-2xl w-full mx-4"
                 onClick={e => e.stopPropagation()}
             >
                 <div className="grid grid-cols-2 gap-4">
