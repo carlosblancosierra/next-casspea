@@ -20,10 +20,10 @@ export default function OrderList() {
 
     // Calculate the current date range using the fixed "today"
     const endDate = new Date(today.getTime());
-    endDate.setDate(today.getDate() - (page * pageSize));
+    endDate.setDate(today.getDate() + 1 - (page * pageSize));
 
     const startDate = new Date(today.getTime());
-    startDate.setDate(today.getDate() - ((page + 1) * pageSize));
+    startDate.setDate(today.getDate() + 1 - ((page + 1) * pageSize));
 
     // Set up filters using the created_after and created_before parameters
     const [filters, setFilters] = useState<OrdersQueryParams>({});
