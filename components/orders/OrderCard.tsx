@@ -159,22 +159,13 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
             </dd>
           </div>
           {/* Discount if present */}
-          {order.checkout_session?.discount && (
+          {order.checkout_session?.cart?.discount && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
               <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">
                 Discount Applied
               </dt>
               <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-                {order.checkout_session.discount}
-              </dd>
-            </div>
-          )}
-          {/* Email */}
-          {order.checkout_session?.email && (
-            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Email</dt>
-              <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-                {order.checkout_session.email}
+                {order.checkout_session.cart.discount}
               </dd>
             </div>
           )}
@@ -190,13 +181,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
             </div>
           )}
           {/* Shipping Option */}
-          <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping Option</dt>
-            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-              {order.checkout_session.shipping_option.name} - £
-              {order.checkout_session.shipping_option.price}
-            </dd>
-          </div>
+          {order.checkout_session?.shipping_option && (
+            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping Option</dt>
+              <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                {order.checkout_session.shipping_option.name} - £{order.checkout_session.shipping_option.price}
+              </dd>
+            </div>
+          )}
           {/* Order Total */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-gray-50 dark:bg-gray-900">
             <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Order Total</dt>
@@ -255,6 +247,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
               ) : (
                 <div>
                   <button
+                    type="button"
                     onClick={async () => {
                       if (isCreating) return;
                       setIsCreating(true);
