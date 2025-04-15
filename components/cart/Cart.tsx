@@ -1,6 +1,6 @@
+'use client';
 import React from 'react';
 import CartItemTable from './CartItemTable';
-import CartSummary from './CartSummary';
 import CartCheckout from './CartCheckout';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import Spinner from '@/components/common/Spinner';

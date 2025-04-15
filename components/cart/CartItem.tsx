@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { CartItem as CartItemType } from '@/types/carts';
