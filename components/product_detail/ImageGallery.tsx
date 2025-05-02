@@ -42,7 +42,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
         <div className={`relative overflow-hidden ${className}`}>
             {/* Main Carousel */}
             <motion.div
-                drag="x"
+                drag={images.length > 1 ? "x" : false}
                 dragElastic={0.2}
                 onDragEnd={handleDragEnd}
                 animate={controls}
@@ -69,34 +69,36 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
                 ))}
             </motion.div>
 
-            {/* Thumbnail Carousel */}
-            <div className="my-4 grid grid-cols-4 gap-2">
-                {images.map((url, idx) => (
-                    <button
-                        key={idx}
-                        onClick={() => {
-                            setCurrentIndex(idx);
-                            controls.start({
-                                x: `${-idx * 100}%`,
-                                transition: { duration: 0.5 }
-                            });
-                        }}
-                        className={`relative aspect-square rounded-md overflow-hidden ${
-                            idx === currentIndex 
-                                ? "ring-2 ring-primary" 
-                                : "ring-1 ring-gray-200 hover:ring-primary/50"
-                        }`}
-                    >
-                        <Image
-                            src={url}
-                            alt={`Thumbnail ${idx + 1}`}
-                            fill
-                            sizes="(max-width: 768px) 25vw, 10vw"
-                            className="object-cover"
-                        />
-                    </button>
-                ))}
-            </div>
+            {/* Thumbnail Carousel - Only show if more than 1 image */}
+            {images.length > 1 && (
+                <div className="my-4 grid grid-cols-4 gap-2">
+                    {images.map((url, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => {
+                                setCurrentIndex(idx);
+                                controls.start({
+                                    x: `${-idx * 100}%`,
+                                    transition: { duration: 0.5 }
+                                });
+                            }}
+                            className={`relative aspect-square rounded-md overflow-hidden ${
+                                idx === currentIndex 
+                                    ? "ring-2 ring-primary" 
+                                    : "ring-1 ring-gray-200 hover:ring-primary/50"
+                            }`}
+                        >
+                            <Image
+                                src={url}
+                                alt={`Thumbnail ${idx + 1}`}
+                                fill
+                                sizes="(max-width: 768px) 25vw, 10vw"
+                                className="object-cover"
+                            />
+                        </button>
+                    ))}
+                </div>
+            )}
 
             {/* Dots (Optional - you can remove if not needed with thumbnails) */}
             {/* <div className="mt-4 flex w-full justify-center gap-2">
