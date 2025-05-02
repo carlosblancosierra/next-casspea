@@ -15,7 +15,7 @@ export default function Page() {
 			<div className='sm:mx-auto sm:w-full sm:max-w-sm'>
 				<Image
 					className='mx-auto h-10 w-auto'
-					src='/logos/pastel-purple.png'
+					src='/logos/brown.png'
 					width={0}
 					height={0}
 					sizes='100vw'
