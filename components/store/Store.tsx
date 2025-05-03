@@ -51,20 +51,6 @@ export default function Store() {
 	return (
 		<div className="container mx-auto min-h-[80vh]">
 			<div className="flex items-center justify-start py-2 overflow-x-auto whitespace-nowrap space-x-2 no-scrollbar pt-4 mx-auto">
-				{showOrderingSteps && (
-						<>
-							<h2 className="font-bold mt-2">
-								Ordering delicious hand made chocolates from CassPea is simple and fun!
-							</h2>
-							<ol className="mt-4 space-y-1 list-decimal list-inside">
-								<li className="font-bold text-pink-500 dark:text-pink-500">For Signature Boxes, select your box size</li>
-								<li className="font-bold text-green-500 dark:text-green-500">Choose a Surprise Box or Pick and Mix your own from our succulent flavours</li>
-								<li className="font-bold text-red-500 dark:text-red-500">Select a shipping date - FREE delivery for orders over £50</li>
-								<li className="font-bold text-orange-500 dark:text-orange-400">Pay securely online</li>
-								<li className="font-bold text-purple-500 dark:text-purple-500">Receive your chocolates and enjoy!</li>
-							</ol>
-						</>
-					)}
 				{categoriesSlugs.map((categorySlug) => (
 					<motion.button
 						key={categorySlug}
