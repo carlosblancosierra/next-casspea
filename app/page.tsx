@@ -6,6 +6,7 @@ import { Playfair_Display } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import ImageGallery from '@/components/product_detail/ImageGallery';
 import PersonalisedHome from '@/components/personalized/PersonalisedHome';
+import CategoryProducts from '@/components/home/CategoryProducts';
 
 // Dynamically import components that can load later
 const HomeProducts = dynamic(() => import('@/components/home/HomeProducts'));
@@ -95,6 +96,20 @@ export default function HomePage() {
 				<div className='mt-5'>
 					<h2 className='text-center text-2xl font-bold mb-3 font-playfair md:mt-4'>Signature Boxes</h2>
 					<HomeProducts />
+				</div>
+			</Suspense>
+
+			<Suspense fallback={<LoadingSection />}>
+				<div className='mt-5'>
+					<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Chocolate Barks</h2>
+					<CategoryProducts categorySlug="chocolate-barks" />
+				</div>
+			</Suspense>
+
+			<Suspense fallback={<LoadingSection />}>
+				<div className='mt-5'>
+					<h2 className='text-center text-2xl font-bold mb-3 font-playfair'>Hot Chocolate</h2>
+					<CategoryProducts categorySlug="hot-chocolate" />
 				</div>
 			</Suspense>
 
