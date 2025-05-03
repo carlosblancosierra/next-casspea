@@ -32,7 +32,7 @@ export default function CategoryProducts({ categorySlug }: CategoryProductsProps
   };
 
   return (
-    <div className="grid gap-x-2 gap-y-2 mt-2 justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
+    <div className="grid gap-x-2 gap-y-2 mt-2 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
       <AnimatePresence>
         {filteredProducts.map((product: Product) => (
           <motion.div
