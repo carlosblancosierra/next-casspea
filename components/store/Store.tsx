@@ -76,7 +76,7 @@ export default function Store() {
 			</div>
 
 			<div
-				className="grid gap-x-2 gap-y-2 mt-2 justify-center grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4"
+				className="grid gap-x-2 gap-y-2 mt-2 justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4"
 			>
 				<AnimatePresence>
 					{filteredProducts.map((product: Product) => (
@@ -88,6 +88,7 @@ export default function Store() {
 							layout
 							variants={productVariants}
 							transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+							className="w-full"
 						>
 							<ProductCard product={product} />
 						</motion.div>
