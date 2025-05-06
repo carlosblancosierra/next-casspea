@@ -23,11 +23,27 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
                 method: 'POST'
             }),
         }),
+
+        createEmbeddedCheckoutSession: builder.mutation<any, void>({
+            query: () => ({
+                url: '/checkout/stripe/create-session/embedded/',
+                method: 'POST'
+            }),
+        }),
+
+        getEmbeddedCheckoutSessionResult: builder.query<any, string>({
+            query: (sessionId) => ({
+                url: `/checkout/stripe/embedded/result/?session_id=${sessionId}`,
+                method: 'GET'
+            }),
+        }),
     })
 });
 
 export const {
     useCreateStripeCheckoutSessionMutation,
     useGetSessionQuery,
-    useUpdateSessionMutation
+    useUpdateSessionMutation,
+    useCreateEmbeddedCheckoutSessionMutation,
+    useGetEmbeddedCheckoutSessionResultQuery
 } = checkoutApiSlice;
