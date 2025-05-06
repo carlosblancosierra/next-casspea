@@ -26,7 +26,7 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
 
         createEmbeddedCheckoutSession: builder.mutation<any, void>({
             query: () => ({
-                url: '/checkout/stripe/create-session/embedded/',
+                url: '/checkout/stripe/embedded/create-session/',
                 method: 'POST'
             }),
         }),
