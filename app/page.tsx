@@ -36,7 +36,7 @@ export default function HomePage() {
 							London's Finest Artisan Chocolates
 						</h1>
 						<h2 className="text-2xl md:text-2xl tracking-tight mb-2 dark:text-white text-primary-text">
-							Celebrate Easter with Our Signature Gift Boxes
+							Celebrate Every Occasion with Our Signature Gift Boxes
 						</h2>
 						<p className="hidden md:block md:mb-6 font-light text-sm text-gray-500 lg:mb-8 md:text-base dark:text-gray-200">Share the love with CassPea Chocolates—perfect for personal indulgence, birthdays, corporate events, and special celebrations. With over 20 exquisite flavours, each handcrafted to perfection by our skilled chocolatiers, every bite is a work of art and a journey through inspired flavours.</p>
 						{/* Desktop buttons */}
