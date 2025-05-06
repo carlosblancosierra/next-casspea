@@ -20,6 +20,8 @@ const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [selectedShippingOption, setSelectedShippingOption] = useState<number | undefined>(undefined);
 
+    const router = useRouter();
+
     const { data: session, isLoading: sessionLoading, error: sessionError } = useGetSessionQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
@@ -46,11 +48,14 @@ const CheckoutConfirm = () => {
 
 
             // Then create the Stripe session
-            const response = await createStripeSession().unwrap();
-            if (response?.url) {
-                await new Promise(resolve => setTimeout(resolve, 500));
-                window.location.href = response.url;
-            }
+            // const response = await createStripeSession().unwrap();
+            // if (response?.url) {
+            //     await new Promise(resolve => setTimeout(resolve, 500));
+            //     window.location.href = response.url;
+            // }
+
+            router.push('/checkout/embedded');
+        
         } catch (err) {
             toast.error('Failed to process payment');
             console.error('Payment processing failed:', err);
@@ -84,12 +89,12 @@ const CheckoutConfirm = () => {
         <div className=" dark:bg-gray-900 min-h-screen">
             <div className="max-w-7xl mx-auto px-0">
                 <div className="space-y-6">
-                    <div className="space-y-4">
+                    {/* <div className="space-y-4">
                         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Order Items</h2>
                         {cart?.items?.map((item) => (
                             <ReadOnlyCartItem key={item.id} entry={item} />
                         ))}
-                    </div>
+                    </div> */}
 
                     <CheckoutDetails session={session} />
                     <CheckoutShippingOptions
