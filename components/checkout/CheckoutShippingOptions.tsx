@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useUpdateSessionMutation } from '@/redux/features/checkout/checkoutApiSlice';
-import { toast } from 'react-toastify';
-import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
 import { ShippingCompany } from '@/types/shipping';
 import { addBusinessDays, format } from 'date-fns';
+import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 
 interface CheckoutShippingOptionsProps {
     shippingCompanies: ShippingCompany[] | undefined;
@@ -18,6 +16,8 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
 }) => {
     const [localSelectedOption, setLocalSelectedOption] = useState<string | null>(null);
     const [isUpdating, setIsUpdating] = useState(false);
+    const { data: cart, isLoading, error: cartError } = useGetCartQuery();
+
 
     // Update local state when prop changes
     useEffect(() => {
@@ -26,12 +26,19 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         }
     }, [selectedOptionId]);
 
-    const allShippingOptions = shippingCompanies?.flatMap(company =>
+    const showStorePick = cart?.discount?.code === 'lkiLspIJ';
+
+    let allShippingOptions = shippingCompanies?.flatMap(company =>
         company.shipping_options.map(option => ({
             ...option,
             companyName: company.name
         }))
     ) || [];
+
+    if (showStorePick) {
+        allShippingOptions = allShippingOptions.filter(option => option.price === 0);
+    }
+
 
     // Set default option if none selected
     useEffect(() => {
