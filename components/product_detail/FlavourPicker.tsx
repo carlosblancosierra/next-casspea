@@ -88,7 +88,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     return (
         <div className='rounded md:px-3'>
             {/* Selected Flavours List */}
-            <div className="selected-flavours">
+            <div className="selected-flavours max-w-[400px]">
                 {flavours.map((flavour, index) => (
                     <div key={flavour.flavor.id} className="flavour-item flex items-center mt-4">
                         <div className="flavour-info flex-grow text-left grid grid-cols-4">

@@ -31,7 +31,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
     };
 
     return (
-        <div className="rounded-lg shadow-sm">
+        <div className="rounded-lg shadow-sm pointer-events-auto">
             {/* <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                 2- Allergens
             </h3> */}
