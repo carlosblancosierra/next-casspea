@@ -26,17 +26,18 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         }
     }, [selectedOptionId]);
 
-    const showStorePick = cart?.discount?.code === 'lkiLspIJ';
+    const shouldShowStorePickup = cart?.discount?.code === 'lkiLspIJ';
 
     let allShippingOptions = shippingCompanies?.flatMap(company =>
         company.shipping_options.map(option => ({
             ...option,
-            companyName: company.name
+            companyName: company.name,
+            companyId: company.id
         }))
     ) || [];
 
-    if (showStorePick) {
-        allShippingOptions = allShippingOptions.filter(option => option.price === 0);
+    if (!shouldShowStorePickup) {
+        allShippingOptions = allShippingOptions.filter(option => option.companyId !== 34);
     }
 
 
