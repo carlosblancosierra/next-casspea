@@ -8,7 +8,7 @@ import { useGetEmbeddedCheckoutSessionResultQuery } from "@/redux/features/check
 const CheckoutResult = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const sessionId = searchParams.get("session_id");
+  const sessionId = searchParams?.get("session_id");
 
   const { data, error, isLoading, isUninitialized } =
     useGetEmbeddedCheckoutSessionResultQuery(sessionId || "", {

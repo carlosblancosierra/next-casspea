@@ -1,10 +1,24 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
+import { useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 
 const ConfirmPage: React.FC = () => {
+    const params = useSearchParams();
+    const sessionId = params?.get('session_id');
+    
+    useEffect(() => {
+        if (typeof window !== 'undefined' && (window as any).gtag && typeof (window as any).gtag === 'function') {
+
+            (window as any).gtag('event', 'purchase', {
+                transaction_id: sessionId,
+            });
+        }
+    }, []);
+
     return (
         <section className="main-bg dark:bg-gray-900">
             <div className="px-4 mx-auto lg:py-16 lg:px-6 gap-4">
