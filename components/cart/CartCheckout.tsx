@@ -38,6 +38,14 @@ export default function CartCheckout() {
         }
     }, [checkoutSession, isSessionLoading]);
 
+    // Add the useEffect hook after the cart is retrieved to set the gift message from the cart
+    useEffect(() => {
+        if (cart?.gift_message) {
+            setGiftMessage(cart.gift_message);
+            setAddGiftMessage(true);
+        }
+    }, [cart]);
+
     if (!cart || cart.items.length === 0) {
         return null;
     }
@@ -71,7 +79,7 @@ export default function CartCheckout() {
 
             await updateSession({ email }).unwrap();
 
-            router.push(`/checkout/address`);
+            router.push(`/checkout/gift-card`);
 
         } catch (err) {
             console.error('Checkout error:', err);
@@ -211,7 +219,7 @@ export default function CartCheckout() {
                         </label>
                         {addGiftMessage && (
                             <div className="ml-6">
-                                <GiftMessage onGiftMessageChange={setGiftMessage} />
+                                <GiftMessage onGiftMessageChange={setGiftMessage} initialMessage={giftMessage} />
                             </div>
                         )}
                     </div>

@@ -1,13 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface GiftMessageProps {
     onGiftMessageChange: (message: string) => void;
+    initialMessage?: string;
 }
 
-export default function GiftMessage({ onGiftMessageChange }: GiftMessageProps) {
-    const [message, setMessage] = useState('');
+export default function GiftMessage({ onGiftMessageChange, initialMessage = '' }: GiftMessageProps) {
+    const [message, setMessage] = useState(initialMessage);
+
+    useEffect(() => {
+        setMessage(initialMessage);
+    }, [initialMessage]);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMessage(e.target.value);
