@@ -1,14 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
-import { useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
+import { useParams } from 'next/navigation'
 
 const ConfirmPage: React.FC = () => {
-    const params = useSearchParams();
-    const sessionId = params?.get('session_id');
+    const params = useParams<{ session_id: string }>()
+    const sessionId = params?.session_id;
     
     useEffect(() => {
         if (typeof window !== 'undefined' && (window as any).gtag && typeof (window as any).gtag === 'function') {
