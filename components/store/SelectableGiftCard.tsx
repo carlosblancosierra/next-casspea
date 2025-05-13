@@ -18,7 +18,7 @@ export default function SelectableGiftCard({
     <div
       onClick={onSelect}
       className={[
-        'relative cursor-pointer rounded-lg p-4 transition flex flex-col items-center',
+        'relative cursor-pointer rounded-lg p-0 transition flex flex-col items-center',
         selected
           ? 'border-2 border-blue-500 shadow-lg'
           : 'border border-gray-300 hover:shadow-md',
@@ -39,7 +39,7 @@ export default function SelectableGiftCard({
         </div>
       )}
 
-      <div className="w-full aspect-video relative mb-2">
+      <div className="w-full aspect-video relative">
         <Image
           src={image}
           alt={title}
@@ -48,12 +48,8 @@ export default function SelectableGiftCard({
           className="object-cover rounded"
         />
       </div>
-      <p className="text-md font-medium text-gray-900 dark:text-white mt-4">￡ 2</p>
-      <div className="flex justify-between mt-1">
-          <div>
-              <h3 className="text-xs md:text-sm text-gray-700 dark:text-gray-300 h-12">{title}</h3>
-          </div>
-      </div>
+      <p className="text-md font-medium text-gray-900 dark:text-white my-2">{title}</p>
+      <h3 className="text-xs md:text-sm text-gray-700 dark:text-gray-300 mb-2">￡ 2.00 GBP</h3>
     </div>
   )
 }
