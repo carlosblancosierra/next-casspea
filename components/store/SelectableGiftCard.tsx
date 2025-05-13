@@ -48,7 +48,12 @@ export default function SelectableGiftCard({
           className="object-cover rounded"
         />
       </div>
-      <div className="text-lg font-medium">{title}</div>
+      <p className="text-md font-medium text-gray-900 dark:text-white mt-4">￡ 2</p>
+      <div className="flex justify-between mt-1">
+          <div>
+              <h3 className="text-xs md:text-sm text-gray-700 dark:text-gray-300 h-12">{title}</h3>
+          </div>
+      </div>
     </div>
   )
 }

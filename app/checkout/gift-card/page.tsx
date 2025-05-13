@@ -100,7 +100,7 @@ const GiftCardPage = () => {
                     <GiftMessage onGiftMessageChange={setGiftMessage} initialMessage={giftMessage} />
                 </div>
                 <h2 className="text-xl font-semibold mb-2">
-                    Choose a Gift Card (for £2 each)
+                    Choose a Gift Card
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                     {giftCardOptions.map((card) => (
