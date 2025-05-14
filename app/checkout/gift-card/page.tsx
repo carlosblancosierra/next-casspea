@@ -86,7 +86,7 @@ const GiftCardPage = () => {
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-4">
+        <div className="max-w-6xl mx-auto p-4">
             <div style={{ display: isLoading ? 'block' : 'none' }}>
                 <div>Loading...</div>
             </div>
@@ -103,7 +103,7 @@ const GiftCardPage = () => {
                 <h2 className="text-xl font-semibold mb-2">
                     Choose a Gift Card
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
                     {giftCardOptions.map((card) => (
                         <SelectableGiftCard
                             key={card.id}
@@ -117,18 +117,18 @@ const GiftCardPage = () => {
                 {error && (
                     <p className="text-red-600 mb-4">{error}</p>
                 )}
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 justify-end">
                     <button 
                         onClick={handleAddGiftCard} 
                         disabled={isProcessing} 
-                        className="w-full sm:w-auto bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700"
+                        className="w-full sm:w-auto bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 sm:order-2"
                     >
                         {isProcessing ? 'Adding...' : 'Add Gift Card'}
                     </button>
                     <button 
                         onClick={handleContinueWithoutGiftCard} 
                         disabled={isProcessing} 
-                        className="w-full sm:w-auto bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                        className="w-full sm:w-auto bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 sm:order-1"
                     >
                         Continue Without Gift Card
                     </button>

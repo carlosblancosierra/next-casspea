@@ -127,6 +127,10 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     );
                 })}
             </div>
+
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                Due to the current high temperatures in the UK, we have temporarily disabled the Royal Mail - Tracked 48® service.
+            </p>
         </div>
     );
 };
