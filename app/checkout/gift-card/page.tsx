@@ -94,7 +94,7 @@ const GiftCardPage = () => {
                     Enhance Your Order with a Gift Card
                 </h1>
                 <p className="mb-4">
-                    Add a personal touch to your order! Choose one of our beautifully designed gift cards for just £2 each to include a heartfelt message for your recipient.
+                    Add a personal touch to your order! Choose one of our beautifully designed gift cards for just £1.25 each to include a heartfelt message for your recipient.
                 </p>
                 <div className="mb-6">
                     <GiftMessage onGiftMessageChange={setGiftMessage} initialMessage={giftMessage} />
