@@ -27,10 +27,10 @@ const GiftCardPage = () => {
     }, [cart]);
 
     const giftCardOptions = [
-        { id: '137', name: 'Thank You', image: '/gift-cards/i-love-you.jpeg' },
+        { id: '137', name: 'Thank You', image: '/gift-cards/thank-you.jpeg' },
         { id: '106', name: 'Happy Birthday', image: '/gift-cards/happy-birthday.jpeg', },
         { id: '105', name: 'Congratulations', image: '/gift-cards/congratulations.jpeg' },
-        { id: '104', name: 'I Love You', image: '/gift-cards/thank-you.jpeg' },
+        { id: '104', name: 'I Love You', image: '/gift-cards/love-you.jpeg' },
     ];
 
     const handleAddGiftCard = async () => {
