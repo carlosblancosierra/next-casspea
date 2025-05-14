@@ -27,9 +27,10 @@ const GiftCardPage = () => {
     }, [cart]);
 
     const giftCardOptions = [
+        { id: '137', name: 'Thank You', image: '/gift-cards/i-love-you.jpeg' },
         { id: '106', name: 'Happy Birthday', image: '/gift-cards/happy-birthday.jpeg', },
         { id: '105', name: 'Congratulations', image: '/gift-cards/congratulations.jpeg' },
-        { id: '104', name: 'I Love You', image: '/gift-cards/thank-you.jpeg' }
+        { id: '104', name: 'I Love You', image: '/gift-cards/thank-you.jpeg' },
     ];
 
     const handleAddGiftCard = async () => {
@@ -102,7 +103,7 @@ const GiftCardPage = () => {
                 <h2 className="text-xl font-semibold mb-2">
                     Choose a Gift Card
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
                     {giftCardOptions.map((card) => (
                         <SelectableGiftCard
                             key={card.id}
