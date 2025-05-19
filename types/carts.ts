@@ -39,6 +39,13 @@ export interface CartItemRequest {
         allergens?: number[];
         flavor_selections?: CartItemBoxFlavorSelectionRequest[] | null;
     };
+    pack_customization?: {
+        selection_type: 'PICK_AND_MIX' | 'RANDOM';
+        flavor_selections?: CartItemBoxFlavorSelectionRequest[] | null;
+        hot_chocolate?: number;
+        chocolate_bark?: number;
+        gift_card?: number;
+    };
 }
 
 export interface Cart {

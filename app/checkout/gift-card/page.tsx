@@ -26,6 +26,12 @@ const GiftCardPage = () => {
         }
     }, [cart]);
 
+    useEffect(() => {
+        if (cart && cart.items && cart.items.some(item => !!(item as any).pack_customization)) {
+            router.push('/checkout/address');
+        }
+    }, [cart, router]);
+
     const giftCardOptions = [
         { id: '137', name: 'Thank You', image: '/gift-cards/thank-you.jpeg' },
         { id: '106', name: 'Happy Birthday', image: '/gift-cards/happy-birthday.jpeg', },

@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice'
+import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice'
 import SelectableProductCard from '@/components/store/SelectableProductCard'
 import SelectableGiftCard from '@/components/store/SelectableGiftCard'
 import AllergenSelection from '@/components/product_detail/AllergenSelection'
@@ -11,16 +12,11 @@ import BoxSelection from '@/components/product_detail/BoxSelection'
 import { Product } from '@/types/products'
 import { Flavour as FlavourType } from '@/types/flavours'
 import { CartItemBoxFlavorSelection } from '@/types/carts'
+import { useRouter } from 'next/navigation'
+// Get the price from the product with the units_per_box.
+const PRICE_MAP: Record<number, number> = { 9: 28, 15: 38, 24: 53, 48: 90 }
 
-type GiftCardOption = { id: string; name: string; image: string }
-
-const PRICE_MAP: Record<number, number> = { 9: 30, 15: 45, 24: 70, 48: 130 }
-
-const GIFT_CARDS: GiftCardOption[] = [
-  { id: 'gc-hb',       name: 'Happy Birthday',    image: '/gift-cards/happy-birthday.jpeg' },
-  { id: 'gc-congrats', name: 'Congratulations',   image: '/gift-cards/congratulations.jpeg' },
-  { id: 'gc-thanks',   name: 'Thank You',         image: '/gift-cards/thank-you.jpeg' },
-]
+const ID_MAP: Record<number, number> = { 9: 170, 15: 171, 24: 172, 48: 173 }
 
 const ALLERGENS = [
   { id: 2, name: 'Gluten'  },
@@ -63,8 +59,8 @@ export default function OrderPage() {
   const [signatureBox,  setSignatureBox]  = useState<Product | null>(null)
   const [chocolateBark, setChocolateBark] = useState<Product | null>(null)
   const [hotChocolate,  setHotChocolate]  = useState<Product | null>(null)
-  const [giftCard,      setGiftCard]      = useState<GiftCardOption | null>(null)
-  const [boxType,       setBoxType]       = useState<string | null>(null)
+  const [giftCard,      setGiftCard]      = useState<Product | null>(null)
+  const [boxType,       setBoxType]       = useState<string>('PICK_AND_MIX')
 
   // customization
   const [selectedAllergens, setSelectedAllergens] = useState<number[]>([])
@@ -76,6 +72,9 @@ export default function OrderPage() {
   // price & capacity
   const units    = signatureBox?.units_per_box || 0
   const sigPrice = PRICE_MAP[units] || 0
+  
+  const router = useRouter();
+  const [addCartItem, { isLoading: cartLoading, error: cartError }] = useAddCartItemMutation();
 
   useEffect(() => {
     if (signatureBox) {
@@ -85,18 +84,18 @@ export default function OrderPage() {
   }, [signatureBox])
 
   // select handler
-  const handleSelect = (item: Product | GiftCardOption) => {
+  const handleSelect = (item: Product) => {
     if (step === 0) {
-      setSignatureBox(item as Product)
+      setSignatureBox(item)
       setStep(s => s + 1)
     } else if (step === 1) {
-      setChocolateBark(item as Product)
+      setChocolateBark(item)
       setStep(s => s + 1)
     } else if (step === 2) {
-      setHotChocolate(item as Product)
+      setHotChocolate(item)
       setStep(s => s + 1)
     } else if (step === 3) {
-      setGiftCard(item as GiftCardOption)
+      setGiftCard(item)
     }
   }
 
@@ -127,18 +126,38 @@ export default function OrderPage() {
   }
 
   // final confirm
-  const handleConfirm = () => {
-    console.log({
-      signatureBox,
-      chocolateBark,
-      hotChocolate,
-      giftCard,
-      boxType,
-      allergens: selectedAllergens,
-      flavours,
-      giftMessage,
-      totalPrice: sigPrice,
-    })
+  const handleConfirm = async () => {
+    if (!signatureBox) return;
+
+    // Ensure boxType is non-null, default to 'PICK_AND_MIX'
+    const finalBoxType = (boxType ? boxType : 'PICK_AND_MIX') as 'PICK_AND_MIX' | 'RANDOM';
+
+    const productId = signatureBox.units_per_box ? (ID_MAP[signatureBox.units_per_box] || signatureBox.id) : signatureBox.id;
+
+    const payload = {
+      product: productId,
+      quantity: 1,
+      // box_customization: null, // Null for packs
+      pack_customization: {
+        selection_type: finalBoxType,
+        flavor_selections: flavours.map(f => ({
+          flavor: f.flavor.id,
+          quantity: f.quantity
+        })),
+        chocolate_bark: chocolateBark ? chocolateBark.id : undefined,
+        hot_chocolate: hotChocolate ? hotChocolate.id : undefined,
+        gift_card: giftCard ? giftCard.id : undefined,
+      }
+    };
+
+    try {
+      console.log('payload', payload)
+      const response = await addCartItem(payload).unwrap();
+      router.push('/cart');
+      console.log('Added pack to cart', response);
+    } catch (error) {
+      console.error('Failed to add pack to cart', error);
+    }
   }
 
   if (isLoading) return <Spinner md />
@@ -184,11 +203,6 @@ export default function OrderPage() {
             <>
               <h2 className="text-xl font-semibold">
                 Step 1: Signature Box
-                {units > 0 && (
-                  <span className="ml-4 text-green-600 font-medium">
-                    Price: £{sigPrice}
-                  </span>
-                )}
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 {products.filter(p => p.category?.slug === 'signature-boxes')
@@ -196,10 +210,14 @@ export default function OrderPage() {
                     <SelectableProductCard
                       key={p.id}
                       product={p}
+                      price={p.units_per_box ? PRICE_MAP[p.units_per_box] : 0}
                       onSelect={() => handleSelect(p)}
                     />
                   ))}
               </div>
+              <p className="text-sm text-gray-500 mt-2">
+                Your box size determines the price of your pack.
+              </p>
             </>
           )}
 
@@ -213,6 +231,7 @@ export default function OrderPage() {
                     <SelectableProductCard
                       key={p.id}
                       product={p}
+                      price={0}
                       onSelect={() => handleSelect(p)}
                     />
                   ))}
@@ -230,6 +249,7 @@ export default function OrderPage() {
                     <SelectableProductCard
                       key={p.id}
                       product={p}
+                      price={0}
                       onSelect={() => handleSelect(p)}
                     />
                   ))}
@@ -242,13 +262,13 @@ export default function OrderPage() {
             <>
               <h2 className="text-xl font-semibold">Step 4: Gift Card</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {GIFT_CARDS.map(gc => (
+                {products.filter(p => p.category?.slug === 'gift-cards').map(p => (
                   <SelectableGiftCard
-                    key={gc.id}
-                    title={gc.name}
-                    image={gc.image}
-                    selected={giftCard?.id === gc.id}
-                    onSelect={() => handleSelect(gc)}
+                    key={p.id}
+                    title={p.name}
+                    image={p.image || ""}
+                    selected={giftCard?.id === p.id}
+                    onSelect={() => handleSelect(p)}
                   />
                 ))}
                 <div
@@ -259,13 +279,11 @@ export default function OrderPage() {
                   No Gift Card
                 </div>
               </div>
-
               {giftCard && (
                 <div className="mt-4">
                   <GiftMessage onGiftMessageChange={setGiftMessage} />
                 </div>
               )}
-
               <button
                 onClick={() => setStep(4)}
                 className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-500"
@@ -281,8 +299,8 @@ export default function OrderPage() {
               <h2 className="text-xl font-semibold mb-4">Step 5: Choose Box Type</h2>
               <BoxSelection
                 options={PREBUILDS}
-                selected={boxType}
-                onChange={setBoxType}
+                selected={(boxType ?? 'PICK_AND_MIX') as string}
+                onChange={(value: string) => setBoxType(value)}
               />
               <button
                 onClick={() => boxType && setStep(5)}
@@ -313,7 +331,7 @@ export default function OrderPage() {
                 setAllergenOption={setAllergenOption as (option: "NONE" | "SPECIFY" | null) => void}
               />
               <button
-                onClick={() => setStep(6)}
+                onClick={() => setStep(boxType === 'RANDOM' ? 7 : 6)}
                 className="mt-4 px-6 py-2 bg-blue-600 text-white rounded"
               >
                 Next
@@ -322,7 +340,7 @@ export default function OrderPage() {
           )}
 
           {/* Step 7 */}
-          {step === 6 && signatureBox && (
+          {step === 6 && signatureBox && boxType === 'PICK_AND_MIX' && (
             <>
               <h2 className="text-xl font-semibold">Step 7: Choose Flavours</h2>
               <FlavourPicker
@@ -339,7 +357,8 @@ export default function OrderPage() {
               />
               <button
                 onClick={() => setStep(7)}
-                className="mt-4 px-6 py-2 bg-blue-600 text-white rounded"
+                disabled={remaining > 0}
+                className={`mt-4 px-6 py-2 rounded text-white ${remaining > 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500'}`}
               >
                 Next
               </button>

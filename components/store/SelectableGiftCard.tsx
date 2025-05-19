@@ -49,7 +49,7 @@ export default function SelectableGiftCard({
         />
       </div>
       <p className="text-md font-medium text-gray-900 dark:text-white my-2">{title}</p>
-      <h3 className="text-xs md:text-sm text-gray-700 dark:text-gray-300 mb-2">￡ 1.25 GBP</h3>
+      <h3 className="text-xs md:text-sm text-gray-700 dark:text-gray-300 mb-2">Included in your pack</h3>
     </div>
   )
 }
