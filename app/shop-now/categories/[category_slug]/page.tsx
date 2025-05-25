@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useGetCategoryQuery } from '@/redux/features/products/productApiSlice';
 import PackBuilder from '@/components/packs/PackBuilder';
 import { Product } from '@/types/products';
+import { STEP_EXPLANATIONS } from '@/components/packs/constants';
 export default function CategoryDetailPage() {
   const { category_slug } = useParams() as { category_slug: string };
   if (category_slug === 'packs') {
@@ -36,7 +37,7 @@ export default function CategoryDetailPage() {
   return (
     <div className="container mx-auto min-h-[80vh] py-2">
       <div className="md:text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white text-center font-playfair">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white text-center">
           { category.name }
         </h1>
       </div>

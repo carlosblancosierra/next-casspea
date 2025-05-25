@@ -27,7 +27,7 @@ export default function FlavourStep({
       <FlavourPicker
         flavours={flavours}
         remainingChocolates={remaining}
-        maxChocolates={signatureBox.units_per_box}
+        maxChocolates={signatureBox.units_per_box ?? 0}
         handleAddFlavour={handleAddFlavour}
         incrementQuantity={incrementQuantity}
         decrementQuantity={decrementQuantity}

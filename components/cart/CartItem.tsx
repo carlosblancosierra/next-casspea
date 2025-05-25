@@ -5,7 +5,10 @@ import { FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { CartItem as CartItemType } from '@/types/carts';
 import FlavourSelectionGrid from './FlavourSelectionGrid';
 import { useChangeCartItemQuantityMutation, useRemoveCartItemMutation } from '@/redux/features/carts/cartApiSlice';
+import { useGetProductQuery, useGetProductsQuery } from '@/redux/features/products/productApiSlice';
+import { skipToken } from '@reduxjs/toolkit/query';
 import { toast } from 'react-toastify';
+import { Allergen } from '@/types/allergens';
 
 interface CartItemProps {
   entry: CartItemType;
@@ -14,20 +17,26 @@ interface CartItemProps {
 const CartItem: React.FC<CartItemProps> = ({ entry }) => {
   const boxSize = entry.product.units_per_box;
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [showFlavours, setShowFlavours] = useState(false);
   const [changeQuantity, { isLoading: isChangingQuantity }] = useChangeCartItemQuantityMutation();
   const [removeItem, { isLoading: isRemoving }] = useRemoveCartItemMutation();
-
   const isLoading = isChangingQuantity || isRemoving;
+  const { data, isLoading: isLoadingProducts, error } = useGetProductsQuery();
+  const products = data ?? [];
+  const hotChocolate = products.find(p => p.id === entry.pack_customization?.hot_chocolate);
+  const giftCard = products.find(p => p.id === entry.pack_customization?.gift_card);
+  const bark = products.find(p => p.id === entry.pack_customization?.chocolate_bark);
+
+  const customization = entry.pack_customization ?? entry.box_customization;
 
   const handleQuantityChange = async (change: number) => {
     const newQuantity = entry.quantity + change;
     if (newQuantity < 1) return;
-
     try {
       await changeQuantity({ id: entry.id, quantity: newQuantity }).unwrap();
     } catch (error) {
       toast.error('Failed to update quantity');
-      console.error('Failed to update quantity:', error);
+      console.error(error);
     }
   };
 
@@ -37,149 +46,213 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
       toast.success('Item removed from cart');
     } catch (error) {
       toast.error('Failed to remove item');
-      console.error('Failed to remove item:', error);
+      console.error(error);
     }
   };
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-[1fr,3fr] gap-4 border border-gray-200 bg-main-bg p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
-        {/* First Column: Product Image */}
+      <div className="grid grid-cols-2 md:grid-cols-[1fr,3fr] gap-x-4 gap-y-1 border bg-main-bg p-4 rounded-lg shadow-sm dark:bg-gray-800 md:p-6">
+        {/* Imagen */}
         <a href="#" className="col-span-1">
           <img
-            className="w-full max-w-[150px] dark:hidden"
-            src={entry.product.image || 'https://via.placeholder.com/150'}
-            alt={entry.product.name}
-          />
-          <img
-            className="w-full max-w-[150px] hidden dark:block"
+            className="w-full max-w-[150px]"
             src={entry.product.image || 'https://via.placeholder.com/150'}
             alt={entry.product.name}
           />
         </a>
 
-        {/* Second Column: Product Info, Actions, and Flavour Grid */}
+        {/* Info, acciones y selección */}
         <div className="col-span-1 space-y-4">
-          <div className="space-y-4">
-            <a href="#" className="text-base font-medium text-gray-900 hover:underline dark:text-white">
-              {entry.product.name}
-            </a>
+          <a href="#" className="text-base font-medium hover:underline dark:text-white">
+            {entry.product.name}
+          </a>
 
+          {customization && (
             <p className="flex flex-wrap items-center gap-2">
-              <span className="items-center rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
-                {entry.box_customization?.selection_type === 'PICK_AND_MIX' && 'Pick & Mix'}
-                {entry.box_customization?.selection_type === 'RANDOM' && 'Surprise Me'}
+              <span className="rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+                {customization.selection_type === 'PICK_AND_MIX' ? 'Pick & Mix' : null}
+                {customization.selection_type === 'RANDOM' ? 'Surprise Me' : null}
               </span>
-
-              {entry.box_customization?.allergens?.map((allergen) => (
-                <span
-                  key={allergen.id}
-                  className="items-center rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
-                >
-                  {allergen.name} Free
-                </span>
-              ))}
+              {'allergens' in customization && customization.allergens
+                ? customization.allergens.map((a: Allergen) => (
+                    <span
+                      key={a.id}
+                      className="rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+                    >
+                      {a.name} Free
+                    </span>
+                  ))
+                : null}
             </p>
+          )}
 
-            <p className="text-base font-bold text-gray-900 dark:text-white">£{entry.product.base_price}</p>
+          <p className="text-base font-bold">£{entry.product.base_price}</p>
 
-            {/* Quantity Controls with Remove Button */}
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setIsDeleteModalOpen(true)}
-                disabled={isLoading}
-                className="p-1.5 rounded-md border border-gray-300 hover:bg-gray-100
-                         disabled:opacity-50 disabled:cursor-not-allowed
-                         dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
-                aria-label="Remove item"
-              >
-                <FiTrash2 className="w-4 h-4 text-red-600" />
-              </button>
+          {/* Controles de cantidad y borrado */}
+          <div className="flex items-center space-x-2">
+            <button onClick={() => setIsDeleteModalOpen(true)} disabled={isLoading} aria-label="Remove item">
+              <FiTrash2 className="w-4 h-4 text-red-600" />
+            </button>
 
-              <button
-                onClick={() => handleQuantityChange(-1)}
-                disabled={isLoading || entry.quantity <= 1}
-                className="p-1.5 rounded-md border border-gray-300 hover:bg-gray-100
-                         disabled:opacity-50 disabled:cursor-not-allowed
-                         dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
-                aria-label="Decrease quantity"
-              >
-                <FiMinus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-              </button>
+            <button
+              onClick={() => handleQuantityChange(-1)}
+              disabled={isLoading || entry.quantity <= 1}
+              className="p-1.5 rounded-md border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Decrease quantity"
+            >
+              <FiMinus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+            </button>
 
-              <span className="px-2 py-1 min-w-[40px] text-center font-medium text-gray-900 dark:text-white">
-                {entry.quantity}
-              </span>
+            <span className="px-2 py-1 min-w-[40px] text-center font-medium text-gray-900 dark:text-white">
+              {entry.quantity}
+            </span>
 
-              <button
-                onClick={() => handleQuantityChange(1)}
-                disabled={isLoading}
-                className="p-1.5 rounded-md border border-gray-300 hover:bg-gray-100
-                         disabled:opacity-50 disabled:cursor-not-allowed
-                         dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
-                aria-label="Increase quantity"
-              >
-                <FiPlus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-              </button>
-            </div>
+            <button
+              onClick={() => handleQuantityChange(1)}
+              disabled={isLoading}
+              className="p-1.5 rounded-md border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Increase quantity"
+            >
+              <FiPlus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+            </button>
           </div>
 
-          {/* Flavour Selection Grid */}
-          {entry.box_customization?.selection_type === 'PICK_AND_MIX' && (
-            <div className="mt-6">
-              <FlavourSelectionGrid
-                flavours={entry.box_customization.flavor_selections || []}
-                boxSize={boxSize}
-              />
-            </div>
+          <div className='hidden md:block'>
+            {/* Productos extra del pack */}
+            {entry.pack_customization && (
+              <p className="flex flex-col gap-4 mt-4">
+                {hotChocolate && (
+                  <div>
+                    <p className="text-xs text-gray-400 italic">Hot Chocolate</p>
+                    <span className="rounded-md px-2 py-1 text-xs font-medium text-gray-600">
+                    {hotChocolate.name}
+                    </span>
+                  </div>
+                )}
+                {giftCard && (
+                  <div>
+                    <p className="text-xs text-gray-400 italic">Gift Card</p>
+                    <span className="rounded-md px-2 py-1 text-xs font-medium text-gray-600">
+                      {giftCard.name}
+                    </span>
+                  </div>
+                )}
+                {bark && (
+                  <div>
+                    <p className="text-xs text-gray-400 italic">Chocolate Bark</p>
+                    <span className="rounded-md px-2 py-1 text-xs font-medium text-gray-600">
+                      {bark.name}
+                    </span>
+                  </div>
+                )}
+              </p>
+            )}
+          </div>
+
+          
+          <div>
+            {/* Flavours: desktop (en columna derecha) */}
+            {customization?.selection_type === 'PICK_AND_MIX' && (
+                <div className="hidden md:block md:col-start-2">
+                  <button
+                    onClick={() => setShowFlavours(prev => !prev)}
+                    className="px-4 py-2 text-primary-text rounded-md text-sm border border-primary-text"
+                  >
+                    {showFlavours ? 'Hide flavours' : 'Show flavours'}
+                  </button>
+                  {showFlavours && (
+                    <div className="mt-2">
+                      <FlavourSelectionGrid flavours={customization.flavor_selections || []} boxSize={boxSize} />
+                    </div>
+                  )}
+                </div>
+              )}
+          </div>
+
+        </div>
+
+        <div className="col-span-2 mb-4 md:hidden">
+          {/* Productos extra del pack */}
+          {entry.pack_customization && (
+            <p className="flex flex-col gap-4 mt-4">
+              {hotChocolate && (
+                <div>
+                  <p className="text-xs text-gray-400 italic">Hot Chocolate</p>
+                  <span className="rounded-md px-2 py-1 text-xs font-medium text-gray-600">
+                   {hotChocolate.name}
+                  </span>
+                </div>
+              )}
+              {giftCard && (
+                <div>
+                  <p className="text-xs text-gray-400 italic">Gift Card</p>
+                  <span className="rounded-md px-2 py-1 text-xs font-medium text-gray-600">
+                    {giftCard.name}
+                  </span>
+                </div>
+              )}
+              {bark && (
+                <div>
+                  <p className="text-xs text-gray-400 italic">Chocolate Bark</p>
+                  <span className="rounded-md px-2 py-1 text-xs font-medium text-gray-600">
+                    {bark.name}
+                  </span>
+                </div>
+              )}
+            </p>
           )}
         </div>
+
+        {/* Flavours: móvil (bajo ambas columnas) */}
+        {customization?.selection_type === 'PICK_AND_MIX' && (
+          <div className="col-span-2 md:hidden flex flex-col">
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowFlavours(prev => !prev)}
+                className="px-4 py-2 text-primary-text rounded-md text-sm border border-primary-text"
+              >
+                {showFlavours ? 'Hide flavours' : 'Show flavours'}
+              </button>
+            </div>
+            {showFlavours && (
+              <div className="mt-2">
+                <FlavourSelectionGrid flavours={customization.flavor_selections || []} boxSize={boxSize} />
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Updated Delete Confirmation Modal */}
+      {/* Modal de confirmación de borrado */}
       {isDeleteModalOpen && (
-        <div className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-full max-w-md max-h-full">
-            <div className="relative bg-main-bg rounded-lg shadow dark:bg-gray-700">
-              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-                  Remove Item
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setIsDeleteModalOpen(false)}
-                  className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                >
-                  <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                  </svg>
-                  <span className="sr-only">Close modal</span>
-                </button>
-              </div>
-              <div className="p-4 md:p-5">
-                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                  Are you sure you want to remove {entry.product.name} from your cart?
-                </p>
-              </div>
-              <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button
-                  onClick={() => {
-                    handleRemove();
-                    setIsDeleteModalOpen(false);
-                  }}
-                  type="button"
-                  className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800 mr-3"
-                >
-                  Yes, remove item
-                </button>
-                <button
-                  onClick={() => setIsDeleteModalOpen(false)}
-                  type="button"
-                  className="text-gray-500 bg-main-bg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-                >
-                  Cancel
-                </button>
-              </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-main-bg rounded-lg shadow dark:bg-gray-700 max-w-md w-full">
+            <div className="flex items-center justify-between p-4 border-b dark:border-gray-600">
+              <h3 className="text-xl dark:text-white">Remove Item</h3>
+              <button onClick={() => setIsDeleteModalOpen(false)} className="text-gray-400">
+                <span className="sr-only">Close modal</span>×
+              </button>
+            </div>
+            <div className="p-4 text-gray-500 dark:text-gray-400">
+              Are you sure you want to remove {entry.product.name}?
+            </div>
+            <div className="flex justify-end p-4 border-t dark:border-gray-600">
+              <button
+                onClick={() => {
+                  handleRemove();
+                  setIsDeleteModalOpen(false);
+                }}
+                className="px-5 py-2.5 text-sm font-medium text-white bg-red-600 rounded-lg"
+              >
+                Yes, remove
+              </button>
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-5 py-2.5 ml-2 text-sm font-medium border rounded-lg"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

@@ -6,8 +6,8 @@ interface Props {
   allergens: Allergen[]
   selectedAllergens: number[]
   setSelectedAllergens: (ids: number[]) => void
-  allergenOption: 'NONE' | 'SPECIFY'
-  setAllergenOption: (opt: 'NONE'|'SPECIFY') => void
+  allergenOption: 'NONE' | 'SPECIFY' | null
+  setAllergenOption: (opt: 'NONE' | 'SPECIFY' | null) => void
   onNext: () => void
 }
 
@@ -19,7 +19,7 @@ export default function AllergenStep({
     <>
       <h2 className="text-xl font-semibold mb-4">Step 6: Select Allergens</h2>
       <p className="text-sm text-gray-500 mb-4">
-        Sólo para bonbons (signature box).
+        Only for bonbons of the signature box.
       </p>
       <AllergenSelection
         allergens={allergens}

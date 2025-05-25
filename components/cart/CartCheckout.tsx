@@ -207,7 +207,7 @@ export default function CartCheckout() {
                     )}
 
                     {/* Gift Message Option */}
-                    <div className="mt-4">
+                    {/* <div className="mt-4">
                         <label className="flex items-center space-x-2">
                             <input
                                 type="checkbox"
@@ -222,7 +222,7 @@ export default function CartCheckout() {
                                 <GiftMessage onGiftMessageChange={setGiftMessage} initialMessage={giftMessage} />
                             </div>
                         )}
-                    </div>
+                    </div> */}
 
                     {/* Discount Option - Updated */}
                     <div className="mt-4">
@@ -257,19 +257,12 @@ export default function CartCheckout() {
                     <EmailForm initialEmail={email} onValidEmail={handleValidEmail} />
                 </div>
 
-                {/* <Link
-                    href="/shop-now/"
-                    className="inline-flex items-center justify-center rounded-md bg-pink-600 px-4 py-3 text-sm font-semibold text-white w-full mt-4"
-                >
-                    <span>Keep Shopping</span>
-                </Link> */}
-
                 <div className="mt-4">
                     <button
                         type="button"
                         onClick={handleCheckout}
                         disabled={!email || isProcessing}
-                        className="w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-white
+                        className="w-full rounded-md bg-primary px-4 py-3 text-xl text-white
                             shadow-sm hover:bg-primary-2 focus-visible:outline focus-visible:outline-2
                             focus-visible:outline-offset-2 focus-visible:outline-primary
                             disabled:bg-gray-300 dark:disabled:bg-gray-700 dark:bg-primary-2
@@ -286,6 +279,13 @@ export default function CartCheckout() {
                     <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 text-center">
                         You'll be able to review your order before it's final
                     </p>
+
+                     <Link
+                    href="/shop-now/"
+                    className="inline-flex items-center justify-center rounded-md text-primary px-4 py-3 text-sm font-semibold w-full mt-4 border border-primary"
+                    >
+                        <span>Keep Shopping</span>
+                    </Link>
                 </div>
             </div>
         </div>

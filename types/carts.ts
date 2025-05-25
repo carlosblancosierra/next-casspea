@@ -26,6 +26,16 @@ export interface CartItemBoxCustomization {
     updated?: string;
 }
 
+export interface CartItemPackCustomization {
+    id: number;
+    cart_item: number;
+    selection_type: 'RANDOM' | 'PICK_AND_MIX';
+    flavor_selections?: CartItemBoxFlavorSelection[];
+    hot_chocolate?: number;
+    chocolate_bark?: number;
+    gift_card?: number;
+}
+
 export interface CartItemBoxFlavorSelectionRequest {
     flavor: number;  // Just the flavor ID
     quantity: number;
@@ -75,6 +85,7 @@ export interface CartItem {
     savings: string;
     created: string;
     updated: string;
+    pack_customization?: CartItemPackCustomization;
 }
 
 export interface CartItemBoxFlavorSelection {

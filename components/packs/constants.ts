@@ -44,3 +44,14 @@ export const STEP_BORDER = [
   'border-indigo-500',
   'border-purple-500',
 ];
+
+export const STEP_EXPLANATIONS = [
+  "Select the size of your signature box.",
+  "Optionally add a layer of delicious chocolate bark.",
+  "Optionally choose a hot chocolate infusion for extra warmth.",
+  "Optionally include a personalized gift card with your order.",
+  "Decide between Pick & Mix for custom flavour selection or Surprise Me for a curated experience.",
+  "Select any allergens you wish to avoid (applies to bonbons only).",
+  "Pick your favourite flavours to fill your box.",
+  "Review and confirm your selections to complete your order."
+];

@@ -44,7 +44,7 @@ const FlavourSelectionGrid: React.FC<FlavourSelectionGridProps> = ({ flavours, b
       className="flavours-grid"
       style={{
         display: 'grid',
-        gridTemplateColumns: `repeat(${getColumnsCount()}, 1fr)`, // Dynamic number of columns
+        gridTemplateColumns: 'repeat(auto-fit, minmax(40px, 40px))',
         gap: getGridGap()
       }}
     >
