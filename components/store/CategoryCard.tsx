@@ -19,7 +19,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
   return (
     <Link
       href={`/shop-now/categories/${category.slug}`}
-      className="block group relative shadow-lg rounded-lg p-4 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-gray-800 hover:opacity-90 transition-opacity"
+      className="block group relative shadow-lg rounded-lg p-0 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-gray-800 hover:opacity-90 transition-opacity"
     >
       <div className="aspect-w-16 aspect-h-9 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700 lg:aspect-none group-hover:opacity-75">
         <Image
@@ -31,7 +31,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="mt-4">
+      <div className="mt-4 p-2">
         <h3 className="text-xl font-bold text-gray-900 dark:text-white">{category.name}</h3>
         {category.description && (
           <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{category.description}</p>

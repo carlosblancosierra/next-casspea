@@ -16,7 +16,7 @@ export default function Page() {
       {isLoading && <div>Loading...</div>}
       {error && <div>Error loading categories</div>}
       {categories && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} />
           ))}
