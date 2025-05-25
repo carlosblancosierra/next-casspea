@@ -7,7 +7,7 @@ import Spinner from '@/components/common/Spinner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGetCategoryQuery } from '@/redux/features/products/productApiSlice';
 import PackBuilder from '@/components/packs/PackBuilder';
-
+import { Product } from '@/types/products';
 export default function CategoryDetailPage() {
   const { category_slug } = useParams() as { category_slug: string };
   if (category_slug === 'packs') {
@@ -31,7 +31,7 @@ export default function CategoryDetailPage() {
   const products = category.products;
   const filteredProducts = category_slug === 'all' 
     ? products 
-    : products.filter((product) => product?.category?.slug === category_slug);
+    : products?.filter((product: Product) => product?.category?.slug === category_slug);
 
   return (
     <div className="container mx-auto min-h-[80vh] py-2">
@@ -57,12 +57,12 @@ export default function CategoryDetailPage() {
       )}
 
       {categoryError && <div className="text-red-500 text-center">Error loading products</div>}
-      {filteredProducts.length === 0 ? (
+      {filteredProducts?.length === 0 ? (
         <div className="text-center text-gray-700 dark:text-gray-300">No products found for this category.</div>
       ) : (
         <div className="grid gap-x-2 gap-y-2 mt-2 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
           <AnimatePresence>
-            {filteredProducts.map((product: Product) => (
+            {filteredProducts?.map((product: Product) => (
               <motion.div
                 key={product.name}
                 initial="hidden"

@@ -6,6 +6,7 @@ export interface ProductCategory {
     active?: boolean;
     created?: string;
     updated?: string;
+    products?: Product[];
 }
 
 export interface ProductGalleryImage {
