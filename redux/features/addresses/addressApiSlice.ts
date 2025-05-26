@@ -8,6 +8,11 @@ export const addressApiSlice = apiSlice.injectEndpoints({
             providesTags: [{ type: 'Addresses', id: 'LIST' }]
         }),
 
+        getAddressesStats: builder.query<Address[], void>({
+            query: () => '/addresses/stats',
+            providesTags: [{ type: 'Addresses', id: 'STATS' }]
+        }),
+
         setAddresses: builder.mutation<any, AddressRequest>({
             query: (addresses) => ({
                 url: '/addresses/',
@@ -21,5 +26,6 @@ export const addressApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetAddressesQuery,
-    useSetAddressesMutation
+    useSetAddressesMutation,
+    useGetAddressesStatsQuery
 } = addressApiSlice;
