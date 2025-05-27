@@ -3,6 +3,68 @@ import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 import { Order } from '@/types/orders';
 import { formatDate, formatSelectionType, formatShippingAddress } from './ordersUtils';
 
+const getCustomization = (boxCustomization: any, packCustomization: any) =>
+  boxCustomization ?? packCustomization;
+
+const AllergenBadges: React.FC<{ allergens?: { id: number; name: string }[] }> = ({ allergens }) => {
+  if (!allergens || allergens.length === 0) return null;
+  return (
+    <div className="mt-2 flex flex-wrap gap-2">
+      {allergens.map((allergen) => (
+        <span
+          key={allergen.id}
+          className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-orange-600 ring-1 ring-inset ring-orange-500/10"
+        >
+          {allergen.name} Free
+        </span>
+      ))}
+    </div>
+  );
+};
+
+const FlavorSection: React.FC<{ flavorSelections?: { flavor: { name: string }; quantity: number }[] }> = ({
+  flavorSelections,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  if (!flavorSelections || flavorSelections.length === 0) return null;
+  return (
+    <div className="flex flex-col mt-2">
+      <button
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="text-sm text-gray-700 hover:text-gray-900 flex items-center gap-1"
+      >
+        Flavours {isOpen ? '▼' : '▶'}
+      </button>
+      {isOpen &&
+        flavorSelections.map((flavor, i) => (
+          <div key={i} className="text-sm text-gray-500 pl-4 flex justify-between">
+            <span>{flavor.flavor.name}</span>
+            <span className="text-gray-400">×{flavor.quantity}</span>
+          </div>
+        ))}
+    </div>
+  );
+};
+
+const BoxCustomizationExtras: React.FC<{ customization: any }> = ({ customization }) => {
+  if (!customization) return null;
+  const { hot_chocolate, chocolate_bark, gift_card } = customization;
+  if (!hot_chocolate && !chocolate_bark && !gift_card) return null;
+  return (
+    <div className="mt-2 flex flex-col">
+      {hot_chocolate ? (
+        <div className="text-sm text-gray-500">Hot Chocolate: {hot_chocolate}</div>
+      ) : null}
+      {chocolate_bark ? (
+        <div className="text-sm text-gray-500">Chocolate Bark: {chocolate_bark}</div>
+      ) : null}
+      {gift_card ? (
+        <div className="text-sm text-gray-500">Gift Card: {gift_card}</div>
+      ) : null}
+    </div>
+  );
+};
+
 interface OrderCardProps {
   order: Order;
   onCreateShipping: (orderId: string) => void;
@@ -55,7 +117,6 @@ const OrderStatusBadge: React.FC<{ status: string }> = ({ status }) => {
 
 const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownloadLabel }) => {
   const { time } = formatDate(order.created);
-  const [openFlavors, setOpenFlavors] = useState<Record<number, boolean>>({});
   const [isCreating, setIsCreating] = useState(false);
 
   return (
@@ -89,59 +150,24 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Items</dt>
             <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
-              {order.checkout_session?.cart?.items?.map((item, index) => (
-                <div key={index} className="mb-2">
-                  <div className="font-medium">
-                    {item.product?.name} {item.quantity && `(x${item.quantity})`}
-                  </div>
-                  {item.box_customization && (
-                    <div className="text-sm text-gray-500">
-                      {formatSelectionType(item.box_customization.selection_type)}
+              {order.checkout_session?.cart?.items?.map((item, index) => {
+                const customization = getCustomization(item.box_customization, item.pack_customization);
+                return (
+                  <div key={index} className="mb-2">
+                    <div className="font-medium">
+                      {item.product?.name} {item.quantity && `(x${item.quantity})`}
                     </div>
-                  )}
-
-                  {/* Allergens */}
-                  {item.box_customization?.allergens && item.box_customization?.allergens?.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {item.box_customization.allergens.map((allergen) => (
-                        <span
-                          key={allergen.id}
-                          className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-orange-600 ring-1 ring-inset ring-orange-500/10"
-                        >
-                          {allergen.name} Free
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                
-                  {/* Flavours */}
-                  <div className="flex flex-col">
-                    <button
-                      onClick={() =>
-                        setOpenFlavors(prev => ({
-                          ...prev,
-                          [item.product?.id || 0]: !prev[item.product?.id || 0]
-                        }))
-                      }
-                      className="text-sm text-gray-700 hover:text-gray-900 flex items-center gap-1"
-                    >
-                      Flavours {openFlavors[item.product?.id || 0] ? '▼' : '▶'}
-                    </button>
-                    {openFlavors[item.product?.id || 0] &&
-                      item.box_customization?.flavor_selections?.map((flavor, i) => (
-                        <div
-                          key={i}
-                          className="text-sm text-gray-500 pl-4 flex justify-between"
-                        >
-                          <span>{flavor.flavor.name}</span>
-                          <span className="text-gray-400">×{flavor.quantity}</span>
-                        </div>
-                      ))}
+                    {customization && (
+                      <div className="text-sm text-gray-500">
+                        {formatSelectionType(customization.selection_type)}
+                      </div>
+                    )}
+                    <AllergenBadges allergens={customization?.allergens} />
+                    <FlavorSection flavorSelections={customization?.flavor_selections} />
+                    {item.pack_customization && <BoxCustomizationExtras customization={item.pack_customization} />}
                   </div>
-
-                </div>
-              ))}
+                );
+              })}
             </dd>
           </div>
           {/* Shipping Date */}
