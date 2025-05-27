@@ -1,13 +1,15 @@
 import React from 'react';
 import { getDayTotals } from './ordersUtils';
 import { Order } from '@/types/orders';
+import { Product } from '@/types/products';
 
 interface DaySummaryProps {
     dateOrders: Order[];
+    products: Product[];
 }
 
-const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders }) => {
-    const { products, flavors, randomBoxes } = getDayTotals(dateOrders);
+const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders, products }) => {
+    const { products: totals, flavors, randomBoxes } = getDayTotals(dateOrders, products);
     return (
         <div className="main-bg dark:bg-gray-800 rounded-lg shadow-sm mt-4">
             <div className="px-4 py-5 sm:px-6">
@@ -19,7 +21,7 @@ const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders }) => {
                     <div className="p-4">
                         <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 mb-2">Products</h4>
                         <div className="space-y-1">
-                            {Object.entries(products).map(([name, qty]) => (
+                            {Object.entries(totals).map(([name, qty]) => (
                                 <div key={name} className="text-sm text-gray-900 dark:text-gray-100">
                                     {name}: {qty}
                                 </div>

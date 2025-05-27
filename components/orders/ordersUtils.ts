@@ -1,5 +1,6 @@
 import { Address } from '@/types/addresses';
 import { Order } from '@/types/orders';
+import { Product } from '@/types/products';
 
 export const formatDate = (dateString?: string): { date: string, time: string } => {
     if (!dateString) return { date: '-', time: '-' };
@@ -58,14 +59,12 @@ export const formatShippingAddress = (address?: Address): string => {
     return parts.join(' • ');
 };
 
-export const getDayTotals = (orders: Order[]) => {
+export const getDayTotals = (orders: Order[], availableProducts?: Product[]) => {
     const products: Record<string, number> = {};
     const flavors: Record<string, number> = {};
     const randomBoxes: Record<string, number> = {};
     // Calculate day total by summing total_with_shipping from each order
-    const dayTotal = orders.reduce((total, order) => {
-        return total + order.checkout_session.total_with_shipping;
-    }, 0);
+    const dayTotal = orders.reduce((total, order) => total + order.checkout_session.total_with_shipping, 0);
     orders.forEach(order => {
         order.checkout_session?.cart?.items?.forEach(item => {
             const boxCustomization = item.box_customization;
@@ -96,10 +95,38 @@ export const getDayTotals = (orders: Order[]) => {
                 ];
                 flavorSelections.forEach(flavor => {
                     if (flavor.flavor.name && flavor.quantity) {
-                        flavors[flavor.flavor.name] = (flavors[flavor.flavor.name] || 0) +
-                            (flavor.quantity * quantity);
+                        flavors[flavor.flavor.name] = (flavors[flavor.flavor.name] || 0) + (flavor.quantity * quantity);
                     }
                 });
+            }
+
+            // Sum extras from pack customization
+            const packCustomization = item.pack_customization;
+            if (packCustomization) {
+                // Function to lookup product name using availableProducts
+                const getExtraName = (id: number, defaultName: string): string => {
+                    if (availableProducts) {
+                        const prod = availableProducts.find(p => p.id === id);
+                        if (prod) return prod.name;
+                    }
+                    return defaultName;
+                };
+
+                if (packCustomization.hot_chocolate) {
+                    const extraId = packCustomization.hot_chocolate;
+                    const extraName = getExtraName(extraId, "Hot Chocolate");
+                    products[extraName] = (products[extraName] || 0) + quantity;
+                }
+                if (packCustomization.chocolate_bark) {
+                    const extraId = packCustomization.chocolate_bark;
+                    const extraName = getExtraName(extraId, "Chocolate Bark");
+                    products[extraName] = (products[extraName] || 0) + quantity;
+                }
+                if (packCustomization.gift_card) {
+                    const extraId = packCustomization.gift_card;
+                    const extraName = getExtraName(extraId, "Gift Card");
+                    products[extraName] = (products[extraName] || 0) + quantity;
+                }
             }
         });
     });

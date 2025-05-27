@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice'
-import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice'
+import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice'
 import StepSidebar from './StepSidebar'
 import {
   SignatureBoxStep,
@@ -23,6 +23,7 @@ import { CartItemBoxFlavorSelection } from '@/types/carts';
 export default function PackBuilder() {
   const { data: products, isLoading, error } = useGetActiveProductsQuery()
   const [addCartItem, { isLoading: cartLoading }] = useAddCartItemMutation()
+  const [updateCart] = useUpdateCartMutation()
   const router = useRouter()
 
   const [step, setStep] = useState(0)
@@ -90,6 +91,10 @@ export default function PackBuilder() {
       }
     }
     try {
+      // Send gift message first, if present
+      if (giftMessage.trim() !== '') {
+        await updateCart({ gift_message: giftMessage }).unwrap();
+      }
       await addCartItem(payload).unwrap()
       router.push('/cart')
     } catch {}

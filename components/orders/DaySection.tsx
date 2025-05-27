@@ -45,7 +45,7 @@ const DaySection: React.FC<DaySectionProps> = ({
               />
             ))}
           </div>
-          <DaySummary dateOrders={orders} />
+          <DaySummary dateOrders={orders} products={products} />
         </div>
       )}
     </div>
