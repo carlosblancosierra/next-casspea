@@ -5,6 +5,7 @@ import DaySection from './DaySection';
 import { useCreateRoyalMailOrderMutation } from '@/redux/features/royalmail/royalmailApiSlice';
 import { toast } from 'react-toastify';
 import { formatDate } from './ordersUtils';
+import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 
 export default function OrderList() {
     // Fix today's date for a stable reference
@@ -38,6 +39,7 @@ export default function OrderList() {
     }, [page]);
 
     const { data: orders, isLoading, isFetching, error } = useGetOrdersQuery(filters);
+    const { data: products } = useGetProductsQuery();
     const [createRoyalMailOrder] = useCreateRoyalMailOrderMutation();
 
     // Set isPageLoading to false when data is loaded
@@ -165,6 +167,7 @@ export default function OrderList() {
                             orders={dateOrders}
                             onCreateShipping={handleCreateShipping}
                             onDownloadLabel={handleDownloadLabel}
+                            products={products || []}
                         />
                     ))}
             </div>

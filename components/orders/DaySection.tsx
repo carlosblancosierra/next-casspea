@@ -4,19 +4,21 @@ import { getDayTotals } from './ordersUtils';
 import DayHeader from './DayHeader';
 import OrderCard from './OrderCard';
 import DaySummary from './DaySummary';
-
+import { Product } from '@/types/products';
 interface DaySectionProps {
   date: string;
   orders: Order[];
   onCreateShipping: (orderId: string) => void;
   onDownloadLabel: (orderId: string) => void;
+  products: Product[];
 }
 
 const DaySection: React.FC<DaySectionProps> = ({
   date,
   orders,
   onCreateShipping,
-  onDownloadLabel
+  onDownloadLabel,
+  products
 }) => {
   const { dayTotal } = getDayTotals(orders);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -39,6 +41,7 @@ const DaySection: React.FC<DaySectionProps> = ({
                 order={order}
                 onCreateShipping={onCreateShipping}
                 onDownloadLabel={onDownloadLabel}
+                products={products}
               />
             ))}
           </div>

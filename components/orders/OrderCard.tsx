@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 import { Order } from '@/types/orders';
 import { formatDate, formatSelectionType, formatShippingAddress } from './ordersUtils';
+import { Product } from '@/types/products';
 
 const getCustomization = (boxCustomization: any, packCustomization: any) =>
   boxCustomization ?? packCustomization;
@@ -46,20 +47,32 @@ const FlavorSection: React.FC<{ flavorSelections?: { flavor: { name: string }; q
   );
 };
 
-const BoxCustomizationExtras: React.FC<{ customization: any }> = ({ customization }) => {
+const BoxCustomizationExtras: React.FC<{ customization: any, products: Product[] }> = ({ customization, products }) => {
   if (!customization) return null;
   const { hot_chocolate, chocolate_bark, gift_card } = customization;
   if (!hot_chocolate && !chocolate_bark && !gift_card) return null;
+
+  const getProductName = (id: number, defaultName: string) => {
+    const prod = products.find(p => p.id === id);
+    return prod ? prod.name : defaultName;
+  };
+
   return (
     <div className="mt-2 flex flex-col">
       {hot_chocolate ? (
-        <div className="text-sm text-gray-500">Hot Chocolate: {hot_chocolate}</div>
+        <div className="text-sm text-gray-500">
+          Hot Chocolate: {getProductName(hot_chocolate, "Hot Chocolate")}
+        </div>
       ) : null}
       {chocolate_bark ? (
-        <div className="text-sm text-gray-500">Chocolate Bark: {chocolate_bark}</div>
+        <div className="text-sm text-gray-500">
+          Chocolate Bark: {getProductName(chocolate_bark, "Chocolate Bark")}
+        </div>
       ) : null}
       {gift_card ? (
-        <div className="text-sm text-gray-500">Gift Card: {gift_card}</div>
+        <div className="text-sm text-gray-500">
+          Gift Card: {getProductName(gift_card, "Gift Card")}
+        </div>
       ) : null}
     </div>
   );
@@ -69,6 +82,7 @@ interface OrderCardProps {
   order: Order;
   onCreateShipping: (orderId: string) => void;
   onDownloadLabel: (orderId: string) => void;
+  products: Product[];
 }
 
 const PaymentStatus = ({ status }: { status?: string }) => {
@@ -115,7 +129,7 @@ const OrderStatusBadge: React.FC<{ status: string }> = ({ status }) => {
   );
 };
 
-const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownloadLabel }) => {
+const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownloadLabel, products }) => {
   const { time } = formatDate(order.created);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -164,7 +178,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                     )}
                     <AllergenBadges allergens={customization?.allergens} />
                     <FlavorSection flavorSelections={customization?.flavor_selections} />
-                    {item.pack_customization && <BoxCustomizationExtras customization={item.pack_customization} />}
+                    {item.pack_customization && <BoxCustomizationExtras customization={item.pack_customization} products={products} />}
                   </div>
                 );
               })}

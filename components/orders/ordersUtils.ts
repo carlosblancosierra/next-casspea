@@ -90,7 +90,11 @@ export const getDayTotals = (orders: Order[]) => {
                 }
             } else if (boxCustomization?.selection_type === 'PICK_AND_MIX') {
                 // Flavor counting for pick & mix boxes
-                boxCustomization?.flavor_selections?.forEach(flavor => {
+                const flavorSelections = [
+                    ...(item.box_customization?.flavor_selections || []),
+                    ...(item.pack_customization?.flavor_selections || [])
+                ];
+                flavorSelections.forEach(flavor => {
                     if (flavor.flavor.name && flavor.quantity) {
                         flavors[flavor.flavor.name] = (flavors[flavor.flavor.name] || 0) +
                             (flavor.quantity * quantity);
