@@ -173,7 +173,7 @@ export default function PackBuilder() {
   ]
 
   return (
-    <div className="md:grid md:grid-cols-4 gap-8">
+    <div className="md:grid md:grid-cols-4 gap-8 mb-20">
       <aside className="hidden md:block md:col-span-1">
         <StepSidebar
           labels={STEP_LABELS}
