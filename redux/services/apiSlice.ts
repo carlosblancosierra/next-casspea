@@ -93,7 +93,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 export const apiSlice = createApi({
 	reducerPath: 'api',
 	// Use the new middleware function as our baseQuery.
-	baseQuery: baseQueryWithReauth,
+	baseQuery: baseQueryWithCsrf,
 	tagTypes: ['Cart', 'CheckoutSession', 'Addresses', 'Templates', 'Flavours', 'Products', 'UserDesigns', 'Orders'],
 	endpoints: builder => ({}),
 });
