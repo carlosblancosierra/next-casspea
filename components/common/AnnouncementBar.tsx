@@ -68,7 +68,7 @@ export default function AnnouncementBar() {
           <Link
             href="/subscribe"
             className="w-full md:w-auto text-center rounded-full
-            bg-gradient-to-r from-primary to-primary-dark
+            bg-gradient-primary
             px-3.5 py-1 text-sm text-white shadow-sm hover:bg-primary-light"
           >
             Subscribe for 10% off <span aria-hidden="true">&rarr;</span>

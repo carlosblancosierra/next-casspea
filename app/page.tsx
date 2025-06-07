@@ -40,7 +40,7 @@ const ButtonGroup = () => (
   <div className="hidden md:flex gap-2">
     <Link
       href="/shop-now/"
-      className="inline-flex items-center justify-center px-8 py-4 mr-3 text-xl font-medium text-primary-button-text rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light"
+      className="inline-flex items-center justify-center px-8 py-4 mr-3 text-xl font-medium text-primary-button-text rounded-lg bg-gradient-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light"
     >
       Shop Now
       <svg

@@ -38,7 +38,7 @@ export default function AboutUsPage() {
                     <div className="absolute inset-0 bg-black/70 rounded-lg"></div>
                     <div className="relative">
                         <Image
-                            src="/logos/brown.png"
+                            src="/logos/pink.png"
                             alt="CassPea Logo"
                             width={200}
                             height={100}
