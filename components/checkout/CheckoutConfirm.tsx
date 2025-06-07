@@ -107,7 +107,7 @@ const CheckoutConfirm = () => {
                     <button
                         onClick={handleProceedToPayment}
                         disabled={isProcessing || !selectedShippingOption}
-                        className="w-full bg-primary text-white py-3 px-4 rounded-md
+                        className="w-full bg-gradient-primary text-white py-3 px-4 rounded-md
                             hover:bg-primary focus:outline-none focus:ring-2
                             focus:ring-primary-2 focus:ring-offset-2 disabled:bg-gray-300
                             disabled:cursor-not-allowed transition-colors duration-200"
