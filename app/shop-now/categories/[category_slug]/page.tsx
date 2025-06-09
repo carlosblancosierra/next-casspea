@@ -33,13 +33,6 @@ export default function CategoryDetailPage() {
     ? products 
     : products?.filter((product: Product) => product?.category?.slug === category_slug);
 
-  const router = useRouter();
-  useEffect(() => {
-    if (!categoryLoading && filteredProducts && filteredProducts.length === 1) {
-      router.push(`/shop-now/${filteredProducts[0].slug}`);
-    }
-  }, [filteredProducts, categoryLoading, router]);
-
   if(filteredProducts?.length === 1) {
     return (
       <div className="flex items-center justify-center min-h-screen">
