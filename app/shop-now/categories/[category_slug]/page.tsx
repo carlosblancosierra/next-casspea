@@ -33,14 +33,6 @@ export default function CategoryDetailPage() {
     ? products 
     : products?.filter((product: Product) => product?.category?.slug === category_slug);
 
-  if(filteredProducts?.length === 1) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Spinner md />
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto min-h-[80vh] py-2 mb-[300px]">
       <div className="md:text-center mb-8">
