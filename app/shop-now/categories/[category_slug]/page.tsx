@@ -1,14 +1,13 @@
 'use client';
 
-import React from 'react';
-import { useParams } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import ProductCard from '@/components/store/ProductCard';
 import Spinner from '@/components/common/Spinner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGetCategoryQuery } from '@/redux/features/products/productApiSlice';
 import PackBuilder from '@/components/packs/PackBuilder';
 import { Product } from '@/types/products';
-import { STEP_EXPLANATIONS } from '@/components/packs/constants';
 export default function CategoryDetailPage() {
   const { category_slug } = useParams() as { category_slug: string };
   if (category_slug === 'packs') {
@@ -34,8 +33,23 @@ export default function CategoryDetailPage() {
     ? products 
     : products?.filter((product: Product) => product?.category?.slug === category_slug);
 
+  const router = useRouter();
+  useEffect(() => {
+    if (!categoryLoading && filteredProducts && filteredProducts.length === 1) {
+      router.push(`/shop-now/${filteredProducts[0].slug}`);
+    }
+  }, [filteredProducts, categoryLoading, router]);
+
+  if(filteredProducts?.length === 1) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner md />
+      </div>
+    );
+  }
+
   return (
-    <div className="container mx-auto min-h-[80vh] py-2">
+    <div className="container mx-auto min-h-[80vh] py-2 mb-[300px]">
       <div className="md:text-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white text-center">
           { category.name }
