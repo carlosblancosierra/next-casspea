@@ -7,6 +7,9 @@ type ColoredListItem =
 type ColoredListProps = {
   items: ColoredListItem[];
   useCustomColors?: boolean;
+  title?: string;
+  subtitle?: string;
+  className?: string;
 };
 
 const colorDict: Record<string, string> = {
@@ -39,14 +42,17 @@ function shuffle<T>(array: T[]): T[] {
   return arr;
 }
 
-const ColoredList: React.FC<ColoredListProps> = ({ items, useCustomColors }) => {
+const ColoredList: React.FC<ColoredListProps> = ({ items, useCustomColors, className, title, subtitle }) => {
   const shuffledColors = React.useMemo(
     () => shuffle(defaultColorClasses),
     [items.length]
   );
 
   return (
-    <ol className="mt-4 space-y-1 list-decimal list-inside">
+    <div>
+      {title && <h3 className="text-2xl font-bold mb-2 text-black dark:text-white">{title}</h3>}
+      {subtitle && <p className="text-gray-600 mb-4 text-black dark:text-white">{subtitle}</p>}
+    <ol className={`mt-4 space-y-1 list-decimal list-inside ${className}`}>
       {items.map((item, idx) => {
         if (typeof item === "string" || !useCustomColors) {
           // Fallback to old behavior
@@ -69,8 +75,9 @@ const ColoredList: React.FC<ColoredListProps> = ({ items, useCustomColors }) => 
             {item.text}
           </li>
         );
-      })}
-    </ol>
+        })}
+      </ol>
+    </div>
   );
 };
 

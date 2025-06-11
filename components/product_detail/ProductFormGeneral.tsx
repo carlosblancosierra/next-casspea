@@ -41,7 +41,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
     };
 
     const prideBoxList = [
-        { text: "Meet the pride flavours!", colorKey: "black" },
+        // { text: "Meet the pride flavours!", colorKey: "black" },
         { text: "Red - Rhubarb and Custard", colorKey: "red" },
         { text: "Orange- Apple Pie", colorKey: "orange" },
         { text: "Yellow - Passion Fruit and Mango Caramel", colorKey: "yellow" },
@@ -53,11 +53,14 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
         <form>
             <div className="mt-4">
                 <ColoredList
+                    className="mb-4"
                     items={
                         product.slug === "pride-box"
                             ? prideBoxList
                             : product.description?.split('\n') || []
                     }
+                    title="Meet the pride flavours!"
+                    subtitle="Each box contains 15 of the following flavours:"
                     useCustomColors={product.slug === "pride-box"}
                 />
                 
