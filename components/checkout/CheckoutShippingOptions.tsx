@@ -90,12 +90,13 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
 
             <div className="space-y-4">
                 {allShippingOptions.map((option) => {
+                    const isOptionDisabled = option.disabled;
                     const dates = getEstimatedDeliveryDates(option.estimated_days_min, option.estimated_days_max);
                     return (
                         <label
                             key={option.id}
                             className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer
-                                ${isUpdating ? 'opacity-50 cursor-not-allowed' : 'hover: dark:hover:bg-gray-700'}
+                                ${isUpdating || isOptionDisabled ? 'opacity-50 cursor-not-allowed' : 'hover: dark:hover:bg-gray-700'}
                                 ${localSelectedOption === option.id.toString() ? 'border-primary-2 ring-1 ring-primary-2' : 'border-gray-200'}`}
                         >
                             <div className="flex items-center">
@@ -105,7 +106,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     value={option.id.toString()}
                                     checked={localSelectedOption === option.id.toString()}
                                     onChange={() => handleShippingChange(option.id.toString())}
-                                    disabled={isUpdating}
+                                    disabled={isUpdating || isOptionDisabled}
                                     className="h-4 w-4 text-primary focus:ring-primary-2"
                                 />
                                 <div className="ml-3">
@@ -115,12 +116,20 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     <p className="text-gray-900 dark:text-gray-100 dark:text-gray-400 text-base">
                                         {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(option.price)}
                                     </p>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                                        Ships: {dates.shipping}
-                                    </p>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                                        Estimated Delivery: {dates.delivery}
-                                    </p>
+                                    {isOptionDisabled ? (
+                                        <p className="text-red-600 dark:text-red-400 text-sm">
+                                            {option.disabled_reason}
+                                        </p>
+                                    ) : (
+                                        <>
+                                            <p className="text-gray-600 dark:text-gray-400 text-sm">
+                                                Ships: {dates.shipping}
+                                            </p>
+                                            <p className="text-gray-600 dark:text-gray-400 text-sm">
+                                                Estimated Delivery: {dates.delivery}
+                                            </p>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </label>

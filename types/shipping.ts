@@ -6,6 +6,8 @@ export interface ShippingOption {
     estimated_days_min: number;
     estimated_days_max: number;
     description: string;
+    disabled: boolean;
+    disabled_reason: string;
 }
 
 export interface ShippingCompany {
