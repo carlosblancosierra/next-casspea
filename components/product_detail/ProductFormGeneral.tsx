@@ -6,6 +6,7 @@ import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { Product as ProductType } from '@/types/products';
 import { useAddCartItemMutation } from "@/redux/features/carts/cartApiSlice";
+import ColoredList from "../common/ColoredList";
 
 interface ProductFormGeneralProps {
     product: ProductType;
@@ -39,9 +40,26 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
         }
     };
 
+    const prideBoxList = [
+        { text: "Meet the pride flavours!", colorKey: "black" },
+        { text: "Red - Rhubarb and Custard", colorKey: "red" },
+        { text: "Orange- Apple Pie", colorKey: "orange" },
+        { text: "Yellow - Passion Fruit and Mango Caramel", colorKey: "yellow" },
+        { text: "Green - Mint and Dark Chocolate", colorKey: "green" },
+        { text: "Blue - Guava Cheesecake", colorKey: "blue" },
+    ];
+
     return (
         <form>
             <div className="mt-4">
+                <ColoredList
+                    items={
+                        product.slug === "pride-box"
+                            ? prideBoxList
+                            : product.description?.split('\n') || []
+                    }
+                    useCustomColors={product.slug === "pride-box"}
+                />
                 
                 {!product.sold_out && (
                     <>
