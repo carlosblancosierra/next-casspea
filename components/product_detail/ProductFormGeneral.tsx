@@ -59,8 +59,8 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                             ? prideBoxList
                             : product.description?.split('\n') || []
                     }
-                    title="Meet the pride flavours!"
-                    subtitle="Each box contains 15 of the following flavours:"
+                    title="Meet the Pride Flavours!"
+                    subtitle="Each box contains 15 bonbons, comprising three of each flavour."
                     useCustomColors={product.slug === "pride-box"}
                 />
                 
