@@ -40,17 +40,27 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         allShippingOptions = allShippingOptions.filter(option => option.companyId !== 34);
     }
 
+    // Sort: enabled options first, then disabled
+    allShippingOptions = allShippingOptions.sort((a, b) => {
+        if (a.disabled === b.disabled) return 0;
+        return a.disabled ? 1 : -1;
+    });
 
-    // Set default option if none selected
+    // Set default option if none selected, and never select a disabled option
     useEffect(() => {
         if (allShippingOptions.length && !localSelectedOption) {
-            setLocalSelectedOption(allShippingOptions[0].id.toString());
-            onShippingOptionChange(allShippingOptions[0].id);
+            const firstEnabled = allShippingOptions.find(opt => !opt.disabled);
+            if (firstEnabled) {
+                setLocalSelectedOption(firstEnabled.id.toString());
+                onShippingOptionChange(firstEnabled.id);
+            }
         }
     }, [allShippingOptions, localSelectedOption]);
 
     const handleShippingChange = async (optionId: string) => {
         if (isUpdating) return;
+        const option = allShippingOptions.find(opt => opt.id.toString() === optionId);
+        if (!option || option.disabled) return; // Prevent selecting disabled
 
         setIsUpdating(true);
         setLocalSelectedOption(optionId);
