@@ -102,6 +102,9 @@ export default function OrderList() {
   return (
     <div className="max-w-7xl mx-auto lg:px-8 py-6">
       {/* Date pickers and search button */}
+      <div className="mb-2 text-center font-semibold text-gray-900 dark:text-gray-100">
+        Filter by order date
+      </div>
       <div className="flex justify-center space-x-4 mb-4">
         <DatePicker
           selected={startDate}
@@ -110,6 +113,7 @@ export default function OrderList() {
           startDate={startDate}
           endDate={endDate}
           dateFormat="yyyy-MM-dd"
+          className="text-black"
         />
         <DatePicker
           selected={endDate}
@@ -119,6 +123,7 @@ export default function OrderList() {
           endDate={endDate}
           minDate={startDate}
           dateFormat="yyyy-MM-dd"
+          className="text-black"
         />
         <button
           className="px-4 py-2 bg-blue-600 text-white rounded"

@@ -277,10 +277,10 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                   )}
 
                   {/* Actions: Download Label, Track Package, and Send Tracking Code Mail */}
-                  <div className="flex gap-2 mt-2">
+                  <div className="flex flex-col gap-2 mt-2">
                     <button
                       onClick={() => onDownloadLabel(order.order_id)}
-                      className="inline-flex items-center gap-1 px-3 py-2 rounded bg-main-bg dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                      className="w-full inline-flex items-center gap-1 px-3 py-2 rounded bg-main-bg dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                     >
                       <ArrowDownTrayIcon className="h-5 w-5" />
                       Download Label
@@ -290,7 +290,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                         href={`https://www.royalmail.com/track-your-item#/tracking-results/${order.tracking_number}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 px-3 py-2 rounded bg-blue-50 dark:bg-blue-900 border border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-200 hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors"
+                        className="w-full inline-flex items-center gap-1 px-3 py-2 rounded bg-blue-50 dark:bg-blue-900 border border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-200 hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors"
                       >
                         Track Package
                       </a>
@@ -298,7 +298,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                     <button
                       onClick={handleSendTrackingMail}
                       disabled={sendingTrackingMail}
-                      className="inline-flex items-center gap-1 px-3 py-2 rounded bg-indigo-500 hover:bg-indigo-600 text-white"
+                      className="w-full inline-flex items-center gap-1 px-3 py-2 rounded bg-indigo-500 hover:bg-indigo-600 text-white"
                     >
                       {sendingTrackingMail ? 'Sending...' : 'Send Tracking Code Mail'}
                     </button>
