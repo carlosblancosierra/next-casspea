@@ -3,6 +3,8 @@ import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 import { Order } from '@/types/orders';
 import { formatDate, formatSelectionType, formatShippingAddress } from './ordersUtils';
 import { Product } from '@/types/products';
+import { useSendTrackingCodeMailMutation } from '@/redux/features/orders/ordersApiSlice';
+import { toast } from 'react-toastify';
 
 const getCustomization = (boxCustomization: any, packCustomization: any) =>
   boxCustomization ?? packCustomization;
@@ -132,6 +134,17 @@ const OrderStatusBadge: React.FC<{ status: string }> = ({ status }) => {
 const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownloadLabel, products }) => {
   const { time } = formatDate(order.created);
   const [isCreating, setIsCreating] = useState(false);
+  const [sendTrackingCodeMail, { isLoading: sendingTrackingMail }] = useSendTrackingCodeMailMutation();
+
+  const handleSendTrackingMail = async () => {
+    try {
+      await sendTrackingCodeMail({ order_id: order.order_id }).unwrap();
+      toast.success('Tracking code email sent successfully!');
+    } catch (error) {
+      console.error('Failed to send tracking code email:', error);
+      toast.error('Failed to send tracking code email');
+    }
+  };
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
@@ -263,7 +276,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                     </div>
                   )}
 
-                  {/* Download Label Button */}
+                  {/* Actions: Download Label, Track Package, and Send Tracking Code Mail */}
                   <div className="flex gap-2 mt-2">
                     <button
                       onClick={() => onDownloadLabel(order.order_id)}
@@ -282,6 +295,13 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                         Track Package
                       </a>
                     )}
+                    <button
+                      onClick={handleSendTrackingMail}
+                      disabled={sendingTrackingMail}
+                      className="inline-flex items-center gap-1 px-3 py-2 rounded bg-indigo-500 hover:bg-indigo-600 text-white"
+                    >
+                      {sendingTrackingMail ? 'Sending...' : 'Send Tracking Code Mail'}
+                    </button>
                   </div>
                 </div>
               ) : (

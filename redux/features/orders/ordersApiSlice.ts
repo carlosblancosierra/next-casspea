@@ -19,11 +19,19 @@ const ordersApiSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ['Orders'],
         }),
+        sendTrackingCodeMail: builder.mutation<{ success: boolean }, { order_id: string }>({
+            query: ({ order_id }) => ({
+                url: '/orders/send-tracking-code-mail/',
+                method: 'POST',
+                body: { order_id },
+            }),
+        }),
     }),
 });
 
 export const {
     useGetOrdersQuery,
+    useSendTrackingCodeMailMutation,
 } = ordersApiSlice;
 
 export default ordersApiSlice;
