@@ -18,17 +18,12 @@ function getCookie(name: string) {
 
 export default function OrderList() {
   const today = useMemo(() => new Date(), []);
-  const [startDate, setStartDate] = useState<Date>(addDays(today, -6)); // últimos 7 días
+  const [startDate, setStartDate] = useState<Date>(addDays(today, -6));
   const [endDate, setEndDate]     = useState<Date>(today);
-  const [filters, setFilters]     = useState<OrdersQueryParams>({});
-
-  // Actualizar filtros al cambiar fechas
-  useEffect(() => {
-    setFilters({
-      start_date: format(startDate, 'yyyy-MM-dd'),
-      end_date:   format(endDate,   'yyyy-MM-dd'),
-    });
-  }, [startDate, endDate]);
+  const [filters, setFilters]     = useState<OrdersQueryParams>({
+    start_date: format(addDays(today, -6), 'yyyy-MM-dd'),
+    end_date: format(today, 'yyyy-MM-dd'),
+  });
 
   const { data: orders, isLoading, isFetching, error } =
     useGetOrdersQuery(filters);
@@ -82,6 +77,14 @@ export default function OrderList() {
     }
   }, []);
 
+  // Add a handler for the search button
+  const handleSearch = () => {
+    setFilters({
+      start_date: format(startDate, 'yyyy-MM-dd'),
+      end_date:   format(endDate,   'yyyy-MM-dd'),
+    });
+  };
+
   if (isBusy) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
@@ -98,7 +101,7 @@ export default function OrderList() {
 
   return (
     <div className="max-w-7xl mx-auto lg:px-8 py-6">
-      {/* Date pickers */}
+      {/* Date pickers and search button */}
       <div className="flex justify-center space-x-4 mb-4">
         <DatePicker
           selected={startDate}
@@ -117,11 +120,17 @@ export default function OrderList() {
           minDate={startDate}
           dateFormat="yyyy-MM-dd"
         />
+        <button
+          className="px-4 py-2 bg-blue-600 text-white rounded"
+          onClick={handleSearch}
+        >
+          Search
+        </button>
       </div>
 
       {/* Rango mostrado */}
       <div className="mb-4 text-center font-semibold">
-        Mostrando pedidos de {startDate.toLocaleDateString()} a{' '}
+        Showing orders from {startDate.toLocaleDateString()} to{' '}
         {endDate.toLocaleDateString()}
       </div>
 
