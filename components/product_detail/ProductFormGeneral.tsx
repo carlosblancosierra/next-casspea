@@ -52,6 +52,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
     return (
         <form>
             <div className="mt-4">
+                {product.slug == "pride-box" && (
                 <ColoredList
                     className="mb-4"
                     items={
@@ -63,7 +64,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                     subtitle="Each box contains 15 bonbons, comprising three of each flavour."
                     useCustomColors={product.slug === "pride-box"}
                 />
-                
+                )}
                 {!product.sold_out && (
                     <>
                         <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
