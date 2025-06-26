@@ -27,4 +27,5 @@ export interface Order {
       discounted_total: string;
     };
   };
+  past_orders?: string[];
 }

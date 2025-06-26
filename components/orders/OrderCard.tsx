@@ -250,6 +250,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
             </dd>
           </div>
 
+          {/* Customer Orders Summary */}
+          <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Customer Orders</dt>
+            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+              {order.past_orders && order.past_orders.length > 0
+                ? `${order.past_orders.length + 1} total orders, past: (${order.past_orders.join(', ')})`
+                : '1 total order, no past orders'}
+            </dd>
+          </div>
+
           {/* Shipping Details & Actions */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">

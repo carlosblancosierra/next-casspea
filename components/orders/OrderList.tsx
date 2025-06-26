@@ -10,7 +10,6 @@ import { Order } from '@/types/orders';
 import DaySection from './DaySection';
 import { toast } from 'react-toastify';
 
-// Extraer utilidades fuera del componente
 function getCookie(name: string) {
   const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
   return match ? decodeURIComponent(match[2]) : null;
@@ -22,17 +21,14 @@ export default function OrderList() {
   const [endDate, setEndDate]     = useState<Date>(today);
   const [filters, setFilters]     = useState<OrdersQueryParams>({
     start_date: format(addDays(today, -6), 'yyyy-MM-dd'),
-    end_date: format(today, 'yyyy-MM-dd'),
+    end_date:   format(today, 'yyyy-MM-dd'),
   });
 
-  const { data: orders, isLoading, isFetching, error } =
-    useGetOrdersQuery(filters);
+  const { data: orders, isLoading, isFetching, error } = useGetOrdersQuery(filters);
   const { data: products } = useGetProductsQuery();
   const [createRoyalMailOrder] = useCreateRoyalMailOrderMutation();
-
   const isBusy = isLoading || isFetching;
 
-  // Memoizar agrupación por día
   const grouped: Record<string, Order[]> = useMemo(() => {
     return orders?.reduce((acc, order) => {
       const d = format(new Date(order.created), 'yyyy-MM-dd');
@@ -77,38 +73,23 @@ export default function OrderList() {
     }
   }, []);
 
-  // Add a handler for the search button
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     setFilters({
       start_date: format(startDate, 'yyyy-MM-dd'),
       end_date:   format(endDate,   'yyyy-MM-dd'),
     });
-  };
-
-  if (isBusy) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
-      </div>
-    );
-  }
-  if (error) {
-    return <p className="text-center text-red-600">Error cargando pedidos</p>;
-  }
-  if (!orders?.length) {
-    return <p className="text-center text-gray-500">No hay pedidos en este rango</p>;
-  }
+  }, [startDate, endDate]);
 
   return (
     <div className="max-w-7xl mx-auto lg:px-8 py-6">
-      {/* Date pickers and search button */}
+      {/* siempre visibles */}
       <div className="mb-2 text-center font-semibold text-gray-900 dark:text-gray-100">
-        Filter by order date
+        Filtrar pedidos por fecha
       </div>
       <div className="flex justify-center space-x-4 mb-4">
         <DatePicker
           selected={startDate}
-          onChange={(d) => d && setStartDate(d)}
+          onChange={d => d && setStartDate(d)}
           selectsStart
           startDate={startDate}
           endDate={endDate}
@@ -117,7 +98,7 @@ export default function OrderList() {
         />
         <DatePicker
           selected={endDate}
-          onChange={(d) => d && setEndDate(d)}
+          onChange={d => d && setEndDate(d)}
           selectsEnd
           startDate={startDate}
           endDate={endDate}
@@ -129,31 +110,39 @@ export default function OrderList() {
           className="px-4 py-2 bg-blue-600 text-white rounded"
           onClick={handleSearch}
         >
-          Search
+          Buscar
         </button>
       </div>
 
-      {/* Rango mostrado */}
       <div className="mb-4 text-center font-semibold">
-        Showing orders from {startDate.toLocaleDateString()} to{' '}
-        {endDate.toLocaleDateString()}
+        Mostrando de {startDate.toLocaleDateString()} a {endDate.toLocaleDateString()}
       </div>
 
-      {/* Secciones por día */}
-      <div className="space-y-4">
-        {Object.entries(grouped)
-          .sort(([a], [b]) => +new Date(b) - +new Date(a))
-          .map(([date, dayOrders]) => (
-            <DaySection
-              key={date}
-              date={date}
-              orders={dayOrders}
-              onCreateShipping={handleCreate}
-              onDownloadLabel={handleDownload}
-              products={products || []}
-            />
-          ))}
-      </div>
+      {/* contenido dinámico */}
+      {isBusy ? (
+        <div className="flex justify-center items-center min-h-[200px]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
+        </div>
+      ) : error ? (
+        <p className="text-center text-red-600">Error cargando pedidos</p>
+      ) : !orders?.length ? (
+        <p className="text-center text-gray-500">No hay pedidos en este rango</p>
+      ) : (
+        <div className="space-y-4">
+          {Object.entries(grouped)
+            .sort(([a], [b]) => +new Date(b) - +new Date(a))
+            .map(([date, dayOrders]) => (
+              <DaySection
+                key={date}
+                date={date}
+                orders={dayOrders}
+                onCreateShipping={handleCreate}
+                onDownloadLabel={handleDownload}
+                products={products || []}
+              />
+            ))}
+        </div>
+      )}
     </div>
   );
 }
