@@ -31,7 +31,7 @@ export function EnterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-3" noValidate>
       <div>
         <label htmlFor="firstName" className="block font-medium mb-1">
           First Name

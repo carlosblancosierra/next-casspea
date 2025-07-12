@@ -24,6 +24,7 @@
 		"classnames": "^2.3.2",
 		"date-fns": "^4.1.0",
 		"framer-motion": "^11.9.0",
+		"jwt-decode": "^4.0.0",
 		"lodash": "^4.17.21",
 		"motion": "^11.13.1",
 		"next": "^14.0.4",
@@ -40,6 +41,8 @@
 		"tailwindcss": "3.3.2"
 	},
 	"devDependencies": {
+		"@tailwindcss/typography": "^0.5.16",
+		"@types/jwt-decode": "^3.1.0",
 		"@types/node": "^20.10.5",
 		"@types/react": "^18.2.45",
 		"daisyui": "^5.0.0",
