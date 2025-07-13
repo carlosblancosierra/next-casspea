@@ -359,10 +359,12 @@ function FlavourGrid() {
       <div className="grid grid-cols-4 md:grid-cols-12 gap-2 max-w-6xl mx-auto">
         {flavours?.map((flavour: Flavour) => (
           <div key={flavour.id} className="aspect-square w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-            <img
+            <Image
               src={flavour.image || flavour.thumbnail || '/flavours/default.png'}
               alt=""
-              className="object-cover w-full h-full"
+              fill
+              style={{ objectFit: 'contain' }}
+              className="w-full h-full"
               loading="lazy"
             />
           </div>
