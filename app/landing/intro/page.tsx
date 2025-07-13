@@ -6,6 +6,12 @@ import Link from 'next/link';
 import { Playfair_Display } from 'next/font/google';
 import { useState } from 'react';
 import ImageGallery from '@/components/product_detail/ImageGallery';
+import ProductCard from '@/components/store/ProductCard';
+import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
+import { Flavour } from '@/types/flavours';
+import NewsletterSubscribe from '@/components/newsletter/NewsletterSubscribe';
+import { useGetCategoriesQuery } from '@/redux/features/products/productApiSlice';
+import CategoryCard from '@/components/store/CategoryCard';
 
 const playfair = Playfair_Display({ subsets: ['latin'], weight: ['700'] });
 
@@ -15,13 +21,15 @@ export default function LandingPage() {
       <HeroSection />
       <WhoWeAre />
       <SignatureBoxes />
-      <Flavours />
+      <OtherCategories />
+      <FlavourGrid />
+      {/* <Flavours /> */}
       <WhyChooseUs />
       <CustomGifts />
       <Testimonials />
-      <Newsletter />
+      <NewsletterSubscribe />
       <SocialFollow />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }
@@ -29,22 +37,18 @@ export default function LandingPage() {
 // 1. Hero
 function HeroSection() {
   return (
-    <section className="relative">
-      <video
-        src="/hero.mp4"
-        autoPlay
-        muted
-        loop
-        className="w-full h-[60vh] object-cover"
-        poster="/landings/thermomix/intro/bg-1.jpg"
-        onError={(e) => {
-          const target = e.target as HTMLVideoElement;
-          target.style.display = 'none';
-          const fallback = document.getElementById('hero-fallback-img');
-          if (fallback) fallback.style.display = 'block';
-        }}
-      />
-      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center px-4 text-center">
+    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/landings/intro/bg-1.jpg"
+          alt="Hero background"
+          fill
+          className="object-cover w-full h-full"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center">
         <h1 className={`${playfair.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white text-shadow-md`}>
           Share the Love, One Bonbon at a Time
         </h1>
@@ -52,7 +56,7 @@ function HeroSection() {
           Luxury handmade chocolates crafted in London.
         </p>
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
-          <Link href="/shop" className="px-6 py-3 bg-pink-500 hover:bg-pink-600 rounded-lg text-white font-medium">
+          <Link href="/shop-now" className="px-6 py-3 bg-pink-500 hover:bg-pink-600 rounded-lg text-white font-medium">
             Shop Now
           </Link>
           <Link href="#story" className="px-6 py-3 border border-white rounded-lg text-white font-medium">
@@ -84,7 +88,7 @@ function WhoWeAre() {
         <p className="leading-relaxed">
           CassPea is a London-based chocolate brand, handcrafting bonbons with bold flavours, stunning designs, and a touch of joy. Founded by chefs with a passion for creativity, every chocolate is made with care — and made to be shared.
         </p>
-        <Link href="/about" className="inline-block mt-4 text-pink-500 font-semibold">
+        <Link href="/about-us" className="inline-block mt-4 text-pink-500 font-semibold">
           Meet the Makers →
         </Link>
       </div>
@@ -93,11 +97,43 @@ function WhoWeAre() {
 }
 
 // 3. Signature Boxes
-const BOXES = [
-  { count: 9, label: 'A little treat, beautifully made.' },
-  { count: 15, label: 'Our best-seller, bursting with flavour.' },
-  { count: 24, label: 'For those who want it all.' },
-  { count: 48, label: 'The most indulgent experience.' },
+const BOX_PRODUCTS = [
+  {
+    id: 1,
+    name: 'Box of 9 Bonbons',
+    slug: 'box-of-9',
+    image: '/landings/intro/boxes/9.jpeg',
+    base_price: '15.00',
+    weight: 135,
+    gallery_images: [],
+  },
+  {
+    id: 2,
+    name: 'Box of 15 Bonbons',
+    slug: 'box-of-15',
+    image: '/landings/intro/boxes/15.jpeg',
+    base_price: '22.00',
+    weight: 225,
+    gallery_images: [],
+  },
+  {
+    id: 3,
+    name: 'Box of 24 Bonbons',
+    slug: 'box-of-24',
+    image: '/landings/intro/boxes/24.jpeg',
+    base_price: '35.00',
+    weight: 360,
+    gallery_images: [],
+  },
+  {
+    id: 4,
+    name: 'Box of 48 Bonbons',
+    slug: 'box-of-48',
+    image: '/landings/intro/boxes/48.jpeg',
+    base_price: '65.00',
+    weight: 720,
+    gallery_images: [],
+  },
 ];
 
 function SignatureBoxes() {
@@ -105,25 +141,12 @@ function SignatureBoxes() {
     <section className="py-12 bg-gray-100 dark:bg-gray-800">
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-center text-2xl sm:text-3xl font-bold mb-8">Pick Your Box</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {BOXES.map(box => (
-            <div key={box.count} className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-              <Image
-                src={`/boxes/${box.count}.jpg`}
-                alt={`${box.count} bonbons`}
-                width={500}
-                height={500}
-                className="w-full h-auto rounded"
-              />
-              <h3 className="mt-4 text-xl font-semibold">{box.count} Bonbons</h3>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{box.label}</p>
-              <Link
-                href={`/shop?box=${box.count}`}
-                className="mt-4 inline-block px-5 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded"
-              >
-                Build Your Box
-              </Link>
-            </div>
+        <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
+          Our signature boxes are the perfect way to share the love. From 9 to 48 bonbons, we have a box for every occasion.
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+          {BOX_PRODUCTS.map(product => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>
@@ -161,9 +184,10 @@ function Flavours() {
 
 // 5. Why Choose Us
 const REASONS = [
+  { icon: '🍫', text: 'Almost too pretty to eat' },
   { icon: '🌱', text: 'Natural Ingredients' },
   { icon: '🎨', text: 'Edible Art' },
-  { icon: '📦', text: 'Eco-Friendly Packaging' },
+  { icon: '📦', text: 'Handmade in London' },
   { icon: '❤️', text: 'Small Batch Production' },
   { icon: '🌈', text: 'Inclusive & Joyful Brand' },
 ];
@@ -192,7 +216,7 @@ function CustomGifts() {
     <section className="py-12 px-4">
       <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
         <Image
-          src="/images/custom-box.jpg"
+          src="/landings/intro/packs.jpg"
           alt="Custom Gifts"
           width={800}
           height={600}
@@ -214,8 +238,33 @@ function CustomGifts() {
 
 // 7. Testimonials
 const TESTIMONIALS = [
-  { name: 'Emma', text: 'Los chocolates más deliciosos que he probado.' },
-  { name: 'Liam', text: 'Perfectos para regalar, ¡volveré a comprar!' },
+  {
+    name: 'Saf Teli',
+    country: 'GB',
+    reviews: 1,
+    rating: 5,
+    date: 'Jun 21, 2025',
+    text: 'These were recommended to me by a friend who loved them. I ordered some for myself and also as a thank you gift. They were wonderful and were appreciated by the recipient too. The customer service was also brilliant as they were super responsive and solution focused when I reached out. Highly recommend!',
+    experience: 'April 28, 2025'
+  },
+  {
+    name: 'Kate W',
+    country: 'GB',
+    reviews: 2,
+    rating: 5,
+    date: 'Mar 3, 2025',
+    text: 'Brought these as a 50th birthday present for my friend who loves her chocolate, she loved them and has since brought them as gifts herself. Beautiful chocolates presented in a lovely box & she assures me they were delicious.',
+    experience: 'November 10, 2024'
+  },
+  {
+    name: 'John Ng',
+    country: 'GB',
+    reviews: 18,
+    rating: 5,
+    date: 'Mar 11, 2025',
+    text: 'Excellent, and beautiful chocolates!! I have ordered a couple times from casspea and the packaging is beautiful. I like how they now include a menu in thier boxes too. Excellent gifts, and wonderful flavours overall. Highly recommend',
+    experience: 'March 10, 2025'
+  },
 ];
 
 function Testimonials() {
@@ -225,42 +274,27 @@ function Testimonials() {
       <div className="max-w-3xl mx-auto space-y-6">
         {TESTIMONIALS.map((t, i) => (
           <blockquote key={i} className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="font-semibold text-lg">{t.name}</span>
+              {t.country && <span className="text-xs text-gray-400">{t.country}</span>}
+              {t.reviews && <span className="text-xs text-gray-400">• {t.reviews} review{t.reviews > 1 ? 's' : ''}</span>}
+            </div>
+            {t.rating && (
+              <div className="flex items-center gap-1 mb-1">
+                {Array.from({ length: t.rating }).map((_, idx) => (
+                  <span key={idx} className="text-yellow-400">★</span>
+                ))}
+                <span className="text-xs text-gray-500 ml-2">Rated {t.rating} out of 5 stars</span>
+              </div>
+            )}
+            {t.date && <div className="text-xs text-gray-400 mb-2">{t.date}</div>}
             <p className="italic">“{t.text}”</p>
-            <footer className="mt-4 text-right font-semibold">— {t.name}</footer>
+            {t.experience && (
+              <div className="mt-2 text-xs text-gray-500">Date of experience: {t.experience}</div>
+            )}
+            {!t.rating && !t.date && <footer className="mt-4 text-right font-semibold">— {t.name}</footer>}
           </blockquote>
         ))}
-      </div>
-    </section>
-  );
-}
-
-// 8. Newsletter
-function Newsletter() {
-  const [email, setEmail] = useState('');
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // lógica de suscripción...
-  };
-  return (
-    <section className="py-12 px-4">
-      <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4">Get 10% Off Your First Order</h2>
-        <p className="mb-6 text-gray-600 dark:text-gray-400">
-          Plus early access to new flavours, limited drops, and special offers.
-        </p>
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
-          <input
-            type="email"
-            required
-            placeholder="Your email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            className="flex-1 px-4 py-2 border rounded-lg focus:ring focus:ring-pink-300"
-          />
-          <button type="submit" className="px-6 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg">
-            Subscribe
-          </button>
-        </form>
       </div>
     </section>
   );
@@ -272,11 +306,10 @@ function SocialFollow() {
     <section className="py-12 bg-gray-900 text-white px-4">
       <h2 className="text-center text-2xl sm:text-3xl font-bold mb-6">Come Behind the Scenes</h2>
       <div className="max-w-4xl mx-auto">
-        {/* Aquí podrías insertar embed de IG Reel o grid de imágenes */}
-        <p className="text-center mb-4">Síguenos en Instagram y TikTok:</p>
+        <p className="text-center mb-4">Follow us on Instagram and Facebook:</p>
         <div className="flex justify-center gap-6">
           <Link href="https://instagram.com/casspea_" target="_blank">Instagram</Link>
-          <Link href="https://tiktok.com/@casspea_" target="_blank">TikTok</Link>
+          <Link href="https://facebook.com/casspea_" target="_blank">Facebook</Link>
         </div>
       </div>
     </section>
@@ -313,5 +346,48 @@ function Footer() {
       </div>
       <p className="text-center text-sm mt-6">&copy; {new Date().getFullYear()} CassPea. All rights reserved.</p>
     </footer>
+  );
+}
+
+function FlavourGrid() {
+  const { data: flavours, isLoading, error } = useGetFlavoursQuery();
+  if (isLoading) return <div className="text-center py-12">Loading...</div>;
+  if (error) return <div className="text-center py-12 text-red-500">Error loading flavours.</div>;
+  return (
+    <section className="py-12 px-4">
+      <h2 className="text-center text-2xl sm:text-3xl font-bold mb-6">All Our Flavours</h2>
+      <div className="grid grid-cols-4 md:grid-cols-12 gap-2 max-w-6xl mx-auto">
+        {flavours?.map((flavour: Flavour) => (
+          <div key={flavour.id} className="aspect-square w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+            <img
+              src={flavour.image || flavour.thumbnail || '/flavours/default.png'}
+              alt=""
+              className="object-cover w-full h-full"
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// Section: Other Categories (not signature-boxes)
+function OtherCategories() {
+  const { data: categories, isLoading, error } = useGetCategoriesQuery();
+  if (isLoading) return <div className="text-center py-12">Loading categories...</div>;
+  if (error) return <div className="text-center py-12 text-red-500">Error loading categories.</div>;
+  if (!categories) return null;
+  const filtered = categories.filter((cat) => cat.slug !== 'signature-boxes');
+  if (filtered.length === 0) return null;
+  return (
+    <section className="py-12 px-4">
+      <h2 className="text-center text-2xl sm:text-3xl font-bold mb-6">Explore More Categories</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-w-4xl mx-auto">
+        {filtered.map((category) => (
+          <CategoryCard key={category.id} category={category} />
+        ))}
+      </div>
+    </section>
   );
 }
