@@ -66,7 +66,8 @@ export default function AnnouncementBar() {
             Tel: 07859 790386 / email: info@casspea.co.uk
           </p>
           <p className="text-sm leading-6 w-full md:w-auto text-center">
-            Free Shipping over £50
+            {/* Free Shipping over £50 */}
+            We are closed from 26th July to 15th August
           </p>
           <Link
             href="/subscribe"

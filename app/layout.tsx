@@ -6,9 +6,9 @@ import { Footer, Navbar } from '@/components/common';
 import { Setup } from '@/components/utils';
 import AnnouncementBar from '@/components/common/AnnouncementBar';
 import MobileMenu from '@/components/navigation/MobileMenu';
-import dynamic from 'next/dynamic';
 import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
+import SummerBreakPopup from '@/components/common/SummerBreakPopup';
 
 // const HeartEffect = dynamic(() => import('@/components/common/HeartEffect'), {
 //   ssr: false
@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   title: 'CassPea Premium Chocolates',
   description: 'Handcrafted premium chocolates and confectionery',
 };
+
 
 export default function RootLayout({
   children,
@@ -49,6 +50,7 @@ export default function RootLayout({
         className={`${inter.className} min-h-screen bg-main-bg dark:bg-gray-900 dark:text-white flex flex-col relative`}
         suppressHydrationWarning
       >
+        <SummerBreakPopup />
         <noscript>
           <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWQTXVNR"
             height="0" width="0" style={{display:'none', visibility:'hidden'}}></iframe>
