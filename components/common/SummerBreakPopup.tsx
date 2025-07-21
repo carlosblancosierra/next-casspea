@@ -32,7 +32,7 @@ export default function SummerBreakPopup() {
           <p className="text-base text-gray-700 dark:text-gray-200 mb-4">
             We are closed for summer break from <b>July 26</b> to <b>August 15</b>.<br />
             <span className="text-pink-600 font-semibold mt-2">
-              Orders placed <b>from July 26</b> will begin shipping on <b>August 16</b>.
+              Orders placed <b>from July 26</b> will begin shipping on <b>August 18</b>.
             </span>
           </p>
           <button
