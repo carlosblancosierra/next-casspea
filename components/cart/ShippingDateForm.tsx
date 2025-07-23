@@ -43,9 +43,9 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
             currentDate.setDate(currentDate.getDate() + 1);
         }
 
-        // Disable July 26 to August 15, 2025
+        // Disable July 23 to August 15, 2025
         disabled.push({
-            startDate: new Date("2025-07-26"),
+            startDate: new Date("2025-07-23"),
             endDate: new Date("2025-08-15")
         });
 

@@ -67,7 +67,7 @@ export default function AnnouncementBar() {
           </p>
           <p className="text-sm leading-6 w-full md:w-auto text-center">
             {/* Free Shipping over £50 */}
-            We are closed from 26th July to 15th August
+            We are closed from 23th July to 15th August
           </p>
           <Link
             href="/subscribe"
