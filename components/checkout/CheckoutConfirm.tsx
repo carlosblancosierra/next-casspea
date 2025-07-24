@@ -19,6 +19,7 @@ import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [selectedShippingOption, setSelectedShippingOption] = useState<number | undefined>(undefined);
+    const [agreedToTerms, setAgreedToTerms] = useState(false);
 
     const router = useRouter();
 
@@ -36,6 +37,10 @@ const CheckoutConfirm = () => {
         if (isProcessing) return;
         if (!selectedShippingOption) {
             toast.error('Please select a shipping method');
+            return;
+        }
+        if (!agreedToTerms) {
+            toast.error('You must agree to the shipping terms to proceed');
             return;
         }
 
@@ -104,16 +109,30 @@ const CheckoutConfirm = () => {
                             setSelectedShippingOption(optionId);
                         }}
                     />
-                    {/* <button
+                    <div className="flex justify-between">
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="agreeToTerms"
+                                className="h-4 w-4"
+                                checked={agreedToTerms}
+                                onChange={e => setAgreedToTerms(e.target.checked)}
+                            />
+                            <label htmlFor="agreeToTerms" className="text-sm text-red-500">
+                                I agree that my order will be shipped after the 18th of August 2025
+                            </label>
+                        </div>
+                    </div>
+                    <button
                         onClick={handleProceedToPayment}
-                        disabled={isProcessing || !selectedShippingOption}
+                        disabled={isProcessing || !selectedShippingOption || !agreedToTerms}
                         className="w-full bg-gradient-primary text-white py-3 px-4 rounded-md
                             hover:bg-primary focus:outline-none focus:ring-2
                             focus:ring-primary-2 focus:ring-offset-2 disabled:bg-gray-300
                             disabled:cursor-not-allowed transition-colors duration-200"
                     >
                         {isProcessing ? 'Processing...' : 'Proceed to Payment'}
-                    </button> */}
+                    </button>
                 </div>
             </div>
         </div>
