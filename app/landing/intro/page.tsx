@@ -12,6 +12,7 @@ import { Flavour } from '@/types/flavours';
 import NewsletterSubscribe from '@/components/newsletter/NewsletterSubscribe';
 import { useGetCategoriesQuery } from '@/redux/features/products/productApiSlice';
 import CategoryCard from '@/components/store/CategoryCard';
+import FlavourCard from '@/components/flavours/FlavourCard';
 
 const playfair = Playfair_Display({ subsets: ['latin'], weight: ['700'] });
 
@@ -71,7 +72,7 @@ function HeroSection() {
 // 2. Who We Are
 function WhoWeAre() {
   return (
-    <section id="story" className="py-12 px-4 max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+    <section id="story" className="py-12 px-4 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
       <div>
         <ImageGallery
             images={[
@@ -139,8 +140,8 @@ const BOX_PRODUCTS = [
 function SignatureBoxes() {
   return (
     <section className="py-12 bg-gray-100 dark:bg-gray-800">
-      <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-center text-2xl sm:text-3xl font-bold mb-8">Pick Your Box</h2>
+      <div className="max-w-7xl mx-auto px-1">
+        <h2 className="text-center text-2xl sm:text-3xl font-bold mb-4">Signature Boxes</h2>
         <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
           Our signature boxes are the perfect way to share the love. From 9 to 48 bonbons, we have a box for every occasion.
         </p>
@@ -195,12 +196,12 @@ const REASONS = [
 function WhyChooseUs() {
   return (
     <section className="py-12 bg-gray-100 dark:bg-gray-800">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-center text-2xl sm:text-3xl font-bold mb-8">Handcrafted with Purpose</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 text-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 text-center">
           {REASONS.map(r => (
             <div key={r.text}>
-              <div className="text-4xl mb-2">{r.icon}</div>
+              <div className="text-6xl mb-2">{r.icon}</div>
               <p className="font-medium">{r.text}</p>
             </div>
           ))}
@@ -271,7 +272,7 @@ function Testimonials() {
   return (
     <section className="py-12 bg-gray-100 dark:bg-gray-800 px-4">
       <h2 className="text-center text-2xl sm:text-3xl font-bold mb-8">Loved by Chocolate Lovers</h2>
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
         {TESTIMONIALS.map((t, i) => (
           <blockquote key={i} className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
             <div className="flex items-center gap-3 mb-2">
@@ -351,25 +352,40 @@ function Footer() {
 
 function FlavourGrid() {
   const { data: flavours, isLoading, error } = useGetFlavoursQuery();
+  const [selectedFlavour, setSelectedFlavour] = useState<Flavour | null>(null);
+
   if (isLoading) return <div className="text-center py-12">Loading...</div>;
   if (error) return <div className="text-center py-12 text-red-500">Error loading flavours.</div>;
   return (
     <section className="py-12 px-4">
       <h2 className="text-center text-2xl sm:text-3xl font-bold mb-6">All Our Flavours</h2>
-      <div className="grid grid-cols-4 md:grid-cols-12 gap-2 max-w-6xl mx-auto">
+      <div className="grid grid-cols-4 md:grid-cols-6 gap-10 max-w-6xl mx-auto">
         {flavours?.map((flavour: Flavour) => (
-          <div key={flavour.id} className="aspect-square w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+          <div key={flavour.id} onClick={() => setSelectedFlavour(flavour)} className="cursor-pointer">
             <Image
               src={flavour.image || flavour.thumbnail || '/flavours/default.png'}
-              alt=""
-              fill
-              style={{ objectFit: 'contain' }}
+              width={0}
+              height={0}
+              sizes="100vw"
+              alt={flavour.name || 'Flavour image'}
               className="w-full h-full"
+              style={{ objectFit: 'contain' }}
               loading="lazy"
             />
           </div>
         ))}
       </div>
+      {/* Modal */}
+      {selectedFlavour && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={() => setSelectedFlavour(null)}>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full relative" onClick={e => e.stopPropagation()}>
+            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => setSelectedFlavour(null)}>
+              &times;
+            </button>
+            <FlavourCard flavour={selectedFlavour} />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
