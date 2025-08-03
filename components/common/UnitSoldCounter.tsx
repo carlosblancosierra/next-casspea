@@ -34,9 +34,9 @@ const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '' }) => 
   if (error) return null;
 
   return (
-    <div className={`rounded-xl bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400 px-8 py-6 flex flex-col items-center w-full max-w-md ${className}`}>
-      <span className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Chocolates Sold Since 2013</span>
-      <div className="flex items-center justify-center h-16">
+    <div className={`rounded-xl bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400 px-4 py-3 flex flex-col items-center w-full max-w-md ${className}`}>
+      <span className="text-lg font-semibold text-gray-900 dark:text-white">Chocolates Sold Since 2023</span>
+      <div className="flex items-center justify-center h-14">
         {isLoading ? (
           <Spinner md />
         ) : (
