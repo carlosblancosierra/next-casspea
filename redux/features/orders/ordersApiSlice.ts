@@ -10,6 +10,15 @@ export interface OrdersQueryParams {
     ordering?: string;
 }
 
+export interface DailyUnitsSold {
+    all_sold: number;
+    ecommerce_v2_sold: number;
+    days: {
+        date: string;
+        units_sold: number;
+    }[];
+}
+
 const ordersApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getOrders: builder.query<any[], OrdersQueryParams | void>({
@@ -26,12 +35,18 @@ const ordersApiSlice = apiSlice.injectEndpoints({
                 body: { order_id },
             }),
         }),
+        getDailyUnitsSold: builder.query<DailyUnitsSold, void>({
+            query: () => ({
+                url: '/orders/daily-units-sold/',
+            }),
+        }),
     }),
 });
 
 export const {
     useGetOrdersQuery,
     useSendTrackingCodeMailMutation,
+    useGetDailyUnitsSoldQuery,
 } = ordersApiSlice;
 
 export default ordersApiSlice;
