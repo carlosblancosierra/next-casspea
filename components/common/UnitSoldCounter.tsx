@@ -7,7 +7,7 @@ interface UnitSoldCounterProps {
   bg?: string;
 }
 
-const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '', bg = '' }) => {
+const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '', bg = 'bg-gradient-primary' }) => {
   const { data: dailyUnitsSold, isLoading, error } = useGetDailyUnitsSoldQuery();
   const [displayedCount, setDisplayedCount] = useState(0);
 
