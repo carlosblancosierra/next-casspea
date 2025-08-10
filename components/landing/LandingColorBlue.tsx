@@ -9,7 +9,7 @@ export default function LandingColorBlue() {
   return (
     <LandingColorBase
       landing={LANDING_TYPES.BLUE}
-      unitSoldBgs={[blueGradient]}
+      unitSoldBgs={blueGradient}
     />
   );
 }

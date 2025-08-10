@@ -3,6 +3,7 @@
 
 import Image from 'next/image';
 import Link  from 'next/link';
+import { HERO_SECTION_DEFAULTS_GOLD, HERO_SECTION_DEFAULTS_BLUE, LANDING_TYPES } from '../constants';
 
 interface CustomGiftsProps {
   landing: string;
@@ -20,11 +21,17 @@ export default function CustomGifts({ landing }: CustomGiftsProps) {
           className="w-full h-auto rounded-lg shadow"
         />
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Make It Personal</h2>
           <p className="mb-6">
             Perfect for weddings, birthdays, corporate gifting and events. Choose your colours, flavours, and packaging.
           </p>
-          <Link href={`/custom/${landing}`} className="px-6 py-3 bg-pink-500 hover:bg-pink-600 text-white rounded-lg">
+          <Link
+            href={`/help`}
+            className={`px-6 py-3 rounded-lg text-white font-semibold transition-colors ${
+              landing === LANDING_TYPES.GOLD
+                ? HERO_SECTION_DEFAULTS_GOLD.ctaBgClass
+                : HERO_SECTION_DEFAULTS_BLUE.ctaBgClass
+            }`}
+          >
             Request a Custom Order
           </Link>
         </div>

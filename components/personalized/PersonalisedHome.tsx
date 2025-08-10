@@ -6,7 +6,11 @@ import CustomChocolate from './CustomChocolate';
 import { UserChosenLayer } from '@/types/personalized';
 import { useMemo } from 'react';
 
-export default function Personalized() {
+export interface PersonalisedProps {
+  theme?: 'gold' | 'blue';
+}
+
+export default function Personalized({ theme = 'blue' }: PersonalisedProps) {
     const { data: templates, isLoading, error } = useGetTemplatesQuery();
 
     const getRandomLayers = (template: any): UserChosenLayer[] => {

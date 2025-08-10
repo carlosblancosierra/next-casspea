@@ -10,12 +10,7 @@ import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 const playfair = Playfair_Display({ subsets: ['latin'], weight: ['700'] });
 
 interface HeroSectionProps {
-  constants: {
-    bgImage: string;
-    overlayClassName: string;
-    ctaBgClass: string;
-    ctaTextClass: string;
-  };
+  constants: any;
 }
 
 export default function HeroSection({
@@ -65,29 +60,30 @@ export default function HeroSection({
         <h1
           className={`${playfair.className} text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]`}
         >
-          Share the Love, One Bonbon at a Time
+          {constants.heading}
         </h1>
 
         <p className="mt-4 max-w-2xl text-base md:text-xl text-gray-100/90">
-          Luxury handmade chocolates crafted in London.
+          {constants.subheading}
         </p>
 
         <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4">
           <Link
-            href="/shop-now"
-            aria-label="Shop Now"
+            href="#lead-capture-twenty-off"
+            aria-label={constants.mainBtnAriaLabel}
             className={`
               inline-flex items-center justify-center px-7 py-3 rounded-lg font-medium
               transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70
-              ${constants.ctaBgClass} ${constants.ctaTextClass}
+              ${constants.ctaBgClass}
+              ${constants.ctaBorderClass} ${constants.ctaTextClass}
             `}
           >
-            Shop Now
+            {constants.mainBtnLabel}
           </Link>
 
           <Link
-            href="#story"
-            aria-label="Explore Our Story"
+            href="/shop-now"
+            aria-label={constants.secondaryBtnAriaLabel}
             className="
               inline-flex items-center justify-center px-7 py-3 rounded-lg font-medium
               border border-white/80 text-white/95 backdrop-blur-[2px]
@@ -95,7 +91,7 @@ export default function HeroSection({
               focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70
             "
           >
-            Explore Our Story
+            {constants.secondaryBtnLabel}
           </Link>
         </div>
       </div>

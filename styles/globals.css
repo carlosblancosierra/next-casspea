@@ -3,6 +3,10 @@
 @tailwind utilities;
 @plugin "daisyui";
 
+html {
+  scroll-behavior: smooth;
+}
+
 .opacity-0 {
     opacity: 0;
 }
@@ -40,6 +44,6 @@
 /* Special radial gold gradient */
 .gradient-radial-gold {
   background: 
-    radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 40%, #8A6E2F 50%, transparent 80%),
-    radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 35%, #5d4a1f 72.5%, #5d4a1f 100%);
+    radial-gradient(ellipse farthest-corner at right bottom, #feda37 0%, #FDB931 8%, #9f7928 40%, #8A6E2F 50%, transparent 80%),
+    radial-gradient(ellipse farthest-corner at left top, #FFFFAC 0%, #ceb05c 1%, #D1B464 30%, #5d4a1f 72.5%, #5d4a1f 100%);
 }

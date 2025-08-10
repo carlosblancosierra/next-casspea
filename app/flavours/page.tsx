@@ -25,7 +25,7 @@ export default function FlavoursPage() {
     }
 
     return (
-        <div className=" dark:bg-gray-900 min-h-screen">
+        <div className="dark:bg-gray-900 min-h-screen my-4">
             <div className="max-w-7xl mx-auto px-0">
                 {/* Header */}
                 <div className="text-center mb-8">
@@ -38,7 +38,7 @@ export default function FlavoursPage() {
                 </div>
 
                 {/* Flavours Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                     {flavours?.map((flavour: Flavour) => (
                         <FlavourCard
                             key={flavour.id}
