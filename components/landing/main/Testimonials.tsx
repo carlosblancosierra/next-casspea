@@ -22,9 +22,9 @@ const TESTIMONIALS = [
   },
 ];
 
-interface TestimonialsProps { landing: string; }
+interface TestimonialsProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
 
-export default function Testimonials({ landing }: TestimonialsProps) {
+export default function Testimonials({ config }: TestimonialsProps) {
   return (
     <section className="py-12 bg-gray-100 dark:bg-gray-800 px-4">
       <h2 className="text-center text-2xl sm:text-3xl font-bold mb-8">Loved by Chocolate Lovers</h2>

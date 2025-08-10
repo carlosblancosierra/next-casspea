@@ -3,9 +3,9 @@
 
 import Link from 'next/link';
 
-interface FooterProps { landing: string; }
+interface FooterProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
 
-export default function Footer({ landing }: FooterProps) {
+export default function Footer({ config }: FooterProps) {
   return (
     <footer className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-8 px-4">
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">

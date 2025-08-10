@@ -8,13 +8,14 @@ import { useMemo } from 'react';
 import { PERSONALISED_TEXT } from '../constants';
 import ColoredList from '@/components/common/ColoredList';
 import { PERSONALISED_STEPS_BLUE_COLORS, PERSONALISED_STEPS_GOLD_COLORS } from '../constants';
-import type { PersonalisedProps } from '@/components/personalized/PersonalisedHome';
 
-export default function Personalized({ theme = 'blue' }: PersonalisedProps) {
+interface PersonalisedProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
+
+export default function Personalised({ config }: PersonalisedProps) {
     const { data: templates, isLoading, error } = useGetTemplatesQuery();
 
     const getRandomLayers = (template: any): UserChosenLayer[] => {
-        return template.layers.map(slot => {
+        return template.layers.map((slot: any) => {
             const randomColor = slot.layer_type.colors[
                 Math.floor(Math.random() * slot.layer_type.colors.length)
             ];
@@ -32,7 +33,7 @@ export default function Personalized({ theme = 'blue' }: PersonalisedProps) {
 
     const randomLayersMap = useMemo(() => {
         const map: Record<string, UserChosenLayer[]> = {};
-        templates?.forEach(template => {
+        templates?.forEach((template: any) => {
             map[template.slug] = getRandomLayers(template);
         });
         return map;
@@ -46,22 +47,22 @@ export default function Personalized({ theme = 'blue' }: PersonalisedProps) {
             {/* Texto introductorio */}
             <div className="text-center max-w-3xl mx-auto px-4">
                 <h2 className="text-2xl md:text-3xl font-bold mb-3">
-                    {PERSONALISED_TEXT.heading}
+                    {config.personalisedText.heading}
                 </h2>
                 <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-2">
-                    {PERSONALISED_TEXT.subheading}
+                    {config.personalisedText.subheading}
                 </p>
                 {/* <ColoredList
-                  items={PERSONALISED_TEXT.steps.map((step, i) => ({
+                  items={config.personalisedText.steps.map((step, i) => ({
                     text: step,
-                    colorKey: (theme === 'gold' ? PERSONALISED_STEPS_GOLD_COLORS : PERSONALISED_STEPS_BLUE_COLORS)[i % 5],
+                    colorKey: config.personalisedColors[i % config.personalisedColors.length],
                   }))}
                 /> */}
             </div>
 
             {/* Grid de plantillas */}
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {templates?.map((template) => (
+                {templates?.map((template: any) => (
                     <Link 
                         key={template.slug} 
                         href={`/personalised/${template.slug}`}
@@ -75,7 +76,7 @@ export default function Personalized({ theme = 'blue' }: PersonalisedProps) {
                         </div>
                         <h2 className="text-xl font-semibold mb-2">{template.title}</h2>
                         <p className="text-gray-600 dark:text-gray-400">
-                            {PERSONALISED_TEXT.templateCardLabel}
+                            {config.personalisedText.templateCardLabel}
                         </p>
                     </Link>
                 ))}

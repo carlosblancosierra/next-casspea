@@ -55,12 +55,27 @@ export const PERSONALISED_STEPS_GOLD_COLORS = [
 ];
 
 
-export const GOLD_CONSTANTS = {
-  HERO_SECTION: HERO_SECTION_DEFAULTS_GOLD,
-  GRADIENT_BG: goldGradient,
-};
-
-export const BLUE_CONSTANTS = {
-  HERO_SECTION: HERO_SECTION_DEFAULTS_BLUE,
-  GRADIENT_BG: blueGradient,
+export const LANDING_CONFIG = {
+  gold: {
+    type: LANDING_TYPES.GOLD,
+    gradient: goldGradient,
+    hero: HERO_SECTION_DEFAULTS_GOLD,
+    leadCaptureTheme: 'gold',
+    leadCaptureBgClass: HERO_SECTION_DEFAULTS_GOLD.leadCaptureBgClass,
+    socialBgClass: HERO_SECTION_DEFAULTS_GOLD.socialBgClass,
+    personalisedColors: PERSONALISED_STEPS_GOLD_COLORS,
+    personalisedText: PERSONALISED_TEXT,
+    // Add more config as needed
+  },
+  blue: {
+    type: LANDING_TYPES.BLUE,
+    gradient: blueGradient,
+    hero: HERO_SECTION_DEFAULTS_BLUE,
+    leadCaptureTheme: 'blue',
+    leadCaptureBgClass: HERO_SECTION_DEFAULTS_BLUE.leadCaptureBgClass,
+    socialBgClass: HERO_SECTION_DEFAULTS_BLUE.socialBgClass,
+    personalisedColors: PERSONALISED_STEPS_BLUE_COLORS,
+    personalisedText: PERSONALISED_TEXT,
+    // Add more config as needed
+  },
 };

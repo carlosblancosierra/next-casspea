@@ -4,9 +4,9 @@
 import { useGetCategoriesQuery } from '@/redux/features/products/productApiSlice';
 import CategoryCard             from '@/components/store/CategoryCard';
 
-interface OtherCategoriesProps { landing: string; }
+interface OtherCategoriesProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
 
-export default function OtherCategories({ landing }: OtherCategoriesProps) {
+export default function OtherCategories({ config }: OtherCategoriesProps) {
   const { data: categories, isLoading, error } = useGetCategoriesQuery();
 
   if (isLoading) return <div className="text-center py-12">Loading categories...</div>;

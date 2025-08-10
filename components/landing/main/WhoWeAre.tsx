@@ -4,9 +4,9 @@
 import ImageGallery from '@/components/product_detail/ImageGallery';
 import Link         from 'next/link';
 
-interface WhoWeAreProps { landing: string; }
+interface WhoWeAreProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
 
-export default function WhoWeAre({ landing }: WhoWeAreProps) {
+export default function WhoWeAre({ config }: WhoWeAreProps) {
   return (
     <section id="story" className="py-12 px-4 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
       <div>

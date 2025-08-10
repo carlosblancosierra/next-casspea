@@ -3,17 +3,16 @@ import { toast } from 'react-toastify';
 import { useSubscribeToNewsletterMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 
 interface LeadCaptureTwentyOffProps {
-  theme?: 'gold' | 'blue';
-  bgClass?: string;
+  config: typeof import('../constants').LANDING_CONFIG.gold;
 }
 
-export default function LeadCaptureTwentyOff({ theme = 'blue', bgClass }: LeadCaptureTwentyOffProps) {
+export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [subscribeToNewsletter] = useSubscribeToNewsletterMutation();
 
   // Gold and blue theme classes
-  const themeClasses = theme === 'gold'
+  const themeClasses = config.leadCaptureTheme === 'gold'
     ? {
         section: 'border-yellow-200 dark:border-yellow-700',
         heading: 'text-3xl md:text-4xl font-extrabold text-white mb-2 text-center',
@@ -50,7 +49,7 @@ export default function LeadCaptureTwentyOff({ theme = 'blue', bgClass }: LeadCa
   };
 
   return (
-    <section id="lead-capture-twenty-off" className={`rounded-xl shadow-lg p-6 md:p-10 mb-8 mx-auto max-w-2xl border ${bgClass || themeClasses.section}`}>
+    <section id="lead-capture-twenty-off" className={`rounded-xl shadow-lg p-6 md:p-10 mb-8 mx-auto max-w-2xl border ${config.leadCaptureBgClass || themeClasses.section}`}>
       <h2 className={themeClasses.heading}>
         Get 20% Off Your First Order
       </h2>

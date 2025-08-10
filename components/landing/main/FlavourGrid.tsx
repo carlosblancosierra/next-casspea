@@ -7,9 +7,9 @@ import { useGetFlavoursQuery }   from '@/redux/features/flavour/flavourApiSlice'
 import { Flavour }               from '@/types/flavours';
 import FlavourCard               from '@/components/flavours/FlavourCard';
 
-interface FlavourGridProps { landing: string; }
+interface FlavourGridProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
 
-export default function FlavourGrid({ landing }: FlavourGridProps) {
+export default function FlavourGrid({ config }: FlavourGridProps) {
   const { data: flavours, isLoading, error } = useGetFlavoursQuery();
   const [selected, setSelected] = useState<Flavour | null>(null);
 

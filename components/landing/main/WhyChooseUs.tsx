@@ -10,9 +10,9 @@ const REASONS = [
   { icon: '🌈', text: 'Inclusive & Joyful Brand' },
 ];
 
-interface WhyChooseUsProps { landing: string; }
+interface WhyChooseUsProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
 
-export default function WhyChooseUs({ landing }: WhyChooseUsProps) {
+export default function WhyChooseUs({ config }: WhyChooseUsProps) {
   return (
     <section className="py-12 bg-gray-100 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4">

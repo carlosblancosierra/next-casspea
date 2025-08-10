@@ -6,10 +6,10 @@ import Link  from 'next/link';
 import { HERO_SECTION_DEFAULTS_GOLD, HERO_SECTION_DEFAULTS_BLUE, LANDING_TYPES } from '../constants';
 
 interface CustomGiftsProps {
-  landing: string;
+  config: typeof import('../constants').LANDING_CONFIG.gold;
 }
 
-export default function CustomGifts({ landing }: CustomGiftsProps) {
+export default function CustomGifts({ config }: CustomGiftsProps) {
   return (
     <section className="py-12 px-4">
       <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
@@ -26,11 +26,7 @@ export default function CustomGifts({ landing }: CustomGiftsProps) {
           </p>
           <Link
             href={`/help`}
-            className={`px-6 py-3 rounded-lg text-white font-semibold transition-colors ${
-              landing === LANDING_TYPES.GOLD
-                ? HERO_SECTION_DEFAULTS_GOLD.ctaBgClass
-                : HERO_SECTION_DEFAULTS_BLUE.ctaBgClass
-            }`}
+            className={`px-6 py-3 rounded-lg text-white font-semibold transition-colors ${config.hero.ctaBgClass}`}
           >
             Request a Custom Order
           </Link>

@@ -10,9 +10,9 @@ const BOX_PRODUCTS = [
   { id: 4, name: 'Box of 48 Bonbons', slug: 'box-of-48', image: '/landings/intro/boxes/48.jpeg', base_price: '65.00', weight: 720, gallery_images: [] },
 ];
 
-interface SignatureBoxesProps { landing: string; }
+interface SignatureBoxesProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
 
-export default function SignatureBoxes({ landing }: SignatureBoxesProps) {
+export default function SignatureBoxes({ config }: SignatureBoxesProps) {
   return (
     <section className="py-12 bg-gray-100 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-1">

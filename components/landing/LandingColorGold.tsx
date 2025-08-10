@@ -2,13 +2,10 @@
 'use client';
 
 import LandingColorBase from './LandingColorBase';
-import { GOLD_CONSTANTS, LANDING_TYPES } from './constants';
+import { LANDING_CONFIG } from './constants';
 
 export default function LandingColorGold() {
   return (
-    <LandingColorBase
-      landing={LANDING_TYPES.GOLD}
-      unitSoldBgs={GOLD_CONSTANTS.GRADIENT_BG}
-    />
+    <LandingColorBase config={LANDING_CONFIG.gold} />
   );
 }

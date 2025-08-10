@@ -10,12 +10,10 @@ import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 const playfair = Playfair_Display({ subsets: ['latin'], weight: ['700'] });
 
 interface HeroSectionProps {
-  constants: any;
+  config: typeof import('../constants').LANDING_CONFIG.gold;
 }
 
-export default function HeroSection({
-  constants,
-}: HeroSectionProps) {
+export default function HeroSection({ config }: HeroSectionProps) {
   const bgRef = useRef<HTMLDivElement | null>(null);
 
   // Parallax ligero con rAF (se desactiva si el usuario prefiere reducir movimiento)
@@ -44,13 +42,13 @@ export default function HeroSection({
         className="pointer-events-none absolute inset-0 z-0 will-change-transform"
       >
         <Image
-          src={constants.bgImage}
+          src={config.hero.bgImage}
           alt=""
           fill
           priority
           className="object-cover w-full h-full"
         />
-        <div className={`absolute inset-0 ${constants.overlayClassName}`} />
+        <div className={`absolute inset-0 ${config.hero.overlayClassName}`} />
         {/* Sutil gradiente para legibilidad en la base */}
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/40 to-transparent" />
       </div>
@@ -60,30 +58,30 @@ export default function HeroSection({
         <h1
           className={`${playfair.className} text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]`}
         >
-          {constants.heading}
+          {config.hero.heading}
         </h1>
 
         <p className="mt-4 max-w-2xl text-base md:text-xl text-gray-100/90">
-          {constants.subheading}
+          {config.hero.subheading}
         </p>
 
         <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4">
           <Link
             href="#lead-capture-twenty-off"
-            aria-label={constants.mainBtnAriaLabel}
+            aria-label={config.hero.mainBtnAriaLabel}
             className={`
               inline-flex items-center justify-center px-7 py-3 rounded-lg font-medium
               transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70
-              ${constants.ctaBgClass}
-              ${constants.ctaBorderClass} ${constants.ctaTextClass}
+              ${config.hero.ctaBgClass}
+              ${config.hero.ctaTextClass}
             `}
           >
-            {constants.mainBtnLabel}
+            {config.hero.mainBtnLabel}
           </Link>
 
           <Link
             href="/shop-now"
-            aria-label={constants.secondaryBtnAriaLabel}
+            aria-label={config.hero.secondaryBtnAriaLabel}
             className="
               inline-flex items-center justify-center px-7 py-3 rounded-lg font-medium
               border border-white/80 text-white/95 backdrop-blur-[2px]
@@ -91,7 +89,7 @@ export default function HeroSection({
               focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70
             "
           >
-            {constants.secondaryBtnLabel}
+            {config.hero.secondaryBtnLabel}
           </Link>
         </div>
       </div>

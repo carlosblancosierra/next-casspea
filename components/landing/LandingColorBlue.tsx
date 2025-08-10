@@ -3,13 +3,10 @@
 
 // Section components
 import LandingColorBase from './LandingColorBase';
-import { blueGradient, LANDING_TYPES } from './constants';
+import { LANDING_CONFIG } from './constants';
 
 export default function LandingColorBlue() {
   return (
-    <LandingColorBase
-      landing={LANDING_TYPES.BLUE}
-      unitSoldBgs={blueGradient}
-    />
+    <LandingColorBase config={LANDING_CONFIG.blue} />
   );
 }
