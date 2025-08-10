@@ -8,7 +8,8 @@ import { usePathname } from 'next/navigation';
 export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
-  if (pathname?.startsWith('/blog')) return null;
+  const hiddenPaths = ['/blog', '/landing/gold'];
+  if (hiddenPaths.some(path => pathname?.startsWith(path))) return null;
 
   const handleClose = () => {
     setIsVisible(false);

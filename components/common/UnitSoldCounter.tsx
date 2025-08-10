@@ -4,9 +4,10 @@ import { useGetDailyUnitsSoldQuery } from '@/redux/features/orders/ordersApiSlic
 
 interface UnitSoldCounterProps {
   className?: string;
+  bg?: string;
 }
 
-const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '' }) => {
+const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '', bg = '' }) => {
   const { data: dailyUnitsSold, isLoading, error } = useGetDailyUnitsSoldQuery();
   const [displayedCount, setDisplayedCount] = useState(0);
 
@@ -34,17 +35,17 @@ const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '' }) => 
   if (error) return null;
 
   return (
-    <div className={`rounded-xl bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400 px-4 py-3 flex flex-col items-center w-full max-w-md ${className}`}>
-      <span className="text-lg font-semibold text-gray-900 dark:text-white">Chocolates Sold Since 2023</span>
-      <div className="flex items-center justify-center h-14">
+    <div className={`px-4 py-2 flex flex-col items-center w-full ${bg}`}>
+      <div className="flex items-center justify-center">
         {isLoading ? (
           <Spinner md />
         ) : (
-          <span className="text-4xl font-extrabold text-white tracking-tight drop-shadow">
+          <span className="text-3xl font-extrabold text-white tracking-tight drop-shadow">
             {displayedCount.toLocaleString()}
           </span>
         )}
       </div>
+      <span className="text-lg font-semibold text-gray-900 dark:text-white">Chocolates Sold Since 2023</span>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function SummerBreakPopup() {
   const [show, setShow] = useState(true);
@@ -14,6 +15,8 @@ export default function SummerBreakPopup() {
     //   sessionStorage.setItem('hideSummerBreakPopup', 'true');
     // }
   };
+  const pathname = usePathname();
+  if (pathname && pathname.startsWith('/landing')) return null;
   if (!show) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

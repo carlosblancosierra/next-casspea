@@ -103,9 +103,9 @@ export default function RootLayout({
               <div className="hidden md:block">
                 <Footer />
               </div>
-              <div className="block md:hidden">
+              {/* <div className="block md:hidden">
                 <MobileMenu />
-              </div>
+              </div> */}
             </div>
           </LayoutWrapper>
         </Provider>
