@@ -24,7 +24,7 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-black/40 rounded-lg" />
       </div>
 
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 mx-auto md:gap-8 xl:gap-0 md:pb-8 w-full max-w-7xl px-4">
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 mx-auto md:gap-8 xl:gap-0 md:pb-8 w-full max-w-7xl px-4 py-4">
         <div className="md:mr-10 md:col-span-6 flex flex-col justify-center items-center md:items-start text-center md:text-left">
           <h1
             className={`${playfair.className} mb-2 text-4xl md:text-7xl font-extrabold tracking-tight leading-none text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]`}
@@ -33,10 +33,10 @@ export default function HeroSection() {
           </h1>
           <h2 className="text-2xl mb-2 text-white font-semibold drop-shadow">{C.HERO_SUBTITLE}</h2>
 
-          <div className="mt-3 mb-4 flex items-start gap-3 text-sm text-gray-100">
-            <FaRegClock className="mt-1 shrink-0" />
+          <div className="my-2 flex items-start gap-3 text-sm text-gray-100">
+            {/* <FaRegClock className="mt-1 shrink-0" /> */}
             <p>
-              <span className="font-semibold">{C.COUNTDOWN_TITLE}:</span>{' '}
+              {/* <span className="font-semibold">{C.COUNTDOWN_TITLE}:</span>{' '} */}
               {C.DEADLINE_COPY.replace('{TZ}', C.TIMEZONE)}
             </p>
           </div>
@@ -46,26 +46,9 @@ export default function HeroSection() {
           </p>
 
           <ButtonGroup />
-
-          <div className="md:hidden mt-4 flex gap-2 w-full">
-            <a
-              href={IG_URL_UTM}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 inline-flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-            >
-              {C.BUTTON_FOLLOW_TEXT}
-            </a>
-            <Link
-              href={C.SUBSCRIBE_PAGE_PATH}
-              className="flex-1 inline-flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
-            >
-              {C.BUTTON_SUBSCRIBE_TEXT}
-            </Link>
-          </div>
         </div>
 
-        <div className="col-span-1 md:col-span-6 flex flex-col items-center justify-center">
+        <div className="col-span-1 md:col-span-6 flex flex-col items-center justify-center mt-4">
           <Image
             src="/landings/thermomix/hero-1.jpg"
             width={0}
@@ -76,7 +59,7 @@ export default function HeroSection() {
             alt={C.HERO_IMAGE_ALT}
           />
           {/* Mobile Gallery */}
-          <div className="block md:hidden w-full max-w-[400px] mx-auto px-2">
+          <div className="block md:hidden w-full max-w-[400px] mx-auto">
             <ImageGallery
               images={[
                 '/landings/thermomix/hero-1.jpg',
