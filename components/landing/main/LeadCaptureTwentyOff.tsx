@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useSubscribeToNewsletterMutation } from '@/redux/features/subscribe/subscribeApiSlice';
+import { FormCode, useSubscribeGenericLeadMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 
 interface LeadCaptureTwentyOffProps {
   config: typeof import('../constants').LANDING_CONFIG.gold;
@@ -9,7 +9,7 @@ interface LeadCaptureTwentyOffProps {
 export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [subscribeToNewsletter] = useSubscribeToNewsletterMutation();
+  const [subscribeGenericLead, { isLoading: apiLoading, isError, error }] = useSubscribeGenericLeadMutation();
 
   // Gold and blue theme classes
   const themeClasses = config.leadCaptureTheme === 'gold'
@@ -37,8 +37,9 @@ export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffPro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    const code = config.leadCaptureTheme === 'gold' ? 'GOLD' : 'BLUE';
     try {
-      await subscribeToNewsletter({ email }).unwrap();
+      await subscribeGenericLead({ email, lead_type: 'landing_page', form_code: code }).unwrap();
       toast.success('Brilliant! Check your inbox for your 20% off code.');
       setEmail('');
     } catch (error) {

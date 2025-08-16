@@ -3,8 +3,11 @@
 import React, { useState, useRef } from 'react';
 import FormInput from '@/components/address/FormInput';
 import FormSection from '@/components/address/FormSection';
+import { useSubscribeGenericLeadMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 
 export function EnterForm() {
+  const [subscribeGenericLead, { isLoading: apiLoading, isError, error }] = useSubscribeGenericLeadMutation();
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -24,13 +27,21 @@ export function EnterForm() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: replace with actual submission logic (e.g. API call)
-    console.log('Form submitted:', formData);
-    alert(
-      'Thank you! Your entry has been received. We will send you an email to confirm eligibility.'
-    );
+    try {
+      await subscribeGenericLead({
+        email: formData.email,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        instagram_username: formData.instaHandle,
+        lead_type: 'giveaway',
+        form_code: 'TM7',
+      }).unwrap();
+      // Optionally show a success message or reset form
+    } catch (err) {
+      // Optionally handle error
+    }
   };
 
   return (

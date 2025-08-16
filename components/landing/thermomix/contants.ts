@@ -108,7 +108,7 @@ export const PRIZE_DETAILS_LIST = [
 ];
 
 // Form
-export const ENTER_GIVEAWAY_TITLE = 'Enter now';
+export const ENTER_GIVEAWAY_TITLE = 'Enter the giveaway';
 export const FORM_NAME_LABEL = 'Name';
 export const FORM_EMAIL_LABEL = 'Email';
 export const FORM_COUNTRY_LABEL = 'Country';
