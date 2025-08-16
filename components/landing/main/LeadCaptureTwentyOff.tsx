@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FormCode, useSubscribeGenericLeadMutation } from '@/redux/features/subscribe/subscribeApiSlice';
+import { useRouter } from 'next/navigation';
 
 interface LeadCaptureTwentyOffProps {
   config: typeof import('../constants').LANDING_CONFIG.gold;
@@ -10,6 +11,7 @@ export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffPro
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [subscribeGenericLead, { isLoading: apiLoading, isError, error }] = useSubscribeGenericLeadMutation();
+  const router = useRouter();
 
   // Gold and blue theme classes
   const themeClasses = config.leadCaptureTheme === 'gold'
@@ -40,8 +42,13 @@ export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffPro
     const code = config.leadCaptureTheme === 'gold' ? 'GOLD' : 'BLUE';
     try {
       await subscribeGenericLead({ email, lead_type: 'landing_page', form_code: code }).unwrap();
-      toast.success('Brilliant! Check your inbox for your 20% off code.');
+      // toast.success('Brilliant! Check your inbox for your 20% off code.');
       setEmail('');
+      if (code === 'GOLD') {
+        router.push('/landing/gold/thank-you');
+      } else {
+        router.push('/landing/blue/thank-you');
+      }
     } catch (error) {
       toast.error('Sorry, something went wrong. Please try again.');
     } finally {
