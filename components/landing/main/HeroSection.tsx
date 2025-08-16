@@ -34,7 +34,7 @@ export default function HeroSection({ config }: HeroSectionProps) {
   }, []);
 
   return (
-    <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden mt-2">
+    <section id="lead-capture-twenty-off" className="scroll-mt-24 relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden mt-2">
       {/* Capa de fondo con parallax */}
       <div
         ref={bgRef}
@@ -66,7 +66,7 @@ export default function HeroSection({ config }: HeroSectionProps) {
         </p>
 
         <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <Link
+          <a
             href="#lead-capture-twenty-off"
             aria-label={config.hero.mainBtnAriaLabel}
             className={`
@@ -77,7 +77,7 @@ export default function HeroSection({ config }: HeroSectionProps) {
             `}
           >
             {config.hero.mainBtnLabel}
-          </Link>
+          </a>
 
           <Link
             href="/shop-now"

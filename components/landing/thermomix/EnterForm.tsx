@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import FormInput from '@/components/address/FormInput';
 import FormSection from '@/components/address/FormSection';
 import { useSubscribeGenericLeadMutation } from '@/redux/features/subscribe/subscribeApiSlice';
+import { toast } from 'react-toastify';
 
 export function EnterForm() {
   const [subscribeGenericLead, { isLoading: apiLoading, isError, error }] = useSubscribeGenericLeadMutation();
@@ -38,9 +39,9 @@ export function EnterForm() {
         lead_type: 'giveaway',
         form_code: 'TM7',
       }).unwrap();
-      // Optionally show a success message or reset form
+      toast.success('Thank you! Your entry has been received. We will send you an email to confirm eligibility.');
     } catch (err) {
-      // Optionally handle error
+      toast.error('Failed to subscribe. Please try again.');
     }
   };
 
