@@ -41,7 +41,7 @@ const CartUnitsSold: React.FC<Props> = ({ className = '' }) => {
         <p className="text-sm font-medium text-gray-800 dark:text-gray-100">
           {cartUnits > 0 ? (
             <>
-              We have sold <span className="font-extrabold">{baseSold.toLocaleString('en-GB')}</span> bonbons. With your <span className="font-extrabold">{cartUnits.toLocaleString('en-GB')}</span> chocolates, we will reach <span className="font-extrabold">{projectedTotal.toLocaleString('en-GB')}</span>!
+              We have sold <span className="font-extrabold">{baseSold.toLocaleString('en-GB')}</span> bonbons. With your <span className="font-extrabold">{cartUnits.toLocaleString('en-GB')}</span> chocolates, we will reach <span className="font-extrabold bg-gradient-primary bg-clip-text text-transparent">{projectedTotal.toLocaleString('en-GB')}</span>!
             </>
           ) : (
             <>We have sold <span className="font-extrabold">{baseSold.toLocaleString('en-GB')}</span> bonbons.</>
