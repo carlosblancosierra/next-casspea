@@ -3,7 +3,7 @@ import * as C from '@/components/landing/thermomix/contants';
 import HeroSection from '@/components/landing/thermomix/HeroSection';
 import Section from '@/components/landing/thermomix/Section';
 import Badge from '@/components/landing/thermomix/Badge';
-import SocialProofSection from '@/components/landing/thermomix/SocialProofSection';
+import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import HowToEnterSection from '@/components/landing/thermomix/HowToEnterSection';
 import StoryShareSection from '@/components/landing/thermomix/StoryShareSection';
 import BenefitsSection from '@/components/landing/thermomix/BenefitsSection';
@@ -64,6 +64,9 @@ export default function LandingThermomix() {
           <Badge text="18+ • See Terms & Conditions" />
         </div>
       </Section>
+      <div className="flex justify-center mb-6">
+        <UnitSoldCounter />
+      </div>
       <HowToEnterSection />
       <StoryShareSection />
       <BenefitsSection />
