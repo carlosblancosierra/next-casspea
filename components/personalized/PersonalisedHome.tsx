@@ -14,7 +14,7 @@ export default function Personalized({ theme = 'blue' }: PersonalisedProps) {
     const { data: templates, isLoading, error } = useGetTemplatesQuery();
 
     const getRandomLayers = (template: any): UserChosenLayer[] => {
-        return template.layers.map(slot => {
+        return template.layers.map((slot: any) => {
             const randomColor = slot.layer_type.colors[
                 Math.floor(Math.random() * slot.layer_type.colors.length)
             ];
@@ -43,7 +43,7 @@ export default function Personalized({ theme = 'blue' }: PersonalisedProps) {
     if (error) return <div>Error loading templates</div>;
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-6 gap-4">
             {templates?.map((template) => (
                 <Link 
                     key={template.slug} 
