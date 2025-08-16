@@ -5,11 +5,11 @@ import { useState }             from 'react';
 import Image                     from 'next/image';
 import { useGetFlavoursQuery }   from '@/redux/features/flavour/flavourApiSlice';
 import { Flavour }               from '@/types/flavours';
-import FlavourCard               from '@/components/flavours/FlavourCard';
+import FlavourCard               from '@/components/landing/main/FlavourCard';
 
-interface FlavourGridProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
+interface FlavourGridProps { }
 
-export default function FlavourGrid({ config }: FlavourGridProps) {
+export default function FlavourGrid({ }: FlavourGridProps) {
   const { data: flavours, isLoading, error } = useGetFlavoursQuery();
   const [selected, setSelected] = useState<Flavour | null>(null);
 

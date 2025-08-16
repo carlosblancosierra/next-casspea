@@ -7,11 +7,13 @@ import dynamic from 'next/dynamic';
 import ImageGallery from '@/components/product_detail/ImageGallery';
 import PersonalisedHome from '@/components/personalized/PersonalisedHome';
 import CategoryProducts from '@/components/home/CategoryProducts';
+import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 
 // Dynamically import components that can load later
 const HomeProducts = dynamic(() => import('@/components/home/HomeProducts'));
 const HomeGallery = dynamic(() => import('@/components/home/HomeGallery'));
 const FlavourCarousel = dynamic(() => import('@/components/flavours/FlavourCarousel'));
+const FlavoursGrid = dynamic(() => import('@/components/landing/main/FlavourGrid'));
 
 // Reusable section component that wraps content in Suspense with a title
 const Section = ({
@@ -40,7 +42,7 @@ const ButtonGroup = () => (
   <div className="hidden md:flex gap-2">
     <Link
       href="/shop-now/"
-      className="inline-flex items-center justify-center px-8 py-4 mr-3 text-xl font-medium text-primary-button-text rounded-lg bg-gradient-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light"
+      className="inline-flex items-center justify-center px-8 py-4 mr-3 text-xl font-medium text-primary-button-text rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light"
     >
       Shop Now
       <svg
@@ -64,6 +66,9 @@ const HeroSection = () => (
   <section className="dark:bg-gray-900">
     <div className="grid grid-cols-1 md:grid-cols-12 mx-auto md:gap-8 xl:gap-0 md:pb-8 relative">
       <div className="md:mr-10 md:col-span-6">
+        <div className="hidden md:block mb-6 mt-2">
+          <UnitSoldCounter />
+        </div>
         <h1
           className={`${playfair.className} mb-2 text-5xl text-primary-text font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}
         >
@@ -100,6 +105,9 @@ const HeroSection = () => (
           ]}
           className="block md:hidden"
         />
+        <div className="md:hidden mb-6">
+          <UnitSoldCounter />
+        </div>
         <p className="md:hidden md:mb-6 text-3xl font-bold mt-2 font-playfair lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">
           Share the love with CassPea Chocolates
         </p>
@@ -131,6 +139,10 @@ export default function HomePage() {
     <main className="dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <HeroSection />
 
+      {/* <Section title="" extraClass="">
+        <UnitSoldCounter />
+      </Section> */}
+
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
         <HomeProducts />
       </Section>
@@ -144,7 +156,7 @@ export default function HomePage() {
       </Section>
 
       <Section title="Our Flavours" extraClass="mt-10">
-        <FlavourCarousel />
+        <FlavoursGrid/>
       </Section>
 
       <Section title="Personalised Chocolates" extraClass="mt-10">

@@ -43,6 +43,7 @@ export default function FlavoursPage() {
                         <FlavourCard
                             key={flavour.id}
                             flavour={flavour}
+                            height="h-70"
                         />
                     ))}
                 </div>

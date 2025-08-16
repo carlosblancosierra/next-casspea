@@ -1,15 +1,14 @@
 'use client';
 
-import HeroSection     from './main/HeroSection';
-import WhoWeAre        from './main/WhoWeAre';
-import SignatureBoxes  from './main/SignatureBoxes';
+import HeroSection from './main/HeroSection';
+import WhoWeAre from './main/WhoWeAre';
+import SignatureBoxes from './main/SignatureBoxes';
 import OtherCategories from './main/OtherCategories';
-import FlavourGrid     from './main/FlavourGrid';
-import WhyChooseUs     from './main/WhyChooseUs';
-import CustomGifts     from './main/CustomGifts';
-import Testimonials    from './main/Testimonials';
-import SocialFollow    from './main/SocialFollow';
-import Footer          from './main/Footer';
+import FlavourGrid from './main/FlavourGrid';
+import WhyChooseUs from './main/WhyChooseUs';
+import CustomGifts from './main/CustomGifts';
+import Testimonials from './main/Testimonials';
+import SocialFollow from './main/SocialFollow';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import LeadCaptureTwentyOff from './main/LeadCaptureTwentyOff';
 import Personalised from './main/Personalised';
@@ -27,7 +26,7 @@ export default function LandingColorBase({ config }: LandingColorBaseProps) {
       <LeadCaptureTwentyOff config={config} />
       <SignatureBoxes config={config} />
       <OtherCategories config={config} />
-      <FlavourGrid config={config} />
+      <FlavourGrid />
       <WhyChooseUs config={config} />
       <Personalised config={config} />
       <CustomGifts config={config} />

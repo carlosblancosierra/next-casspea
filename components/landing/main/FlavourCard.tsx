@@ -4,24 +4,21 @@ import Image from 'next/image';
 
 interface FlavourCardProps {
     flavour: FlavourType;
-    height?: string;
 }
 
-const FlavourCard: React.FC<FlavourCardProps> = ({ flavour, height = 'h-96' }) => {
+const FlavourCard: React.FC<FlavourCardProps> = ({ flavour }) => {
     return (
         <div
-            className={`border p-4 rounded-lg flex-shrink-0 bg-main-bg shadow-md dark:bg-gray-800 dark:text-white dark:border-gray-700 w-full flex flex-col justify-between ${height}`}
+            className="border p-4 rounded-lg flex-shrink-0 bg-main-bg shadow-md dark:bg-gray-800 dark:text-white dark:border-gray-700"
             style={{ overflow: 'hidden' }}
         >
-            <div className="w-full flex items-center justify-center" style={{ minHeight: 120, maxHeight: 120 }}>
-                <Image
-                    src={flavour.image || '/flavours/default.png'}
+            <div className="mx-20">
+                <Image src={flavour.image || '/flavours/default.png'}
                     alt={flavour.name}
                     width={0}
                     height={0}
                     sizes="100vw"
-                    className="object-contain w-full h-full max-h-[120px]"
-                />
+                    className='w-full h-auto' />
             </div>
             <h3 className="text-lg font-bold md:text-md text-center min-h-[2rem] mt-3 leading-5
             ">{flavour.name}</h3>
