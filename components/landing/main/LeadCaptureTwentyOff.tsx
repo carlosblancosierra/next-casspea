@@ -57,7 +57,10 @@ export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffPro
   };
 
   return (
-    <section id="lead-capture-twenty-off" className={`rounded-xl shadow-lg p-6 md:p-10 mb-8 mx-auto max-w-2xl border ${config.leadCaptureBgClass || themeClasses.section}`}>
+    <section
+      id="enter-form"
+      className={`scroll-mt-32 rounded-xl shadow-lg p-6 md:p-10 mb-8 mx-auto max-w-2xl border ${config.leadCaptureBgClass || themeClasses.section}`}
+    >
       <h2 className={themeClasses.heading}>
         Get 20% Off Your First Order
       </h2>

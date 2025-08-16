@@ -67,7 +67,7 @@ export default function HeroSection({ config }: HeroSectionProps) {
 
         <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4">
           <a
-            href="#lead-capture-twenty-off"
+            href="#enter-form"
             aria-label={config.hero.mainBtnAriaLabel}
             className={`
               inline-flex items-center justify-center px-7 py-3 rounded-lg font-medium
