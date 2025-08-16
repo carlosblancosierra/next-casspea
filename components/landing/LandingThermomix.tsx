@@ -35,6 +35,28 @@ export default function LandingThermomix() {
           By entering, you agree to receive emails from {C.BRAND}. You can unsubscribe at any time.
         </p>
       </Section>
+      <Section title="Watch How It Works" extraClass="mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="aspect-w-16 aspect-h-9 w-full">
+            <iframe
+              src="https://www.youtube.com/embed/sYyTH4rFuz0"
+              title="Thermomix Video 1"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-64 md:h-80 rounded-lg shadow"
+            />
+          </div>
+          <div className="aspect-w-16 aspect-h-9 w-full">
+            <iframe
+              src="https://www.youtube.com/embed/rxm0Sv0ckUM"
+              title="Thermomix Video 2"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-64 md:h-80 rounded-lg shadow"
+            />
+          </div>
+        </div>
+      </Section>
       <Section>
         <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
           <Badge text="No purchase necessary" />
