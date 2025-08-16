@@ -67,7 +67,6 @@ export default function LandingThermomix() {
       <HowToEnterSection />
       <StoryShareSection />
       <BenefitsSection />
-      <SocialProofSection />
       <PrizeDetailsSection />
       <KeyTermsSection />
       <TermsSection />
