@@ -33,7 +33,6 @@ export default function LandingColorBase({ config }: LandingColorBaseProps) {
       <CustomGifts config={config} />
       <Testimonials config={config} />
       <SocialFollow config={config} />
-      <Footer config={config} />
     </main>
   );
 }

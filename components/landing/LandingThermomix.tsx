@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { Playfair_Display } from 'next/font/google';
 import * as C from '@/components/landing/thermomix/contants';
 import HeroSection from '@/components/landing/thermomix/HeroSection';
@@ -11,7 +10,6 @@ import BenefitsSection from '@/components/landing/thermomix/BenefitsSection';
 import PrizeDetailsSection from '@/components/landing/thermomix/PrizeDetailsSection';
 import KeyTermsSection from '@/components/landing/thermomix/KeyTermsSection';
 import TermsSection from '@/components/landing/thermomix/TermsSection';
-import SiteFooter from '@/components/landing/thermomix/SiteFooter';
 import { EnterForm } from '@/components/landing/thermomix/EnterForm';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
@@ -51,7 +49,6 @@ export default function LandingThermomix() {
       <PrizeDetailsSection />
       <KeyTermsSection />
       <TermsSection />
-      <SiteFooter />
     </main>
   );
 }

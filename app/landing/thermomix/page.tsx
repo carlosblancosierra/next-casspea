@@ -1,4 +1,4 @@
-import LandingThermomix from '@/components/landing/thermomix/LandingThermomix';
+import LandingThermomix from '@/components/landing/LandingThermomix';
 
 export default function HomePage() {
   return <LandingThermomix />;
