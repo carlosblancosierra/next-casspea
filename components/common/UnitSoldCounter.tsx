@@ -1,3 +1,4 @@
+"use client";
 import Spinner from './Spinner';
 import React, { useEffect, useState } from 'react';
 import { useGetDailyUnitsSoldQuery } from '@/redux/features/orders/ordersApiSlice';
