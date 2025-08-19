@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams } from 'next/navigation'
+import CheckoutSuccessUnitsSold from '@/components/checkout/CheckoutSuccessUnitsSold';
 
 const ConfirmPage: React.FC = () => {
     const params = useParams<{ session_id: string }>()
@@ -33,9 +34,11 @@ const ConfirmPage: React.FC = () => {
                             className="rounded-lg w-full h-full"
                         />
                     </div>
+                    
 
                     {/* Content Section */}
                     <div className="flex flex-col md:ml-10 lg:text-left text-center gap-2 md:gap-10 justify-start h-full mt-4">
+                        <CheckoutSuccessUnitsSold className="mb-4" />
                         <h2 className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl dark:text-white">
                             Order Placed Successfully!
                         </h2>
