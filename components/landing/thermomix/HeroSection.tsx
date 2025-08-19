@@ -45,7 +45,27 @@ export default function HeroSection() {
             {C.HERO_PARAGRAPH}
           </p>
 
-          <ButtonGroup />
+          {/* Steps to Enter */}
+          <div className="mt-6 w-full flex flex-col items-center">
+            <ol className="flex flex-col md:flex-row gap-4 md:gap-6 w-full max-w-2xl justify-center items-start md:items-center">
+              {C.HOW_TO_ENTER_STEPS.map((step, idx) => (
+                <li key={idx} className="flex items-start md:items-center gap-2 md:gap-3">
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-lg shrink-0">
+                    {idx + 1}
+                  </span>
+                  <span className="text-sm md:text-base text-white text-left">{step}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          {/* Single CTA Button */}
+          <a
+            href="#enter-form"
+            className="w-full md:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg text-white font-semibold transition-colors bg-pink-600 hover:bg-pink-700 text-lg mt-6 mb-2"
+          >
+            Register your entry
+          </a>
         </div>
 
         <div className="col-span-1 md:col-span-6 flex flex-col items-center justify-center mt-4">

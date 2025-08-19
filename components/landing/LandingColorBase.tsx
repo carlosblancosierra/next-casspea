@@ -12,6 +12,7 @@ import SocialFollow from './main/SocialFollow';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import LeadCaptureTwentyOff from './main/LeadCaptureTwentyOff';
 import Personalised from './main/Personalised';
+import Instagram from './main/Instagram';
 
 interface LandingColorBaseProps {
   config: typeof import('./constants').LANDING_CONFIG.gold;
@@ -31,7 +32,7 @@ export default function LandingColorBase({ config }: LandingColorBaseProps) {
       <Personalised config={config} />
       <CustomGifts config={config} />
       <Testimonials config={config} />
-      <SocialFollow config={config} />
+      <Instagram />
     </main>
   );
 }
