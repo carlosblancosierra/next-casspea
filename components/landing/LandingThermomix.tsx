@@ -29,7 +29,7 @@ export default function LandingThermomix() {
     <main className="dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <HeroSection />
-      <Section title={C.ENTER_GIVEAWAY_TITLE} extraClass="mt-8">
+      <Section title={C.ENTER_GIVEAWAY_TITLE} extraClass="mt-8" id="enter-form">
         <EnterForm />
         <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
           By entering, you agree to receive emails from {C.BRAND}. You can unsubscribe at any time.

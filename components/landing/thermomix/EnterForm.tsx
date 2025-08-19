@@ -46,7 +46,12 @@ export function EnterForm() {
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="space-y-3" noValidate>
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      className="space-y-3"
+      noValidate
+    >
       <FormSection>
         <FormInput
           id="firstName"
