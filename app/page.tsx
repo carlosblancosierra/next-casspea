@@ -16,7 +16,7 @@ const FlavourCarousel = dynamic(() => import('@/components/flavours/FlavourCarou
 const FlavoursGrid = dynamic(() => import('@/components/landing/main/FlavourGrid'));
 
 // Reusable section component that wraps content in Suspense with a title
-const Section = ({
+export const Section = ({
   title,
   children,
   extraClass = '',
@@ -139,17 +139,9 @@ export default function HomePage() {
     <main className="dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <HeroSection />
 
-      {/* <Section title="" extraClass="">
-        <UnitSoldCounter />
-      </Section> */}
-
-      <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
-        <HomeProducts />
-      </Section>
-      <Section title="" extraClass="mt-8">
+      <Section title="September Giveaway" extraClass="mt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch rounded-xl overflow-hidden border border-yellow-200 dark:border-yellow-700 bg-yellow-50 dark:bg-yellow-900">
 
-          {/* Left: Image (clickable) */}
           <Link href="/landing/thermomix" className="relative min-h-[220px] md:min-h-[320px] block group">
             <Image
               src="/home/home-tm7.jpeg"
@@ -187,7 +179,12 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-</Section>
+      </Section>
+
+      <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
+        <HomeProducts />
+      </Section>
+ 
       <Section title="Chocolate Barks" extraClass="mt-5">
         <CategoryProducts categorySlug="chocolate-barks" />
       </Section>
