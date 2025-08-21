@@ -5,9 +5,11 @@ import FormInput from '@/components/address/FormInput';
 import FormSection from '@/components/address/FormSection';
 import { useSubscribeGenericLeadMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 export function EnterForm() {
   const [subscribeGenericLead, { isLoading: apiLoading, isError, error }] = useSubscribeGenericLeadMutation();
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -40,6 +42,7 @@ export function EnterForm() {
         form_code: 'TM7',
       }).unwrap();
       toast.success('Thank you! Your entry has been received. We will send you an email to confirm eligibility.');
+      router.push('/landing/thermomix/thank-you');
     } catch (err) {
       toast.error('Failed to subscribe. Please try again.');
     }

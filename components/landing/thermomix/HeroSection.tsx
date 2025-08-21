@@ -46,18 +46,23 @@ export default function HeroSection() {
           </p>
 
           {/* Steps to Enter */}
-          <div className="mt-6 w-full flex flex-col items-center">
-            <ol className="flex flex-col md:flex-row gap-4 md:gap-6 w-full max-w-2xl justify-center items-start md:items-center">
-              {C.HOW_TO_ENTER_STEPS.map((step, idx) => (
-                <li key={idx} className="flex items-start md:items-center gap-2 md:gap-3">
-                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-lg shrink-0">
-                    {idx + 1}
-                  </span>
-                  <span className="text-sm md:text-base text-white text-left">{step}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
+            <div className="mt-6 w-full flex flex-col items-center">
+              <ol className="w-full max-w-2xl space-y-4">
+                {C.HOW_TO_ENTER_STEPS.map((step, idx) => (
+                  <li
+                    key={idx}
+                    className="grid grid-cols-[2.25rem,1fr] gap-3 items-start"
+                  >
+                    <span className="flex items-center justify-center w-9 h-9 rounded-full bg-blue-600 text-white font-bold text-lg shrink-0">
+                      {idx + 1}
+                    </span>
+                    <span className="text-sm md:text-base text-white leading-snug">
+                      {step}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
 
           {/* Single CTA Button */}
           <a

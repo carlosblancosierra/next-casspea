@@ -71,7 +71,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
 
             {/* Thumbnail Carousel - Only show if more than 1 image */}
             {images.length > 1 && (
-                <div className="my-4 grid grid-cols-4 gap-2">
+                <div className="my-4 mx-2 grid grid-cols-4 gap-2">
                     {images.map((url, idx) => (
                         <button
                             key={idx}
