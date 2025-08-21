@@ -64,7 +64,10 @@ export default function AnnouncementBar() {
             </div>
           </p>
           <p className="text-sm leading-6 w-full md:w-auto text-center">
-            Tel: 07859 790386 / email: info@casspea.co.uk
+            {/* Tel: 07859 790386 / email: info@casspea.co.uk */}
+            <Link href="/landing/thermomix" className="underline hover:no-underline transition underline-offset-2">
+              Free Thermomix Giveaway
+            </Link>
           </p>
           <p className="text-sm leading-6 w-full md:w-auto text-center">
             Free Shipping over £50
