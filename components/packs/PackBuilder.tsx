@@ -31,13 +31,13 @@ export default function PackBuilder() {
   const [chocolateBark, setChocolateBark] = useState<Product | null>(null)
   const [hotChocolate, setHotChocolate] = useState<Product | null>(null)
   const [giftCard, setGiftCard] = useState<Product | null>(null)
-  const [boxType, setBoxType] = useState('PICK_AND_MIX')
+  const [boxType, setBoxType] = useState<'PICK_AND_MIX' | 'RANDOM'>('PICK_AND_MIX')
   const [selectedAllergens, setSelectedAllergens] = useState<number[]>([])
   const [flavours, setFlavours] = useState<CartItemBoxFlavorSelection[]>([])
   const [remaining, setRemaining] = useState(0)
   const [giftMessage, setGiftMessage] = useState('')
   const [allergenOption, setAllergenOption] = useState<'NONE' | 'SPECIFY' | null>(null)
-  
+
   useEffect(() => {
     if (signatureBox) {
       setRemaining(signatureBox.units_per_box ?? 0)
@@ -45,13 +45,43 @@ export default function PackBuilder() {
     }
   }, [signatureBox])
 
-  const handleAddFlavour = (f: Product) => {
+  const handleAddFlavour = (f: { id: number; name: string }) => {
     if (remaining === 0) return
-    const idx = flavours.findIndex(x => x.flavor.id === f.id)
+    // Find the full product/flavour by id
+    const prod = products?.find(p => p.id === f.id)
+    if (!prod) return
+    const idx = flavours.findIndex(x => x.flavor.id === prod.id)
     if (idx >= 0) {
       const u = [...flavours]; u[idx].quantity++; setFlavours(u)
     } else {
-      setFlavours([...flavours, { flavor: { ...f, mini_description: (f as any).mini_description || '' }, quantity: 1 }])
+      // Ensure all required Flavour fields are present
+      setFlavours([
+        ...flavours,
+        {
+          flavor: {
+            id: prod.id,
+            name: prod.name,
+            slug: prod.slug,
+            description: prod.description || '',
+            mini_description: (prod as any).mini_description || '',
+            category: prod.category
+              ? {
+                  id: prod.category.id,
+                  name: prod.category.name,
+                  slug: prod.category.slug,
+                  active: prod.category.active ?? false,
+                }
+              : undefined,
+            allergens: (prod as any).allergens,
+            active: prod.active,
+            image: prod.image,
+            image_webp: prod.image_webp,
+            thumbnail: prod.thumbnail,
+            thumbnail_webp: prod.thumbnail_webp,
+          },
+          quantity: 1
+        }
+      ])
     }
     setRemaining(r => r - 1)
   }
@@ -74,79 +104,109 @@ export default function PackBuilder() {
     setFlavours([]); setRemaining(signatureBox?.units_per_box ?? 0)
   }
 
+  // Helper: ensure we send the **Flavour** PK, not the Product PK
+  const getFlavourPk = (f: any): number => {
+    // Prefer canonical flavour FK the API expects if present on product
+    // Adjust these fallbacks to your actual product->flavour mapping
+    return (
+      f.flavour_id ??
+      f.flavor_id ??
+      f.flavour?.id ??
+      f.flavor?.id ??
+      f.id // last resort (only if product.id == flavour.id in your DB)
+    )
+  }
+
   const handleConfirm = async () => {
     if (!signatureBox) return
-    const finalBoxType = boxType as 'PICK_AND_MIX' | 'RANDOM'
-    const productId = typeof signatureBox.units_per_box === 'number' ? (ID_MAP[signatureBox.units_per_box] || signatureBox.id) : signatureBox.id
-    const payload = {
-      product: productId, quantity: 1,
+    const productId = typeof signatureBox.units_per_box === 'number'
+      ? (ID_MAP[signatureBox.units_per_box] || signatureBox.id)
+      : signatureBox.id
+
+    const allergensToSend =
+      allergenOption === 'SPECIFY' ? selectedAllergens : []
+
+    const payload: any = {
+      product: productId,
+      quantity: 1,
       pack_customization: {
-        selection_type: finalBoxType,
-        flavor_selections: flavours.map(f => ({
-          flavor: f.flavor.id, quantity: f.quantity
-        })),
-        chocolate_bark: chocolateBark?.id,
-        hot_chocolate: hotChocolate?.id,
-        gift_card: giftCard?.id,
+        selection_type: boxType, // must match choices in your model
+        flavor_selections: boxType === 'PICK_AND_MIX'
+          ? flavours.map(f => ({
+              flavor: getFlavourPk(f.flavor),
+              quantity: f.quantity
+            }))
+          : [],
+        chocolate_bark: chocolateBark?.id ?? null,
+        hot_chocolate: hotChocolate?.id ?? null,
+        gift_card: giftCard?.id ?? null,
+        allergens: allergensToSend
       }
     }
+
+    console.log('payload', payload)
+
     try {
-      // Send gift message first, if present
       if (giftMessage.trim() !== '') {
         await updateCart({ gift_message: giftMessage }).unwrap();
       }
       await addCartItem(payload).unwrap()
       router.push('/cart')
-    } catch {}
+    } catch (e) {
+      console.error('Pack add error', e)
+      // optionally surface a toast/snackbar
+    }
   }
 
   if (isLoading) return <Spinner md />
   if (error || !products) return <div>Error loading products</div>
 
-  // Helper for summary
-  const allergenSummary = selectedAllergens.length === 0
-    ? 'No Allergens (applies only to bonbons)'
-    : `${ALLERGENS.filter(a => selectedAllergens.includes(a.id))
-        .map(a => a.name)
-        .join(' and ')} (only for bonbons)`
+  const allergenSummary =
+    selectedAllergens.length === 0
+      ? 'No Allergens (applies only to bonbons)'
+      : `${ALLERGENS.filter(a => selectedAllergens.includes(a.id))
+          .map(a => a.name)
+          .join(' and ')} (only for bonbons)`
 
-  // Step mapping
-  const steps = [
-    <SignatureBoxStep
-      products={products}
-      priceMap={PRICE_MAP}
-      onSelect={(p: Product) => { setSignatureBox(p); setStep(1); }}
-    />,
-    <ChocolateBarkStep
-      products={products}
-      onSelect={(p: Product) => { setChocolateBark(p); setStep(2); }}
-    />,
-    <HotChocolateStep
-      products={products}
-      onSelect={(p: Product) => { setHotChocolate(p); setStep(3); }}
-    />,
-    <GiftCardStep
-      products={products}
-      selected={giftCard}
-      onSelect={(p: Product) => setGiftCard(p)}
-      giftMessage={giftMessage}
-      onMessageChange={setGiftMessage}
-      onNext={() => setStep(4)}
-    />,
-    <BoxTypeStep
-      options={PREBUILDS}
-      selected={boxType}
-      onChange={(option: string) => setBoxType(option)}
-      onNext={() => setStep(5)}
-    />,
-    <AllergenStep
-      allergens={ALLERGENS}
-      selectedAllergens={selectedAllergens}
-      setSelectedAllergens={setSelectedAllergens}
-      allergenOption={selectedAllergens !== undefined ? allergenOption : null}
-      setAllergenOption={setAllergenOption}
-      onNext={() => setStep(boxType === 'RANDOM' ? 7 : 6)}
-    />,
+  // strongly type to avoid ReactNode | false confusion
+const steps: React.ReactNode[] = [
+  <SignatureBoxStep
+    products={products}
+    priceMap={PRICE_MAP}
+    onSelect={(p: Product) => { setSignatureBox(p); setStep(1); }}
+  />,
+  <ChocolateBarkStep
+    products={products}
+    onSelect={(p: Product) => { setChocolateBark(p); setStep(2); }}
+  />,
+  <HotChocolateStep
+    products={products}
+    onSelect={(p: Product) => { setHotChocolate(p); setStep(3); }}
+  />,
+  <GiftCardStep
+    products={products}
+    selected={giftCard}
+    onSelect={(p: Product) => setGiftCard(p)}
+    giftMessage={giftMessage}
+    onMessageChange={setGiftMessage}
+    onNext={() => setStep(4)}
+  />,
+  <BoxTypeStep
+    options={PREBUILDS}
+    selected={boxType}
+    onChange={(option: 'PICK_AND_MIX' | 'RANDOM') => setBoxType(option)}
+    onNext={() => setStep(5)}
+  />,
+  <AllergenStep
+    allergens={ALLERGENS}
+    selectedAllergens={selectedAllergens}
+    setSelectedAllergens={setSelectedAllergens}
+    allergenOption={selectedAllergens !== undefined ? allergenOption : null}
+    setAllergenOption={setAllergenOption}
+    onNext={() => setStep(boxType === 'RANDOM' ? 7 : 6)}
+  />,
+  // this one should stay conditional (needs signatureBox info)
+  signatureBox && (
     <FlavourStep
       signatureBox={signatureBox}
       flavours={flavours}
@@ -158,19 +218,24 @@ export default function PackBuilder() {
       handleClear={handleClear}
       selectedAllergens={selectedAllergens}
       onNext={() => setStep(7)}
-    />,
-    <SummaryStep
-      signatureBox={signatureBox as Product}
-      chocolateBark={chocolateBark}
-      hotChocolate={hotChocolate}
-      giftCard={giftCard}
-      flavours={flavours}
-      allergenSummary={allergenSummary}
-      price={PRICE_MAP[signatureBox?.units_per_box ?? 0]}
-      onEdit={setStep}
-      onConfirm={handleConfirm}
     />
-  ]
+  ),
+  <SummaryStep
+    signatureBox={signatureBox as Product}
+    chocolateBark={chocolateBark}
+    hotChocolate={hotChocolate}
+    giftCard={giftCard}
+    flavours={flavours}
+    allergenSummary={
+      selectedAllergens.length === 0
+        ? 'No Allergens (applies only to bonbons)'
+        : `${ALLERGENS.filter(a => selectedAllergens.includes(a.id)).map(a => a.name).join(' and ')} (only for bonbons)`
+    }
+    price={PRICE_MAP[signatureBox?.units_per_box ?? 0]}
+    onEdit={setStep}
+    onConfirm={handleConfirm}
+  />
+]
 
   return (
     <div className="md:grid md:grid-cols-4 gap-8 mb-20">
