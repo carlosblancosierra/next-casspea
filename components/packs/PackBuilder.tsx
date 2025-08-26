@@ -19,9 +19,11 @@ import { useRouter } from 'next/navigation'
 import Spinner from "@/components/common/Spinner";
 import { Product } from '@/types/products';
 import { CartItemBoxFlavorSelection } from '@/types/carts';
+import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 
 export default function PackBuilder() {
   const { data: products, isLoading, error } = useGetActiveProductsQuery()
+  const { data: allFlavours, isLoading: isFlavoursLoading, error: flavourError } = useGetFlavoursQuery();
   const [addCartItem, { isLoading: cartLoading }] = useAddCartItemMutation()
   const [updateCart] = useUpdateCartMutation()
   const router = useRouter()
@@ -45,42 +47,16 @@ export default function PackBuilder() {
     }
   }, [signatureBox])
 
-  const handleAddFlavour = (f: { id: number; name: string }) => {
-    if (remaining === 0) return
-    // Find the full product/flavour by id
-    const prod = products?.find(p => p.id === f.id)
-    if (!prod) return
-    const idx = flavours.findIndex(x => x.flavor.id === prod.id)
+  // Updated handleAddFlavour to use FlavourType
+  const handleAddFlavour = (flavour) => {
+    if (remaining === 0) return;
+    const idx = flavours.findIndex(x => x.flavor.id === flavour.id);
     if (idx >= 0) {
       const u = [...flavours]; u[idx].quantity++; setFlavours(u)
     } else {
-      // Ensure all required Flavour fields are present
       setFlavours([
         ...flavours,
-        {
-          flavor: {
-            id: prod.id,
-            name: prod.name,
-            slug: prod.slug,
-            description: prod.description || '',
-            mini_description: (prod as any).mini_description || '',
-            category: prod.category
-              ? {
-                  id: prod.category.id,
-                  name: prod.category.name,
-                  slug: prod.category.slug,
-                  active: prod.category.active ?? false,
-                }
-              : undefined,
-            allergens: (prod as any).allergens,
-            active: prod.active,
-            image: prod.image,
-            image_webp: prod.image_webp,
-            thumbnail: prod.thumbnail,
-            thumbnail_webp: prod.thumbnail_webp,
-          },
-          quantity: 1
-        }
+        { flavor: flavour, quantity: 1 }
       ])
     }
     setRemaining(r => r - 1)
@@ -218,6 +194,7 @@ const steps: React.ReactNode[] = [
       handleClear={handleClear}
       selectedAllergens={selectedAllergens}
       onNext={() => setStep(7)}
+      allFlavours={allFlavours}
     />
   ),
   <SummaryStep

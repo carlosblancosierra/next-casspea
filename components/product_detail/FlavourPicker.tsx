@@ -18,6 +18,7 @@ interface FlavourPickerProps {
     deleteFlavour: (index: number) => void;
     handleDeleteAllFlavours: () => void;
     selectedAllergens: number[];
+    availableFlavours?: FlavourType[];
 }
 
 const FlavourPicker: React.FC<FlavourPickerProps> = ({
@@ -29,13 +30,16 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     decrementQuantity,
     deleteFlavour,
     handleDeleteAllFlavours,
-    selectedAllergens
+    selectedAllergens,
+    availableFlavours: propAvailableFlavours,
+    ...rest
 }) => {
-    const { data: availableFlavours, isLoading, error } = useGetFlavoursQuery();
-    if (isLoading) return <div className="flex items-center justify-center min-h-screen">
+    const { data: fetchedFlavours, isLoading, error } = useGetFlavoursQuery();
+    const availableFlavours = propAvailableFlavours ?? fetchedFlavours;
+    if (!propAvailableFlavours && isLoading) return <div className="flex items-center justify-center min-h-screen">
                 <Spinner md />
             </div>;
-    if (error) return <div>Error:</div>;
+    if (!propAvailableFlavours && error) return <div>Error:</div>;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -47,6 +51,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
 
     // Function to filter out flavours that contain any selected allergens
     const getFilteredFlavours = () => {
+        if (!availableFlavours) return [];
         if (selectedAllergens.length === 0) return availableFlavours;
 
         return availableFlavours.filter(flavour => {

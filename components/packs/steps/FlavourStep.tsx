@@ -2,24 +2,26 @@ import React from 'react'
 import FlavourPicker from '@/components/product_detail/FlavourPicker'
 import { Product } from '@/types/products'
 import { CartItemBoxFlavorSelection } from '@/types/carts'
+import { Flavour as FlavourType } from '@/types/flavours';
 
 interface Props {
   signatureBox: Product
   flavours: CartItemBoxFlavorSelection[]
   remaining: number
-  handleAddFlavour: (f: { id: number; name: string }) => void
+  handleAddFlavour: (f: FlavourType) => void
   incrementQuantity: (i: number) => void
   decrementQuantity: (i: number) => void
   deleteFlavour: (i: number) => void
   handleClear: () => void
   selectedAllergens: number[]
   onNext: () => void
+  allFlavours?: FlavourType[]
 }
 
 export default function FlavourStep({
   signatureBox, flavours, remaining,
   handleAddFlavour, incrementQuantity, decrementQuantity,
-  deleteFlavour, handleClear, selectedAllergens, onNext
+  deleteFlavour, handleClear, selectedAllergens, onNext, allFlavours
 }: Props) {
   return (
     <>
@@ -35,6 +37,7 @@ export default function FlavourStep({
         handleDeleteAllFlavours={handleClear}
         selectedAllergens={selectedAllergens}
         handleFlavourChange={() => {}}
+        availableFlavours={allFlavours}
       />
       <button
         onClick={onNext}

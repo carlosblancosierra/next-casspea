@@ -27,7 +27,12 @@ export default function GiveawayPopup() {
   if (pathname && pathname.startsWith("/landing/thermomix")) return null;
   if (!show) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={e => {
+        if (e.target === e.currentTarget) handleClose();
+      }}
+    >
       <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full mx-4">
         <button
           onClick={handleClose}
