@@ -114,6 +114,7 @@ const CheckoutConfirm = () => {
                     >
                         {isProcessing ? 'Processing...' : 'Proceed to Payment'}
                     </button> */}
+                    <div className="text-center text-gray-500">We are temporarily closed for maintenance. Please check back soon.</div>
                 </div>
             </div>
         </div>

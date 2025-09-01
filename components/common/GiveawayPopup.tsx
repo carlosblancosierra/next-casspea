@@ -56,7 +56,7 @@ export default function GiveawayPopup() {
               priority={false}
             />
           </div> */}
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Free Thermomix Giveaway</h3>
+          {/* <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Free Thermomix Giveaway</h3> */}
           <p className="text-base text-gray-700 dark:text-gray-200 mb-4">
             We are temporarily closed for maintenance. Please check back soon.
           </p>
