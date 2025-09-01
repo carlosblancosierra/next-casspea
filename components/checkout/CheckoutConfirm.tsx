@@ -104,7 +104,7 @@ const CheckoutConfirm = () => {
                             setSelectedShippingOption(optionId);
                         }}
                     />
-                    <button
+                    {/* <button
                         onClick={handleProceedToPayment}
                         disabled={isProcessing || !selectedShippingOption}
                         className="w-full bg-gradient-primary text-white py-3 px-4 rounded-md
@@ -113,7 +113,7 @@ const CheckoutConfirm = () => {
                             disabled:cursor-not-allowed transition-colors duration-200"
                     >
                         {isProcessing ? 'Processing...' : 'Proceed to Payment'}
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </div>
