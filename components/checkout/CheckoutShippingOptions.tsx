@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ShippingCompany } from '@/types/shipping';
 import { addBusinessDays, format } from 'date-fns';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
+import CheckoutStorePickUp from './CheckoutStorePickUp';
 
 interface CheckoutShippingOptionsProps {
     shippingCompanies: ShippingCompany[] | undefined;
@@ -146,6 +147,16 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     );
                 })}
             </div>
+
+            {/* Render store pickup slot picker if selected option is 34 */}
+            {localSelectedOption === '34' && (
+                <div className="mt-6">
+                    <CheckoutStorePickUp onChange={(val) => {
+                        // You can handle the selected slot here, e.g. save to state or call a parent callback
+                        console.log('Selected store pickup:', val);
+                    }} />
+                </div>
+            )}
 
             {/* <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                 Due to the current high temperatures in the UK, we have temporarily disabled the Royal Mail - Tracked 48® service.
