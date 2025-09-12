@@ -44,7 +44,7 @@ export default function GiveawayPopup() {
           </svg>
         </button>
         <div className="p-6 text-center flex flex-col items-center w-full mx-auto">
-          {/* <div className="relative w-full mb-3">
+          <div className="relative w-full mb-3">
             <Image
               src="/landings/thermomix/hero-1.jpg"
               alt="Win the Thermomix® TM7 + CassPea Chocolates"
@@ -55,20 +55,21 @@ export default function GiveawayPopup() {
               style={{ objectFit: 'cover' }}
               priority={false}
             />
-          </div> */}
-          {/* <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Free Thermomix Giveaway</h3> */}
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Free Thermomix Giveaway</h3>
           <p className="text-base text-gray-700 dark:text-gray-200 mb-4">
-            We are temporarily closed for maintenance. Please check back soon.
+            Enter for a chance to win the all-new <b>Thermomix® TM7</b> and a CassPea Signature Box!
           </p>
-          {/* <Link
+          <Link
             href="/landing/thermomix"
             className="mt-2 px-6 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-pink-300"
             onClick={handleClose}
           >
             Enter Giveaway
-          </Link> */}
+          </Link>
         </div>
       </div>
     </div>
   );
 }
+  
