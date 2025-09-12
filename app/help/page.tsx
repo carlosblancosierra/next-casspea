@@ -43,7 +43,7 @@ const faqs = [
     },
     {
         question: "Do you do bespoke orders?",
-        answer: "Absolutely, we can personalize your chocolates. Using our software, you can design your chocolate, and we can develop a flavour if we don't already have it. Please contact us for more information at info@casspea.co.uk or send us a WhatsApp message at 07447 990542."
+        answer: "Absolutely, we can personalize your chocolates. Using our software, you can design your chocolate, and we can develop a flavour if we don't already have it. Please contact us for more information at info@casspea.co.uk or send us a WhatsApp message at 07859 790386."
     },
     {
         question: "How long would a bespoke order take?",
@@ -51,7 +51,7 @@ const faqs = [
     },
     {
         question: "What is your return policy?",
-        answer: "If you are unsatisfied with your order or there was a problem with delivery, we will do everything possible to make sure that you are left satisfied and wanting to come back again. If you have had a negative experience, please contact us directly at info@casspea.co.uk or send us a WhatsApp message at 07447 990542."
+        answer: "If you are unsatisfied with your order or there was a problem with delivery, we will do everything possible to make sure that you are left satisfied and wanting to come back again. If you have had a negative experience, please contact us directly at info@casspea.co.uk or send us a WhatsApp message at 07859 790386."
     },
     {
         question: "Where are you located?",
