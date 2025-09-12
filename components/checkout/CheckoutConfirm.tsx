@@ -19,6 +19,7 @@ import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [selectedShippingOption, setSelectedShippingOption] = useState<number | undefined>(undefined);
+    const [storePickup, setStorePickup] = useState<{ date: Date; slot: { start: string; end: string; value: string } } | null>(null);
 
     const router = useRouter();
 
@@ -42,10 +43,16 @@ const CheckoutConfirm = () => {
         try {
             setIsProcessing(true);
 
-            await updateSession({
+            // Prepare payload
+            const payload: any = {
                 shipping_option_id: selectedShippingOption
-            }).unwrap();
+            };
+            if (selectedShippingOption === 34 && storePickup) {
+                payload.pickup_date = storePickup.date.toISOString().slice(0, 10); // YYYY-MM-DD
+                payload.pickup_time = storePickup.slot.start + ' - ' + storePickup.slot.end;
+            }
 
+            await updateSession(payload).unwrap();
 
             // Then create the Stripe session
             // const response = await createStripeSession().unwrap();
@@ -103,6 +110,7 @@ const CheckoutConfirm = () => {
                         onShippingOptionChange={async (optionId: number) => {
                             setSelectedShippingOption(optionId);
                         }}
+                        onChangeStorePickup={setStorePickup}
                     />
                     <button
                         onClick={handleProceedToPayment}

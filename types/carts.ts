@@ -65,6 +65,8 @@ export interface Cart {
     discount?: Discount;
     gift_message?: string | null;
     shipping_date?: string | null;
+    pickup_date?: string | null;
+    pickup_time?: string | null;
     items: CartItem[];
     base_total: string;
     discounted_total: string;

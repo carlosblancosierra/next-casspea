@@ -4,21 +4,36 @@ import { addBusinessDays, format } from 'date-fns';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
 
+interface Slot {
+    start: string;
+    end: string;
+    value: string;
+}
+
 interface CheckoutShippingOptionsProps {
     shippingCompanies: ShippingCompany[] | undefined;
     selectedOptionId?: number;
     onShippingOptionChange: (optionId: number) => Promise<void>;
+    onChangeStorePickup?: (val: { date: Date; slot: Slot } | null) => void;
 }
 
 const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     shippingCompanies,
     selectedOptionId,
-    onShippingOptionChange
+    onShippingOptionChange,
+    onChangeStorePickup
 }) => {
     const [localSelectedOption, setLocalSelectedOption] = useState<string | null>(null);
     const [isUpdating, setIsUpdating] = useState(false);
     const { data: cart, isLoading, error: cartError } = useGetCartQuery();
+    const [storePickup, setStorePickup] = useState<{ date: Date; slot: Slot } | null>(null);
 
+    // Expose storePickup to parent if onChangeStorePickup is provided
+    useEffect(() => {
+        if (onChangeStorePickup) {
+            onChangeStorePickup(storePickup);
+        }
+    }, [storePickup, onChangeStorePickup]);
 
     // Update local state when prop changes
     useEffect(() => {
@@ -27,8 +42,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         }
     }, [selectedOptionId]);
 
-    const shouldShowStorePickup = cart?.discount?.code === 'lkiLspIJ';
-
     let allShippingOptions = shippingCompanies?.flatMap(company =>
         company.shipping_options.map(option => ({
             ...option,
@@ -36,10 +49,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
             companyId: company.id
         }))
     ) || [];
-
-    if (!shouldShowStorePickup) {
-        allShippingOptions = allShippingOptions.filter(option => option.companyId !== 34);
-    }
 
     // Sort: enabled options first, then disabled
     allShippingOptions = allShippingOptions.sort((a, b) => {
@@ -133,12 +142,20 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                         </p>
                                     ) : (
                                         <>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm">
-                                                Ships: {dates.shipping}
-                                            </p>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm">
-                                                Estimated Delivery: {dates.delivery}
-                                            </p>
+                                            {option.id === 34 ? (
+                                                <p className="text-gray-600 dark:text-gray-400 text-sm font-semibold">
+                                                    Pick up at 104 Bedford Hill, London, SW12 9HR
+                                                </p>
+                                            ) : (
+                                                <>
+                                                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                                                        Ships: {dates.shipping}
+                                                    </p>
+                                                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                                                        Estimated Delivery: {dates.delivery}
+                                                    </p>
+                                                </>
+                                            )}
                                         </>
                                     )}
                                 </div>
@@ -152,8 +169,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
             {localSelectedOption === '34' && (
                 <div className="mt-6">
                     <CheckoutStorePickUp onChange={(val) => {
-                        // You can handle the selected slot here, e.g. save to state or call a parent callback
-                        console.log('Selected store pickup:', val);
+                        setStorePickup(val);
                     }} />
                 </div>
             )}
