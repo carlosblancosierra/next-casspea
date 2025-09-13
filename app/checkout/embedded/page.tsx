@@ -21,8 +21,6 @@ export default function CheckoutPage() {
 
   const options = { fetchClientSecret };
 
-  return <div>Temporarily disabled</div>;
-
   return (
     <div id="checkout">
       <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
