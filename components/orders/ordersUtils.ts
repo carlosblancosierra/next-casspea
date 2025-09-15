@@ -94,7 +94,7 @@ export const getDayTotals = (orders: Order[], availableProducts?: Product[]) => 
                     ...(item.pack_customization?.flavor_selections || [])
                 ];
                 flavorSelections.forEach(flavor => {
-                    if (flavor.flavor.name && flavor.quantity) {
+                    if (flavor.flavor && flavor.flavor.name && flavor.quantity) {
                         flavors[flavor.flavor.name] = (flavors[flavor.flavor.name] || 0) + (flavor.quantity * quantity);
                     }
                 });

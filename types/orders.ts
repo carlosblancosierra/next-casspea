@@ -25,6 +25,8 @@ export interface Order {
       gift_message?: string | null;
       shipping_date?: string | null;
       discounted_total: string;
+      pickup_date?: string | null;
+      pickup_time?: string | null;
     };
   };
   past_orders?: string[];
