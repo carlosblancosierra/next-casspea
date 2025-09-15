@@ -204,6 +204,18 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
               <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
             </dd>
           </div>
+          {/* Pickup Date & Time if present */}
+          {order.checkout_session?.cart?.pickup_date && (
+            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Pickup Date</dt>
+              <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+                {order.checkout_session.cart.pickup_date}
+                {order.checkout_session.cart.pickup_time && (
+                  <> at {order.checkout_session.cart.pickup_time}</>
+                )}
+              </dd>
+            </div>
+          )}
           {/* Shipping Address */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Delivery Address</dt>
