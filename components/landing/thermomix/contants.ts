@@ -19,8 +19,8 @@ export const TERMS_PATH = '#terms';
 // Dates & timezone
 export const TIMEZONE = 'Europe/London';
 export const START_DATE_ISO = '2025-08-15T00:00:00Z'; // ← update if different
-export const END_DATE_ISO   = '2025-09-19T23:59:00Z';
-export const DRAW_DATE_ISO  = '2025-09-21T12:00:00Z'; // ← update if different
+export const END_DATE_ISO   = '2025-09-29T23:59:00Z';
+export const DRAW_DATE_ISO  = '2025-10-01T12:00:00Z'; // ← update if different
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Hero
@@ -51,7 +51,7 @@ export const COUNTDOWN_LABELS = {
   seconds: 'Sec',
 };
 export const DEADLINE_COPY =
-  'Entries close on 19/09/2025 at 23:59 (GMT).';
+  'Entries close on 29/09/2025 at 23:59 (GMT).';
 
 // Social proof
 export const SOCIAL_PROOF_TITLE = 'Loved by our community';
@@ -129,11 +129,11 @@ export const GIVEAWAY_RULES_TITLE = 'Key terms at a glance';
 export const GIVEAWAY_RULES_LIST = [
   'Promoter: CassPea Ltd, 123 Example Street, London, UK.', // ← update
   'Eligibility: 18+; residents of the United Kingdom.',
-  'Dates: 15/08/2025 to 19/09/2025 23:59 (GMT).',
+  'Dates: 15/08/2025 to 29/09/2025 23:59 (GMT).',
   'How to enter: leave email, follow on Instagram, and share the giveaway Story mentioning us.',
   'Bonus entries: CassPea upload (+3); +1 per 5 people tagged (relevant only; no spam).',
   'Winner selection: random draw using a verifiable method or independent supervision.',
-  'Notification: via Instagram DM and/or email on 21/09/2025.',
+  'Notification: via Instagram DM and/or email on 01/10/2025.',
   'Claim window: 7 days, else an alternate winner may be drawn.',
   'No purchase necessary. Instagram is not a sponsor or administrator.',
   'Winner publication: surname and county may be published unless you object (see Ts & Cs).',
