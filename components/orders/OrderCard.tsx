@@ -25,7 +25,7 @@ const AllergenBadges: React.FC<{ allergens?: { id: number; name: string }[] }> =
   );
 };
 
-const FlavorSection: React.FC<{ flavorSelections?: { flavor: { name: string }; quantity: number }[] }> = ({
+const FlavorSection: React.FC<{ flavorSelections?: { flavor_name: string; quantity: number }[] }> = ({
   flavorSelections,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +41,7 @@ const FlavorSection: React.FC<{ flavorSelections?: { flavor: { name: string }; q
       {isOpen &&
         flavorSelections.map((flavor, i) => (
           <div key={i} className="text-sm text-gray-500 pl-4 flex justify-between">
-            <span>{flavor.flavor?.name || 'Unknown Flavour'}</span>
+            <span>{flavor.flavor_name || 'Unknown Flavour'}</span>
             <span className="text-gray-400">×{flavor.quantity}</span>
           </div>
         ))}

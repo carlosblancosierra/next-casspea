@@ -92,6 +92,7 @@ export interface CartItem {
 
 export interface CartItemBoxFlavorSelection {
     id?: number;
-    flavor: Flavour;
+    flavor?: Flavour;
     quantity: number;
+    flavor_name?: string; // for compatibility with new backend structure
 }
