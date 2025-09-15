@@ -41,7 +41,7 @@ const FlavorSection: React.FC<{ flavorSelections?: { flavor: { name: string }; q
       {isOpen &&
         flavorSelections.map((flavor, i) => (
           <div key={i} className="text-sm text-gray-500 pl-4 flex justify-between">
-            <span>{flavor.flavor.name}</span>
+            <span>{flavor.flavor?.name || 'Unknown Flavour'}</span>
             <span className="text-gray-400">×{flavor.quantity}</span>
           </div>
         ))}
@@ -182,7 +182,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                 return (
                   <div key={index} className="mb-2">
                     <div className="font-medium">
-                      {item.product?.name} {item.quantity && `(x${item.quantity})`}
+                      {item.product?.name || 'Unknown Product'} {item.quantity && `(x${item.quantity})`}
                     </div>
                     {customization && (
                       <div className="text-sm text-gray-500">
