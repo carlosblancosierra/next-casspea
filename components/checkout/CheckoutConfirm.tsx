@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import {
     useGetSessionQuery,
     useUpdateSessionMutation,
-    useCreateStripeCheckoutSessionMutation
+    useCreateStripeCheckoutSessionMutation,
+    useUpdateShippingOptionMutation
 } from '@/redux/features/checkout/checkoutApiSlice';
 import CheckoutDetails from './CheckoutDetails';
 import CheckoutShippingOptions from './CheckoutShippingOptions';
@@ -30,7 +31,7 @@ const CheckoutConfirm = () => {
     const { data: shippingCompanies, isLoading: isShippingLoading } = useGetShippingOptionsQuery();
 
     const [createStripeSession] = useCreateStripeCheckoutSessionMutation();
-    const [updateSession] = useUpdateSessionMutation();
+    const [updateShippingOption] = useUpdateShippingOptionMutation();
 
 
     const handleProceedToPayment = async () => {
@@ -52,7 +53,10 @@ const CheckoutConfirm = () => {
                 payload.pickup_time = storePickup.slot.start + ' - ' + storePickup.slot.end;
             }
 
-            await updateSession(payload).unwrap();
+            await updateShippingOption({
+                checkoutSessionId: session?.id || 0,
+                data: payload
+            }).unwrap();
 
             // Then create the Stripe session
             // const response = await createStripeSession().unwrap();

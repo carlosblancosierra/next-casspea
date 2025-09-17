@@ -37,6 +37,14 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
                 method: 'GET'
             }),
         }),
+
+        updateShippingOption: builder.mutation<CheckoutSession, { checkoutSessionId: number, data: { shipping_option_id: number, pickup_date?: string, pickup_time?: string } }>({
+            query: ({ checkoutSessionId, data }) => ({
+                url: `/checkout/session/${checkoutSessionId}/shipping-option/`,
+                method: 'POST',
+                body: data,
+            }),
+        }),
     })
 });
 
@@ -45,5 +53,6 @@ export const {
     useGetSessionQuery,
     useUpdateSessionMutation,
     useCreateEmbeddedCheckoutSessionMutation,
-    useGetEmbeddedCheckoutSessionResultQuery
+    useGetEmbeddedCheckoutSessionResultQuery,
+    useUpdateShippingOptionMutation
 } = checkoutApiSlice;
