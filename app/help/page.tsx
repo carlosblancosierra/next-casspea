@@ -84,8 +84,7 @@ const HelpPage = () => {
                             </a>
                         </p>
                         <p>
-                            <span className="font-medium">Address:</span> 97 Hambalt Road, London, United Kingdom SW4 9EL
-                        </p>
+                            <span className="font-medium">Address:</span> 104 Bedford Hill, London, SW12 9HR
                     </div>
                 </section>
 
