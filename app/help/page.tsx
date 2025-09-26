@@ -84,7 +84,8 @@ const HelpPage = () => {
                             </a>
                         </p>
                         <p>
-                            <span className="font-medium">Address:</span> 104 Bedford Hill, London, SW12 9HR
+                            <span className="font-medium">Address / Store Pickup:</span> 104 Bedford Hill, London, SW12 9HR
+                        </p>
                     </div>
                 </section>
 
