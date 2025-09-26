@@ -20,4 +20,6 @@ export interface Flavour {
     image_webp?: string;
     thumbnail?: string;
     thumbnail_webp?: string;
+    featured?: boolean;
+    featured_message?: string;
 }

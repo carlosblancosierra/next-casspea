@@ -11,8 +11,26 @@ const FlavourCard: React.FC<FlavourCardProps> = ({ flavour, height = 'h-96' }) =
     return (
         <div
             className={`border p-4 rounded-lg flex-shrink-0 bg-main-bg shadow-md dark:bg-gray-800 dark:text-white dark:border-gray-700 w-full flex flex-col justify-between ${height}`}
-            style={{ overflow: 'hidden' }}
+            style={{ overflow: 'hidden', position: 'relative' }}
         >
+            {/* Featured Badge */}
+            {flavour.featured && flavour.featured_message && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 12,
+                        right: -40,
+                        transform: 'rotate(30deg)',
+                        zIndex: 10,
+                        width: 160,
+                        textAlign: 'center',
+                        pointerEvents: 'none',
+                    }}
+                    className="bg-pink-600 text-white font-bold py-1 px-2 text-xs shadow-lg select-none"
+                >
+                    {flavour.featured_message}
+                </div>
+            )}
             <div className="w-full flex items-center justify-center" style={{ minHeight: 120, maxHeight: 120 }}>
                 <Image
                     src={flavour.image || '/flavours/default.png'}
