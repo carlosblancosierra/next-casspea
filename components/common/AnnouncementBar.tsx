@@ -64,10 +64,10 @@ export default function AnnouncementBar() {
             </div>
           </p>
           <p className="text-sm leading-6 w-full md:w-auto text-center">
-            {/* Tel: 07859 790386 / email: info@casspea.co.uk */}
-            <Link href="/landing/thermomix" className="underline hover:no-underline transition underline-offset-2">
+            Tel: <a href="tel:07859790386" className="underline hover:no-underline transition underline-offset-2">07859 790386</a> / email: <a href="mailto:info@casspea.co.uk" className="underline hover:no-underline transition underline-offset-2">info@casspea.co.uk</a>
+            {/* <Link href="/landing/thermomix" className="underline hover:no-underline transition underline-offset-2">
               Free Thermomix Giveaway
-            </Link>
+            </Link> */}
           </p>
           <p className="text-sm leading-6 w-full md:w-auto text-center">
             Free Shipping over £50

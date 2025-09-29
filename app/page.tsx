@@ -139,7 +139,7 @@ export default function HomePage() {
     <main className="dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <HeroSection />
 
-      <Section title="September Giveaway" extraClass="mt-8">
+      {/* <Section title="September Giveaway" extraClass="mt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch rounded-xl overflow-hidden border border-yellow-200 dark:border-yellow-700 bg-yellow-50 dark:bg-yellow-900">
 
           <Link href="/landing/thermomix" className="relative min-h-[220px] md:min-h-[320px] block group">
@@ -156,7 +156,6 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-black/20 md:bg-black/10" />
           </Link>
 
-          {/* Right: Copy + CTA */}
           <div className="flex flex-col justify-center gap-3 p-6 md:p-8">
             <h3 className="text-2xl md:text-3xl font-bold text-yellow-900 dark:text-yellow-50">
               Win the All‑New Thermomix® TM7
@@ -179,7 +178,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </Section>
+      </Section> */}
 
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
         <HomeProducts />

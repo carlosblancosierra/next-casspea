@@ -90,7 +90,7 @@ export default function RootLayout({
         <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="7ef907d7-ea0d-4a43-beec-ca187e2ea5cd" data-blockingmode="auto" type="text/javascript"></script>
         <Provider>
           <Setup />
-          <GiveawayPopup />
+          {/* <GiveawayPopup /> */}
           <LayoutWrapper>
             <div className="flex flex-col min-h-screen relative">
               <AnnouncementBar />

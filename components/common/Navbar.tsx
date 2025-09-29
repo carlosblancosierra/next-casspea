@@ -9,7 +9,7 @@ const navigation = [
   { name: 'Store', href: '/shop-now', current: false },
   { name: 'Flavours', href: '/flavours', current: false },
   { name: 'Personalised', href: '/personalised', current: false },
-  { name: 'Thermomix Giveaway', href: '/landing/thermomix', current: false },
+  // { name: 'Thermomix Giveaway', href: '/landing/thermomix', current: false },
   { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false, external: true },
   { name: 'Help', href: '/help', current: false },
   { name: 'About Us', href: '/about-us', current: false },
