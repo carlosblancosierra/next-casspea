@@ -95,12 +95,22 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                     <div className="space-y-1">
                         {discountedPrice ? (
                             <>
+                                {/* Regular price label above discounted price */}
+                                <p className="text-sm text-gray-900 dark:text-gray-100 line-through">
+                                    <span className="font-medium">Regular price:</span> ￡{product.preorder && product.preorder_price ? product.preorder_price : product.base_price} GBP
+                                </p>
                                 <p className="text-xl text-gray-900 font-semibold">
                                     <span className="text-gray-900 dark:text-gray-100">￡{discountedPrice} GBP</span>
                                     <span className="ml-1 text-white bg-[#CC0C38] p-1 text-sm rounded -mt-2">{discount_percentage}% off</span>
                                 </p>
-                                <p className="text-sm text-gray-900 dark:text-gray-100 line-through">
-                                    ￡{product.base_price} GBP
+                            </>
+                        ) : product.preorder && product.preorder_price ? (
+                            <>
+                                <p className="text-xl text-gray-900 dark:text-gray-100">
+                                    ￡{product.preorder_price} GBP
+                                </p>
+                                <p className="text-xs text-gray-500 line-through">
+                                    <span className="font-medium">Regular price:</span> ￡{product.base_price} GBP
                                 </p>
                             </>
                         ) : (
