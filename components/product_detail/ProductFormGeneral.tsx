@@ -85,11 +85,13 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                 )}
             </div>
 
-            <div className="mt-4">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    We'll start delivery on Nov 25th.
-                </p>
-            </div>
+            {product.slug === "advent-calendar" && (
+                <div className="mt-4">
+                    <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+                    Shipping begins on Nov 21st.
+                    </p>
+                </div>
+            )}
 
             {product.sold_out ? (
                 <button

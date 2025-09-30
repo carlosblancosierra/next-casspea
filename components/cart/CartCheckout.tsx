@@ -276,6 +276,9 @@ export default function CartCheckout() {
                             {error}
                         </p>
                     )}
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-400 text-center">
+                        Advent Calendar Shipping begins on Nov 21st.
+                    </p>
                     <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 text-center">
                         You'll be able to review your order before it's final
                     </p>
