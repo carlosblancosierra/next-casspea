@@ -31,7 +31,7 @@ const ConfirmCartItem: React.FC<ConfirmCartItemProps> = ({ entry }) => {
                 </p>
 
                 <p className="text-base font-bold text-gray-900 dark:text-white">
-                    £{entry.product.base_price}
+                    £{entry.product.current_price}
                 </p>
 
                 {/* Quantity */}

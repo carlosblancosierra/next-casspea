@@ -8,7 +8,7 @@ export const useProductDiscountedPrice = (productId: number, product: Product) =
     // If no cart or no discount, return original price
     if (!cart?.discount) {
         return {
-            originalPrice: product.base_price,
+            originalPrice: product.current_price,
             discountedPrice: null,
             savings: null,
             hasDiscount: false
@@ -21,14 +21,14 @@ export const useProductDiscountedPrice = (productId: number, product: Product) =
     const isExcluded = discount.exclusions.some(p => p.id === productId);
     if (isExcluded) {
         return {
-            originalPrice: product.base_price,
+            originalPrice: product.current_price,
             discountedPrice: null,
             savings: null,
             hasDiscount: false
         };
     }
 
-    const originalPrice = parseFloat(product?.base_price || '0');
+    const originalPrice = parseFloat(product?.current_price || '0');
     let discountAmount = 0;
 
     // Calculate discount based on type
@@ -42,7 +42,7 @@ export const useProductDiscountedPrice = (productId: number, product: Product) =
     const savings = discountAmount.toFixed(2);
 
     return {
-        originalPrice: product.base_price,
+        originalPrice: product.current_price,
         discountedPrice,
         savings,
         hasDiscount: true,

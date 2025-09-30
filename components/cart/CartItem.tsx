@@ -87,7 +87,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
             </p>
           )}
 
-          <p className="text-base font-bold">£{entry.product.base_price}</p>
+          <p className="text-base font-bold">£{entry.product.current_price}</p>
 
           {/* Controles de cantidad y borrado */}
           <div className="flex items-center space-x-2">

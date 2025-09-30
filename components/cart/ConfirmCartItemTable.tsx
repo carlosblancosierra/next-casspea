@@ -8,7 +8,7 @@ interface ConfirmCartItemTableProps {
 }
 
 const ConfirmCartItemTable: React.FC<ConfirmCartItemTableProps> = ({ cartEntries, shippingCost }) => {
-  const subtotal = cartEntries.reduce((acc, item) => acc + item.product.base_price * item.quantity, 0);
+  const subtotal = cartEntries.reduce((acc, item) => acc + item.product.current_price * item.quantity, 0);
   const total = subtotal + shippingCost;
 
   return (
