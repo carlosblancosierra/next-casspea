@@ -51,6 +51,7 @@ export interface Product {
     preorder?: boolean;
     preorder_finish_date?: string;
     preorder_price?: string;
+    is_preorder_active?: boolean;
     
     gallery_images?: ProductGalleryImage[];
 
