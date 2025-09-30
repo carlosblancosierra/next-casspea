@@ -8,6 +8,8 @@ import ImageGallery from '@/components/product_detail/ImageGallery';
 import PersonalisedHome from '@/components/personalized/PersonalisedHome';
 import CategoryProducts from '@/components/home/CategoryProducts';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
+import React, { useEffect, useState } from 'react';
+import AdventCountdown from '@/components/common/AdventCountdown';
 
 // Dynamically import components that can load later
 const HomeProducts = dynamic(() => import('@/components/home/HomeProducts'));
@@ -98,10 +100,9 @@ const HeroSection = () => (
         />
         <ImageGallery
           images={[
-            '/home/easter/1.jpg',
-            '/home/easter/2.jpg',
-            '/home/easter/3.jpg',
-            '/home/easter/4.jpg',
+            '/advent-calendar/2025/carousel/21.jpeg',
+            '/advent-calendar/2025/carousel/22.jpeg',
+            '/advent-calendar/2025/carousel/23.jpeg',
           ]}
           className="block md:hidden"
         />
@@ -139,13 +140,13 @@ export default function HomePage() {
     <main className="dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <HeroSection />
 
-      {/* <Section title="September Giveaway" extraClass="mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch rounded-xl overflow-hidden border border-yellow-200 dark:border-yellow-700 bg-yellow-50 dark:bg-yellow-900">
+      <Section title="" extraClass="mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch rounded-xl overflow-hidden bg-[#173960]">
 
-          <Link href="/landing/thermomix" className="relative min-h-[220px] md:min-h-[320px] block group">
+          <Link href="/shop-now/advent-calendar" className="relative min-h-[220px] md:min-h-[320px] block group">
             <Image
-              src="/home/home-tm7.jpeg"
-              alt="Win the Thermomix® TM7 + CassPea Chocolates"
+              src="/advent-calendar/2025/2.jpg"
+              alt="Advent Calendar"
               width={800}
               height={0}
               sizes="100vw"
@@ -158,27 +159,29 @@ export default function HomePage() {
 
           <div className="flex flex-col justify-center gap-3 p-6 md:p-8">
             <h3 className="text-2xl md:text-3xl font-bold text-yellow-900 dark:text-yellow-50">
-              Win the All‑New Thermomix® TM7
+              Introducing the 2025 Advent Calendar
             </h3>
+            <h4 className="text-lg md:text-xl font-bold text-yellow-900 dark:text-yellow-50">
+              Pre-order before 15th October for an exclusive discount
+            </h4>
+            <AdventCountdown />
+
             <p className="text-sm md:text-base text-yellow-950/80 dark:text-yellow-100/90">
-              Enter our giveaway for a chance to win the Thermomix® TM7 and a CassPea Signature Box. 
-              No purchase necessary.
+              A 24-day countdown to Christmas with 24 delicious treats.
             </p>
 
             <div className="mt-2 flex flex-wrap items-center gap-3">
               <Link
-                href="/landing/thermomix"
-                className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-semibold text-white bg-pink-600 hover:bg-pink-700 transition"
+                href="/shop-now/advent-calendar"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition"
               >
-                Enter Giveaway
+                Shop Now the pre-order
               </Link>
-              <span className="text-xs text-gray-700 dark:text-gray-300">
-                Terms apply
-              </span>
             </div>
+            
           </div>
         </div>
-      </Section> */}
+      </Section>
 
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
         <HomeProducts />

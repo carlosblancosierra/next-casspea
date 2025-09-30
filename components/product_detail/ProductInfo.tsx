@@ -12,8 +12,8 @@ interface ProductInfoProps {
 
 const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
     const { discountedPrice, discount_percentage } = useProductDiscountedPrice(product.id, product);
-    const preorderFinishDate = product.preorder_finish_date 
-        ? new Date(product.preorder_finish_date) 
+    const preorderFinishDate = product.preorder_finish_date
+        ? new Date(`${product.preorder_finish_date}T23:59:59+01:00`)
         : new Date();
     const preorderFinishDateFormatted = preorderFinishDate.toLocaleDateString('en-GB', {
         day: 'numeric',
