@@ -32,7 +32,6 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                 quantity,
                 ...(product.can_pick_allergens ? {
                     box_customization: {
-                        selection_type: 'RANDOM', // or undefined if not needed
                         allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
                     }
                 } : {})
