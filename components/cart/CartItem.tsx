@@ -68,7 +68,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
             {entry.product.name}
           </a>
 
-          {customization && (
+          {customization && customization.selection_type && (
             <p className="flex flex-wrap items-center gap-2">
               <span className="rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
                 {customization.selection_type === 'PICK_AND_MIX' ? 'Pick & Mix' : null}
