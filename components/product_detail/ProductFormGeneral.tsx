@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Product as ProductType } from '@/types/products';
 import { useAddCartItemMutation } from "@/redux/features/carts/cartApiSlice";
 import ColoredList from "../common/ColoredList";
+import AllergenSelection from './AllergenSelection';
 
 interface ProductFormGeneralProps {
     product: ProductType;
@@ -14,6 +15,9 @@ interface ProductFormGeneralProps {
 
 const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
+    // Allergen state
+    const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
+    const [allergenOption, setAllergenOption] = useState<'NONE' | 'SPECIFY' | null>(null);
     const dispatch = useAppDispatch();
     const router = useRouter();
 
@@ -26,6 +30,12 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
             const cartItemRequest: CartItemRequest = {
                 product: product.id,
                 quantity,
+                ...(product.can_pick_allergens ? {
+                    box_customization: {
+                        selection_type: 'RANDOM', // or undefined if not needed
+                        allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
+                    }
+                } : {})
             };
 
             // Actually call the mutation
@@ -47,6 +57,13 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
         { text: "Yellow - Passion Fruit and Mango Caramel", colorKey: "yellow" },
         { text: "Green - Mint and Dark Chocolate", colorKey: "green" },
         { text: "Blue - Guava Cheesecake", colorKey: "blue" },
+    ];
+
+    const allergens = [
+        { name: 'Gluten', id: 2 },
+        { name: 'Alcohol', id: 5 },
+        { name: 'Nut', id: 6 },
+        // Add more allergens as needed
     ];
 
     return (
@@ -84,6 +101,19 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                     </>
                 )}
             </div>
+
+            {/* Allergen selection if product.allergen_options is true */}
+            {product.can_pick_allergens && (
+                <div className="mt-4">
+                    <AllergenSelection
+                        allergens={allergens}
+                        selectedAllergens={selectedAllergens}
+                        setSelectedAllergens={setSelectedAllergens}
+                        allergenOption={allergenOption}
+                        setAllergenOption={setAllergenOption}
+                    />
+                </div>
+            )}
 
             {product.slug === "advent-calendar" && (
                 <div className="mt-4">

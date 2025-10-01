@@ -52,7 +52,9 @@ export interface Product {
     preorder_finish_date?: string;
     preorder_price?: string;
     is_preorder_active?: boolean;
-    
+
+    can_pick_allergens?: boolean;
+
     gallery_images?: ProductGalleryImage[];
 
     created?: string;
