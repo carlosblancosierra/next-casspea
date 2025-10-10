@@ -158,15 +158,15 @@ export default function HomePage() {
           </Link>
 
           <div className="flex flex-col justify-center gap-3 p-6 md:p-8">
-            <h3 className="text-2xl md:text-3xl font-bold text-yellow-900 dark:text-yellow-50">
+            <h3 className="text-2xl md:text-3xl font-bold text-yellow-50">
               Introducing the 2025 Advent Calendar
             </h3>
-            <h4 className="text-lg md:text-xl font-bold text-yellow-900 dark:text-yellow-50">
+            <h4 className="text-lg md:text-xl font-bold text-yellow-50">
               Pre-order before 15th October for an exclusive discount
             </h4>
             <AdventCountdown />
 
-            <p className="text-sm md:text-base text-yellow-950/80 dark:text-yellow-100/90">
+            <p className="text-sm md:text-base text-yellow-100/90">
               A 24-day countdown to Christmas with 24 delicious treats.
             </p>
 

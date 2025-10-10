@@ -22,18 +22,18 @@ const AdventCountdown = () => {
   }, [target]);
 
   return (
-    <div className="flex gap-4 text-lg font-bold">
+    <div className="flex gap-4 text-lg font-bold text-white">
       <div>
-        <span className="text-white">{timeLeft.days}</span> days
+        <span>{timeLeft.days}</span> days
       </div>
       <div>
-        <span className="text-white">{timeLeft.hours}</span> hours
+        <span>{timeLeft.hours}</span> hours
       </div>
       <div>
-        <span className="text-white">{timeLeft.minutes}</span> min
+        <span>{timeLeft.minutes}</span> min
       </div>
       <div>
-        <span className="text-white">{timeLeft.seconds}</span> sec
+        <span>{timeLeft.seconds}</span> sec
       </div>
     </div>
   );
