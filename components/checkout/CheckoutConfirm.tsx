@@ -59,13 +59,13 @@ const CheckoutConfirm = () => {
             }).unwrap();
 
             // Then create the Stripe session
-            // const response = await createStripeSession().unwrap();
-            // if (response?.url) {
-            //     await new Promise(resolve => setTimeout(resolve, 500));
-            //     window.location.href = response.url;
-            // }
+            const response = await createStripeSession().unwrap();
+            if (response?.url) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                window.location.href = response.url;
+            }
 
-            router.push('/checkout/embedded');
+            // router.push('/checkout/embedded');
         
         } catch (err) {
             toast.error('Failed to process payment');
