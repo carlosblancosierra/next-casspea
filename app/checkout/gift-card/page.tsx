@@ -127,7 +127,7 @@ const GiftCardPage = () => {
                     <button 
                         onClick={handleAddGiftCard} 
                         disabled={isProcessing} 
-                        className="w-full sm:w-auto bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 sm:order-2"
+                        className="w-full sm:w-auto bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-2 sm:order-2"
                     >
                         {isProcessing ? 'Adding...' : 'Add Gift Card'}
                     </button>
