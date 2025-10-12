@@ -1,15 +1,31 @@
 "use client";
-import { XMarkIcon } from '@heroicons/react/20/solid'
+
+import { XMarkIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link'
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+// Constants
+const HIDDEN_PATHS = ['/blog', '/landing/gold'];
+const BACKGROUND_COLOR = "#480607";
+
+type AnnouncementLink = {
+  href: string;
+  text: string;
+};
+
+const CONTACT_INFO = {
+  phone: { number: "07859 790386", href: "tel:07859790386" },
+  email: { address: "info@casspea.co.uk", href: "mailto:info@casspea.co.uk" }
+};
 
 export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
-  const hiddenPaths = ['/blog', '/landing/gold'];
-  if (hiddenPaths.some(path => pathname?.startsWith(path))) return null;
+  
+  // Early return if on excluded paths
+  if (HIDDEN_PATHS.some(path => pathname?.startsWith(path))) return null;
 
   const handleClose = () => {
     setIsVisible(false);
@@ -19,64 +35,62 @@ export default function AnnouncementBar() {
     return null;
   }
 
+  const renderTrustpilotRating = () => (
+    <div className="flex items-center gap-x-2 justify-center">
+      <Image
+        src="/home/stars-4.5.svg"
+        alt="Trustpilot Rating 4.4"
+        width={100}
+        height={100}
+        className="inline-block"
+      />
+      <a 
+        href="https://uk.trustpilot.com/review/www.casspea.co.uk" 
+        className="text-sm font-medium inline-block text-white hover:underline"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        4.4 on Trustpilot
+      </a>
+    </div>
+  );
+  
+  const renderContactInfo = () => (
+    <p className="text-sm leading-6 w-full md:w-auto text-center text-white">
+      Tel: <a 
+        href={CONTACT_INFO.phone.href} 
+        className="underline hover:no-underline transition underline-offset-2 text-white"
+      >
+        {CONTACT_INFO.phone.number}
+      </a> / email: <a 
+        href={CONTACT_INFO.email.href} 
+        className="underline hover:no-underline transition underline-offset-2 text-white"
+      >
+        {CONTACT_INFO.email.address}
+      </a>
+    </p>
+  );
+  
   return (
-    <div className="relative isolate overflow-hidden px-6 py-2.5 sm:px-3.5">
-      <div
-        aria-hidden="true"
-        className="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-      >
-        <div
-          style={{
-            clipPath:
-              'polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)',
-          }}
-          className="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
-        />
-      </div>
-      <div
-        aria-hidden="true"
-        className="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-      >
-        <div
-          style={{
-            clipPath:
-              'polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)',
-          }}
-          className="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
-        />
-      </div>
-      <div className="flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-x-6 max-w-screen-2xl mx-auto text-gray-900 dark:text-white">
+    <div 
+      className="relative isolate overflow-hidden px-6 py-2.5 sm:px-3.5" 
+      style={{ backgroundColor: BACKGROUND_COLOR }}
+    >
+      <div className="flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-x-6 max-w-screen-2xl mx-auto text-white">
         <div className="flex flex-col md:flex-row flex-1 justify-center items-center gap-y-2 md:gap-x-8 w-full">
-          <p className="text-sm leading-6 w-full md:w-auto text-center">
-          <div className="">
-            <div className="flex flex-row items-center gap-x-2 justify-center">
-                <Image
-                    src="/home/stars-4.5.svg"
-                    alt="Trustpilot Starts 4.3"
-                    width={100}
-                    height={100}
-                    className="inline-block"
-                />
-                <a href="https://uk.trustpilot.com/review/www.casspea.co.uk" className="text-sm font-medium inline-block">
-                    4.4 on Trustpilot
-                </a>
-            </div>
-            </div>
-          </p>
-          <p className="text-sm leading-6 w-full md:w-auto text-center">
-            Tel: <a href="tel:07859790386" className="underline hover:no-underline transition underline-offset-2">07859 790386</a> / email: <a href="mailto:info@casspea.co.uk" className="underline hover:no-underline transition underline-offset-2">info@casspea.co.uk</a>
-            {/* <Link href="/landing/thermomix" className="underline hover:no-underline transition underline-offset-2">
-              Free Thermomix Giveaway
-            </Link> */}
-          </p>
-          <p className="text-sm leading-6 w-full md:w-auto text-center">
+          <div className="text-sm leading-6 w-full md:w-auto text-center">
+            {renderTrustpilotRating()}
+          </div>
+          
+          {renderContactInfo()}
+          
+          <p className="text-sm leading-6 w-full md:w-auto text-center text-white">
             Free Shipping over £50
           </p>
+          
           <Link
             href="/subscribe"
-            className="w-full md:w-auto text-center rounded-full
-            bg-gradient-primary
-            px-3.5 py-1 text-sm text-white shadow-sm hover:bg-primary-light"
+            className="w-full md:w-auto text-center rounded-full bg-red-600 px-3.5 py-1 text-sm text-white shadow-sm hover:bg-primary-light transition"
           >
             Subscribe for 10% off <span aria-hidden="true">&rarr;</span>
           </Link>
@@ -84,11 +98,12 @@ export default function AnnouncementBar() {
 
         <button
           type="button"
-          className="absolute top-2 right-2 md:relative md:top-auto md:right-auto p-2 hover:bg-gray-100 rounded-full"
+          className="absolute top-2 right-2 md:relative md:top-auto md:right-auto p-2 hover:bg-gray-100/20 rounded-full transition"
           onClick={handleClose}
+          aria-label="Dismiss announcement"
         >
           <span className="sr-only">Dismiss</span>
-          <XMarkIcon aria-hidden="true" className="h-5 w-5 text-gray-900 dark:text-white" />
+          <XMarkIcon aria-hidden="true" className="h-5 w-5 text-white" />
         </button>
       </div>
     </div>

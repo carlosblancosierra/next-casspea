@@ -51,18 +51,18 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src='/logos/pink.png'
+                      src='/logos/brown.png'
                       width={0}
                       height={0}
                       sizes="100vw"
                       priority
-                      className='w-36 h-auto block dark:hidden'
+                      className='w-36 h-auto block dark:hidden mt-1'
                     />
                   </Link>
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src='/logos/pink.png'
+                      src='/logos/brown.png'
                       width={0}
                       height={0}
                       sizes="100vw"

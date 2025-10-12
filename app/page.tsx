@@ -9,13 +9,14 @@ import PersonalisedHome from '@/components/personalized/PersonalisedHome';
 import CategoryProducts from '@/components/home/CategoryProducts';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import React, { useEffect, useState } from 'react';
+import AdventSection from '@/components/home/AdventSection';
 import AdventCountdown from '@/components/common/AdventCountdown';
 
 // Dynamically import components that can load later
 const HomeProducts = dynamic(() => import('@/components/home/HomeProducts'));
 const HomeGallery = dynamic(() => import('@/components/home/HomeGallery'));
-const FlavourCarousel = dynamic(() => import('@/components/flavours/FlavourCarousel'));
 const FlavoursGrid = dynamic(() => import('@/components/landing/main/FlavourGrid'));
+
 
 // Reusable section component that wraps content in Suspense with a title
 export const Section = ({
@@ -30,7 +31,7 @@ export const Section = ({
   <Suspense fallback={<LoadingSection />}>
     <div className={extraClass}>
       {title && (
-        <h2 className="text-center text-2xl font-bold mb-3 font-playfair">
+        <h2 className={`text-center text-2xl font-bold mb-3 ${playfair.className}`}>
           {title}
         </h2>
       )}
@@ -62,6 +63,9 @@ const ButtonGroup = () => (
     </Link>
   </div>
 );
+
+// Initialize font
+const playfair = Playfair_Display({ subsets: ['latin'] });
 
 // Hero section component (grid now splits at md instead of lg)
 const HeroSection = () => (
@@ -109,7 +113,7 @@ const HeroSection = () => (
         <div className="md:hidden mb-6">
           <UnitSoldCounter />
         </div>
-        <p className="md:hidden md:mb-6 text-3xl font-bold mt-2 font-playfair lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">
+        <p className={`md:hidden md:mb-6 text-3xl font-bold mt-2 ${playfair.className} lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200`}>
           Share the love with CassPea Chocolates
         </p>
         <p className="md:hidden md:mb-6 font-light text-md mt-2 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-200">
@@ -122,8 +126,6 @@ const HeroSection = () => (
     </div>
   </section>
 );
-
-const playfair = Playfair_Display({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'CassPea Hand Crafted Chocolates',
@@ -141,46 +143,7 @@ export default function HomePage() {
       <HeroSection />
 
       <Section title="" extraClass="mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch rounded-xl overflow-hidden bg-[#173960]">
-
-          <Link href="/shop-now/advent-calendar" className="relative min-h-[220px] md:min-h-[320px] block group">
-            <Image
-              src="/advent-calendar/2025/2.jpg"
-              alt="Advent Calendar"
-              width={800}
-              height={0}
-              sizes="100vw"
-              style={{ objectFit: 'cover' }}
-              priority={false}
-              className="object-cover w-full h-auto transition-transform duration-300 group-hover:scale-[1.02]"
-            />
-            <div className="absolute inset-0 bg-black/20 md:bg-black/10" />
-          </Link>
-
-          <div className="flex flex-col justify-center gap-3 p-6 md:p-8">
-            <h3 className="text-2xl md:text-3xl font-bold text-yellow-50">
-              Introducing the 2025 Advent Calendar
-            </h3>
-            <h4 className="text-lg md:text-xl font-bold text-yellow-50">
-              Pre-order before 15th October for an exclusive discount
-            </h4>
-            <AdventCountdown />
-
-            <p className="text-sm md:text-base text-yellow-100/90">
-              A 24-day countdown to Christmas with 24 delicious treats.
-            </p>
-
-            <div className="mt-2 flex flex-wrap items-center gap-3">
-              <Link
-                href="/shop-now/advent-calendar"
-                className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition"
-              >
-                Shop Now the pre-order
-              </Link>
-            </div>
-            
-          </div>
-        </div>
+        <AdventSection />
       </Section>
 
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">

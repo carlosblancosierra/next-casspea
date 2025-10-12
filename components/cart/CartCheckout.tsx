@@ -262,7 +262,7 @@ export default function CartCheckout() {
                         type="button"
                         onClick={handleCheckout}
                         disabled={!email || isProcessing}
-                        className="w-full rounded-md bg-gradient-primary px-4 py-3 text-xl text-white
+                        className="w-full rounded-md bg-gradient-autumn px-4 py-3 text-xl text-white
                             shadow-sm hover:bg-primary-2 focus-visible:outline focus-visible:outline-2
                             focus-visible:outline-offset-2 focus-visible:outline-primary
                             disabled:bg-gray-300 dark:disabled:bg-gray-700 dark:bg-primary-2
