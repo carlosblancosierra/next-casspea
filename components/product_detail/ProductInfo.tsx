@@ -48,7 +48,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
             <div id="product-info">
                 <div className="flex flex-col gap-y-2 md:gap-y-4 lg:max-w-[500px] mx-auto">
                     {product.preorder && (
-                        <div className="w-fit rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ring-pink-500/10 bg-pink-500 text-white border border-pink-500">
+                        <div className="w-fit rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ring-primary/10 bg-primary text-white border border-primary">
                             {/* Preorder tag with finish date */}
                             <span >
                                 Preorder ends on {preorderFinishDateFormatted}
