@@ -104,9 +104,14 @@ const HeroSection = () => (
         />
         <ImageGallery
           images={[
-            '/advent-calendar/2025/carousel/21.jpeg',
-            '/advent-calendar/2025/carousel/22.jpeg',
-            '/advent-calendar/2025/carousel/23.jpeg',
+            '/home/2025-10/tinified/1.jpg',
+            '/home/2025-10/tinified/2.jpg',
+            '/home/2025-10/tinified/3.jpg',
+            '/home/2025-10/tinified/4.jpg',
+            '/home/2025-10/tinified/5.jpg',
+            '/home/2025-10/tinified/6.jpg',
+            '/home/2025-10/tinified/7.jpg',
+            '/home/2025-10/tinified/8.jpg',
           ]}
           className="block md:hidden"
         />
