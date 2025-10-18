@@ -8,10 +8,11 @@ import AnnouncementBar from '@/components/common/AnnouncementBar';
 import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
 import GiveawayPopup from '@/components/common/GiveawayPopup';
+import dynamic from 'next/dynamic';
 
-// const HeartEffect = dynamic(() => import('@/components/common/HeartEffect'), {
-//   ssr: false
-// });
+const AutumEffect = dynamic(() => import('@/components/common/AutumEffect'), {
+  ssr: false
+});
 
 
 
@@ -87,12 +88,26 @@ export default function RootLayout({
           `}
         </Script>
 
+        <Script id="tawk-to" strategy="afterInteractive">
+          {`
+            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            (function(){
+              var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+              s1.async=true;
+              s1.src='https://embed.tawk.to/67a5f217825083258e11a954/1ijg3jbdp';
+              s1.charset='UTF-8';
+              s1.setAttribute('crossorigin','*');
+              s0.parentNode.insertBefore(s1,s0);
+            })();
+          `}
+        </Script>
+
         <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="7ef907d7-ea0d-4a43-beec-ca187e2ea5cd" data-blockingmode="auto" type="text/javascript"></script>
         <Provider>
           <Setup />
           {/* <GiveawayPopup /> */}
           <LayoutWrapper>
-            <div className="flex flex-col min-h-screen relative">
+            <div className="flex flex-col min-h-screen relative z-1">
               <AnnouncementBar />
               <Navbar />
               <main className="flex-grow pt-2 pb-16 md:pb-0 mx-4">
@@ -101,9 +116,7 @@ export default function RootLayout({
               <div className="hidden md:block">
                 <Footer />
               </div>
-              {/* <div className="block md:hidden">
-                <MobileMenu />
-              </div> */}
+              <AutumEffect />
             </div>
           </LayoutWrapper>
         </Provider>
