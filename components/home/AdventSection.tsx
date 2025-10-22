@@ -23,10 +23,10 @@ export default function AdventSection() {
         <h3 className="text-2xl md:text-3xl font-bold text-primary-button-text">
           Introducing the 2025 Advent Calendar
         </h3>
-        <h4 className="text-lg md:text-xl font-bold text-primary-button-text">
+        {/* <h4 className="text-lg md:text-xl font-bold text-primary-button-text">
           Pre-order before 15th October for an exclusive discount
-        </h4>
-        <AdventCountdown />
+        </h4> */}
+        {/* <AdventCountdown /> */}
 
         <p className="text-sm md:text-base text-primary-button-text">
           A 24-day countdown to Christmas with 24 delicious treats.
