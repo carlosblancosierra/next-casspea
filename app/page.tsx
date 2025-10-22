@@ -154,14 +154,6 @@ export default function HomePage() {
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
         <HomeProducts />
       </Section>
- 
-      <Section title="Chocolate Barks" extraClass="mt-5">
-        <CategoryProducts categorySlug="chocolate-barks" />
-      </Section>
-
-      <Section title="Hot Chocolate" extraClass="mt-5">
-        <CategoryProducts categorySlug="hot-chocolate" />
-      </Section>
 
       <Section title="Our Flavours" extraClass="mt-10">
         <FlavoursGrid/>
@@ -173,6 +165,14 @@ export default function HomePage() {
 
       <Section title="Gallery" extraClass="mt-10">
         <HomeGallery />
+      </Section>
+
+      <Section title="Chocolate Barks" extraClass="mt-5">
+        <CategoryProducts categorySlug="chocolate-barks" />
+      </Section>
+
+      <Section title="Hot Chocolate" extraClass="mt-5">
+        <CategoryProducts categorySlug="hot-chocolate" />
       </Section>
     </main>
   );
