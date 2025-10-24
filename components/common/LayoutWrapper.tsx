@@ -2,6 +2,7 @@
 
 import { Suspense } from 'react';
 import { useDiscountCode } from '@/hooks/useDiscountCode';
+import WhatsAppFAB from './WhatsAppFAB';
 
 // Separate client component for discount code handling
 function DiscountCodeHandler() {
@@ -17,6 +18,7 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
                 <DiscountCodeHandler />
             </Suspense>
             {children}
+            <WhatsAppFAB />
         </>
     );
 }
