@@ -8,7 +8,8 @@ interface UnitSoldCounterProps {
   bg?: string;
 }
 
-const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '', bg = 'bg-gradient-autumn' }) => {
+const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '' }) => {
+  const bg_color = '#977545';
   const { data: dailyUnitsSold, isLoading, error } = useGetDailyUnitsSoldQuery();
   const [displayedCount, setDisplayedCount] = useState(0);
   
@@ -59,7 +60,7 @@ const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '', bg = 
   if (error && !isLocal) return null;
 
   return (
-    <div className={`px-4 py-2 flex flex-col items-center w-full ${bg}`}>
+    <div className="px-4 py-2 flex flex-col items-center w-full" style={{ backgroundColor: bg_color }}>
       <div className="flex items-center justify-center">
         {isLoading && !isLocal ? (
           <Spinner md />

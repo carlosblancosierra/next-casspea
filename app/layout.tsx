@@ -10,7 +10,7 @@ import LayoutWrapper from '@/components/common/LayoutWrapper';
 import GiveawayPopup from '@/components/common/GiveawayPopup';
 import dynamic from 'next/dynamic';
 
-const AutumEffect = dynamic(() => import('@/components/common/AutumEffect'), {
+const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
   ssr: false
 });
 
@@ -102,7 +102,7 @@ export default function RootLayout({
               <div className="hidden md:block">
                 <Footer />
               </div>
-              <AutumEffect />
+              <SnowEffect />
             </div>
           </LayoutWrapper>
         </Provider>

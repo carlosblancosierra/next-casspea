@@ -51,7 +51,7 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src='/logos/brown.png'
+                      src='/logos/logo-green-hat.png'
                       width={0}
                       height={0}
                       sizes="100vw"

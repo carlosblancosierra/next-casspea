@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 
 // Constants
 const HIDDEN_PATHS = ['/blog', '/landing/gold'];
-const BACKGROUND_COLOR = "#480607";
+const BACKGROUND_COLOR = "#274F39";
 
 type AnnouncementLink = {
   href: string;

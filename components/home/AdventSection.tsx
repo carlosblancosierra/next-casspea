@@ -4,7 +4,7 @@ import AdventCountdown from '@/components/common/AdventCountdown';
 
 export default function AdventSection() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch rounded-xl overflow-hidden bg-secondary-bg">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch rounded-xl overflow-hidden bg-[#977545]">
       <Link href="/shop-now/advent-calendar" className="relative min-h-[220px] md:min-h-[320px] block group">
         <Image
           src="/advent-calendar/2025/2.jpg"
@@ -37,7 +37,7 @@ export default function AdventSection() {
             href="/shop-now/advent-calendar"
             className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition"
           >
-            Shop Now the pre-order
+            Shop Now
           </Link>
         </div>
       </div>
