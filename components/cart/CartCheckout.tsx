@@ -27,9 +27,8 @@ export default function CartCheckout() {
     const [error, setError] = useState<string | null>(null);
     const [addDiscount, setAddDiscount] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [emailError, setEmailError] = useState(false);
-    const emailSectionRef = useRef<HTMLDivElement>(null);
-    const emailInputRef = useRef<HTMLInputElement>(null);
+    const [showEmailModal, setShowEmailModal] = useState(false);
+    const [modalEmail, setModalEmail] = useState('');
 
     // here, when load the page, get the session
     const { data: checkoutSession, isLoading: isSessionLoading } = useGetSessionQuery();
@@ -55,7 +54,10 @@ export default function CartCheckout() {
 
     const handleValidEmail = async (newEmail: string) => {
         setEmail(newEmail);
-        setEmailError(false); // Clear error when valid email is entered
+    };
+
+    const handleModalEmailChange = (newEmail: string) => {
+        setModalEmail(newEmail);
     };
 
     const formatCurrency = (value: string) => {
@@ -68,28 +70,31 @@ export default function CartCheckout() {
     const handleCheckout = async () => {
         console.log('handleCheckout email', email);
         
-        // If no email, scroll to email field and highlight it
+        // If no email, open modal to collect it
         if (!email) {
-            setEmailError(true);
-            
-            // Scroll to email section with smooth behavior
-            emailSectionRef.current?.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
-            });
-            
-            // Focus the email input after a brief delay for scroll
-            setTimeout(() => {
-                const emailInput = document.getElementById('email') as HTMLInputElement;
-                emailInput?.focus();
-            }, 500);
-            
+            setModalEmail(''); // Reset modal email
+            setShowEmailModal(true);
             return;
         }
 
+        // Proceed with checkout
+        await proceedToCheckout(email);
+    };
+
+    const handleModalCheckout = async () => {
+        if (!modalEmail) return;
+        
+        // Set the email from modal
+        setEmail(modalEmail);
+        setShowEmailModal(false);
+        
+        // Proceed with checkout
+        await proceedToCheckout(modalEmail);
+    };
+
+    const proceedToCheckout = async (emailToUse: string) => {
         setIsProcessing(true);
         setError(null);
-        setEmailError(false);
 
         try {
             if (addShippingDate || addGiftMessage) {
@@ -100,7 +105,7 @@ export default function CartCheckout() {
                 await updateCart(cartUpdate).unwrap();
             }
 
-            await updateSession({ email }).unwrap();
+            await updateSession({ email: emailToUse }).unwrap();
 
             router.push(`/checkout/gift-card`);
 
@@ -270,119 +275,46 @@ export default function CartCheckout() {
                 </div>
             </div>
 
-            {/* Contact Information */}
-            <div 
-                ref={emailSectionRef}
-                className="border-b border-gray-900/10 pb-12 dark:border-gray-700 transition-all duration-300"
-            >
-                <div className={`rounded-lg p-4 mb-6 border transition-all duration-300 ${
-                    emailError 
-                        ? 'bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-800' 
-                        : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
-                }`}>
-                    <div className="flex items-start">
-                        <svg className={`w-5 h-5 mt-0.5 mr-3 flex-shrink-0 ${
-                            emailError 
-                                ? 'text-red-600 dark:text-red-400' 
-                                : 'text-blue-600 dark:text-blue-400'
-                        }`} fill="currentColor" viewBox="0 0 20 20">
-                            {emailError ? (
-                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
-                            ) : (
-                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-                            )}
-                        </svg>
-                        <div>
-                            <h3 className={`text-sm font-semibold ${
-                                emailError 
-                                    ? 'text-red-900 dark:text-red-200' 
-                                    : 'text-blue-900 dark:text-blue-200'
-                            }`}>
-                                {emailError ? 'Email Required!' : 'Almost ready to checkout!'}
-                            </h3>
-                            <p className={`mt-1 text-sm ${
-                                emailError 
-                                    ? 'text-red-800 dark:text-red-300' 
-                                    : 'text-blue-800 dark:text-blue-300'
-                            }`}>
-                                {emailError 
-                                    ? 'Please enter your email address below to continue to checkout.' 
-                                    : 'Please provide your email address to continue. You\'ll review shipping details on the next page.'}
-                            </p>
+            {/* Contact Information - Optional */}
+            {email && (
+                <div className="border-b border-gray-900/10 pb-6 dark:border-gray-700">
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                        <div className="flex items-start">
+                            <svg className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                            </svg>
+                            <div className="flex-1">
+                                <h3 className="text-sm font-semibold text-green-900 dark:text-green-200">
+                                    Email Confirmed
+                                </h3>
+                                <p className="mt-1 text-sm text-green-800 dark:text-green-300">
+                                    {email}
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setEmail('')}
+                                className="text-sm text-green-700 dark:text-green-300 hover:text-green-900 dark:hover:text-green-100 font-medium"
+                            >
+                                Change
+                            </button>
                         </div>
                     </div>
                 </div>
+            )}
 
-                <h2 className="text-base font-semibold text-gray-900 dark:text-gray-200 mb-4">
-                    Contact Information <span className="text-red-500">*</span>
-                </h2>
-                
+            {/* Checkout Button Section */}
+            <div className="border-b border-gray-900/10 pb-12 dark:border-gray-700">
                 <div className="space-y-4">
-                    <div className={`transition-all duration-300 ${
-                        emailError ? 'ring-2 ring-red-500 dark:ring-red-400 rounded-lg p-3 -m-3' : ''
-                    }`}>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Email Address <span className="text-red-500">*</span>
-                        </label>
-                        <EmailForm initialEmail={email} onValidEmail={handleValidEmail} />
-                        {email && !emailError && (
-                            <div className="mt-2 flex items-center text-sm text-green-600 dark:text-green-400">
-                                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                                </svg>
-                                Email verified
-                            </div>
-                        )}
-                        {emailError && (
-                            <div className="mt-2 flex items-center text-sm text-red-600 dark:text-red-400 animate-pulse">
-                                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
-                                </svg>
-                                Email is required to proceed
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Requirements Checklist */}
-                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 space-y-2">
-                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
-                            Checkout Requirements
-                        </p>
-                        <div className="space-y-2">
-                            <div className="flex items-center text-sm">
-                                {email ? (
-                                    <svg className="w-5 h-5 text-green-500 dark:text-green-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                                    </svg>
-                                ) : (
-                                    <svg className="w-5 h-5 text-gray-400 dark:text-gray-600 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12z" clipRule="evenodd"/>
-                                    </svg>
-                                )}
-                                <span className={email ? 'text-gray-900 dark:text-gray-100 font-medium' : 'text-gray-500 dark:text-gray-400'}>
-                                    Valid email address
-                                </span>
-                            </div>
-                            <div className="flex items-center text-sm">
-                                <svg className="w-5 h-5 text-green-500 dark:text-green-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                                </svg>
-                                <span className="text-gray-900 dark:text-gray-100 font-medium">
-                                    Items in cart
-                                </span>
-                            </div>
-                        </div>
-                    </div>
 
                     <button
                         type="button"
                         onClick={handleCheckout}
                         disabled={isProcessing}
-                        className={`w-full rounded-md px-4 py-3 text-lg font-semibold text-white
-                            shadow-sm transition-all duration-200 flex items-center justify-center
+                        className={`w-full rounded-md px-4 py-4 text-xl font-bold text-white
+                            shadow-lg transition-all duration-200 flex items-center justify-center
                             ${isProcessing
                                 ? 'bg-gray-400 dark:bg-gray-600 cursor-wait opacity-70'
-                                : 'bg-gradient-autumn dark:bg-primary-2 hover:shadow-lg hover:scale-[1.02] dark:hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
+                                : 'bg-gradient-autumn dark:bg-primary-2 hover:shadow-xl hover:scale-[1.02] dark:hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
                             }`}
                     >
                         {isProcessing ? (
@@ -396,7 +328,7 @@ export default function CartCheckout() {
                         ) : (
                             <>
                                 Continue to Checkout
-                                <svg className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                                <svg className="w-6 h-6 ml-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"/>
                                 </svg>
                             </>
@@ -412,26 +344,24 @@ export default function CartCheckout() {
                         </div>
                     )}
 
-                    {!emailError && (
-                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-md p-3 space-y-2">
-                            <div className="flex items-start">
-                                <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-                                </svg>
-                                <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    You'll review your complete order and enter shipping details on the next page
-                                </p>
-                            </div>
-                            <div className="flex items-start">
-                                <svg className="w-5 h-5 text-red-500 dark:text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>
-                                </svg>
-                                <p className="text-xs text-red-600 dark:text-red-400">
-                                    Advent Calendar shipping begins on November 21st
-                                </p>
-                            </div>
+                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-md p-3 space-y-2">
+                        <div className="flex items-start">
+                            <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                            </svg>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                                {email ? "You'll review your complete order and enter shipping details on the next page" : "Click the button above to continue. We'll ask for your email in the next step."}
+                            </p>
                         </div>
-                    )}
+                        <div className="flex items-start">
+                            <svg className="w-5 h-5 text-red-500 dark:text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>
+                            </svg>
+                            <p className="text-xs text-red-600 dark:text-red-400">
+                                Advent Calendar shipping begins on November 21st
+                            </p>
+                        </div>
+                    </div>
 
                     <Link
                         href="/shop-now/"
@@ -444,6 +374,67 @@ export default function CartCheckout() {
                     </Link>
                 </div>
             </div>
+
+            {/* Email Collection Modal */}
+            {showEmailModal && (
+                <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        {/* Background overlay */}
+                        <div 
+                            className="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity" 
+                            aria-hidden="true"
+                            onClick={() => setShowEmailModal(false)}
+                        ></div>
+
+                        {/* Center modal */}
+                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                        <div className="inline-block align-bottom bg-main-bg dark:bg-gray-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                            <div>
+                                <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900">
+                                    <svg className="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div className="mt-3 text-center sm:mt-5">
+                                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100" id="modal-title">
+                                        One More Step
+                                    </h3>
+                                    <div className="mt-2">
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            Please enter your email address to continue to checkout. We'll send your order confirmation here.
+                                        </p>
+                                    </div>
+                                    <div className="mt-4">
+                                        <EmailForm initialEmail={modalEmail} onValidEmail={handleModalEmailChange} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                                <button
+                                    type="button"
+                                    disabled={!modalEmail}
+                                    onClick={handleModalCheckout}
+                                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:col-start-2 sm:text-sm
+                                        ${modalEmail
+                                            ? 'bg-primary dark:bg-primary-2 hover:bg-primary-2 dark:hover:bg-primary focus:ring-primary'
+                                            : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                                        }`}
+                                >
+                                    Continue to Checkout
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowEmailModal(false)}
+                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-main-bg dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:col-start-1 sm:text-sm"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
