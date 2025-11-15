@@ -133,8 +133,15 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     <h3 className="font-medium text-gray-900 dark:text-gray-100">
                                         {option.companyName} - {option.name}
                                     </h3>
-                                    <p className="text-gray-900 dark:text-gray-100 dark:text-gray-400 text-base">
-                                        {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(option.price)}
+                                    <p className={`text-base font-semibold ${
+                                        parseFloat(option.price.toString()) === 0
+                                            ? 'text-primary dark:text-primary-2'
+                                            : 'text-gray-900 dark:text-gray-100'
+                                    }`}>
+                                        {parseFloat(option.price.toString()) === 0
+                                            ? 'Free'
+                                            : new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(option.price)
+                                        }
                                     </p>
                                     {isOptionDisabled ? (
                                         <p className="text-red-600 dark:text-red-400 text-sm">
