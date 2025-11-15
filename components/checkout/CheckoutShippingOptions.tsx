@@ -1,8 +1,31 @@
 import { useState, useEffect } from 'react';
-import { ShippingCompany } from '@/types/shipping';
 import { addBusinessDays, format } from 'date-fns';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
+
+export interface ShippingOption {
+    id: number;
+    name: string;
+    delivery_speed: string;
+    price: string; // Now returns discounted price as string
+    original_price?: string;
+    discounted_price?: string;
+    discount_amount?: string;
+    estimated_days_min: number;
+    estimated_days_max: number;
+    description: string;
+    disabled: boolean;
+    disabled_reason: string;
+}
+
+export interface ShippingCompany {
+    id: number;
+    name: string;
+    code: string;
+    website: string;
+    track_url: string;
+    shipping_options: ShippingOption[];
+}
 
 interface Slot {
     start: string;
@@ -27,6 +50,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     const [isUpdating, setIsUpdating] = useState(false);
     const { data: cart, isLoading, error: cartError } = useGetCartQuery();
     const [storePickup, setStorePickup] = useState<{ date: Date; slot: Slot } | null>(null);
+    const [deliveryType, setDeliveryType] = useState<'shipping' | 'pickup' | null>(null);
 
     // Expose storePickup to parent if onChangeStorePickup is provided
     useEffect(() => {
@@ -49,6 +73,29 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
             companyId: company.id
         }))
     ) || [];
+
+    // Filter by delivery type
+    if (deliveryType === 'pickup') {
+        allShippingOptions = allShippingOptions.filter(option => option.id === 34); // Store pickup option
+    } else if (deliveryType === 'shipping') {
+        allShippingOptions = allShippingOptions.filter(option => option.id !== 34); // All except store pickup
+    }
+
+    // Filter out redundant free shipping options - show only the priciest one
+    const freeOptions = allShippingOptions.filter(option => parseFloat(option.price.toString()) === 0);
+    const paidOptions = allShippingOptions.filter(option => parseFloat(option.price.toString()) > 0);
+
+    if (freeOptions.length > 1) {
+        // If multiple free options, keep only the one with the highest original price (most valuable)
+        const priciestFreeOption = freeOptions.reduce((priciest, current) =>
+            parseFloat(current.original_price || current.price) > parseFloat(priciest.original_price || priciest.price)
+                ? current
+                : priciest
+        );
+        allShippingOptions = [priciestFreeOption, ...paidOptions];
+    } else {
+        allShippingOptions = [...freeOptions, ...paidOptions];
+    }
 
     // Sort: enabled options first, then disabled
     allShippingOptions = allShippingOptions.sort((a, b) => {
@@ -96,94 +143,219 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         };
     };
 
-    if (!allShippingOptions.length) return null;
+    // Helper function to render shipping price with discount
+    const renderShippingPrice = (option: any) => {
+        const discountedPrice = parseFloat(option.price);
+        const originalPrice = parseFloat(option.original_price || option.price);
+        const discountAmount = parseFloat(option.discount_amount || '0');
+
+        // If original price was 0, just show FREE
+        if (originalPrice === 0) {
+            return (
+                <span className="text-base font-semibold text-primary dark:text-primary-2">
+                    FREE
+                </span>
+            );
+        }
+
+        // If discounted price is 0, show FREE with original price struck through
+        if (discountedPrice === 0) {
+            return (
+                <div className="flex items-center gap-2">
+                    <span className="text-base font-semibold text-primary dark:text-primary-2">
+                        FREE
+                    </span>
+                    <span className="text-sm text-gray-500 line-through">
+                        Was {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(originalPrice)}
+                    </span>
+                </div>
+            );
+        }
+
+        // If there's a discount, show discounted price with original struck through
+        if (discountAmount > 0) {
+            return (
+                <div className="flex items-center gap-2">
+                    <span className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                        {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(discountedPrice)}
+                    </span>
+                    <span className="text-sm text-gray-500 line-through">
+                        Was {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(originalPrice)}
+                    </span>
+                </div>
+            );
+        }
+
+        // No discount, show regular price
+        return (
+            <span className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(discountedPrice)}
+            </span>
+        );
+    };
+
+    if (!allShippingOptions.length && !deliveryType) return null;
 
     return (
         <div className="main-bg p-6 rounded-lg shadow dark:bg-gray-800">
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                Shipping Options
+                {deliveryType ? 'Shipping Options' : 'How would you like to receive your order?'}
             </h2>
 
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                Orders will be shipped ASAP, usually within 24 hours. Delivery Date depends on the shipping option selected.
-            </p>
+            {!deliveryType ? (
+                <div className="space-y-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                        Choose how you'd like to receive your chocolate order.
+                    </p>
 
-            <div className="space-y-4">
-                {allShippingOptions.map((option) => {
-                    const isOptionDisabled = option.disabled;
-                    const dates = getEstimatedDeliveryDates(option.estimated_days_min, option.estimated_days_max);
-                    return (
-                        <label
-                            key={option.id}
-                            className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer
-                                ${isUpdating || isOptionDisabled ? 'opacity-50 cursor-not-allowed' : 'hover: dark:hover:bg-gray-700'}
-                                ${localSelectedOption === option.id.toString() ? 'border-primary-2 ring-1 ring-primary-2' : 'border-gray-200'}`}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Shipping Delivery Option */}
+                        <button
+                            onClick={() => setDeliveryType('shipping')}
+                            className="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary-2 hover:bg-primary/5 dark:hover:bg-primary-2/10 transition-all duration-200 text-left group"
                         >
-                            <div className="flex items-center">
-                                <input
-                                    type="radio"
-                                    name="shipping"
-                                    value={option.id.toString()}
-                                    checked={localSelectedOption === option.id.toString()}
-                                    onChange={() => handleShippingChange(option.id.toString())}
-                                    disabled={isUpdating || isOptionDisabled}
-                                    className="h-4 w-4 text-primary focus:ring-primary-2"
-                                />
-                                <div className="ml-3">
-                                    <h3 className="font-medium text-gray-900 dark:text-gray-100">
-                                        {option.companyName} - {option.name}
-                                    </h3>
-                                    <p className={`text-base font-semibold ${
-                                        parseFloat(option.price.toString()) === 0
-                                            ? 'text-primary dark:text-primary-2'
-                                            : 'text-gray-900 dark:text-gray-100'
-                                    }`}>
-                                        {parseFloat(option.price.toString()) === 0
-                                            ? 'Free'
-                                            : new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(option.price)
-                                        }
-                                    </p>
-                                    {isOptionDisabled ? (
-                                        <p className="text-red-600 dark:text-red-400 text-sm">
-                                            {option.disabled_reason}
-                                        </p>
-                                    ) : (
-                                        <>
-                                            {option.id === 34 ? (
-                                                <p className="text-gray-600 dark:text-gray-400 text-sm font-semibold">
-                                                    Pick up at 104 Bedford Hill, London, SW12 9HR
-                                                </p>
-                                            ) : (
-                                                <>
-                                                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                                                        Ships: {dates.shipping}
-                                                    </p>
-                                                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                                                        Estimated Delivery: {dates.delivery}
-                                                    </p>
-                                                </>
-                                            )}
-                                        </>
-                                    )}
+                            <div className="flex items-center mb-3">
+                                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-3 group-hover:bg-primary dark:group-hover:bg-primary-2 transition-colors">
+                                    <svg className="w-6 h-6 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">Shipping Delivery</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Delivered to your address</p>
                                 </div>
                             </div>
-                        </label>
-                    );
-                })}
-            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Choose from various shipping options with different delivery speeds and costs.
+                            </p>
+                        </button>
 
-            {/* Render store pickup slot picker if selected option is 34 */}
-            {localSelectedOption === '34' && (
-                <div className="mt-6">
-                    <CheckoutStorePickUp onChange={(val) => {
-                        setStorePickup(val);
-                    }} />
+                        {/* Store Pickup Option */}
+                        <button
+                            onClick={() => setDeliveryType('pickup')}
+                            className="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary-2 hover:bg-primary/5 dark:hover:bg-primary-2/10 transition-all duration-200 text-left group"
+                        >
+                            <div className="flex items-center mb-3">
+                                <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-3 group-hover:bg-primary dark:group-hover:bg-primary-2 transition-colors">
+                                    <svg className="w-6 h-6 text-green-600 dark:text-green-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">Store Pickup</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Collect from our store</p>
+                                </div>
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Pick up your order from our Bedford Hill store location. Schedule a pickup time.
+                            </p>
+                        </button>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
+                        <button
+                            onClick={() => setDeliveryType('shipping')}
+                            className="text-sm text-primary dark:text-primary-2 hover:text-primary-2 dark:hover:text-primary font-medium"
+                        >
+                            Skip to shipping options →
+                        </button>
+                    </div>
                 </div>
-            )}
+            ) : (
+                <>
+                    <div className="flex items-center justify-between mb-4">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {deliveryType === 'shipping'
+                                ? 'Orders will be shipped ASAP, usually within 24 hours. Delivery Date depends on the shipping option selected.'
+                                : 'Pick up your order from our Bedford Hill store. Choose a convenient time slot.'
+                            }
+                        </p>
+                        <button
+                            onClick={() => {
+                                setDeliveryType(null);
+                                setLocalSelectedOption(null);
+                            }}
+                            className="text-sm text-primary dark:text-primary-2 hover:text-primary-2 dark:hover:text-primary font-medium flex items-center"
+                        >
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Change method
+                        </button>
+                    </div>
 
-            {/* <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                Due to the current high temperatures in the UK, we have temporarily disabled the Royal Mail - Tracked 48® service.
-            </p> */}
+                    {allShippingOptions.length > 0 && (
+                        <div className="space-y-4">
+                            {allShippingOptions.map((option) => {
+                                const isOptionDisabled = option.disabled;
+                                const dates = getEstimatedDeliveryDates(option.estimated_days_min, option.estimated_days_max);
+                                return (
+                                    <label
+                                        key={option.id}
+                                        className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer
+                                            ${isUpdating || isOptionDisabled ? 'opacity-50 cursor-not-allowed' : 'hover: dark:hover:bg-gray-700'}
+                                            ${localSelectedOption === option.id.toString() ? 'border-primary-2 ring-1 ring-primary-2' : 'border-gray-200'}`}
+                                    >
+                                        <div className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="shipping"
+                                                value={option.id.toString()}
+                                                checked={localSelectedOption === option.id.toString()}
+                                                onChange={() => handleShippingChange(option.id.toString())}
+                                                disabled={isUpdating || isOptionDisabled}
+                                                className="h-4 w-4 text-primary focus:ring-primary-2"
+                                            />
+                                            <div className="ml-3">
+                                                <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                                                    {option.companyName} - {option.name}
+                                                </h3>
+                                                {renderShippingPrice(option)}
+                                                {isOptionDisabled ? (
+                                                    <p className="text-red-600 dark:text-red-400 text-sm">
+                                                        {option.disabled_reason}
+                                                    </p>
+                                                ) : (
+                                                    <>
+                                                        {option.id === 34 ? (
+                                                            <p className="text-gray-600 dark:text-gray-400 text-sm font-semibold">
+                                                                Pick up at 104 Bedford Hill, London, SW12 9HR
+                                                            </p>
+                                                        ) : (
+                                                            <>
+                                                                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                                                                    Ships: {dates.shipping}
+                                                                </p>
+                                                                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                                                                    Estimated Delivery: {dates.delivery}
+                                                                </p>
+                                                            </>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </label>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {/* Render store pickup slot picker if selected option is 34 */}
+                    {localSelectedOption === '34' && allShippingOptions.length > 0 && (
+                        <div className="mt-6">
+                            <CheckoutStorePickUp onChange={(val) => {
+                                setStorePickup(val);
+                            }} />
+                        </div>
+                    )}
+
+                    {/* <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        Due to the current high temperatures in the UK, we have temporarily disabled the Royal Mail - Tracked 48® service.
+                    </p> */}
+                </>
+            )}
         </div>
     );
 };
