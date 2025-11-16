@@ -227,8 +227,8 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 <StepIndicator />
 
                 {/* Step 1: Selection Type */}
-                {currentStep >= 1 && (
-                    <div className={`transition-opacity ${currentStep === 1 ? 'opacity-100' : 'opacity-50'}`}>
+                {currentStep === 1 && (
+                    <div className="transition-opacity">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Step 1: Choose your experience</h3>
                         <BoxSelection
                             options={prebulids}
@@ -245,24 +245,22 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 Choose your own {maxChocolates} flavours and create your perfect box.
                             </p>
                         )}
-                        {currentStep === 1 && (
-                            <div className="mt-6 flex justify-end">
-                                <button
-                                    type="button"
-                                    onClick={handleNextStep}
-                                    disabled={!canProceedToStep2()}
-                                    className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        )}
+                        <div className="mt-6 flex justify-end">
+                            <button
+                                type="button"
+                                onClick={handleNextStep}
+                                disabled={!canProceedToStep2()}
+                                className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
                 )}
 
                 {/* Step 2: Allergens */}
-                {currentStep >= 2 && (
-                    <div className={`transition-opacity ${currentStep === 2 ? 'opacity-100' : 'opacity-50'}`}>
+                {currentStep === 2 && (
+                    <div className="transition-opacity">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Step 2: Any allergens to avoid?</h3>
                         <AllergenSelection
                             allergens={allergens}
@@ -271,30 +269,28 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             allergenOption={allergenOption}
                             setAllergenOption={setAllergenOption}
                         />
-                        {currentStep === 2 && (
-                            <div className="mt-6 flex justify-between">
-                                <button
-                                    type="button"
-                                    onClick={handlePrevStep}
-                                    className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                >
-                                    Back
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleNextStep}
-                                    disabled={!canProceedToStep3()}
-                                    className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        )}
+                        <div className="mt-6 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={handlePrevStep}
+                                className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                            >
+                                Back
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleNextStep}
+                                disabled={!canProceedToStep3()}
+                                className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
                 )}
 
                 {/* Step 3: Flavours or Final Options */}
-                {currentStep >= 3 && (
+                {currentStep === 3 && (
                     <div className="transition-opacity">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                             Step 3: {selection === 'PICK_AND_MIX' ? 'Pick your flavours' : 'Review your selection'}
@@ -402,8 +398,8 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 )}
             </div>
 
-            {/* Add to Cart Button - Only show when ready */}
-            {canProceedToCart() && (
+            {/* Add to Cart Button - Only show on final step when ready */}
+            {currentStep === 3 && canProceedToCart() && (
                 <div className="sticky md:static bottom-[55px] md:bottom-auto bg-main-bg dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
                     <AddToCartButton
                         onClick={handleAddToCart}
