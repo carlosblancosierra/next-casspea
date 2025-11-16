@@ -7,16 +7,18 @@ import { Flavour as FlavourType } from '@/types/flavours';
 import { CartItemBoxFlavorSelection, CartItemRequest } from '@/types/carts';
 import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
-import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
+// import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
+import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice';
 import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
 
 // Importing sub-components
 import BoxSelection from './BoxSelection';
 import AllergenSelection from './AllergenSelection';
 import AddToCartButton from './AddToCartButton';
-import SelectableProductCard from '@/components/store/SelectableProductCard';
-import SelectableGiftCard from '@/components/store/SelectableGiftCard';
-import GiftMessage from '@/components/cart/GiftMessage';
+// Pack-related imports - HIDDEN FOR TESTING
+// import SelectableProductCard from '@/components/store/SelectableProductCard';
+// import SelectableGiftCard from '@/components/store/SelectableGiftCard';
+// import GiftMessage from '@/components/cart/GiftMessage';
 
 interface ProductInfoProps {
     product: ProductType;
@@ -39,17 +41,17 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
 
     // Final options
     const [quantity, setQuantity] = useState<number>(1);
-    // Pack-related state
-    const [isPack, setIsPack] = useState<boolean>(false);
-    const [chocolateBark, setChocolateBark] = useState<Product | null>(null);
-    const [hotChocolate, setHotChocolate] = useState<Product | null>(null);
-    const [giftCard, setGiftCard] = useState<Product | null>(null);
-    const [giftMessage, setGiftMessage] = useState<string>('');
+    // Pack-related state - HIDDEN FOR TESTING
+    // const [isPack, setIsPack] = useState<boolean>(false);
+    // const [chocolateBark, setChocolateBark] = useState<Product | null>(null);
+    // const [hotChocolate, setHotChocolate] = useState<Product | null>(null);
+    // const [giftCard, setGiftCard] = useState<Product | null>(null);
+    // const [giftMessage, setGiftMessage] = useState<string>('');
 
     const dispatch = useAppDispatch();
     const router = useRouter();
     const [addToCart, { isLoading }] = useAddCartItemMutation();
-    const [updateCart] = useUpdateCartMutation();
+    // const [updateCart] = useUpdateCartMutation(); // HIDDEN FOR TESTING
     const { data: allProducts } = useGetActiveProductsQuery();
 
     const prebulids = [
@@ -193,47 +195,21 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
 
     const handleAddToCart = async () => {
         try {
-            let cartItemRequest: CartItemRequest;
-
-            if (isPack) {
-                // Pack customization
-                cartItemRequest = {
-                    product: product.id,
-                    quantity: quantity,
-                    pack_customization: {
-                        selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
-                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
-                            flavor: f.flavor!.id,
-                            quantity: f.quantity
-                        })) : [],
-                        chocolate_bark: chocolateBark?.id ?? undefined,
-                        hot_chocolate: hotChocolate?.id ?? undefined,
-                        gift_card: giftCard?.id ?? undefined
-                    }
-                };
-            } else {
-                // Regular box customization
-                cartItemRequest = {
-                    product: product.id,
-                    quantity: quantity,
-                    box_customization: {
-                        selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
-                        allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
-                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
-                            flavor: f.flavor!.id,
-                            quantity: f.quantity
-                        })) : []
-                    }
-                };
-            }
-
-            // Handle gift message for packs
-            if (isPack && giftMessage.trim() !== '') {
-                await updateCart({ gift_message: giftMessage }).unwrap();
-            }
+            const cartItemRequest: CartItemRequest = {
+                product: product.id,
+                quantity: quantity,
+                box_customization: {
+                    selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
+                    allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
+                    flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
+                        flavor: f.flavor!.id,
+                        quantity: f.quantity
+                    })) : []
+                }
+            };
 
             const response = await addToCart(cartItemRequest).unwrap();
-            toast.success(isPack ? 'Pack added to cart successfully!' : 'Box added to cart successfully!');
+            toast.success('Box added to cart successfully!');
             router.push('/cart');
         } catch (error) {
             toast.error('Failed to add item to cart');
@@ -369,142 +345,17 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             </select>
                                         </div>
 
-                                        {/* Pack Option Toggle */}
-                                        <div>
-                                            <div className="flex items-center justify-between p-4 border border-gray-300 dark:border-gray-600 rounded-lg">
-                                                <div className="flex items-center">
-                                                    <input
-                                                        type="checkbox"
-                                                        id="pack-option"
-                                                        checked={isPack}
-                                                        onChange={(e) => {
-                                                            setIsPack(e.target.checked);
-                                                            // Reset pack selections when toggling off
-                                                            if (!e.target.checked) {
-                                                                setChocolateBark(null);
-                                                                setHotChocolate(null);
-                                                                setGiftCard(null);
-                                                                setGiftMessage('');
-                                                            }
-                                                        }}
-                                                        className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
-                                                    />
-                                                    <label htmlFor="pack-option" className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
-                                                        Upgrade to Indulgent Pack (+£10)
-                                                    </label>
-                                                </div>
-                                                <div className="text-sm font-semibold text-primary">
-                                                    {isPack ? 'Pack Selected' : 'Box Only'}
-                                                </div>
-                                            </div>
-                                            {isPack && (
-                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                    Transform your signature box into a complete indulgent experience with chocolate bark, hot chocolate, and a personalized gift card.
-                                                </p>
-                                            )}
+                                        <div className="mt-6 flex justify-between">
+                                            <button
+                                                type="button"
+                                                onClick={handlePrevStep}
+                                                className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                            >
+                                                Back
+                                            </button>
                                         </div>
-
-                                        {/* Pack Customization Section */}
-                                        {isPack && (
-                                            <div className="mt-6 space-y-6">
-                                                {/* Chocolate Bark Selection */}
-                                                <div>
-                                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Chocolate Bark</h3>
-                                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                                                        {allProducts?.filter(p => p.category?.slug === 'chocolate-barks').map(p => (
-                                                            <div key={p.id} className={`border-2 rounded-lg ${chocolateBark?.id === p.id ? 'border-primary' : 'border-transparent'}`}>
-                                                                <SelectableProductCard
-                                                                    product={p}
-                                                                    price={0}
-                                                                    onSelect={() => setChocolateBark(p)}
-                                                                />
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setChocolateBark(null)}
-                                                        className={`mt-4 px-4 py-2 text-sm rounded-md ${
-                                                            chocolateBark === null
-                                                                ? 'bg-primary text-white'
-                                                                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                                                        }`}
-                                                    >
-                                                        No Chocolate Bark
-                                                    </button>
-                                                </div>
-
-                                                {/* Hot Chocolate Selection */}
-                                                <div>
-                                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Hot Chocolate</h3>
-                                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                                                        {allProducts?.filter(p => p.category?.slug === 'hot-chocolate').map(p => (
-                                                            <div key={p.id} className={`border-2 rounded-lg ${hotChocolate?.id === p.id ? 'border-primary' : 'border-transparent'}`}>
-                                                                <SelectableProductCard
-                                                                    product={p}
-                                                                    price={0}
-                                                                    onSelect={() => setHotChocolate(p)}
-                                                                />
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setHotChocolate(null)}
-                                                        className={`mt-4 px-4 py-2 text-sm rounded-md ${
-                                                            hotChocolate === null
-                                                                ? 'bg-primary text-white'
-                                                                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                                                        }`}
-                                                    >
-                                                        No Hot Chocolate
-                                                    </button>
-                                                </div>
-
-                                                {/* Gift Card Selection */}
-                                                <div>
-                                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Gift Card</h3>
-                                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                                                        {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
-                                                            <SelectableGiftCard
-                                                                key={p.id}
-                                                                title={p.name}
-                                                                image={p.image || ''}
-                                                                selected={giftCard?.id === p.id}
-                                                                onSelect={() => setGiftCard(p)}
-                                                            />
-                                                        ))}
-                                                        <div
-                                                            onClick={() => setGiftCard(null)}
-                                                            className={`flex items-center justify-center p-6 border rounded cursor-pointer ${
-                                                                giftCard === null
-                                                                    ? 'border-primary bg-primary text-white'
-                                                                    : 'border-gray-300 dark:border-gray-600 hover:border-primary'
-                                                            }`}
-                                                        >
-                                                            No Gift Card
-                                                        </div>
-                                                    </div>
-                                                    {giftCard && (
-                                                        <div className="mt-4">
-                                                            <GiftMessage onGiftMessageChange={setGiftMessage} />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
                                 )}
-
-                                <div className="mt-6 flex justify-between">
-                                    <button
-                                        type="button"
-                                        onClick={handlePrevStep}
-                                        className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                    >
-                                        Back
-                                    </button>
-                                </div>
                             </>
                         ) : (
                             // RANDOM selection - show summary and options
@@ -535,130 +386,6 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     </select>
                                 </div>
 
-                                {/* Pack Option Toggle */}
-                                <div>
-                                    <div className="flex items-center justify-between p-4 border border-gray-300 dark:border-gray-600 rounded-lg">
-                                        <div className="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                id="pack-option"
-                                                checked={isPack}
-                                                onChange={(e) => {
-                                                    setIsPack(e.target.checked);
-                                                    // Reset pack selections when toggling off
-                                                    if (!e.target.checked) {
-                                                        setChocolateBark(null);
-                                                        setHotChocolate(null);
-                                                        setGiftCard(null);
-                                                        setGiftMessage('');
-                                                    }
-                                                }}
-                                                className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
-                                            />
-                                            <label htmlFor="pack-option" className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
-                                                Upgrade to Indulgent Pack (+£10)
-                                            </label>
-                                        </div>
-                                        <div className="text-sm font-semibold text-primary">
-                                            {isPack ? 'Pack Selected' : 'Box Only'}
-                                        </div>
-                                    </div>
-                                    {isPack && (
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                            Transform your signature box into a complete indulgent experience with chocolate bark, hot chocolate, and a personalized gift card.
-                                        </p>
-                                    )}
-                                </div>
-
-                                {/* Pack Customization Section */}
-                                {isPack && (
-                                    <div className="mt-6 space-y-6">
-                                        {/* Chocolate Bark Selection */}
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Chocolate Bark</h3>
-                                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                                                {allProducts?.filter(p => p.category?.slug === 'chocolate-barks').map(p => (
-                                                    <div key={p.id} className={`border-2 rounded-lg ${chocolateBark?.id === p.id ? 'border-primary' : 'border-transparent'}`}>
-                                                        <SelectableProductCard
-                                                            product={p}
-                                                            price={0}
-                                                            onSelect={() => setChocolateBark(p)}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => setChocolateBark(null)}
-                                                className={`mt-4 px-4 py-2 text-sm rounded-md ${
-                                                    chocolateBark === null
-                                                        ? 'bg-primary text-white'
-                                                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                                                }`}
-                                            >
-                                                No Chocolate Bark
-                                            </button>
-                                        </div>
-
-                                        {/* Hot Chocolate Selection */}
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Hot Chocolate</h3>
-                                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                                                {allProducts?.filter(p => p.category?.slug === 'hot-chocolate').map(p => (
-                                                    <div key={p.id} className={`border-2 rounded-lg ${hotChocolate?.id === p.id ? 'border-primary' : 'border-transparent'}`}>
-                                                        <SelectableProductCard
-                                                            product={p}
-                                                            price={0}
-                                                            onSelect={() => setHotChocolate(p)}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => setHotChocolate(null)}
-                                                className={`mt-4 px-4 py-2 text-sm rounded-md ${
-                                                    hotChocolate === null
-                                                        ? 'bg-primary text-white'
-                                                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                                                }`}
-                                            >
-                                                No Hot Chocolate
-                                            </button>
-                                        </div>
-
-                                        {/* Gift Card Selection */}
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Gift Card</h3>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                                                {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
-                                                    <SelectableGiftCard
-                                                        key={p.id}
-                                                        title={p.name}
-                                                        image={p.image || ''}
-                                                        selected={giftCard?.id === p.id}
-                                                        onSelect={() => setGiftCard(p)}
-                                                    />
-                                                ))}
-                                                <div
-                                                    onClick={() => setGiftCard(null)}
-                                                    className={`flex items-center justify-center p-6 border rounded cursor-pointer ${
-                                                        giftCard === null
-                                                            ? 'border-primary bg-primary text-white'
-                                                            : 'border-gray-300 dark:border-gray-600 hover:border-primary'
-                                                    }`}
-                                                >
-                                                    No Gift Card
-                                                </div>
-                                            </div>
-                                            {giftCard && (
-                                                <div className="mt-4">
-                                                    <GiftMessage onGiftMessageChange={setGiftMessage} />
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
 
                                 <div className="mt-6 flex justify-between">
                                     <button
