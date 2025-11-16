@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { Product as ProductType } from '@/types/products';
+import { Product as ProductType, Product } from '@/types/products';
 import FlavourPicker from './FlavourPicker';
 import ProgressBar from '@/components/common/ProgressBar';
 import { Flavour as FlavourType } from '@/types/flavours';
@@ -24,11 +24,20 @@ interface ProductInfoProps {
 
 const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const maxChocolates = product.units_per_box || 0;
+    const [currentStep, setCurrentStep] = useState<number>(1);
+
+    // Step 1: Selection type
     const [selection, setSelection] = useState<string | null>(null);
-    const [flavours, setFlavours] = useState<CartItemBoxFlavorSelection[]>([]);
-    const [remainingChocolates, setRemainingChocolates] = useState<number>(maxChocolates);
+
+    // Step 2: Allergens
     const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
     const [allergenOption, setAllergenOption] = useState<'NONE' | 'SPECIFY' | null>(null);
+
+    // Step 3: Flavours (only for PICK_AND_MIX)
+    const [flavours, setFlavours] = useState<CartItemBoxFlavorSelection[]>([]);
+    const [remainingChocolates, setRemainingChocolates] = useState<number>(maxChocolates);
+
+    // Final options
     const [quantity, setQuantity] = useState<number>(1);
     // Pack-related state
     const [isPack, setIsPack] = useState<boolean>(false);
@@ -63,12 +72,59 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         // Add more allergens as needed
     ];
 
+    // Step navigation helpers
+    const canProceedToStep2 = () => selection !== null;
+    const canProceedToStep3 = () => selection !== null && allergenOption !== null;
+    const canProceedToCart = () => {
+        if (!canProceedToStep3()) return false;
+        if (selection === 'PICK_AND_MIX') {
+            return flavours.length > 0 && remainingChocolates === 0 && flavours.every(f => f.flavor?.id);
+        }
+        return true; // RANDOM can proceed after allergens
+    };
+
+    const handleNextStep = () => {
+        if (currentStep === 1 && canProceedToStep2()) {
+            setCurrentStep(2);
+        } else if (currentStep === 2 && canProceedToStep3()) {
+            setCurrentStep(3);
+        }
+    };
+
+    const handlePrevStep = () => {
+        if (currentStep > 1) {
+            setCurrentStep(currentStep - 1);
+        }
+    };
+
+    // Step indicator component
+    const StepIndicator = () => (
+        <div className="flex items-center justify-center mb-8">
+            {[1, 2, 3].map((step) => (
+                <React.Fragment key={step}>
+                    <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
+                        step <= currentStep
+                            ? 'bg-primary border-primary text-white'
+                            : 'border-gray-300 text-gray-400 bg-gray-50 dark:bg-gray-800'
+                    }`}>
+                        {step}
+                    </div>
+                    {step < 3 && (
+                        <div className={`flex-1 h-0.5 mx-4 transition-colors ${
+                            step < currentStep ? 'bg-primary' : 'bg-gray-300'
+                        }`} />
+                    )}
+                </React.Fragment>
+            ))}
+        </div>
+    );
+
     const handleAddFlavour = (flavour: FlavourType) => {
         if (remainingChocolates <= 0) {
             toast.error('Not enough remaining chocolates for this selection.');
             return;
         }
-        const existingFlavourIndex = flavours.findIndex(f => f.flavor.id === flavour.id);
+        const existingFlavourIndex = flavours.findIndex(f => f.flavor?.id === flavour.id);
         if (existingFlavourIndex !== -1) {
             handleFlavourChange(existingFlavourIndex, 'quantity', flavours[existingFlavourIndex].quantity + 1);
         } else {
@@ -124,22 +180,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     };
 
     const isAddToCartDisabled = () => {
-        // Basic validation for both box types
-        if (!selection || !allergenOption) {
-            return true;
-        }
-
-        // For Pick & Mix, ensure all chocolates are selected
-        if (selection === 'PICK_AND_MIX') {
-            if (flavours.length === 0 || remainingChocolates > 0) {
-                return true;
-            }
-        }
-
-        // For packs, all selections are optional since they can choose "No [item]"
-        // The pack customization is handled in the UI but doesn't block add to cart
-
-        return false;
+        return !canProceedToCart();
     };
 
     const getProgressText = () => {
@@ -161,14 +202,13 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                     quantity: quantity,
                     pack_customization: {
                         selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
-                        allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
-                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.map(f => ({
-                            flavor: f.flavor.id,
+                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
+                            flavor: f.flavor!.id,
                             quantity: f.quantity
                         })) : [],
-                        chocolate_bark: chocolateBark?.id ?? null,
-                        hot_chocolate: hotChocolate?.id ?? null,
-                        gift_card: giftCard?.id ?? null
+                        chocolate_bark: chocolateBark?.id ?? undefined,
+                        hot_chocolate: hotChocolate?.id ?? undefined,
+                        gift_card: giftCard?.id ?? undefined
                     }
                 };
             } else {
@@ -179,8 +219,8 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                     box_customization: {
                         selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
                         allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
-                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.map(f => ({
-                            flavor: f.flavor.id,
+                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
+                            flavor: f.flavor!.id,
                             quantity: f.quantity
                         })) : []
                     }
@@ -207,18 +247,47 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         }}>
             <div className="space-y-6 pb-6 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
                 <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Create your Signature Box</h2>
-                <BoxSelection
-                    options={prebulids}
-                    selected={selection}
-                    onChange={setSelection}
-                />
 
-                {selection === 'RANDOM' ? (
-                    <>
-                        <p className="text-sm dark:text-gray-200">
-                            We will pick you {maxChocolates} amazing bonbons with your selected preferences.
-                        </p>
+                <StepIndicator />
 
+                {/* Step 1: Selection Type */}
+                {currentStep >= 1 && (
+                    <div className={`transition-opacity ${currentStep === 1 ? 'opacity-100' : 'opacity-50'}`}>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Step 1: Choose your experience</h3>
+                        <BoxSelection
+                            options={prebulids}
+                            selected={selection}
+                            onChange={setSelection}
+                        />
+                        {selection === 'RANDOM' && (
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                                We will pick you {maxChocolates} amazing bonbons with your selected preferences.
+                            </p>
+                        )}
+                        {selection === 'PICK_AND_MIX' && (
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                                Choose your own {maxChocolates} flavours and create your perfect box.
+                            </p>
+                        )}
+                        {currentStep === 1 && (
+                            <div className="mt-6 flex justify-end">
+                                <button
+                                    type="button"
+                                    onClick={handleNextStep}
+                                    disabled={!canProceedToStep2()}
+                                    className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* Step 2: Allergens */}
+                {currentStep >= 2 && (
+                    <div className={`transition-opacity ${currentStep === 2 ? 'opacity-100' : 'opacity-50'}`}>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Step 2: Any allergens to avoid?</h3>
                         <AllergenSelection
                             allergens={allergens}
                             selectedAllergens={selectedAllergens}
@@ -226,204 +295,398 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             allergenOption={allergenOption}
                             setAllergenOption={setAllergenOption}
                         />
-                    </>
-                ) : (
-                    <>
-                        <AllergenSelection
-                            allergens={allergens}
-                            selectedAllergens={selectedAllergens}
-                            setSelectedAllergens={setSelectedAllergens}
-                            allergenOption={allergenOption}
-                            setAllergenOption={setAllergenOption}
-                        />
+                        {currentStep === 2 && (
+                            <div className="mt-6 flex justify-between">
+                                <button
+                                    type="button"
+                                    onClick={handlePrevStep}
+                                    className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                >
+                                    Back
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleNextStep}
+                                    disabled={!canProceedToStep3()}
+                                    className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
 
-                        {allergenOption && (
+                {/* Step 3: Flavours or Final Options */}
+                {currentStep >= 3 && (
+                    <div className="transition-opacity">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                            Step 3: {selection === 'PICK_AND_MIX' ? 'Pick your flavours' : 'Review your selection'}
+                        </h3>
+
+                        {selection === 'PICK_AND_MIX' ? (
                             <>
-                                <div>
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">3- Pick your flavours</h3>
-                                    <FlavourPicker
-                                        flavours={flavours}
-                                        remainingChocolates={remainingChocolates}
-                                        maxChocolates={maxChocolates}
-                                        handleAddFlavour={handleAddFlavour}
-                                        handleFlavourChange={handleFlavourChange}
-                                        incrementQuantity={incrementQuantity}
-                                        decrementQuantity={decrementQuantity}
-                                        deleteFlavour={deleteFlavour}
-                                        handleDeleteAllFlavours={handleDeleteAllFlavours}
-                                        selectedAllergens={selectedAllergens}
-                                    />
-                                </div>
+                                <FlavourPicker
+                                    flavours={flavours}
+                                    remainingChocolates={remainingChocolates}
+                                    maxChocolates={maxChocolates}
+                                    handleAddFlavour={handleAddFlavour}
+                                    handleFlavourChange={handleFlavourChange}
+                                    incrementQuantity={incrementQuantity}
+                                    decrementQuantity={decrementQuantity}
+                                    deleteFlavour={deleteFlavour}
+                                    handleDeleteAllFlavours={handleDeleteAllFlavours}
+                                    selectedAllergens={selectedAllergens}
+                                />
 
-                                <div>
+                                <div className="mt-4">
                                     <p className="text-sm mb-1 dark:text-gray-200">{getProgressText()}</p>
                                     <ProgressBar
                                         value={maxChocolates - remainingChocolates}
                                         max={maxChocolates}
                                     />
                                 </div>
+
+                                {remainingChocolates === 0 && (
+                                    <div className="mt-6 space-y-4">
+                                        {/* Quantity Selection */}
+                                        <div>
+                                            <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                                                Number of Boxes
+                                            </label>
+                                            <select
+                                                id="quantity"
+                                                name="quantity"
+                                                value={quantity}
+                                                onChange={handleQuantityChange}
+                                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
+                                                    bg-main-bg dark:bg-transparent shadow-sm focus:border-primary-2
+                                                    focus:ring-primary-2"
+                                            >
+                                                {Array.from({ length: 20 }, (_, i) => (
+                                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        {/* Pack Option Toggle */}
+                                        <div>
+                                            <div className="flex items-center justify-between p-4 border border-gray-300 dark:border-gray-600 rounded-lg">
+                                                <div className="flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="pack-option"
+                                                        checked={isPack}
+                                                        onChange={(e) => {
+                                                            setIsPack(e.target.checked);
+                                                            // Reset pack selections when toggling off
+                                                            if (!e.target.checked) {
+                                                                setChocolateBark(null);
+                                                                setHotChocolate(null);
+                                                                setGiftCard(null);
+                                                                setGiftMessage('');
+                                                            }
+                                                        }}
+                                                        className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                                    />
+                                                    <label htmlFor="pack-option" className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
+                                                        Upgrade to Indulgent Pack (+£10)
+                                                    </label>
+                                                </div>
+                                                <div className="text-sm font-semibold text-primary">
+                                                    {isPack ? 'Pack Selected' : 'Box Only'}
+                                                </div>
+                                            </div>
+                                            {isPack && (
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                    Transform your signature box into a complete indulgent experience with chocolate bark, hot chocolate, and a personalized gift card.
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        {/* Pack Customization Section */}
+                                        {isPack && (
+                                            <div className="mt-6 space-y-6">
+                                                {/* Chocolate Bark Selection */}
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Chocolate Bark</h3>
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                        {allProducts?.filter(p => p.category?.slug === 'chocolate-barks').map(p => (
+                                                            <div key={p.id} className={`border-2 rounded-lg ${chocolateBark?.id === p.id ? 'border-primary' : 'border-transparent'}`}>
+                                                                <SelectableProductCard
+                                                                    product={p}
+                                                                    price={0}
+                                                                    onSelect={() => setChocolateBark(p)}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setChocolateBark(null)}
+                                                        className={`mt-4 px-4 py-2 text-sm rounded-md ${
+                                                            chocolateBark === null
+                                                                ? 'bg-primary text-white'
+                                                                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                                                        }`}
+                                                    >
+                                                        No Chocolate Bark
+                                                    </button>
+                                                </div>
+
+                                                {/* Hot Chocolate Selection */}
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Hot Chocolate</h3>
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                        {allProducts?.filter(p => p.category?.slug === 'hot-chocolate').map(p => (
+                                                            <div key={p.id} className={`border-2 rounded-lg ${hotChocolate?.id === p.id ? 'border-primary' : 'border-transparent'}`}>
+                                                                <SelectableProductCard
+                                                                    product={p}
+                                                                    price={0}
+                                                                    onSelect={() => setHotChocolate(p)}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setHotChocolate(null)}
+                                                        className={`mt-4 px-4 py-2 text-sm rounded-md ${
+                                                            hotChocolate === null
+                                                                ? 'bg-primary text-white'
+                                                                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                                                        }`}
+                                                    >
+                                                        No Hot Chocolate
+                                                    </button>
+                                                </div>
+
+                                                {/* Gift Card Selection */}
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Gift Card</h3>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                                                        {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
+                                                            <SelectableGiftCard
+                                                                key={p.id}
+                                                                title={p.name}
+                                                                image={p.image || ''}
+                                                                selected={giftCard?.id === p.id}
+                                                                onSelect={() => setGiftCard(p)}
+                                                            />
+                                                        ))}
+                                                        <div
+                                                            onClick={() => setGiftCard(null)}
+                                                            className={`flex items-center justify-center p-6 border rounded cursor-pointer ${
+                                                                giftCard === null
+                                                                    ? 'border-primary bg-primary text-white'
+                                                                    : 'border-gray-300 dark:border-gray-600 hover:border-primary'
+                                                            }`}
+                                                        >
+                                                            No Gift Card
+                                                        </div>
+                                                    </div>
+                                                    {giftCard && (
+                                                        <div className="mt-4">
+                                                            <GiftMessage onGiftMessageChange={setGiftMessage} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                <div className="mt-6 flex justify-between">
+                                    <button
+                                        type="button"
+                                        onClick={handlePrevStep}
+                                        className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    >
+                                        Back
+                                    </button>
+                                </div>
                             </>
+                        ) : (
+                            // RANDOM selection - show summary and options
+                            <div className="space-y-4">
+                                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                                        We'll select {maxChocolates} chocolates for you, avoiding your specified allergens.
+                                    </p>
+                                </div>
+
+                                {/* Quantity Selection */}
+                                <div>
+                                    <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                                        Number of Boxes
+                                    </label>
+                                    <select
+                                        id="quantity"
+                                        name="quantity"
+                                        value={quantity}
+                                        onChange={handleQuantityChange}
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
+                                            bg-main-bg dark:bg-transparent shadow-sm focus:border-primary-2
+                                            focus:ring-primary-2"
+                                    >
+                                        {Array.from({ length: 20 }, (_, i) => (
+                                            <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {/* Pack Option Toggle */}
+                                <div>
+                                    <div className="flex items-center justify-between p-4 border border-gray-300 dark:border-gray-600 rounded-lg">
+                                        <div className="flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                id="pack-option"
+                                                checked={isPack}
+                                                onChange={(e) => {
+                                                    setIsPack(e.target.checked);
+                                                    // Reset pack selections when toggling off
+                                                    if (!e.target.checked) {
+                                                        setChocolateBark(null);
+                                                        setHotChocolate(null);
+                                                        setGiftCard(null);
+                                                        setGiftMessage('');
+                                                    }
+                                                }}
+                                                className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                            />
+                                            <label htmlFor="pack-option" className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
+                                                Upgrade to Indulgent Pack (+£10)
+                                            </label>
+                                        </div>
+                                        <div className="text-sm font-semibold text-primary">
+                                            {isPack ? 'Pack Selected' : 'Box Only'}
+                                        </div>
+                                    </div>
+                                    {isPack && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            Transform your signature box into a complete indulgent experience with chocolate bark, hot chocolate, and a personalized gift card.
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Pack Customization Section */}
+                                {isPack && (
+                                    <div className="mt-6 space-y-6">
+                                        {/* Chocolate Bark Selection */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Chocolate Bark</h3>
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                {allProducts?.filter(p => p.category?.slug === 'chocolate-barks').map(p => (
+                                                    <div key={p.id} className={`border-2 rounded-lg ${chocolateBark?.id === p.id ? 'border-primary' : 'border-transparent'}`}>
+                                                        <SelectableProductCard
+                                                            product={p}
+                                                            price={0}
+                                                            onSelect={() => setChocolateBark(p)}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setChocolateBark(null)}
+                                                className={`mt-4 px-4 py-2 text-sm rounded-md ${
+                                                    chocolateBark === null
+                                                        ? 'bg-primary text-white'
+                                                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                                                }`}
+                                            >
+                                                No Chocolate Bark
+                                            </button>
+                                        </div>
+
+                                        {/* Hot Chocolate Selection */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Hot Chocolate</h3>
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                {allProducts?.filter(p => p.category?.slug === 'hot-chocolate').map(p => (
+                                                    <div key={p.id} className={`border-2 rounded-lg ${hotChocolate?.id === p.id ? 'border-primary' : 'border-transparent'}`}>
+                                                        <SelectableProductCard
+                                                            product={p}
+                                                            price={0}
+                                                            onSelect={() => setHotChocolate(p)}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setHotChocolate(null)}
+                                                className={`mt-4 px-4 py-2 text-sm rounded-md ${
+                                                    hotChocolate === null
+                                                        ? 'bg-primary text-white'
+                                                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                                                }`}
+                                            >
+                                                No Hot Chocolate
+                                            </button>
+                                        </div>
+
+                                        {/* Gift Card Selection */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Gift Card</h3>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                                                {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
+                                                    <SelectableGiftCard
+                                                        key={p.id}
+                                                        title={p.name}
+                                                        image={p.image || ''}
+                                                        selected={giftCard?.id === p.id}
+                                                        onSelect={() => setGiftCard(p)}
+                                                    />
+                                                ))}
+                                                <div
+                                                    onClick={() => setGiftCard(null)}
+                                                    className={`flex items-center justify-center p-6 border rounded cursor-pointer ${
+                                                        giftCard === null
+                                                            ? 'border-primary bg-primary text-white'
+                                                            : 'border-gray-300 dark:border-gray-600 hover:border-primary'
+                                                    }`}
+                                                >
+                                                    No Gift Card
+                                                </div>
+                                            </div>
+                                            {giftCard && (
+                                                <div className="mt-4">
+                                                    <GiftMessage onGiftMessageChange={setGiftMessage} />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="mt-6 flex justify-between">
+                                    <button
+                                        type="button"
+                                        onClick={handlePrevStep}
+                                        className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    >
+                                        Back
+                                    </button>
+                                </div>
+                            </div>
                         )}
-                    </>
-                )}
-
-                {/* Quantity Selection */}
-                <div>
-                    <label htmlFor="quantity"
-                        className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                        3. Number of Boxes
-                    </label>
-                    <select
-                        id="quantity"
-                        name="quantity"
-                        value={quantity}
-                        onChange={handleQuantityChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
-                            bg-main-bg dark:bg-transparent shadow-sm focus:border-primary-2
-                            focus:ring-primary-2"
-                    >
-                        {Array.from({ length: 20 }, (_, i) => (
-                            <option key={i + 1} value={i + 1}>{i + 1}</option>
-                        ))}
-                    </select>
-                </div>
-
-                {/* Pack Option Toggle */}
-                <div className="mt-4">
-                    <div className="flex items-center justify-between p-4 border border-gray-300 dark:border-gray-600 rounded-lg">
-                        <div className="flex items-center">
-                            <input
-                                type="checkbox"
-                                id="pack-option"
-                                checked={isPack}
-                                onChange={(e) => {
-                                    setIsPack(e.target.checked);
-                                    // Reset pack selections when toggling off
-                                    if (!e.target.checked) {
-                                        setChocolateBark(null);
-                                        setHotChocolate(null);
-                                        setGiftCard(null);
-                                        setGiftMessage('');
-                                    }
-                                }}
-                                className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
-                            />
-                            <label htmlFor="pack-option" className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
-                                Upgrade to Indulgent Pack (+£10)
-                            </label>
-                        </div>
-                        <div className="text-sm font-semibold text-primary">
-                            {isPack ? 'Pack Selected' : 'Box Only'}
-                        </div>
-                    </div>
-                    {isPack && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            Transform your signature box into a complete indulgent experience with chocolate bark, hot chocolate, and a personalized gift card.
-                        </p>
-                    )}
-                </div>
-
-                {/* Pack Customization Section */}
-                {isPack && (
-                    <div className="mt-6 space-y-6">
-                        {/* Chocolate Bark Selection */}
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Chocolate Bark</h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                                {allProducts?.filter(p => p.category?.slug === 'chocolate-barks').map(p => (
-                                    <SelectableProductCard
-                                        key={p.id}
-                                        product={p}
-                                        price={0}
-                                        selected={chocolateBark?.id === p.id}
-                                        onSelect={() => setChocolateBark(p)}
-                                    />
-                                ))}
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => setChocolateBark(null)}
-                                className={`mt-4 px-4 py-2 text-sm rounded-md ${
-                                    chocolateBark === null
-                                        ? 'bg-primary text-white'
-                                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                                }`}
-                            >
-                                No Chocolate Bark
-                            </button>
-                        </div>
-
-                        {/* Hot Chocolate Selection */}
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Hot Chocolate</h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                                {allProducts?.filter(p => p.category?.slug === 'hot-chocolate').map(p => (
-                                    <SelectableProductCard
-                                        key={p.id}
-                                        product={p}
-                                        price={0}
-                                        selected={hotChocolate?.id === p.id}
-                                        onSelect={() => setHotChocolate(p)}
-                                    />
-                                ))}
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => setHotChocolate(null)}
-                                className={`mt-4 px-4 py-2 text-sm rounded-md ${
-                                    hotChocolate === null
-                                        ? 'bg-primary text-white'
-                                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                                }`}
-                            >
-                                No Hot Chocolate
-                            </button>
-                        </div>
-
-                        {/* Gift Card Selection */}
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Add Gift Card</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                                {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
-                                    <SelectableGiftCard
-                                        key={p.id}
-                                        title={p.name}
-                                        image={p.image || ''}
-                                        selected={giftCard?.id === p.id}
-                                        onSelect={() => setGiftCard(p)}
-                                    />
-                                ))}
-                                <div
-                                    onClick={() => setGiftCard(null)}
-                                    className={`flex items-center justify-center p-6 border rounded cursor-pointer ${
-                                        giftCard === null
-                                            ? 'border-primary bg-primary text-white'
-                                            : 'border-gray-300 dark:border-gray-600 hover:border-primary'
-                                    }`}
-                                >
-                                    No Gift Card
-                                </div>
-                            </div>
-                            {giftCard && (
-                                <div className="mt-4">
-                                    <GiftMessage onGiftMessageChange={setGiftMessage} />
-                                </div>
-                            )}
-                        </div>
                     </div>
                 )}
             </div>
 
-            {/* Add to Cart Button */}
-            <div className="sticky md:static bottom-[55px] md:bottom-auto bg-main-bg dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
-                <AddToCartButton
-                    onClick={handleAddToCart}
-                    isLoading={isLoading}
-                    isDisabled={isAddToCartDisabled()}
-                    selection={selection}
-                    remainingChocolates={remainingChocolates}
-                />
-            </div>
+            {/* Add to Cart Button - Only show when ready */}
+            {canProceedToCart() && (
+                <div className="sticky md:static bottom-[55px] md:bottom-auto bg-main-bg dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
+                    <AddToCartButton
+                        onClick={handleAddToCart}
+                        isLoading={isLoading}
+                        isDisabled={isAddToCartDisabled()}
+                        selection={selection}
+                        remainingChocolates={remainingChocolates}
+                    />
+                </div>
+            )}
         </form>
     );
 
