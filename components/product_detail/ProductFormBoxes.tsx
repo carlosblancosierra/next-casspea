@@ -433,7 +433,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                     </label>
                                                 </div>
                                                 <div className="text-sm font-semibold text-primary">
-                                                    {isPack ? 'Pack Selected' : 'Box Only'}
+                                                    Transform your signature box into a complete indulgent experience with chocolate bark, hot chocolate, and a personalized gift card.
                                                 </div>
                                             </div>
                                             {isPack && (
@@ -516,9 +516,9 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                 Upgrade to Indulgent Pack (+£{getPackPrice()})
                                             </label>
                                         </div>
-                                        <div className="text-sm font-semibold text-primary">
-                                            {isPack ? 'Pack Selected' : 'Box Only'}
-                                        </div>
+                                                <div className="text-sm font-semibold text-primary">
+                                                    Transform your signature box into a complete indulgent experience with chocolate bark, hot chocolate, and a personalized gift card.
+                                                </div>
                                     </div>
                                     {isPack && (
                                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -648,7 +648,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                     <div className="transition-opacity">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Step 6: Choose your Gift Card</h3>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
                             {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
                                 <SelectableGiftCard
                                     key={p.id}
