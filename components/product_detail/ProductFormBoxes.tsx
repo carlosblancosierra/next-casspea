@@ -7,18 +7,18 @@ import { Flavour as FlavourType } from '@/types/flavours';
 import { CartItemBoxFlavorSelection, CartItemRequest } from '@/types/carts';
 import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
-// import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
-import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice';
+import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
 
 // Importing sub-components
 import BoxSelection from './BoxSelection';
 import AllergenSelection from './AllergenSelection';
 import AddToCartButton from './AddToCartButton';
-// Pack-related imports - HIDDEN FOR TESTING
-// import SelectableProductCard from '@/components/store/SelectableProductCard';
-// import SelectableGiftCard from '@/components/store/SelectableGiftCard';
-// import GiftMessage from '@/components/cart/GiftMessage';
+// Pack-related imports
+import SelectableProductCard from '@/components/store/SelectableProductCard';
+import SelectableGiftCard from '@/components/store/SelectableGiftCard';
+import GiftMessage from '@/components/cart/GiftMessage';
+import { ID_MAP } from '@/components/packs/constants';
 
 interface ProductInfoProps {
     product: ProductType;
@@ -41,17 +41,17 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
 
     // Final options
     const [quantity, setQuantity] = useState<number>(1);
-    // Pack-related state - HIDDEN FOR TESTING
-    // const [isPack, setIsPack] = useState<boolean>(false);
-    // const [chocolateBark, setChocolateBark] = useState<Product | null>(null);
-    // const [hotChocolate, setHotChocolate] = useState<Product | null>(null);
-    // const [giftCard, setGiftCard] = useState<Product | null>(null);
-    // const [giftMessage, setGiftMessage] = useState<string>('');
+    // Pack-related state
+    const [isPack, setIsPack] = useState<boolean>(false);
+    const [chocolateBark, setChocolateBark] = useState<Product | null>(null);
+    const [hotChocolate, setHotChocolate] = useState<Product | null>(null);
+    const [giftCard, setGiftCard] = useState<Product | null>(null);
+    const [giftMessage, setGiftMessage] = useState<string>('');
 
     const dispatch = useAppDispatch();
     const router = useRouter();
     const [addToCart, { isLoading }] = useAddCartItemMutation();
-    // const [updateCart] = useUpdateCartMutation(); // HIDDEN FOR TESTING
+    const [updateCart] = useUpdateCartMutation();
     const { data: allProducts } = useGetActiveProductsQuery();
 
     const prebulids = [
@@ -79,17 +79,49 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const canProceedToStep3 = () => selection !== null && allergenOption !== null;
     const canProceedToCart = () => {
         if (!canProceedToStep3()) return false;
+
+        // Check basic selection requirements
         if (selection === 'PICK_AND_MIX') {
-            return flavours.length > 0 && remainingChocolates === 0 && flavours.every(f => f.flavor?.id);
+            if (flavours.length === 0 || remainingChocolates > 0 || !flavours.every(f => f.flavor?.id)) {
+                return false;
+            }
         }
-        return true; // RANDOM can proceed after allergens
+
+        // If pack is selected, check pack requirements
+        if (isPack) {
+            return hotChocolate !== null && chocolateBark !== null && giftCard !== null;
+        }
+
+        return true;
     };
+
+    // Pack pricing based on box size
+    const getPackPrice = () => {
+        const units = product.units_per_box || 0;
+        switch (units) {
+            case 9: return 11;
+            case 15: return 8;
+            case 24: return 8;
+            case 48: return 5;
+            default: return 10; // fallback
+        }
+    };
+
+    // Dynamic step calculation
+    const getTotalSteps = () => isPack ? 6 : 3;
+    const isPackStep = (step: number) => isPack && step > 3;
 
     const handleNextStep = () => {
         if (currentStep === 1 && canProceedToStep2()) {
             setCurrentStep(2);
         } else if (currentStep === 2 && canProceedToStep3()) {
             setCurrentStep(3);
+        } else if (currentStep === 3 && isPack) {
+            setCurrentStep(4);
+        } else if (currentStep === 4 && hotChocolate !== null) {
+            setCurrentStep(5);
+        } else if (currentStep === 5 && chocolateBark !== null) {
+            setCurrentStep(6);
         }
     };
 
@@ -100,26 +132,29 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     };
 
     // Step indicator component
-    const StepIndicator = () => (
-        <div className="flex items-center justify-center mb-8">
-            {[1, 2, 3].map((step) => (
-                <React.Fragment key={step}>
-                    <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
-                        step <= currentStep
-                            ? 'bg-primary border-primary text-white'
-                            : 'border-gray-300 text-gray-400 bg-gray-50 dark:bg-gray-800'
-                    }`}>
-                        {step}
-                    </div>
-                    {step < 3 && (
-                        <div className={`flex-1 h-0.5 mx-4 transition-colors ${
-                            step < currentStep ? 'bg-primary' : 'bg-gray-300'
-                        }`} />
-                    )}
-                </React.Fragment>
-            ))}
-        </div>
-    );
+    const StepIndicator = () => {
+        const totalSteps = getTotalSteps();
+        return (
+            <div className="flex items-center justify-center mb-8">
+                {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
+                    <React.Fragment key={step}>
+                        <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
+                            step <= currentStep
+                                ? 'bg-primary border-primary text-white'
+                                : 'border-gray-300 text-gray-400 bg-gray-50 dark:bg-gray-800'
+                        }`}>
+                            {step}
+                        </div>
+                        {step < totalSteps && (
+                            <div className={`flex-1 h-0.5 mx-4 transition-colors ${
+                                step < currentStep ? 'bg-primary' : 'bg-gray-300'
+                            }`} />
+                        )}
+                    </React.Fragment>
+                ))}
+            </div>
+        );
+    };
 
     const handleAddFlavour = (flavour: FlavourType) => {
         if (remainingChocolates <= 0) {
@@ -195,21 +230,48 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
 
     const handleAddToCart = async () => {
         try {
-            const cartItemRequest: CartItemRequest = {
-                product: product.id,
-                quantity: quantity,
-                box_customization: {
-                    selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
-                    allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
-                    flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
-                        flavor: f.flavor!.id,
-                        quantity: f.quantity
-                    })) : []
-                }
-            };
+            let cartItemRequest: CartItemRequest;
+
+            if (isPack) {
+                // Pack customization - use pack product ID from ID_MAP
+                const packProductId = ID_MAP[product.units_per_box || 0] || product.id;
+                cartItemRequest = {
+                    product: packProductId,
+                    quantity: quantity,
+                    pack_customization: {
+                        selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
+                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
+                            flavor: f.flavor!.id,
+                            quantity: f.quantity
+                        })) : [],
+                        chocolate_bark: chocolateBark?.id ?? undefined,
+                        hot_chocolate: hotChocolate?.id ?? undefined,
+                        gift_card: giftCard?.id ?? undefined
+                    }
+                };
+            } else {
+                // Regular box customization
+                cartItemRequest = {
+                    product: product.id,
+                    quantity: quantity,
+                    box_customization: {
+                        selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
+                        allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
+                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
+                            flavor: f.flavor!.id,
+                            quantity: f.quantity
+                        })) : []
+                    }
+                };
+            }
+
+            // Handle gift message for packs
+            if (isPack && giftMessage.trim() !== '') {
+                await updateCart({ gift_message: giftMessage }).unwrap();
+            }
 
             const response = await addToCart(cartItemRequest).unwrap();
-            toast.success('Box added to cart successfully!');
+            toast.success(isPack ? 'Pack added to cart successfully!' : 'Box added to cart successfully!');
             router.push('/cart');
         } catch (error) {
             toast.error('Failed to add item to cart');
@@ -341,6 +403,41 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             </select>
                                         </div>
 
+                                        {/* Pack Option Toggle */}
+                                        <div>
+                                            <div className="flex items-center justify-between p-4 border border-gray-300 dark:border-gray-600 rounded-lg">
+                                                <div className="flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="pack-option"
+                                                        checked={isPack}
+                                                        onChange={(e) => {
+                                                            setIsPack(e.target.checked);
+                                                            // Reset pack selections when toggling off
+                                                            if (!e.target.checked) {
+                                                                setChocolateBark(null);
+                                                                setHotChocolate(null);
+                                                                setGiftCard(null);
+                                                                setGiftMessage('');
+                                                            }
+                                                        }}
+                                                        className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                                    />
+                                                    <label htmlFor="pack-option" className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
+                                                        Upgrade to Indulgent Pack (+£{getPackPrice()})
+                                                    </label>
+                                                </div>
+                                                <div className="text-sm font-semibold text-primary">
+                                                    {isPack ? 'Pack Selected' : 'Box Only'}
+                                                </div>
+                                            </div>
+                                            {isPack && (
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                    Transform your signature box into a complete indulgent experience with chocolate bark, hot chocolate, and a personalized gift card.
+                                                </p>
+                                            )}
+                                        </div>
+
                                         <div className="mt-6 flex justify-between">
                                             <button
                                                 type="button"
@@ -382,6 +479,40 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     </select>
                                 </div>
 
+                                {/* Pack Option Toggle */}
+                                <div>
+                                    <div className="flex items-center justify-between p-4 border border-gray-300 dark:border-gray-600 rounded-lg">
+                                        <div className="flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                id="pack-option"
+                                                checked={isPack}
+                                                onChange={(e) => {
+                                                    setIsPack(e.target.checked);
+                                                    // Reset pack selections when toggling off
+                                                    if (!e.target.checked) {
+                                                        setChocolateBark(null);
+                                                        setHotChocolate(null);
+                                                        setGiftCard(null);
+                                                        setGiftMessage('');
+                                                    }
+                                                }}
+                                                className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                            />
+                                            <label htmlFor="pack-option" className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
+                                                Upgrade to Indulgent Pack (+£{getPackPrice()})
+                                            </label>
+                                        </div>
+                                        <div className="text-sm font-semibold text-primary">
+                                            {isPack ? 'Pack Selected' : 'Box Only'}
+                                        </div>
+                                    </div>
+                                    {isPack && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            Transform your signature box into a complete indulgent experience with chocolate bark, hot chocolate, and a personalized gift card.
+                                        </p>
+                                    )}
+                                </div>
 
                                 <div className="mt-6 flex justify-between">
                                     <button
@@ -396,10 +527,149 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         )}
                     </div>
                 )}
+
+                {/* Step 4: Hot Chocolate Selection (Pack only) */}
+                {currentStep === 4 && isPack && (
+                    <div className="transition-opacity">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Step 4: Choose your Hot Chocolate</h3>
+
+                        <div className="mb-4">
+                            <label htmlFor="hot-chocolate-select" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Select Hot Chocolate
+                            </label>
+                            <select
+                                id="hot-chocolate-select"
+                                value={hotChocolate?.id || ''}
+                                onChange={(e) => {
+                                    const selectedProduct = allProducts?.find(p => p.id === parseInt(e.target.value));
+                                    setHotChocolate(selectedProduct || null);
+                                }}
+                                className="block w-full rounded-md border-gray-300 dark:border-gray-600
+                                    bg-main-bg dark:bg-transparent shadow-sm focus:border-primary-2
+                                    focus:ring-primary-2 px-3 py-2"
+                            >
+                                <option value="">Choose a hot chocolate...</option>
+                                {allProducts?.filter(p => p.category?.slug === 'hot-chocolate').map(p => (
+                                    <option key={p.id} value={p.id}>{p.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mt-6 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={handlePrevStep}
+                                className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                            >
+                                Back
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleNextStep}
+                                disabled={hotChocolate === null}
+                                className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Step 5: Chocolate Bark Selection (Pack only) */}
+                {currentStep === 5 && isPack && (
+                    <div className="transition-opacity">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Step 5: Choose your Chocolate Bark</h3>
+
+                        <div className="mb-4">
+                            <label htmlFor="chocolate-bark-select" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Select Chocolate Bark
+                            </label>
+                            <select
+                                id="chocolate-bark-select"
+                                value={chocolateBark?.id || ''}
+                                onChange={(e) => {
+                                    const selectedProduct = allProducts?.find(p => p.id === parseInt(e.target.value));
+                                    setChocolateBark(selectedProduct || null);
+                                }}
+                                className="block w-full rounded-md border-gray-300 dark:border-gray-600
+                                    bg-main-bg dark:bg-transparent shadow-sm focus:border-primary-2
+                                    focus:ring-primary-2 px-3 py-2"
+                            >
+                                <option value="">Choose a chocolate bark...</option>
+                                {allProducts?.filter(p => p.category?.slug === 'chocolate-barks').map(p => (
+                                    <option key={p.id} value={p.id}>{p.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mt-6 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={handlePrevStep}
+                                className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                            >
+                                Back
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleNextStep}
+                                disabled={chocolateBark === null}
+                                className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Step 6: Gift Card Selection (Pack only) */}
+                {currentStep === 6 && isPack && (
+                    <div className="transition-opacity">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Step 6: Choose your Gift Card</h3>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-4">
+                            {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
+                                <SelectableGiftCard
+                                    key={p.id}
+                                    title={p.name}
+                                    image={p.image || ''}
+                                    selected={giftCard?.id === p.id}
+                                    onSelect={() => setGiftCard(p)}
+                                />
+                            ))}
+                            <div
+                                onClick={() => setGiftCard(null)}
+                                className={`flex items-center justify-center p-6 border rounded cursor-pointer ${
+                                    giftCard === null
+                                        ? 'border-primary bg-primary text-white'
+                                        : 'border-gray-300 dark:border-gray-600 hover:border-primary'
+                                }`}
+                            >
+                                No Gift Card
+                            </div>
+                        </div>
+
+                        {giftCard && (
+                            <div className="mt-4">
+                                <GiftMessage onGiftMessageChange={setGiftMessage} />
+                            </div>
+                        )}
+
+                        <div className="mt-6 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={handlePrevStep}
+                                className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                            >
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Add to Cart Button - Only show on final step when ready */}
-            {currentStep === 3 && canProceedToCart() && (
+            {((!isPack && currentStep === 3) || (isPack && currentStep === 6)) && canProceedToCart() && (
                 <div className="sticky md:static bottom-[55px] md:bottom-auto bg-main-bg dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
                     <AddToCartButton
                         onClick={handleAddToCart}
