@@ -77,7 +77,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     // Step navigation helpers
     const canProceedToStep2 = () => selection !== null;
     const canProceedToStep3 = () => selection !== null && allergenOption !== null;
-    const canProceedToCart = () => {
+    const canProceedToNextStep = () => {
         if (!canProceedToStep3()) return false;
 
         // Check basic selection requirements
@@ -87,7 +87,12 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             }
         }
 
-        // If pack is selected, check pack requirements
+        return true;
+    };
+    const canAddToCart = () => {
+        if (!canProceedToNextStep()) return false;
+
+        // If pack is selected, check that all pack items are selected
         if (isPack) {
             return hotChocolate !== null && chocolateBark !== null && giftCard !== null;
         }
@@ -217,7 +222,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     };
 
     const isAddToCartDisabled = () => {
-        return !canProceedToCart();
+        return !canAddToCart();
     };
 
     const getProgressText = () => {
@@ -446,6 +451,14 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             >
                                                 Back
                                             </button>
+                                            <button
+                                                type="button"
+                                                onClick={handleNextStep}
+                                                disabled={!canProceedToNextStep()}
+                                                className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            >
+                                                {isPack ? 'Continue to Pack' : 'Add to Cart'}
+                                            </button>
                                         </div>
                                     </div>
                                 )}
@@ -521,6 +534,14 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                         className="px-6 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                     >
                                         Back
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleNextStep}
+                                        disabled={!canProceedToNextStep()}
+                                        className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        {isPack ? 'Continue to Pack' : 'Add to Cart'}
                                     </button>
                                 </div>
                             </div>
@@ -669,7 +690,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             </div>
 
             {/* Add to Cart Button - Only show on final step when ready */}
-            {((!isPack && currentStep === 3) || (isPack && currentStep === 6)) && canProceedToCart() && (
+            {((!isPack && currentStep === 3) || (isPack && currentStep === 6)) && canAddToCart() && (
                 <div className="sticky md:static bottom-[55px] md:bottom-auto bg-main-bg dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
                     <AddToCartButton
                         onClick={handleAddToCart}
