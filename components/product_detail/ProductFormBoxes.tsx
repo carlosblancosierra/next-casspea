@@ -43,6 +43,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [quantity, setQuantity] = useState<number>(1);
     // Pack-related state
     const [isPack, setIsPack] = useState<boolean>(false);
+    const [showUpgradePopup, setShowUpgradePopup] = useState<boolean>(false);
     const [chocolateBark, setChocolateBark] = useState<Product | null>(null);
     const [hotChocolate, setHotChocolate] = useState<Product | null>(null);
     const [giftCard, setGiftCard] = useState<Product | null>(null);
@@ -408,88 +409,6 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             </select>
                                         </div>
 
-                                        {/* Pack Option Toggle */}
-                                        <div
-                                          className={`relative mt-4 rounded-xl border-2 cursor-pointer transition-all duration-200
-                                            ${isPack
-                                              ? 'border-primary bg-primary/5 shadow-md'
-                                              : 'border-gray-200 dark:border-gray-700 hover:border-primary/70 hover:bg-gray-50 dark:hover:bg-gray-800'}
-                                          `}
-                                          onClick={() => {
-                                            const next = !isPack;
-                                            setIsPack(next);
-                                            if (!next) {
-                                              setChocolateBark(null);
-                                              setHotChocolate(null);
-                                              setGiftCard(null);
-                                              setGiftMessage('');
-                                            }
-                                          }}
-                                        >
-                                          <div className="absolute -top-3 left-4 inline-flex items-center rounded-full bg-primary px-3 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-white">
-                                            Most loved upgrade
-                                          </div>
-
-                                          <div className="flex items-start gap-4 p-4">
-                                            <input
-                                              type="checkbox"
-                                              id="pack-option"
-                                              checked={isPack}
-                                              onChange={(e) => {
-                                                e.stopPropagation();
-                                                const next = e.target.checked;
-                                                setIsPack(next);
-                                                if (!next) {
-                                                  setChocolateBark(null);
-                                                  setHotChocolate(null);
-                                                  setGiftCard(null);
-                                                  setGiftMessage('');
-                                                }
-                                              }}
-                                              className="mt-1 h-5 w-5 shrink-0 rounded border-gray-300 text-primary focus:ring-primary"
-                                            />
-
-                                            <label htmlFor="pack-option" className="flex-1 cursor-pointer">
-                                              <div className="flex items-start justify-between gap-4">
-                                                <div>
-                                                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                                                    Make it an Indulgent Pack
-                                                  </p>
-                                                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                                                    Turn your Signature Box into a full gift experience with:
-                                                  </p>
-                                                </div>
-                                                <div className="text-right">
-                                                  <p className="text-sm font-semibold text-primary">
-                                                    +£{getPackPrice()}
-                                                  </p>
-                                                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
-                                                    One flat upgrade price
-                                                  </p>
-                                                </div>
-                                              </div>
-
-                                              <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
-                                                <li className="flex items-center gap-1">
-                                                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                                                  Gourmet chocolate bark
-                                                </li>
-                                                <li className="flex items-center gap-1">
-                                                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                                                  Luxury hot chocolate
-                                                </li>
-                                                <li className="flex items-center gap-1">
-                                                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                                                  Personalized gift card
-                                                </li>
-                                              </ul>
-
-                                              <p className="mt-3 text-[11px] font-medium text-emerald-700 dark:text-emerald-400">
-                                                Perfect for birthdays, thank-yous or any special treat.
-                                              </p>
-                                            </label>
-                                          </div>
-                                        </div>
 
                                         <div className="mt-6 flex justify-between">
                                             <button
@@ -499,7 +418,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             >
                                                 Back
                                             </button>
-                                            {isPack && (
+                                            {isPack ? (
                                                 <button
                                                     type="button"
                                                     onClick={handleNextStep}
@@ -507,6 +426,15 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                     className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                                 >
                                                     Continue to Pack
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowUpgradePopup(true)}
+                                                    disabled={!canAddToCart()}
+                                                    className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                                >
+                                                    Add to Cart
                                                 </button>
                                             )}
                                         </div>
@@ -542,88 +470,6 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     </select>
                                 </div>
 
-                                {/* Pack Option Toggle */}
-                                <div
-                                  className={`relative mt-4 rounded-xl border-2 cursor-pointer transition-all duration-200
-                                    ${isPack
-                                      ? 'border-primary bg-primary/5 shadow-md'
-                                      : 'border-gray-200 dark:border-gray-700 hover:border-primary/70 hover:bg-gray-50 dark:hover:bg-gray-800'}
-                                  `}
-                                  onClick={() => {
-                                    const next = !isPack;
-                                    setIsPack(next);
-                                    if (!next) {
-                                      setChocolateBark(null);
-                                      setHotChocolate(null);
-                                      setGiftCard(null);
-                                      setGiftMessage('');
-                                    }
-                                  }}
-                                >
-                                  <div className="absolute -top-3 left-4 inline-flex items-center rounded-full bg-primary px-3 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-white">
-                                    Most loved upgrade
-                                  </div>
-
-                                  <div className="flex items-start gap-4 p-4">
-                                    <input
-                                      type="checkbox"
-                                      id="pack-option"
-                                      checked={isPack}
-                                      onChange={(e) => {
-                                        e.stopPropagation();
-                                        const next = e.target.checked;
-                                        setIsPack(next);
-                                        if (!next) {
-                                          setChocolateBark(null);
-                                          setHotChocolate(null);
-                                          setGiftCard(null);
-                                          setGiftMessage('');
-                                        }
-                                      }}
-                                      className="mt-1 h-5 w-5 shrink-0 rounded border-gray-300 text-primary focus:ring-primary"
-                                    />
-
-                                    <label htmlFor="pack-option" className="flex-1 cursor-pointer">
-                                      <div className="flex items-start justify-between gap-4">
-                                        <div>
-                                          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                                            Make it an Indulgent Pack
-                                          </p>
-                                          <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                                            Turn your Signature Box into a full gift experience with:
-                                          </p>
-                                        </div>
-                                        <div className="text-right">
-                                          <p className="text-sm font-semibold text-primary">
-                                            +£{getPackPrice()}
-                                          </p>
-                                          <p className="text-[11px] text-gray-500 dark:text-gray-400">
-                                            One flat upgrade price
-                                          </p>
-                                        </div>
-                                      </div>
-
-                                      <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
-                                        <li className="flex items-center gap-1">
-                                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                                          Gourmet chocolate bark
-                                        </li>
-                                        <li className="flex items-center gap-1">
-                                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                                          Luxury hot chocolate
-                                        </li>
-                                        <li className="flex items-center gap-1">
-                                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                                          Personalized gift card
-                                        </li>
-                                      </ul>
-
-                                      <p className="mt-3 text-[11px] font-medium text-emerald-700 dark:text-emerald-400">
-                                        Perfect for birthdays, thank-yous or any special treat.
-                                      </p>
-                                    </label>
-                                  </div>
-                                </div>
 
                                 <div className="mt-6 flex justify-between">
                                     <button
@@ -633,7 +479,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     >
                                         Back
                                     </button>
-                                    {isPack && (
+                                    {isPack ? (
                                         <button
                                             type="button"
                                             onClick={handleNextStep}
@@ -641,6 +487,15 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                         >
                                             Continue to Pack
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowUpgradePopup(true)}
+                                            disabled={!canAddToCart()}
+                                            className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        >
+                                            Add to Cart
                                         </button>
                                     )}
                                 </div>
@@ -799,6 +654,48 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         selection={selection}
                         remainingChocolates={remainingChocolates}
                     />
+                </div>
+            )}
+
+            {/* Upgrade Popup */}
+            {showUpgradePopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
+                        <div className="text-center">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                Make your signature box more indulgent.
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                                For £{getPackPrice()} pounds more add:
+                            </p>
+                            <ul className="text-sm text-gray-600 dark:text-gray-300 mb-6 space-y-1">
+                                <li>• Gourmet chocolate bark</li>
+                                <li>• Luxury hot chocolate</li>
+                                <li>• Personalized gift card</li>
+                            </ul>
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => {
+                                        setShowUpgradePopup(false);
+                                        handleAddToCart();
+                                    }}
+                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                >
+                                    Continue to cart
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowUpgradePopup(false);
+                                        setIsPack(true);
+                                        handleNextStep();
+                                    }}
+                                    className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+                                >
+                                    Make an indulgence pack
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
         </form>
