@@ -29,17 +29,17 @@ export default function SelectableProductCard({ product, onSelect, price }: Prop
       </div>
       {price === 0 ? (
         <>
-          <p className="text-md font-medium text-gray-900 dark:text-white mt-4">{product.name}</p>
-          <p className="mt-1 text-sm text-gray-600">Included in your pack</p>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{product.weight} g</p>
+          <p className="text-md font-medium text-primary-text mt-4">{product.name}</p>
+          <p className="mt-1 text-sm text-primary-text">Included in your pack</p>
+          <p className="mt-1 text-sm text-primary-text">{product.weight} g</p>
         </>
       ) : (
         <>
-          <p className="text-md font-medium text-gray-900 dark:text-white mt-4">￡ {price !== undefined ? price : product.base_price}</p>
+          <p className="text-md font-medium text-primary-text mt-4">￡ {price !== undefined ? price : product.base_price}</p>
           <div className="flex justify-between mt-1">
             <div>
-              <h3 className="text-xs md:text-sm text-gray-700 dark:text-gray-300 h-12">{product.name}</h3>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{product.weight} g</p>
+              <h3 className="text-xs md:text-sm text-primary-text h-12">{product.name}</h3>
+              <p className="mt-1 text-sm text-primary-text">{product.weight} g</p>
             </div>
           </div>
         </>

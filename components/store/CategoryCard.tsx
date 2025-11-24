@@ -32,9 +32,9 @@ export default function CategoryCard({ category }: CategoryCardProps) {
         />
       </div>
       <div className="p-2">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white">{category.name}</h3>
+        <h3 className="text-lg font-bold text-primary-text">{category.name}</h3>
         {category.description && (
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{category.description}</p>
+          <p className="mt-2 text-sm text-primary-text">{category.description}</p>
         )}
       </div>
     </Link>

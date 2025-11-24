@@ -121,13 +121,13 @@ export default function CartCheckout() {
         <div className="space-y-4 mt-4">
             {/* Order Summary - Moved to top */}
             <div className="space-y-4 rounded-lg border border-gray-200 bg-main-bg p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6 px-5">
-                <p className="text-xl font-semibold text-gray-900 dark:text-white">Order summary</p>
+                <p className="text-xl font-semibold text-primary-text">Order summary</p>
 
                 <div className="space-y-4">
                     {/* Original Price */}
                     <dl className="flex items-center justify-between gap-4">
-                        <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Original price</dt>
-                        <dd className="text-base font-medium text-gray-900 dark:text-white">
+                        <dt className="text-base font-normal text-primary-text">Original price</dt>
+                        <dd className="text-base font-medium text-primary-text">
                             {formatCurrency(cart.base_total)}
                         </dd>
                     </dl>
@@ -135,7 +135,7 @@ export default function CartCheckout() {
                     {/* Discount if applied */}
                     {cart.discount && (
                         <dl className="flex items-center justify-between gap-4">
-                            <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
+                            <dt className="text-base font-normal text-primary-text">
                                 Discount ({cart.discount.code})
                             </dt>
                             <dd className="text-base font-medium text-green-600 dark:text-green-400">
@@ -145,8 +145,8 @@ export default function CartCheckout() {
                     )}
 
                     <dl className="flex items-center justify-between gap-4">
-                        <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Shipping</dt>
-                        <dd className="text-base font-medium text-gray-900 dark:text-white">
+                        <dt className="text-base font-normal text-primary-text">Shipping</dt>
+                        <dd className="text-base font-medium text-primary-text">
                             Next Step
                         </dd>
                     </dl>
@@ -154,8 +154,8 @@ export default function CartCheckout() {
 
                 {/* Total */}
                 <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
-                    <dt className="text-base font-bold text-gray-900 dark:text-white">Total</dt>
-                    <dd className="text-base font-bold text-gray-900 dark:text-white">
+                    <dt className="text-base font-bold text-primary-text">Total</dt>
+                    <dd className="text-base font-bold text-primary-text">
                         {formatCurrency(cart.discounted_total)}
                     </dd>
                 </dl>
@@ -165,7 +165,7 @@ export default function CartCheckout() {
             <div className="border-b border-gray-900/10 pb-4 dark:border-gray-700">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-200">Order Options</h2>
+                        <h2 className="text-base font-semibold text-primary-text">Order Options</h2>
                     </div>
                 </div>
 
@@ -184,7 +184,7 @@ export default function CartCheckout() {
                                 }}
                                 className="rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-primary-2"
                             />
-                            <span className="text-sm font-medium text-gray-900 dark:text-white">
+                            <span className="text-sm font-medium text-primary-text">
                                 Add Shipping Date
                             </span>
                         </label>
@@ -201,7 +201,7 @@ export default function CartCheckout() {
                             <div className="relative w-full max-w-md max-h-full">
                                 <div className="relative bg-main-bg rounded-lg shadow dark:bg-gray-700">
                                     <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                        <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+                                        <h3 className="text-xl font-medium text-primary-text">
                                             Shipping Date Information
                                         </h3>
                                         <button
@@ -216,7 +216,7 @@ export default function CartCheckout() {
                                         </button>
                                     </div>
                                     <div className="p-4 md:p-5">
-                                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                        <p className="text-base leading-relaxed text-primary-text">
                                             The shipping date is the date we will ship your order. Your delivery date depends on the selected shipping method.
                                         </p>
                                     </div>
@@ -262,7 +262,7 @@ export default function CartCheckout() {
                                 className="rounded border-gray-300 text-primary focus:ring-primary
                                     dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-primary-2"
                             />
-                            <span className="text-sm font-medium text-gray-900 dark:text-white">
+                            <span className="text-sm font-medium text-primary-text">
                                 Add Discount Code
                             </span>
                         </label>
@@ -284,16 +284,16 @@ export default function CartCheckout() {
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                             </svg>
                             <div className="flex-1">
-                                <h3 className="text-sm font-semibold text-green-900 dark:text-green-200">
+                                <h3 className="text-sm font-semibold text-primary-text">
                                     Email Confirmed
                                 </h3>
-                                <p className="mt-1 text-sm text-green-800 dark:text-green-300">
+                                <p className="mt-1 text-sm text-primary-text">
                                     {email}
                                 </p>
                             </div>
                             <button
                                 onClick={() => setEmail('')}
-                                className="text-sm text-green-700 dark:text-green-300 hover:text-green-900 dark:hover:text-green-100 font-medium"
+                                className="text-sm text-primary-text font-medium"
                             >
                                 Change
                             </button>
@@ -310,7 +310,7 @@ export default function CartCheckout() {
                         type="button"
                         onClick={handleCheckout}
                         disabled={isProcessing}
-                        className={`w-full rounded-md px-4 py-4 text-xl font-bold text-white
+                        className={`w-full rounded-md px-4 py-4 text-xl font-bold text-primary-text
                             shadow-lg transition-all duration-200 flex items-center justify-center
                             ${isProcessing
                                 ? 'bg-gray-400 dark:bg-gray-600 cursor-wait opacity-70'
@@ -319,7 +319,7 @@ export default function CartCheckout() {
                     >
                         {isProcessing ? (
                             <>
-                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
@@ -340,7 +340,7 @@ export default function CartCheckout() {
                             <svg className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
                             </svg>
-                            <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
+                            <p className="text-sm text-primary-text">{error}</p>
                         </div>
                     )}
 
@@ -349,7 +349,7 @@ export default function CartCheckout() {
                             <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
                             </svg>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                            <p className="text-xs text-primary-text">
                                 {email ? "You'll review your complete order and enter shipping details on the next page" : "Click the button above to continue. We'll ask for your email in the next step."}
                             </p>
                         </div>
@@ -357,7 +357,7 @@ export default function CartCheckout() {
                             <svg className="w-5 h-5 text-red-500 dark:text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>
                             </svg>
-                            <p className="text-xs text-red-600 dark:text-red-400">
+                            <p className="text-xs text-primary-text">
                                 Advent Calendar shipping begins on November 21st
                             </p>
                         </div>
@@ -397,11 +397,11 @@ export default function CartCheckout() {
                                     </svg>
                                 </div>
                                 <div className="mt-3 text-center sm:mt-5">
-                                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100" id="modal-title">
+                                    <h3 className="text-lg leading-6 font-medium text-primary-text" id="modal-title">
                                         One More Step
                                     </h3>
                                     <div className="mt-2">
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                        <p className="text-sm text-primary-text">
                                             Please enter your email address to continue to checkout. We'll send your order confirmation here.
                                         </p>
                                     </div>
@@ -415,7 +415,7 @@ export default function CartCheckout() {
                                     type="button"
                                     disabled={!modalEmail}
                                     onClick={handleModalCheckout}
-                                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:col-start-2 sm:text-sm
+                                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-primary-text focus:outline-none focus:ring-2 focus:ring-offset-2 sm:col-start-2 sm:text-sm
                                         ${modalEmail
                                             ? 'bg-primary dark:bg-primary-2 hover:bg-primary-2 dark:hover:bg-primary focus:ring-primary'
                                             : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
@@ -426,7 +426,7 @@ export default function CartCheckout() {
                                 <button
                                     type="button"
                                     onClick={() => setShowEmailModal(false)}
-                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-main-bg dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:col-start-1 sm:text-sm"
+                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-main-bg dark:bg-gray-700 text-base font-medium text-primary-text hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:col-start-1 sm:text-sm"
                                 >
                                     Cancel
                                 </button>

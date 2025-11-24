@@ -19,7 +19,7 @@ export default function FlavoursPage() {
     if (error) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div>Error:</div>
+                <div className="text-primary-text">Error:</div>
             </div>
         );
     }
@@ -29,10 +29,10 @@ export default function FlavoursPage() {
             <div className="max-w-7xl mx-auto px-0">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                    <h1 className="text-3xl font-bold text-primary-text">
                         Our Flavours
                     </h1>
-                    <p className="mt-2 text-gray-600 dark:text-gray-400">
+                    <p className="mt-2 text-primary-text">
                         Discover our delicious selection of handcrafted chocolates
                     </p>
                 </div>

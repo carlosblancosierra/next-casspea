@@ -42,8 +42,8 @@ export default function StepFlavourSelection({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">Step 6: Choose Flavours</h2>
-      <p className="text-gray-600">
+      <h2 className="text-xl font-semibold text-primary-text">Step 6: Choose Flavours</h2>
+      <p className="text-primary-text">
         Select up to {max} chocolates ({max - remaining} chosen, {remaining} left).
       </p>
 
@@ -58,7 +58,7 @@ export default function StepFlavourSelection({
                 height={48}
                 className="rounded"
               />
-              <span className="ml-3 flex-1 font-medium">{f.flavor.name}</span>
+              <span className="ml-3 flex-1 font-medium text-primary-text">{f.flavor.name}</span>
               <div className="flex items-center space-x-1">
                 <button onClick={() => onDecrement(i)}><FiMinus /></button>
                 <span>{f.quantity}</span>
@@ -69,7 +69,7 @@ export default function StepFlavourSelection({
           ))}
           <button
             onClick={onClear}
-            className="text-sm text-red-500 hover:underline"
+            className="text-sm text-primary-text hover:underline"
           >
             Clear all
           </button>
@@ -90,14 +90,14 @@ export default function StepFlavourSelection({
                 className="object-contain rounded"
               />
             </div>
-            <h3 className="mt-2 font-medium text-center">{f.name}</h3>
+            <h3 className="mt-2 font-medium text-center text-primary-text">{f.name}</h3>
             <button
               onClick={() => onAdd(f)}
               disabled={remaining === 0}
               className={`mt-3 px-4 py-2 rounded ${
                 remaining > 0
-                  ? 'bg-primary text-white'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  ? 'bg-primary text-primary-text'
+                  : 'bg-gray-300 text-primary-text cursor-not-allowed'
               }`}
             >
               + Add
@@ -109,7 +109,7 @@ export default function StepFlavourSelection({
       <button
         onClick={onNext}
         disabled={remaining > 0}
-        className="mt-6 w-full py-3 bg-blue-600 text-white rounded disabled:opacity-50"
+        className="mt-6 w-full py-3 bg-blue-600 text-primary-text rounded disabled:opacity-50"
       >
         Next: Order Summary
       </button>
