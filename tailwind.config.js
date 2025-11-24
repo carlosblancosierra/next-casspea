@@ -29,7 +29,7 @@ module.exports = {
 				'main-bg-dark': '#0a0c10',
 				'secondary-bg': '#480607',
 				'primary-button-text': '#FFF',
-				'primary-text': '#28282B',
+				'primary-text': '#FFF',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
