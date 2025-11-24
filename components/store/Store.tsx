@@ -27,7 +27,7 @@ export default function Store() {
 
 	if (products.length === 0) {
 		console.log("Store: No products found, products array is empty", products);
-		return <div className="text-primary-text">No products found</div>;
+		return <div className="text-text-primary-text">No products found</div>;
 	}
 
 	const categoriesSlugs = ['All', 'signature-boxes', 'chocolate-barks', 'hot-chocolate'];
@@ -51,7 +51,7 @@ export default function Store() {
 	return (
 		<div className="container mx-auto min-h-[80vh]">
 			<>
-				<h2 className="font-bold mt-2 text-primary-text">
+				<h2 className="font-bold mt-2 text-text-primary-text">
 					Ordering delicious hand made chocolates from CassPea is simple and fun!
 				</h2>
 				<ol className="mt-4 space-y-1 list-decimal list-inside">
@@ -70,9 +70,9 @@ export default function Store() {
 						onClick={() => setSelectedCategory(categorySlug)}
 						className={`${
 							selectedCategory === categorySlug
-								? 'text-primary-text bg-primary border-primary dark:bg-primary dark:border-primary'
-								: 'text-primary-text bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700'
-						} hover:bg-blue-700 hover:text-primary-text dark:hover:bg-blue-600 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 rounded-full
+								? 'text-text-primary-text bg-primary border-primary dark:bg-primary dark:border-primary'
+								: 'text-text-primary-text bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700'
+						} hover:bg-blue-700 hover:text-text-primary-text dark:hover:bg-blue-600 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 rounded-full
               text-xs px-3 py-2
               sm:text-xs sm:px-4 sm:py-2
               md:text-base md:px-5 md:py-3

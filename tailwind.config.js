@@ -29,8 +29,8 @@ module.exports = {
 				'main-bg-dark': '#0a0c10',
 				'secondary-bg': '#480607',
 				'primary-button-text': '#FFF',
-				'primary-text': '#FFF',
-				'secondary-text': '#FFF',
+				'text-primary-text': '#FFF',
+				'text-primary-text': '#FFF',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

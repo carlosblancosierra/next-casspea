@@ -4,12 +4,12 @@ import * as C from './contants';
 export default function StoryShareSection() {
   return (
     <Section title={C.STORY_SHARE_TITLE} extraClass="mt-10">
-      <ul className="list-disc list-inside space-y-1 secondary-text dark:secondary-text max-w-3xl mx-auto">
+      <ul className="list-disc list-inside space-y-1 text-primary-text dark:text-primary-text max-w-3xl mx-auto">
         {C.STORY_SHARE_STEPS.map((line: string, idx: number) => (
           <li key={idx}>{line}</li>
         ))}
       </ul>
-      <p className="mt-3 text-xs secondary-text dark:secondary-text">{C.IG_DISCLAIMER}</p>
+      <p className="mt-3 text-xs text-primary-text dark:text-primary-text">{C.IG_DISCLAIMER}</p>
     </Section>
   );
 }

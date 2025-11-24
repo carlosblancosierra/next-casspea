@@ -17,7 +17,7 @@ export default function SignatureBoxStep({ products, priceMap, onSelect }: Props
             Welcome to CassPea Indulgent Chocolate Packs
           </h2>
 
-          <p className="text-sm secondary-text mt-2">Your pack begins with a signature box, followed by a chocolate bark, a cup of hot chocolate, and a gift card. We'll guide you through each step to create your unique bespoke pack.</p>
+          <p className="text-sm text-primary-text mt-2">Your pack begins with a signature box, followed by a chocolate bark, a cup of hot chocolate, and a gift card. We'll guide you through each step to create your unique bespoke pack.</p>
         </section>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -30,7 +30,7 @@ export default function SignatureBoxStep({ products, priceMap, onSelect }: Props
           />
         ))}
       </div>
-      <p className="text-sm secondary-text mt-2">
+      <p className="text-sm text-primary-text mt-2">
         Your box size determines the price of your pack.
       </p>
     </>

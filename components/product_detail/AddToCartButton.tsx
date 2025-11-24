@@ -34,9 +34,9 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
                 transition-all duration-200 ease-in-out
                 flex items-center justify-center gap-2
                 ${!selection
-                    ? 'bg-gray-100 secondary-text dark:bg-gray-800 dark:secondary-text cursor-not-allowed'
+                    ? 'bg-gray-100 text-primary-text dark:bg-gray-800 dark:text-primary-text cursor-not-allowed'
                     : isDisabled
-                        ? 'bg-gray-100 secondary-text dark:bg-gray-800 dark:secondary-text cursor-not-allowed'
+                        ? 'bg-gray-100 text-primary-text dark:bg-gray-800 dark:text-primary-text cursor-not-allowed'
                         : 'bg-primary text-white hover:bg-primary dark:bg-primary-2 dark:hover:bg-primary'
                 }
                 disabled:cursor-not-allowed disabled:opacity-50

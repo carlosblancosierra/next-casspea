@@ -33,16 +33,16 @@ export default function Testimonials({ config }: TestimonialsProps) {
           <blockquote key={i} className="bg-white dark:bg-main-bg-dark p-6 rounded-lg shadow">
             <div className="flex items-center gap-3 mb-2">
               <span className="font-semibold text-lg">{t.name}</span>
-              <span className="text-xs secondary-text">• {t.reviews} review{t.reviews>1?'s':''}</span>
-              <span className="text-xs secondary-text ml-auto">{t.country}</span>
+              <span className="text-xs text-primary-text">• {t.reviews} review{t.reviews>1?'s':''}</span>
+              <span className="text-xs text-primary-text ml-auto">{t.country}</span>
             </div>
             <div className="flex items-center gap-1 mb-1">
               {Array.from({ length: t.rating }).map((_, i) => <span key={i} className="text-yellow-400">★</span>)}
-              <span className="text-xs secondary-text ml-2">Rated {t.rating} out of 5</span>
+              <span className="text-xs text-primary-text ml-2">Rated {t.rating} out of 5</span>
             </div>
-            <div className="text-xs secondary-text mb-2">{t.date}</div>
+            <div className="text-xs text-primary-text mb-2">{t.date}</div>
             <p className="italic">“{t.text}”</p>
-            <div className="mt-2 text-xs secondary-text">Date of experience: {t.experience}</div>
+            <div className="mt-2 text-xs text-primary-text">Date of experience: {t.experience}</div>
           </blockquote>
         ))}
       </div>

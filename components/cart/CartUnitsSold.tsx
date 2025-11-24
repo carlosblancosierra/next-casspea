@@ -36,9 +36,9 @@ const CartUnitsSold: React.FC<Props> = ({ className = '' }) => {
   return (
     <div className={`rounded-md border p-4 bg-white dark:bg-gray-800 ${className}`}>
       {loading ? (
-        <span className="text-sm text-primary-text">Updating…</span>
+        <span className="text-sm text-text-primary-text">Updating…</span>
       ) : (
-        <p className="text-sm font-medium text-primary-text">
+        <p className="text-sm font-medium text-text-primary-text">
           {cartUnits > 0 ? (
             <>
               We have sold <span className="font-extrabold">{baseSold.toLocaleString('en-GB')}</span> bonbons. With your <span className="font-extrabold">{cartUnits.toLocaleString('en-GB')}</span> chocolates, we will reach <span className="font-extrabold bg-gradient-autumn bg-clip-text text-transparent">{projectedTotal.toLocaleString('en-GB')}</span>!

@@ -72,7 +72,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
     return (
         <div className="space-y-8">
             <div className="main-bg p-6 rounded-lg shadow dark:bg-gray-800">
-                <h2 className="text-xl font-semibold mb-4 secondary-text dark:secondary-text">Shipping Address</h2>
+                <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text">Shipping Address</h2>
                 <AddressForm
                     onAddressSubmit={handleShippingSubmit}
                     buttonText="Save Shipping Address"
@@ -88,7 +88,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
                         onChange={handleCheckboxChange}
                         className="h-4 w-4 text-primary focus:ring-primary-2 border-gray-300 rounded"
                     />
-                    <label htmlFor="sameAsShipping" className="ml-2 block text-sm secondary-text">
+                    <label htmlFor="sameAsShipping" className="ml-2 block text-sm text-primary-text">
                         Billing address same as shipping?
                     </label>
                 </div>

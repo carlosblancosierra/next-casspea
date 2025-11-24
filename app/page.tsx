@@ -76,14 +76,14 @@ const HeroSection = () => (
           <UnitSoldCounter />
         </div>
         <h1
-          className={`${playfair.className} mb-2 text-5xl text-primary-text font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}
+          className={`${playfair.className} mb-2 text-5xl text-text-primary-text font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}
         >
           London's Finest Artisan Chocolates
         </h1>
-        <h2 className="text-2xl mb-2 dark:text-white text-primary-text">
+        <h2 className="text-2xl mb-2 dark:text-white text-text-primary-text">
           Celebrate Every Occasion with Our Signature Gift Boxes
         </h2>
-        <p className="hidden md:block md:mb-6 font-light text-sm secondary-text lg:mb-8 md:text-base dark:secondary-text">
+        <p className="hidden md:block md:mb-6 font-light text-sm text-primary-text lg:mb-8 md:text-base dark:text-primary-text">
           Share the love with CassPea Chocolates—perfect for personal indulgence,
           birthdays, corporate events, and special celebrations. With over 20
           exquisite flavours, each handcrafted to perfection by our skilled
@@ -118,10 +118,10 @@ const HeroSection = () => (
         <div className="md:hidden mb-6">
           <UnitSoldCounter />
         </div>
-        <p className={`md:hidden md:mb-6 text-3xl font-bold mt-2 ${playfair.className} lg:mb-8 md:text-lg lg:text-xl dark:secondary-text`}>
+        <p className={`md:hidden md:mb-6 text-3xl font-bold mt-2 ${playfair.className} lg:mb-8 md:text-lg lg:text-xl dark:text-primary-text`}>
           Share the love with CassPea Chocolates
         </p>
-        <p className="md:hidden md:mb-6 font-light text-md mt-2 secondary-text lg:mb-8 md:text-lg lg:text-xl dark:secondary-text">
+        <p className="md:hidden md:mb-6 font-light text-md mt-2 text-primary-text lg:mb-8 md:text-lg lg:text-xl dark:text-primary-text">
           Perfect for personal indulgence, birthdays, corporate events, and
           special celebrations. With over 20 exquisite flavours, each handcrafted
           to perfection by our skilled chocolatiers, every bite is a work of art

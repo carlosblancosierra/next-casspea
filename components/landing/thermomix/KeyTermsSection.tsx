@@ -4,7 +4,7 @@ import * as C from './contants';
 export default function KeyTermsSection() {
   return (
     <Section title={C.GIVEAWAY_RULES_TITLE} extraClass="mt-10">
-      <ol className="list-decimal list-inside space-y-2 secondary-text dark:secondary-text">
+      <ol className="list-decimal list-inside space-y-2 text-primary-text dark:text-primary-text">
         {C.GIVEAWAY_RULES_LIST.map((rule: string, idx: number) => (
           <li key={idx}>{rule}</li>
         ))}

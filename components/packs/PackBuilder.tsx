@@ -226,7 +226,7 @@ const steps: React.ReactNode[] = [
       </aside>
       <section className="md:col-span-3">
         <div className="mb-4">
-          <p className="text-sm secondary-text">{STEP_EXPLANATIONS[step]}</p>
+          <p className="text-sm text-primary-text">{STEP_EXPLANATIONS[step]}</p>
         </div>
         {steps[step]}
       </section>

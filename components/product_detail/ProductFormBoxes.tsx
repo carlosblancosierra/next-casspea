@@ -146,8 +146,8 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                     <React.Fragment key={step}>
                         <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
                             step <= currentStep
-                                ? 'bg-primary border-primary text-primary-text'
-                                : 'border-gray-300 text-primary-text bg-gray-50 dark:bg-gray-800'
+                                ? 'bg-primary border-primary text-text-primary-text'
+                                : 'border-gray-300 text-text-primary-text bg-gray-50 dark:bg-gray-800'
                         }`}>
                             {step}
                         </div>
@@ -290,26 +290,26 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             e.preventDefault();
         }}>
             <div className="space-y-6 pb-6 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
-                <h2 className="text-2xl font-semibold text-primary-text mb-4">Create your Signature Box</h2>
+                <h2 className="text-2xl font-semibold text-text-primary-text mb-4">Create your Signature Box</h2>
 
                 <StepIndicator />
 
                 {/* Step 1: Selection Type */}
                 {currentStep === 1 && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">Step 1: Choose your experience</h3>
+                        <h3 className="text-lg font-semibold text-text-primary-text mb-4">Step 1: Choose your experience</h3>
                         <BoxSelection
                             options={prebulids}
                             selected={selection}
                             onChange={setSelection}
                         />
                         {selection === 'RANDOM' && (
-                            <p className="text-sm text-primary-text mt-2">
+                            <p className="text-sm text-text-primary-text mt-2">
                                 We will pick you {maxChocolates} amazing bonbons with your selected preferences.
                             </p>
                         )}
                         {selection === 'PICK_AND_MIX' && (
-                            <p className="text-sm text-primary-text mt-2">
+                            <p className="text-sm text-text-primary-text mt-2">
                                 Choose your own {maxChocolates} flavours and create your perfect box.
                             </p>
                         )}
@@ -318,7 +318,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={!canProceedToStep2()}
-                                className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="px-6 py-2 bg-primary text-text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 Next
                             </button>
@@ -329,7 +329,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 2: Allergens */}
                 {currentStep === 2 && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">Step 2: Any allergens to avoid?</h3>
+                        <h3 className="text-lg font-semibold text-text-primary-text mb-4">Step 2: Any allergens to avoid?</h3>
                         <AllergenSelection
                             allergens={allergens}
                             selectedAllergens={selectedAllergens}
@@ -341,7 +341,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className="px-6 py-2 border border-gray-300 text-text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                             >
                                 Back
                             </button>
@@ -349,7 +349,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={!canProceedToStep3()}
-                                className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="px-6 py-2 bg-primary text-text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 Next
                             </button>
@@ -360,7 +360,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 3: Flavours or Final Options */}
                 {currentStep === 3 && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">
+                        <h3 className="text-lg font-semibold text-text-primary-text mb-4">
                             Step 3: {selection === 'PICK_AND_MIX' ? 'Pick your flavours' : 'Review your selection'}
                         </h3>
 
@@ -380,7 +380,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 />
 
                                 <div className="mt-4">
-                                    <p className="text-sm mb-1 text-primary-text">{getProgressText()}</p>
+                                    <p className="text-sm mb-1 text-text-primary-text">{getProgressText()}</p>
                                     <ProgressBar
                                         value={maxChocolates - remainingChocolates}
                                         max={maxChocolates}
@@ -391,7 +391,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     <div className="mt-6 space-y-4">
                                         {/* Quantity Selection */}
                                         <div>
-                                            <label htmlFor="quantity" className="block text-sm font-medium text-primary-text">
+                                            <label htmlFor="quantity" className="block text-sm font-medium text-text-primary-text">
                                                 Number of Boxes
                                             </label>
                                             <select
@@ -414,7 +414,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             <button
                                                 type="button"
                                                 onClick={handlePrevStep}
-                                                className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                                className="px-6 py-2 border border-gray-300 text-text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                             >
                                                 Back
                                             </button>
@@ -423,7 +423,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                     type="button"
                                                     onClick={handleNextStep}
                                                     disabled={!canProceedToNextStep()}
-                                                    className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                                    className="px-6 py-2 bg-primary text-text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                                 >
                                                     Continue to Pack
                                                 </button>
@@ -432,7 +432,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                     type="button"
                                                     onClick={() => setShowUpgradePopup(true)}
                                                     disabled={!canAddToCart()}
-                                                    className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                                    className="px-6 py-2 bg-primary text-text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                                 >
                                                     Add to Cart
                                                 </button>
@@ -445,14 +445,14 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             // RANDOM selection - show summary and options
                             <div className="space-y-4">
                                 <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                                    <p className="text-sm text-primary-text">
+                                    <p className="text-sm text-text-primary-text">
                                         We'll select {maxChocolates} chocolates for you, avoiding your specified allergens.
                                     </p>
                                 </div>
 
                                 {/* Quantity Selection */}
                                 <div>
-                                    <label htmlFor="quantity" className="block text-sm font-medium text-primary-text">
+                                    <label htmlFor="quantity" className="block text-sm font-medium text-text-primary-text">
                                         Number of Boxes
                                     </label>
                                     <select
@@ -475,7 +475,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     <button
                                         type="button"
                                         onClick={handlePrevStep}
-                                        className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                        className="px-6 py-2 border border-gray-300 text-text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                     >
                                         Back
                                     </button>
@@ -484,7 +484,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             type="button"
                                             onClick={handleNextStep}
                                             disabled={!canProceedToNextStep()}
-                                            className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            className="px-6 py-2 bg-primary text-text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                         >
                                             Continue to Pack
                                         </button>
@@ -493,7 +493,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             type="button"
                                             onClick={() => setShowUpgradePopup(true)}
                                             disabled={!canAddToCart()}
-                                            className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            className="px-6 py-2 bg-primary text-text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                         >
                                             Add to Cart
                                         </button>
@@ -507,10 +507,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 4: Hot Chocolate Selection (Pack only) */}
                 {currentStep === 4 && isPack && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">Step 4: Choose your Hot Chocolate</h3>
+                        <h3 className="text-lg font-semibold text-text-primary-text mb-4">Step 4: Choose your Hot Chocolate</h3>
 
                         <div className="mb-4">
-                            <label htmlFor="hot-chocolate-select" className="block text-sm font-medium text-primary-text mb-2">
+                            <label htmlFor="hot-chocolate-select" className="block text-sm font-medium text-text-primary-text mb-2">
                                 Select Hot Chocolate
                             </label>
                             <select
@@ -535,7 +535,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className="px-6 py-2 border border-gray-300 text-text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                             >
                                 Back
                             </button>
@@ -543,7 +543,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={hotChocolate === null}
-                                className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="px-6 py-2 bg-primary text-text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 Next
                             </button>
@@ -554,10 +554,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 5: Chocolate Bark Selection (Pack only) */}
                 {currentStep === 5 && isPack && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">Step 5: Choose your Chocolate Bark</h3>
+                        <h3 className="text-lg font-semibold text-text-primary-text mb-4">Step 5: Choose your Chocolate Bark</h3>
 
                         <div className="mb-4">
-                            <label htmlFor="chocolate-bark-select" className="block text-sm font-medium text-primary-text mb-2">
+                            <label htmlFor="chocolate-bark-select" className="block text-sm font-medium text-text-primary-text mb-2">
                                 Select Chocolate Bark
                             </label>
                             <select
@@ -582,7 +582,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className="px-6 py-2 border border-gray-300 text-text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                             >
                                 Back
                             </button>
@@ -590,7 +590,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={chocolateBark === null}
-                                className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="px-6 py-2 bg-primary text-text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 Next
                             </button>
@@ -601,7 +601,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 6: Gift Card Selection (Pack only) */}
                 {currentStep === 6 && isPack && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">Step 6: Choose your Gift Card</h3>
+                        <h3 className="text-lg font-semibold text-text-primary-text mb-4">Step 6: Choose your Gift Card</h3>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
                             {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
@@ -621,7 +621,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                         : 'border-gray-300 dark:border-gray-600 hover:border-primary'
                                 }`}
                             >
-                                <span className="text-primary-text">No Gift Card</span>
+                                <span className="text-text-primary-text">No Gift Card</span>
                             </div>
                         </div>
 
@@ -635,7 +635,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className="px-6 py-2 border border-gray-300 text-text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                             >
                                 Back
                             </button>
@@ -662,13 +662,13 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
                         <div className="text-center">
-                            <h3 className="text-lg font-semibold text-primary-text mb-4">
+                            <h3 className="text-lg font-semibold text-text-primary-text mb-4">
                                 Make your signature box more indulgent.
                             </h3>
-                            <p className="text-sm text-primary-text mb-4">
+                            <p className="text-sm text-text-primary-text mb-4">
                                 For £{getPackPrice()} pounds more add:
                             </p>
-                            <ul className="text-sm text-primary-text mb-6 space-y-1">
+                            <ul className="text-sm text-text-primary-text mb-6 space-y-1">
                                 <li>• Gourmet chocolate bark</li>
                                 <li>• Luxury hot chocolate</li>
                                 <li>• Personalized gift card</li>
@@ -679,7 +679,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                         setShowUpgradePopup(false);
                                         handleAddToCart();
                                     }}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                    className="flex-1 px-4 py-2 border border-gray-300 text-text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                 >
                                     Continue to cart
                                 </button>
@@ -689,7 +689,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                         setIsPack(true);
                                         handleNextStep();
                                     }}
-                                    className="flex-1 px-4 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 transition-colors"
+                                    className="flex-1 px-4 py-2 bg-primary text-text-primary-text rounded-md hover:bg-primary/90 transition-colors"
                                 >
                                     Make an indulgence pack
                                 </button>

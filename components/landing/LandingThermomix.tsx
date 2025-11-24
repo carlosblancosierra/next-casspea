@@ -31,7 +31,7 @@ export default function LandingThermomix() {
       <HeroSection />
       <Section title={C.ENTER_GIVEAWAY_TITLE} extraClass="mt-8" id="enter-form">
         <EnterForm />
-        <p className="mt-3 text-xs secondary-text dark:secondary-text">
+        <p className="mt-3 text-xs text-primary-text dark:text-primary-text">
           By entering, you agree to receive emails from {C.BRAND}. You can unsubscribe at any time.
         </p>
       </Section>

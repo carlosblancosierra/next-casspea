@@ -23,7 +23,7 @@ export default function SummerBreakPopup() {
       <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full mx-4">
         <button
           onClick={handleClose}
-          className="absolute top-2 right-2 secondary-text hover:secondary-text dark:hover:text-white rounded-lg text-sm w-8 h-8 flex items-center justify-center focus:outline-none"
+          className="absolute top-2 right-2 text-primary-text hover:text-primary-text dark:hover:text-white rounded-lg text-sm w-8 h-8 flex items-center justify-center focus:outline-none"
           aria-label="Close"
         >
           <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -31,8 +31,8 @@ export default function SummerBreakPopup() {
           </svg>
         </button>
         <div className="p-6 text-center">
-          <h3 className="text-xl font-semibold secondary-text dark:text-white mb-2">Summer Break</h3>
-          <p className="text-base secondary-text dark:secondary-text mb-4">
+          <h3 className="text-xl font-semibold text-primary-text dark:text-white mb-2">Summer Break</h3>
+          <p className="text-base text-primary-text dark:text-primary-text mb-4">
             We are closed for summer break from <b>July 23</b> to <b>August 15</b>.<br />
             <span className="text-pink-600 font-semibold mt-2">
               Orders placed <b>from July 23</b> will begin shipping on <b>August 18</b>.

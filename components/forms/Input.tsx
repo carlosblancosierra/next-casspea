@@ -28,7 +28,7 @@ export default function Input({
 			<div className='flex justify-between align-center'>
 				<label
 					htmlFor={labelId}
-					className='block text-sm font-medium leading-6 secondary-text'
+					className='block text-sm font-medium leading-6 text-primary-text'
 				>
 					{children}
 				</label>
@@ -46,7 +46,7 @@ export default function Input({
 			<div className='mt-2'>
 				<input
 					id={labelId}
-					className='block w-full rounded-md border-0 py-1.5 secondary-text shadow-sm ring-1 ring-inset ring-gray-300 placeholder:secondary-text focus:ring-2 focus:ring-inset focus:ring-primary text-base sm:leading-6'
+					className='block w-full rounded-md border-0 py-1.5 text-primary-text shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-primary-text focus:ring-2 focus:ring-inset focus:ring-primary text-base sm:leading-6'
 					name={labelId}
 					type={type}
 					onChange={onChange}

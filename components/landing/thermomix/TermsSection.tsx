@@ -9,7 +9,7 @@ export default function TermsSection() {
         if (para.toLowerCase().includes('privacy policy')) {
           const [before, after] = para.split(/Privacy Policy/i);
           return (
-            <p key={idx} className="secondary-text dark:secondary-text">
+            <p key={idx} className="text-primary-text dark:text-primary-text">
               {before}
               <Link href={C.PRIVACY_POLICY_PATH} className="text-blue-600 hover:underline">
                 Privacy Policy
@@ -19,12 +19,12 @@ export default function TermsSection() {
           );
         }
         return (
-          <p key={idx} className="secondary-text dark:secondary-text">
+          <p key={idx} className="text-primary-text dark:text-primary-text">
             {para}
           </p>
         );
       })}
-      <p className="secondary-text dark:secondary-text">
+      <p className="text-primary-text dark:text-primary-text">
         8. Contact us at{' '}
         <a href="mailto:hello@casspea.co.uk" className="text-blue-600 hover:underline">
           hello@casspea.co.uk

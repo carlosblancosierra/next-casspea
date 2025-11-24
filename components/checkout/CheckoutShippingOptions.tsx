@@ -165,7 +165,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     <span className="text-base font-semibold text-primary dark:text-primary-2">
                         FREE
                     </span>
-                    <span className="text-sm secondary-text line-through">
+                    <span className="text-sm text-primary-text line-through">
                         Was {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(originalPrice)}
                     </span>
                 </div>
@@ -176,10 +176,10 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         if (discountAmount > 0) {
             return (
                 <div className="flex items-center gap-2">
-                    <span className="text-base font-semibold secondary-text dark:secondary-text">
+                    <span className="text-base font-semibold text-primary-text dark:text-primary-text">
                         {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(discountedPrice)}
                     </span>
-                    <span className="text-sm secondary-text line-through">
+                    <span className="text-sm text-primary-text line-through">
                         Was {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(originalPrice)}
                     </span>
                 </div>
@@ -188,7 +188,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
 
         // No discount, show regular price
         return (
-            <span className="text-base font-semibold secondary-text dark:secondary-text">
+            <span className="text-base font-semibold text-primary-text dark:text-primary-text">
                 {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(discountedPrice)}
             </span>
         );
@@ -198,13 +198,13 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
 
     return (
         <div className="main-bg p-6 rounded-lg shadow dark:bg-gray-800">
-            <h2 className="text-xl font-semibold mb-4 secondary-text dark:secondary-text">
+            <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text">
                 {deliveryType ? 'Shipping Options' : 'How would you like to receive your order?'}
             </h2>
 
             {!deliveryType ? (
                 <div className="space-y-4">
-                    <p className="text-sm secondary-text dark:secondary-text mb-6">
+                    <p className="text-sm text-primary-text dark:text-primary-text mb-6">
                         Choose how you'd like to receive your chocolate order.
                     </p>
 
@@ -221,11 +221,11 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold secondary-text dark:secondary-text">Shipping Delivery</h3>
-                                    <p className="text-sm secondary-text dark:secondary-text">Delivered to your address</p>
+                                    <h3 className="font-semibold text-primary-text dark:text-primary-text">Shipping Delivery</h3>
+                                    <p className="text-sm text-primary-text dark:text-primary-text">Delivered to your address</p>
                                 </div>
                             </div>
-                            <p className="text-sm secondary-text dark:secondary-text">
+                            <p className="text-sm text-primary-text dark:text-primary-text">
                                 Choose from various shipping options with different delivery speeds and costs.
                             </p>
                         </button>
@@ -243,11 +243,11 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold secondary-text dark:secondary-text">Store Pickup</h3>
-                                    <p className="text-sm secondary-text dark:secondary-text">Collect from our store</p>
+                                    <h3 className="font-semibold text-primary-text dark:text-primary-text">Store Pickup</h3>
+                                    <p className="text-sm text-primary-text dark:text-primary-text">Collect from our store</p>
                                 </div>
                             </div>
-                            <p className="text-sm secondary-text dark:secondary-text">
+                            <p className="text-sm text-primary-text dark:text-primary-text">
                                 Pick up your order from our Bedford Hill store location. Schedule a pickup time.
                             </p>
                         </button>
@@ -265,7 +265,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
             ) : (
                 <>
                     <div className="flex items-center justify-between mb-4">
-                        <p className="text-sm secondary-text dark:secondary-text">
+                        <p className="text-sm text-primary-text dark:text-primary-text">
                             {deliveryType === 'shipping'
                                 ? 'Orders will be shipped ASAP, usually within 24 hours. Delivery Date depends on the shipping option selected.'
                                 : 'Pick up your order from our Bedford Hill store. Choose a convenient time slot.'
@@ -308,7 +308,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                                 className="h-4 w-4 text-primary focus:ring-primary-2"
                                             />
                                             <div className="ml-3">
-                                                <h3 className="font-medium secondary-text dark:secondary-text">
+                                                <h3 className="font-medium text-primary-text dark:text-primary-text">
                                                     {option.companyName} - {option.name}
                                                 </h3>
                                                 {renderShippingPrice(option)}
@@ -319,15 +319,15 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                                 ) : (
                                                     <>
                                                         {option.id === 34 ? (
-                                                            <p className="secondary-text dark:secondary-text text-sm font-semibold">
+                                                            <p className="text-primary-text dark:text-primary-text text-sm font-semibold">
                                                                 Pick up at 104 Bedford Hill, London, SW12 9HR
                                                             </p>
                                                         ) : (
                                                             <>
-                                                                <p className="secondary-text dark:secondary-text text-sm">
+                                                                <p className="text-primary-text dark:text-primary-text text-sm">
                                                                     Ships: {dates.shipping}
                                                                 </p>
-                                                                <p className="secondary-text dark:secondary-text text-sm">
+                                                                <p className="text-primary-text dark:text-primary-text text-sm">
                                                                     Estimated Delivery: {dates.delivery}
                                                                 </p>
                                                             </>
@@ -351,7 +351,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                         </div>
                     )}
 
-                    {/* <p className="text-sm secondary-text dark:secondary-text mb-2">
+                    {/* <p className="text-sm text-primary-text dark:text-primary-text mb-2">
                         Due to the current high temperatures in the UK, we have temporarily disabled the Royal Mail - Tracked 48® service.
                     </p> */}
                 </>

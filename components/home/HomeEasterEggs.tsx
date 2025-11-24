@@ -29,7 +29,7 @@ const HomeEasterEggs: React.FC<HomeEasterEggsProps> = () => {
 					sizes="100vw"
 					className="w-full h-auto object-cover rounded-lg shadow-md mb-6 hidden md:block" 
 				/>
-				<h2 className="text-3xl font-bold mb-4 secondary-text dark:text-white text-center">
+				<h2 className="text-3xl font-bold mb-4 text-primary-text dark:text-white text-center">
 					Salted Caramel & Brownie Easter Egg
 				</h2>
 				<div className="flex justify-center">

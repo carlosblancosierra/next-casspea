@@ -20,7 +20,7 @@ interface LandingColorBaseProps {
 
 export default function LandingColorBase({ config }: LandingColorBaseProps) {
   return (
-    <main className="bg-white dark:bg-main-bg-dark secondary-text dark:secondary-text">
+    <main className="bg-white dark:bg-main-bg-dark text-primary-text dark:text-primary-text">
       <UnitSoldCounter bg={config.gradient} />
       <HeroSection config={config} />
       <WhoWeAre config={config} />

@@ -4,7 +4,7 @@ export default function StepCard({ index, text }: { index: number; text: string 
       <span className="absolute -top-3 -left-3 inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-bold">
         {index}
       </span>
-      <p className="secondary-text dark:secondary-text pl-6">{text}</p>
+      <p className="text-primary-text dark:text-primary-text pl-6">{text}</p>
     </li>
   );
 }

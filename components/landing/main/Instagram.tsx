@@ -1,7 +1,7 @@
 const Instagram = () => (
   <section className="py-12 px-4 flex flex-col items-center justify-center bg-gradient-to-r from-pink-100 via-pink-200 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 mt-8">
     <h2 className="text-2xl md:text-3xl font-bold mb-4 text-center text-pink-700 dark:text-pink-300">Follow us on Instagram</h2>
-    <p className="mb-6 text-center secondary-text dark:secondary-text max-w-xl">See our latest creations, behind-the-scenes, and exclusive offers. Join the CassPea community!</p>
+    <p className="mb-6 text-center text-primary-text dark:text-primary-text max-w-xl">See our latest creations, behind-the-scenes, and exclusive offers. Join the CassPea community!</p>
     <a
       href="https://www.instagram.com/casspea_/"
       target="_blank"

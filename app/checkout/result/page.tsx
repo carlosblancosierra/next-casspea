@@ -33,12 +33,12 @@ const CheckoutResult = () => {
     }
   }, [sessionId, isLoading, isUninitialized, data, error, router]);
 
-  return <div className="text-primary-text">Redirecting…</div>;
+  return <div className="text-text-primary-text">Redirecting…</div>;
 };
 
 export default function CheckoutResultPage() {
   return (
-    <Suspense fallback={<div className="text-primary-text">Loading…</div>}>
+    <Suspense fallback={<div className="text-text-primary-text">Loading…</div>}>
       <CheckoutResult />
     </Suspense>
   );

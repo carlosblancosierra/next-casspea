@@ -13,16 +13,16 @@ const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders, products }) => {
     return (
         <div className="main-bg dark:bg-gray-800 rounded-lg shadow-sm mt-4">
             <div className="px-4 py-5 sm:px-6">
-                <h3 className="text-lg font-medium secondary-text dark:secondary-text">Day Summary</h3>
+                <h3 className="text-lg font-medium text-primary-text dark:text-primary-text">Day Summary</h3>
             </div>
             <div className="border-t border-gray-200 dark:border-gray-700">
                 <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
                     {/* Products Column */}
                     <div className="p-4">
-                        <h4 className="font-medium text-sm secondary-text dark:secondary-text mb-2">Products</h4>
+                        <h4 className="font-medium text-sm text-primary-text dark:text-primary-text mb-2">Products</h4>
                         <div className="space-y-1">
                             {Object.entries(totals).map(([name, qty]) => (
-                                <div key={name} className="text-sm secondary-text dark:secondary-text">
+                                <div key={name} className="text-sm text-primary-text dark:text-primary-text">
                                     {name}: {qty}
                                 </div>
                             ))}
@@ -30,15 +30,15 @@ const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders, products }) => {
                     </div>
                     {/* Pick & Mix Column */}
                     <div className="p-4">
-                        <h4 className="font-medium text-sm secondary-text dark:secondary-text mb-2">Pick & Mix Flavours</h4>
+                        <h4 className="font-medium text-sm text-primary-text dark:text-primary-text mb-2">Pick & Mix Flavours</h4>
                         <div className="space-y-1">
                             {Object.entries(flavors).length > 0 ?
                                 Object.entries(flavors).map(([name, qty]) => (
-                                    <div key={name} className="text-sm secondary-text dark:secondary-text">
+                                    <div key={name} className="text-sm text-primary-text dark:text-primary-text">
                                         {name}: {qty}
                                     </div>
                                 )) :
-                                <div className="text-sm secondary-text dark:secondary-text">
+                                <div className="text-sm text-primary-text dark:text-primary-text">
                                     No Pick & Mix Flavours
                                 </div>
                             }
@@ -46,15 +46,15 @@ const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders, products }) => {
                     </div>
                     {/* Random Boxes Column */}
                     <div className="p-4">
-                        <h4 className="font-medium text-sm secondary-text dark:secondary-text mb-2">Other Flavours</h4>
+                        <h4 className="font-medium text-sm text-primary-text dark:text-primary-text mb-2">Other Flavours</h4>
                         <div className="space-y-1">
                             {Object.entries(randomBoxes).length > 0 ?
                                 Object.entries(randomBoxes).map(([key, qty]) => (
-                                    <div key={key} className="text-sm secondary-text dark:secondary-text">
+                                    <div key={key} className="text-sm text-primary-text dark:text-primary-text">
                                         {key === 'Random' ? `Random: ${qty}` : `${key}: ${qty}`}
                                     </div>
                                 )) :
-                                <div className="text-sm secondary-text dark:secondary-text">
+                                <div className="text-sm text-primary-text dark:text-primary-text">
                                     No Random Boxes
                                 </div>
                             }

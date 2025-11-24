@@ -101,7 +101,7 @@ const CheckoutConfirm = () => {
             <div className="max-w-7xl mx-auto px-0">
                 <div className="space-y-6">
                     {/* <div className="space-y-4">
-                        <h2 className="text-xl font-semibold secondary-text dark:secondary-text">Order Items</h2>
+                        <h2 className="text-xl font-semibold text-primary-text dark:text-primary-text">Order Items</h2>
                         {cart?.items?.map((item) => (
                             <ReadOnlyCartItem key={item.id} entry={item} />
                         ))}

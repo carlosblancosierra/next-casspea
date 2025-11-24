@@ -36,7 +36,7 @@ export default function GiveawayPopup() {
       <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full mx-4">
         <button
           onClick={handleClose}
-          className="absolute top-2 right-2 secondary-text hover:secondary-text dark:hover:text-white rounded-lg text-sm w-8 h-8 flex items-center justify-center focus:outline-none"
+          className="absolute top-2 right-2 text-primary-text hover:text-primary-text dark:hover:text-white rounded-lg text-sm w-8 h-8 flex items-center justify-center focus:outline-none"
           aria-label="Close"
         >
           <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -56,8 +56,8 @@ export default function GiveawayPopup() {
               priority={false}
             />
           </div>
-          <h3 className="text-xl font-semibold secondary-text dark:text-white mb-2">Free Thermomix Giveaway</h3>
-          <p className="text-base secondary-text dark:secondary-text mb-4">
+          <h3 className="text-xl font-semibold text-primary-text dark:text-white mb-2">Free Thermomix Giveaway</h3>
+          <p className="text-base text-primary-text dark:text-primary-text mb-4">
             Enter for a chance to win the all-new <b>Thermomix® TM7</b> and a CassPea Signature Box!
           </p>
           <Link

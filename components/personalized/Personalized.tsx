@@ -53,7 +53,7 @@ export default function Personalized() {
                         />
                     </div>
                     <h2 className="text-xl font-semibold mb-2">{template.title}</h2>
-                    <p className="secondary-text dark:secondary-text">
+                    <p className="text-primary-text dark:text-primary-text">
                         Customize your chocolate with this template
                     </p>
                 </Link>

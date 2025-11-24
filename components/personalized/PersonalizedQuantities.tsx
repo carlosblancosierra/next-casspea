@@ -52,7 +52,7 @@ export default function PersonalizedQuantities({ orderDetails, setOrderDetails }
   return (
     <div className="p-4 space-y-6 bg-main-bg dark:bg-gray-800 rounded shadow">
       <div>
-        <label htmlFor="quantity" className="block text-sm font-medium secondary-text dark:secondary-text">
+        <label htmlFor="quantity" className="block text-sm font-medium text-primary-text dark:text-primary-text">
           Quantity
         </label>
         <div className="flex items-center mt-1 space-x-2">
@@ -66,12 +66,12 @@ export default function PersonalizedQuantities({ orderDetails, setOrderDetails }
           />
           <button onClick={handleIncrement} className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded">+</button>
         </div>
-        <p className="text-sm secondary-text dark:secondary-text mt-1">
+        <p className="text-sm text-primary-text dark:text-primary-text mt-1">
           Adjust quantity in steps of 50. (You can type any value ≥ 50.)
         </p>
       </div>
       <div>
-        <p className="text-sm font-medium secondary-text dark:secondary-text">
+        <p className="text-sm font-medium text-primary-text dark:text-primary-text">
           Select up to {maxFlavours} flavour{maxFlavours !== 1 ? 's' : ''}:
         </p>
         <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -87,7 +87,7 @@ export default function PersonalizedQuantities({ orderDetails, setOrderDetails }
                   disabled={disableCheckbox}
                   className="form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
                 />
-                <span className="text-sm secondary-text dark:secondary-text">{flavour.name}</span>
+                <span className="text-sm text-primary-text dark:text-primary-text">{flavour.name}</span>
               </label>
             );
           })}

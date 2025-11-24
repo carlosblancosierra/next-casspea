@@ -19,27 +19,27 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                     {product.preorder && product.preorder_finish_date && (
                         <PreorderCountdown preorderFinishDate={product.preorder_finish_date} />
                     )}
-                    <h2 className="text-2xl md:text-3xl font-extrabold font-playfair text-primary-text">
+                    <h2 className="text-2xl md:text-3xl font-extrabold font-playfair text-text-primary-text">
                         {product.seo_title}
                     </h2>
                     <div className="space-y-1">
                         {product.is_preorder_active && (
-                            <p className="text-sm text-primary-text">
+                            <p className="text-sm text-text-primary-text">
                                 <span className="font-medium">Regular price:</span> £{product.base_price} GBP
                             </p>
                         )}
                         {discountedPrice ? (
-                            <p className="text-xl text-primary-text font-semibold">
-                                <span className="text-primary-text">£{discountedPrice} GBP</span>
-                                <span className="ml-1 text-primary-text bg-[#CC0C38] p-1 text-sm rounded -mt-2">{discount_percentage}% off</span>
+                            <p className="text-xl text-text-primary-text font-semibold">
+                                <span className="text-text-primary-text">£{discountedPrice} GBP</span>
+                                <span className="ml-1 text-text-primary-text bg-[#CC0C38] p-1 text-sm rounded -mt-2">{discount_percentage}% off</span>
                             </p>
                         ) : (
-                            <p className="text-xl text-primary-text">
+                            <p className="text-xl text-text-primary-text">
                                 £{product.current_price} GBP
                             </p>
                         )}
                     </div>
-                    <p className="font-normal text-sm text-primary-text">
+                    <p className="font-normal text-sm text-text-primary-text">
                         {product.description}
                     </p>
                 </div>

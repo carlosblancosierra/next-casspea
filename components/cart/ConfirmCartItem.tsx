@@ -26,17 +26,17 @@ const ConfirmCartItem: React.FC<ConfirmCartItemProps> = ({ entry }) => {
 
             {/* Product Info */}
             <div className="col-span-1 space-y-2">
-                <p className="text-md font-medium text-primary-text hover:underline">
+                <p className="text-md font-medium text-text-primary-text hover:underline">
                     {entry.product.name}
                 </p>
 
-                <p className="text-base font-bold text-primary-text">
+                <p className="text-base font-bold text-text-primary-text">
                     £{entry.product.current_price}
                 </p>
 
                 {/* Quantity */}
                 <div className="flex items-center space-x-2 !mt-4">
-                    <span className="px-2 py-1 min-w-[40px] text-center font-medium text-primary-text">
+                    <span className="px-2 py-1 min-w-[40px] text-center font-medium text-text-primary-text">
                         Quantity: {entry.quantity}
                     </span>
                 </div>

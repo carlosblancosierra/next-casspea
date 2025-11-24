@@ -47,7 +47,7 @@ const ProductConfirm: React.FC<ProductConfirmProps> = ({ flavours, isVisible, on
         /> */}
         <Image src={flavour.image || '/flavours/default.png'}
           alt={flavour.name} width={0} height={0} sizes="100vw" className='w-20 h-22' />
-        {/* <p className='text-xs dark:secondary-text'>{flavour.name}</p> */}
+        {/* <p className='text-xs dark:text-primary-text'>{flavour.name}</p> */}
       </div>
     ))
   );
@@ -55,7 +55,7 @@ const ProductConfirm: React.FC<ProductConfirmProps> = ({ flavours, isVisible, on
   return (
     <div className="fixed inset-0 bg-gray-800 dark:bg-main-bg-dark bg-opacity-75 flex items-center justify-center md:max-h-[80vh] z-50">
       <div className="main-bg dark:bg-gray-800 dark:text-white p-6 rounded-lg shadow-lg text-center md:w-[50vw]">
-        <h2 className="text-xl md:text-2xl font-bold mb-4 dark:secondary-text">Creating your Unique Selection</h2>
+        <h2 className="text-xl md:text-2xl font-bold mb-4 dark:text-primary-text">Creating your Unique Selection</h2>
         <div className={`grid gap-4 ${getGridCols(totalChocolates)}`}>
           {images}
         </div>
