@@ -10,7 +10,7 @@ interface FlavourCardProps {
 const FlavourCard: React.FC<FlavourCardProps> = ({ flavour, height = 'h-96' }) => {
     return (
         <div
-            className={`border p-4 rounded-lg flex-shrink-0 bg-main-bg shadow-md dark:bg-main-bg-dark dark:text-white dark:border-gray-700 w-full flex flex-col justify-between ${height}`}
+            className={`border p-4 rounded-lg flex-shrink-0 bg-main-bg shadow-md dark:bg-main-bg-dark dark:text-primary-text dark:border-gray-700 w-full flex flex-col justify-between ${height}`}
             style={{ overflow: 'hidden', position: 'relative' }}
         >
             {/* Featured Badge */}
@@ -26,7 +26,7 @@ const FlavourCard: React.FC<FlavourCardProps> = ({ flavour, height = 'h-96' }) =
                         textAlign: 'center',
                         pointerEvents: 'none',
                     }}
-                    className="bg-pink-600 text-white font-bold py-1 px-2 text-xs shadow-lg select-none"
+                    className="bg-pink-600 text-primary-text font-bold py-1 px-2 text-xs shadow-lg select-none"
                 >
                     {flavour.featured_message}
                 </div>
@@ -42,9 +42,9 @@ const FlavourCard: React.FC<FlavourCardProps> = ({ flavour, height = 'h-96' }) =
                 />
             </div>
             <h3 className="text-lg font-bold md:text-md text-center min-h-[2rem] mt-3 leading-5
-            ">{flavour.name}</h3>
+            text-primary-text">{flavour.name}</h3>
             <p className="text-md min-h-[6.5rem] text-center overflow-hidden text-ellipsis">{flavour.description}</p>
-            <p className="mt-1 text-[10px] text-primary-text md:text-xs text-center">
+            <p className="mt-1 text-[10px] text-secondary-text md:text-xs text-center">
                 {flavour.allergens?.map((allergen, index) => (
                     <span key={index} className="mr-1">
                         {allergen.name},
