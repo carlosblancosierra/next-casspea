@@ -84,7 +84,7 @@ export default function AboutUsPage() {
                             in design, flavours and packaging to create a brand that is inclusive and warm.
                         </p>
                     </div>
-                    <div className="bg-pink-50 dark:bg-main-bg-dark p-8 rounded-lg">
+                    <div className="bg-pink-600 dark:bg-pink-600 p-8 rounded-lg">
                         <h2 className={`text-2xl font-bold text-center mb-4 text-primary-text dark:text-white`}>
                             Vision
                         </h2>
