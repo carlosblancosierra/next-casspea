@@ -153,7 +153,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         </div>
                         {step < totalSteps && (
                             <div className={`flex-1 h-0.5 mx-4 transition-colors ${
-                                step < currentStep ? 'bg-primary' : 'bg-gray-300'
+                                step < currentStep ? 'bg-primary' : 'bg-main-bg'
                             }`} />
                         )}
                     </React.Fragment>

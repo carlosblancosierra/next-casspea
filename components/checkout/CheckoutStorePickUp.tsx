@@ -87,7 +87,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
           return (
             <button
               key={dayStr}
-              className={`px-2 py-2 rounded border ${isSelected ? 'bg-primary text-primary-text' : 'bg-main-bg dark:bg-main-bg-dark'} hover:bg-primary/10`}
+              className={`px-2 py-2 rounded border ${isSelected ? 'bg-primary text-primary-text' : 'bg-main-bg dark:bg-main-bg-dark text-primary-text'} hover:bg-primary/10`}
               onClick={() => { setSelectedDate(day); setSelectedSlot(null); }}
             >
               {dayStr}
@@ -102,7 +102,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
             {slots.map(slot => (
               <button
                 key={slot.value}
-                className={`px-2 py-2 rounded border ${selectedSlot === slot.value ? 'bg-primary text-primary-text' : 'bg-main-bg dark:bg-main-bg-dark'} hover:bg-primary/10`}
+                className={`px-2 py-2 rounded border ${selectedSlot === slot.value ? 'bg-primary text-primary-text' : 'bg-main-bg dark:bg-main-bg-dark text-primary-text'} hover:bg-primary/10`}
                 onClick={() => { setSelectedSlot(slot.value); onChange && onChange({ date: selectedDate, slot }); }}
               >
                 {slot.start} - {slot.end}

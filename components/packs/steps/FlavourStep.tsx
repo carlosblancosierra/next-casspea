@@ -43,7 +43,7 @@ export default function FlavourStep({
         onClick={onNext}
         disabled={remaining > 0}
         className={`mt-4 px-6 py-2 rounded text-white ${
-          remaining > 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500'
+          remaining > 0 ? 'bg-main-bg cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500'
         }`}
       >
         Next

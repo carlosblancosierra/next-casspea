@@ -397,9 +397,6 @@ export default function CartCheckout() {
                                     </svg>
                                 </div>
                                 <div className="mt-3 text-center sm:mt-5">
-                                    <h3 className="text-lg leading-6 font-medium text-primary-text" id="modal-title">
-                                        One More Step
-                                    </h3>
                                     <div className="mt-2">
                                         <p className="text-sm text-primary-text">
                                             Please enter your email address to continue to checkout. We'll send your order confirmation here.
@@ -418,7 +415,7 @@ export default function CartCheckout() {
                                     className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-primary-text focus:outline-none focus:ring-2 focus:ring-offset-2 sm:col-start-2 sm:text-sm
                                         ${modalEmail
                                             ? 'bg-primary dark:bg-primary-2 hover:bg-primary-2 dark:hover:bg-primary focus:ring-primary'
-                                            : 'bg-gray-300 dark:bg-main-bg-dark cursor-not-allowed'
+                                            : 'bg-main-bg dark:bg-main-bg-dark cursor-not-allowed'
                                         }`}
                                 >
                                     Continue to Checkout

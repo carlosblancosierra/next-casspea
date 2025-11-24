@@ -134,7 +134,7 @@ const GiftCardPage = () => {
                     <button 
                         onClick={handleContinueWithoutGiftCard} 
                         disabled={isProcessing} 
-                        className="w-full sm:w-auto bg-gray-300 text-primary-text px-4 py-2 rounded-md hover:bg-gray-400 sm:order-1"
+                        className="w-full sm:w-auto bg-main-bg text-primary-text px-4 py-2 rounded-md hover:bg-gray-400 sm:order-1"
                     >
                         Continue Without Gift Card
                     </button>

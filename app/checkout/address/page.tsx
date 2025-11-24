@@ -192,7 +192,7 @@ export default function AddressPage() {
                     disabled={isProcessing || !isFormValid}
                     className="w-full bg-primary dark:bg-primary-2 text-primary-text py-3 px-4 rounded-md
                         hover:bg-primary dark:hover:bg-primary focus:outline-none focus:ring-2
-                        focus:ring-primary-2 focus:ring-offset-2 disabled:bg-gray-300 dark:disabled:bg-gray-700
+                        focus:ring-primary-2 focus:ring-offset-2 disabled:bg-main-bg dark:disabled:bg-gray-700
                         disabled:cursor-not-allowed transition-colors duration-200"
                 >
                     {isProcessing ? 'Processing...' : 'Continue to Review Order'}

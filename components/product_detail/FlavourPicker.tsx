@@ -153,7 +153,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                 className={`mt-4 cursor-pointer group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium focus:outline-none
                 ${remainingChocolates > 0
                         ? 'bg-primary-2 dark:bg-primary text-primary-text border-gray-300 dark:border-primary hover:bg-primary dark:hover:bg-primary'
-                        : 'bg-gray-300 dark:bg-main-bg-dark text-primary-text cursor-not-allowed border-gray-300 dark:border-gray-600'
+                        : 'bg-main-bg dark:bg-main-bg-dark text-primary-text cursor-not-allowed border-gray-300 dark:border-gray-600'
                     }`}
             >
                 {remainingChocolates > 0 ? 'Add Flavour' : 'All Flavours Selected'}
@@ -217,7 +217,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-2
                                             ${getFlavorQuantity(flavour.id) > 0
                                                     ? 'bg-primary text-primary-text hover:bg-primary'
-                                                    : 'bg-gray-300 text-primary-text cursor-not-allowed'
+                                                    : 'bg-main-bg text-primary-text cursor-not-allowed'
                                                 }`}
                                         >
                                             <FiMinus size={16} />
@@ -232,7 +232,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-2
                                             ${remainingChocolates > 0 || getFlavorQuantity(flavour.id) > 0
                                                     ? 'bg-primary text-primary-text hover:bg-primary'
-                                                    : 'bg-gray-300 text-primary-text cursor-not-allowed'
+                                                    : 'bg-main-bg text-primary-text cursor-not-allowed'
                                                 }`}
                                         >
                                             <FiPlus size={16} />

@@ -89,7 +89,7 @@ export default function DiscountForm() {
                         disabled={isValidating || !discountCode}
                         className="bg-primary dark:bg-primary-2 text-primary-text text-xs px-4 py-2 rounded-md
                             hover:bg-primary-2 dark:hover:bg-primary-2
-                            disabled:bg-gray-300 dark:disabled:bg-gray-600
+                            disabled:bg-main-bg dark:disabled:bg-gray-600
                             disabled:cursor-not-allowed"
                     >
                         {isValidating ? 'Validating...' : 'Apply'}

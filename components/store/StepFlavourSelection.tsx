@@ -97,7 +97,7 @@ export default function StepFlavourSelection({
               className={`mt-3 px-4 py-2 rounded ${
                 remaining > 0
                   ? 'bg-primary text-primary-text'
-                  : 'bg-gray-300 text-primary-text cursor-not-allowed'
+                  : 'bg-main-bg text-primary-text cursor-not-allowed'
               }`}
             >
               + Add

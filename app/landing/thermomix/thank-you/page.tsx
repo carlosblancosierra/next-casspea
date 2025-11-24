@@ -25,7 +25,7 @@ export default function GiveawayThankYou() {
               <Link href="/" className="mt-4 md:mt-0 px-6 py-3 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark transition">
                 Back to Home
               </Link>
-              <Link href="/shop-now" className="mt-2 md:mt-0 px-6 py-3 bg-gray-200 dark:bg-main-bg-dark text-primary-text dark:text-white rounded-lg font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+              <Link href="/shop-now" className="mt-2 md:mt-0 px-6 py-3 bg-gray-200 dark:bg-main-bg-dark text-primary-text dark:text-white rounded-lg font-bold hover:bg-main-bg dark:hover:bg-gray-600 transition">
                 Shop Now
               </Link>
             </div>

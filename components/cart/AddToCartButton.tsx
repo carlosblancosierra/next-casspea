@@ -23,7 +23,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
             disabled={isDisabled}
             className={`w-full flex items-center justify-center bg-gradient-autumn text-primary-text py-3 px-4 rounded-md
                 hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary-2 focus:ring-offset-2
-                ${isDisabled ? 'bg-gray-300 cursor-not-allowed' : ''}
+                ${isDisabled ? 'bg-main-bg cursor-not-allowed' : ''}
                 transition-colors duration-200`}
         >
             {isLoading ? 'Adding to Cart...' : (

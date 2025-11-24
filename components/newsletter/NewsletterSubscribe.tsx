@@ -98,7 +98,7 @@ export default function
                                             sm:rounded-none sm:rounded-r-lg hover:bg-primary-light
                                             focus:ring-4 focus:ring-primary-light dark:bg-primary dark:hover:bg-primary-light
                                             dark:focus:ring-primary dark:focus:ring-primary
-                                            disabled:bg-gray-300 dark:disabled:bg-gray-600
+                                            disabled:bg-main-bg dark:disabled:bg-gray-600
                                             disabled:cursor-not-allowed transition-colors duration-200"
                                     >
                                         {isLoading ? 'Subscribing...' : 'Subscribe'}

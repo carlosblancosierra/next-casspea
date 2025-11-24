@@ -211,7 +211,7 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                                 className={`h-3 w-3 rounded-full transition-colors ${
                                     idx === currentIndex 
                                         ? 'bg-primary dark:bg-primary-2' 
-                                        : 'bg-gray-300 dark:bg-main-bg-dark'
+                                        : 'bg-main-bg dark:bg-main-bg-dark'
                                 }`}
                                 aria-label={`Go to ${views[idx].name}`}
                             />
