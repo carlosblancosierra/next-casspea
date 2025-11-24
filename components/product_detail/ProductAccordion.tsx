@@ -20,7 +20,7 @@ const AccordionItem = ({ i, expanded, setExpanded, title, content }) => {
           <div className="flex flex-col">
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-4">
-                <p className="font-normal font-sans txt-medium text-sm">{title}</p>
+                <p className="font-normal font-sans txt-medium text-sm text-primary-text dark:text-primary-text">{title}</p>
               </div>
               <div className="text-grey-90 hover:bg-grey-5 bg-transparent disabled:bg-transparent rounded-rounded group relative p-[6px]">
                 {isOpen ? <FiChevronUp /> : <FiChevronDown />}
@@ -66,18 +66,18 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
       content: (
         <div className="grid grid-cols-2 gap-8 px-2 pt-2 pb-4">
           <div>
-            <span className="font-semibold text-xs">Pieces</span>
-            <p className='text-sm'>{product.units_per_box} {isSignatureBox ? 'Bonbons' : 'units'}</p>
+            <span className="font-semibold text-xs text-primary-text dark:text-primary-text">Pieces</span>
+            <p className='text-sm text-primary-text dark:text-primary-text'>{product.units_per_box} {isSignatureBox ? 'Bonbons' : 'units'}</p>
           </div>
           {product.weight && (
             <div>
-              <span className="font-semibold text-xs">Weight</span>
-              <p className='text-sm'>{product.weight} grams</p>
+              <span className="font-semibold text-xs text-primary-text dark:text-primary-text">Weight</span>
+              <p className='text-sm text-primary-text dark:text-primary-text'>{product.weight} grams</p>
             </div>
           )}
           <div>
-            <span className="font-semibold text-xs">City of origin</span>
-            <p className='text-sm'>London</p>
+            <span className="font-semibold text-xs text-primary-text dark:text-primary-text">City of origin</span>
+            <p className='text-sm text-primary-text dark:text-primary-text'>London</p>
           </div>
           {/* <div>
             <span className="font-semibold text-xs">Dimensions</span>
@@ -93,22 +93,22 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
           <div className="flex items-start gap-x-2">
             <FiCheckCircle />
             <div>
-              <span className="font-semibold text-sm">Royal Mail Tracked 48®</span>
-              <p className="text-xs">Shipping within 24 hours, Aims to deliver in two to three working days</p>
+              <span className="font-semibold text-sm text-primary-text dark:text-primary-text">Royal Mail Tracked 48®</span>
+              <p className="text-xs text-primary-text dark:text-primary-text">Shipping within 24 hours, Aims to deliver in two to three working days</p>
             </div>
           </div>
           <div className="flex items-start gap-x-2">
             <FiCheckCircle />
             <div>
-              <span className="font-semibold text-sm">Royal Mail Tracked 24®</span>
-              <p className="text-xs">Shipping within 24 hours, Next working day delivery aim</p>
+              <span className="font-semibold text-sm text-primary-text dark:text-primary-text">Royal Mail Tracked 24®</span>
+              <p className="text-xs text-primary-text dark:text-primary-text">Shipping within 24 hours, Next working day delivery aim</p>
             </div>
           </div>
           <div className="flex items-start gap-x-2">
             <FiCheckCircle />
             <div>
-              <span className="font-semibold text-sm">Royal Mail Special Delivery</span>
-              <p className="text-xs">Shipping same day for orders placed before 11 am. Delivery within 24 hours</p>
+              <span className="font-semibold text-sm text-primary-text dark:text-primary-text">Royal Mail Special Delivery</span>
+              <p className="text-xs text-primary-text dark:text-primary-text">Shipping same day for orders placed before 11 am. Delivery within 24 hours</p>
             </div>
           </div>
         </div>
@@ -125,8 +125,8 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
           <div className="flex items-start gap-x-2">
             <FiCheckCircle />
             <div>
-              <span className="font-semibold text-sm">Customize Your Box</span>
-              <p className="text-xs">
+              <span className="font-semibold text-sm text-primary-text dark:text-primary-text">Customize Your Box</span>
+              <p className="text-xs text-primary-text dark:text-primary-text">
                 Choose your box size, select any allergens to avoid, and pick your favourite flavours. Can't decide? Let us choose for you with our curated selection!
               </p>
             </div>
@@ -134,8 +134,8 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
           <div className="flex items-start gap-x-2">
             <FiCheckCircle />
             <div>
-              <span className="font-semibold text-sm">Review Your Order</span>
-              <p className="text-xs">
+              <span className="font-semibold text-sm text-primary-text dark:text-primary-text">Review Your Order</span>
+              <p className="text-xs text-primary-text dark:text-primary-text">
                 Double-check your order details, pick a preferred shipping date, and add a personal message for that extra touch.
               </p>
             </div>
@@ -143,8 +143,8 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
           <div className="flex items-start gap-x-2">
             <FiCheckCircle />
             <div>
-              <span className="font-semibold text-sm">Secure Checkout</span>
-              <p className="text-xs mb-2">
+              <span className="font-semibold text-sm text-primary-text dark:text-primary-text">Secure Checkout</span>
+              <p className="text-xs mb-2 text-primary-text dark:text-primary-text">
                 Pay safely and easily through Stripe, using your preferred payment method. Fast and secure.
               </p>
               <PaymentMethods size={10} lg={10}/>
@@ -153,8 +153,8 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
           <div className="flex items-start gap-x-2">
             <FiCheckCircle />
             <div>
-              <span className="font-semibold text-sm">Savor the Moment</span>
-              <p className="text-xs">
+              <span className="font-semibold text-sm text-primary-text dark:text-primary-text">Savor the Moment</span>
+              <p className="text-xs text-primary-text dark:text-primary-text">
                 Receive your chocolates and indulge in every bite. Share the joy or keep them all for yourself!
               </p>
             </div>

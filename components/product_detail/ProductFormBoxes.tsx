@@ -400,7 +400,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                 value={quantity}
                                                 onChange={handleQuantityChange}
                                                 className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
-                                                    bg-main-bg dark:bg-main-bg-dark shadow-sm focus:border-primary-2
+                                                    bg-main-bg dark:bg-main-bg-dark text-primary-text shadow-sm focus:border-primary-2
                                                     focus:ring-primary-2"
                                             >
                                                 {Array.from({ length: 20 }, (_, i) => (
@@ -461,7 +461,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                         value={quantity}
                                         onChange={handleQuantityChange}
                                         className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
-                                            bg-main-bg dark:bg-transparent shadow-sm focus:border-primary-2
+                                            bg-main-bg dark:bg-transparent text-primary-text shadow-sm focus:border-primary-2
                                             focus:ring-primary-2"
                                     >
                                         {Array.from({ length: 20 }, (_, i) => (
@@ -521,7 +521,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     setHotChocolate(selectedProduct || null);
                                 }}
                                 className="block w-full rounded-md border-gray-300 dark:border-gray-600
-                                    bg-main-bg dark:bg-transparent shadow-sm focus:border-primary-2
+                                    bg-main-bg dark:bg-transparent text-primary-text shadow-sm focus:border-primary-2
                                     focus:ring-primary-2 px-3 py-2"
                             >
                                 <option value="">Choose a hot chocolate...</option>
@@ -568,7 +568,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     setChocolateBark(selectedProduct || null);
                                 }}
                                 className="block w-full rounded-md border-gray-300 dark:border-gray-600
-                                    bg-main-bg dark:bg-transparent shadow-sm focus:border-primary-2
+                                    bg-main-bg dark:bg-transparent text-primary-text shadow-sm focus:border-primary-2
                                     focus:ring-primary-2 px-3 py-2"
                             >
                                 <option value="">Choose a chocolate bark...</option>

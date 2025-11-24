@@ -83,7 +83,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                 )}
                 {!product.sold_out && (
                     <>
-                        <label htmlFor="quantity" className="block text-sm font-medium text-primary-text">
+                        <label htmlFor="quantity" className="block text-sm font-medium text-primary-text dark:text-primary-text">
                             Quantity
                         </label>
                         <select
@@ -91,7 +91,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                             name="quantity"
                             value={quantity}
                             onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark shadow-sm focus:border-primary-2 focus:ring-primary-2 sm:text-sm"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark text-primary-text shadow-sm focus:border-primary-2 focus:ring-primary-2 sm:text-sm"
                         >
                             {Array.from({ length: 10 }, (_, i) => (
                                 <option key={i + 1} value={i + 1}>{i + 1}</option>
@@ -116,7 +116,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
 
             {product.slug === "advent-calendar" && (
                 <div className="mt-4">
-                    <p className="text-lg font-semibold text-primary-text">
+                    <p className="text-lg font-semibold text-primary-text dark:text-primary-text">
                     Shipping begins on Nov 21st.
                     </p>
                 </div>
