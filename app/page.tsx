@@ -76,11 +76,11 @@ const HeroSection = () => (
           <UnitSoldCounter />
         </div>
         <h1
-          className={`${playfair.className} mb-2 text-5xl text-text-primary-text font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}
+          className={`${playfair.className} mb-2 text-5xl text-primary-text font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}
         >
           London's Finest Artisan Chocolates
         </h1>
-        <h2 className="text-2xl mb-2 dark:text-white text-text-primary-text">
+        <h2 className="text-2xl mb-2 dark:text-white text-primary-text">
           Celebrate Every Occasion with Our Signature Gift Boxes
         </h2>
         <p className="hidden md:block md:mb-6 font-light text-sm text-primary-text lg:mb-8 md:text-base dark:text-primary-text">

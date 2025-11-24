@@ -35,7 +35,7 @@ export default function Nav() {
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button */}
-                <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-text-primary-text hover:bg-gray-100 hover:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-2">
+                <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-primary-text hover:bg-gray-100 hover:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-2">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -82,7 +82,7 @@ export default function Nav() {
                         className={classNames(
                           item.current
                             ? 'bg-gray-900 text-white'
-                            : 'text-text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white',
+                            : 'text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
                         )}
                       >
@@ -98,9 +98,9 @@ export default function Nav() {
                 <Link href="/cart" className="group relative -m-2 flex items-center p-2">
                   <ShoppingBagIcon
                     aria-hidden="true"
-                    className="h-6 w-6 text-text-primary-text group-hover:text-primary-text dark:text-primary-text dark:group-hover:text-white"
+                    className="h-6 w-6 text-primary-text group-hover:text-primary-text dark:text-primary-text dark:group-hover:text-white"
                   />
-                  {/* <span className="ml-2 text-xs font-medium text-text-primary-text group-hover:text-primary-text dark:text-primary-text dark:group-hover:text-white">
+                  {/* <span className="ml-2 text-xs font-medium text-primary-text group-hover:text-primary-text dark:text-primary-text dark:group-hover:text-white">
                     {totalItems} (£{totalValue.toFixed(2)})
                   </span> */}
                   <span className="sr-only">items in cart, view bag</span>
@@ -121,7 +121,7 @@ export default function Nav() {
                 >
                   <DisclosureButton
                     className={classNames(
-                      item.current ? 'bg-gray-900 text-white' : 'text-text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white',
+                      item.current ? 'bg-gray-900 text-white' : 'text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white',
                       'block w-full rounded-md px-3 py-2 text-base font-medium text-left'
                     )}
                   >

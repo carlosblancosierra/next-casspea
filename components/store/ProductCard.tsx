@@ -34,19 +34,19 @@ export default function ProductCard({ product, useAlternateImage = false }: Prod
                 )}
             </div>
             {discountedPrice ? (
-                <p className="text-md font-medium text-text-primary-text mt-4">
+                <p className="text-md font-medium text-primary-text mt-4">
                     ￡ {discountedPrice}
-                    <span className="ml-1 text-xs line-through text-text-primary-text">￡ {product.current_price}</span>
+                    <span className="ml-1 text-xs line-through text-primary-text">￡ {product.current_price}</span>
                 </p>
             ) : (
-                <p className="text-md font-medium text-text-primary-text mt-4">￡ {product.current_price}</p>
+                <p className="text-md font-medium text-primary-text mt-4">￡ {product.current_price}</p>
             )}
             <div className="flex justify-between mt-1">
                 <div>
-                    <h3 className="text-xs md:text-sm text-text-primary-text h-12">
+                    <h3 className="text-xs md:text-sm text-primary-text h-12">
                         {product.name}
                     </h3>
-                    <p className="mt-1 text-sm text-text-primary-text">{product.weight} g</p>
+                    <p className="mt-1 text-sm text-primary-text">{product.weight} g</p>
                 </div>
             </div>
         </Link>

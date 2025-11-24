@@ -97,16 +97,16 @@ const GiftCardPage = () => {
                 <div>Loading...</div>
             </div>
             <div style={{ display: isLoading ? 'none' : 'block' }}>
-                <h1 className="text-2xl font-bold mb-4 text-text-primary-text">
+                <h1 className="text-2xl font-bold mb-4 text-primary-text">
                     Enhance Your Order with a Gift Card
                 </h1>
-                <p className="mb-4 text-text-primary-text">
+                <p className="mb-4 text-primary-text">
                     Add a personal touch to your order! Choose one of our beautifully designed gift cards for just £1.25 each to include a heartfelt message for your recipient.
                 </p>
                 <div className="mb-6">
                     <GiftMessage onGiftMessageChange={setGiftMessage} initialMessage={giftMessage} />
                 </div>
-                <h2 className="text-xl font-semibold mb-2 text-text-primary-text">
+                <h2 className="text-xl font-semibold mb-2 text-primary-text">
                     Choose a Gift Card
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
@@ -121,20 +121,20 @@ const GiftCardPage = () => {
                     ))}
                 </div>
                 {error && (
-                    <p className="text-text-primary-text mb-4">{error}</p>
+                    <p className="text-primary-text mb-4">{error}</p>
                 )}
                 <div className="flex flex-col sm:flex-row gap-4 justify-end">
                     <button 
                         onClick={handleAddGiftCard} 
                         disabled={isProcessing} 
-                        className="w-full sm:w-auto bg-primary text-text-primary-text px-4 py-2 rounded-md hover:bg-primary-2 sm:order-2"
+                        className="w-full sm:w-auto bg-primary text-primary-text px-4 py-2 rounded-md hover:bg-primary-2 sm:order-2"
                     >
                         {isProcessing ? 'Adding...' : 'Add Gift Card'}
                     </button>
                     <button 
                         onClick={handleContinueWithoutGiftCard} 
                         disabled={isProcessing} 
-                        className="w-full sm:w-auto bg-gray-300 text-text-primary-text px-4 py-2 rounded-md hover:bg-gray-400 sm:order-1"
+                        className="w-full sm:w-auto bg-gray-300 text-primary-text px-4 py-2 rounded-md hover:bg-gray-400 sm:order-1"
                     >
                         Continue Without Gift Card
                     </button>
