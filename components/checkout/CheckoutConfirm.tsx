@@ -90,7 +90,7 @@ const CheckoutConfirm = () => {
         return (
             <div className=" dark:bg-main-bg-dark min-h-screen">
                 <div className="max-w-7xl mx-auto px-0">
-                    <div className="text-red-500">Error loading checkout details</div>
+                    <div className="text-primary-text">Error loading checkout details</div>
                 </div>
             </div>
         );
@@ -119,7 +119,7 @@ const CheckoutConfirm = () => {
                     <button
                         onClick={handleProceedToPayment}
                         disabled={isProcessing || !selectedShippingOption}
-                        className="w-full bg-gradient-autumn text-white py-3 px-4 rounded-md
+                        className="w-full bg-gradient-autumn text-primary-text py-3 px-4 rounded-md
                             hover:bg-primary focus:outline-none focus:ring-2
                             focus:ring-primary-2 focus:ring-offset-2 disabled:bg-gray-300
                             disabled:cursor-not-allowed transition-colors duration-200"

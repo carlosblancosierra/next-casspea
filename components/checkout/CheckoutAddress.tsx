@@ -95,7 +95,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
 
                 {!sameAsShipping && (
                     <div className="mt-6">
-                        <h2 className="text-xl font-semibold mb-4">Billing Address</h2>
+                        <h2 className="text-xl font-semibold mb-4 text-primary-text">Billing Address</h2>
                         <AddressForm
                             onAddressSubmit={handleBillingSubmit}
                             buttonText="Save Billing Address"
@@ -105,14 +105,14 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
             </div>
 
             {error && (
-                <div className="text-red-500 text-sm mt-2">
+                <div className="text-primary-text text-sm mt-2">
                     {error}
                 </div>
             )}
 
             <button
                 onClick={handleSubmit}
-                className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
+                className="w-full bg-primary text-primary-text py-2 px-4 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
             >
                 Continue to Payment
             </button>

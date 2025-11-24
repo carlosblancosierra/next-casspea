@@ -79,7 +79,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
   // Calendar UI: simple grid of availableDays
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Select Pickup Date</h3>
+      <h3 className="text-lg font-semibold text-primary-text">Select Pickup Date</h3>
       <div className="grid grid-cols-3 gap-2">
         {availableDays.map(day => {
           const dayStr = format(day, 'EEE dd MMM', { locale: enGB });
@@ -87,7 +87,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
           return (
             <button
               key={dayStr}
-              className={`px-2 py-2 rounded border ${isSelected ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800'} hover:bg-primary/10`}
+              className={`px-2 py-2 rounded border ${isSelected ? 'bg-primary text-primary-text' : 'bg-white dark:bg-gray-800'} hover:bg-primary/10`}
               onClick={() => { setSelectedDate(day); setSelectedSlot(null); }}
             >
               {dayStr}
@@ -97,12 +97,12 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
       </div>
       {selectedDate && (
         <>
-          <h4 className="text-md font-semibold mt-4">Select Time Slot</h4>
+          <h4 className="text-md font-semibold mt-4 text-primary-text">Select Time Slot</h4>
           <div className="grid grid-cols-2 gap-2">
             {slots.map(slot => (
               <button
                 key={slot.value}
-                className={`px-2 py-2 rounded border ${selectedSlot === slot.value ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800'} hover:bg-primary/10`}
+                className={`px-2 py-2 rounded border ${selectedSlot === slot.value ? 'bg-primary text-primary-text' : 'bg-white dark:bg-gray-800'} hover:bg-primary/10`}
                 onClick={() => { setSelectedSlot(slot.value); onChange && onChange({ date: selectedDate, slot }); }}
               >
                 {slot.start} - {slot.end}
