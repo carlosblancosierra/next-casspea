@@ -42,7 +42,7 @@ const AddressLookup: React.FC<AddressLookupProps> = ({ onPlaceSelect, addressErr
 
     return (
         <div className="space-y-1">
-            <label htmlFor="address-lookup" className="block text-xs font-medium text-gray-700 dark:text-gray-200">
+            <label htmlFor="address-lookup" className="block text-xs font-medium secondary-text dark:secondary-text">
                 Find Address *
             </label>
             <input
@@ -54,7 +54,7 @@ const AddressLookup: React.FC<AddressLookupProps> = ({ onPlaceSelect, addressErr
                     "mt-0.5 block w-full rounded-md border text-base",
                     addressError
                         ? "border-red-500"
-                        : "border-gray-300 bg-main-bg text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600",
+                        : "border-gray-300 bg-main-bg secondary-text dark:bg-gray-800 dark:secondary-text dark:border-gray-600",
                     "shadow-sm focus:border-primary-2 focus:ring-primary-2"
                 )}
                 required

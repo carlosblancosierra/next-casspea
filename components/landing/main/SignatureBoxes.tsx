@@ -17,7 +17,7 @@ export default function SignatureBoxes({ config }: SignatureBoxesProps) {
     <section className="py-12 bg-gray-100 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-1">
         <h2 className="text-center text-2xl sm:text-3xl font-bold mb-4">Signature Boxes</h2>
-        <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
+        <p className="text-center secondary-text dark:secondary-text mb-8">
           Our signature boxes are the perfect way to share the love. From 9 to 48 bonbons, we have a box for every occasion.
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1">

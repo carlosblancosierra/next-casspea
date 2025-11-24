@@ -17,7 +17,7 @@ export default function GiveawayThankYou() {
           />
           <div className="p-4">
             <h1 className="text-3xl md:text-5xl font-extrabold text-primary-text dark:text-white mb-2 text-center">Thank You for Entering!</h1>
-            <p className="text-lg text-gray-700 dark:text-gray-200 mb-6 text-center">
+            <p className="text-lg secondary-text dark:secondary-text mb-6 text-center">
               Your entry for the Thermomix Giveaway has been received.<br />
               Good luck!
             </p>
@@ -25,7 +25,7 @@ export default function GiveawayThankYou() {
               <Link href="/" className="mt-4 md:mt-0 px-6 py-3 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark transition">
                 Back to Home
               </Link>
-              <Link href="/shop-now" className="mt-2 md:mt-0 px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+              <Link href="/shop-now" className="mt-2 md:mt-0 px-6 py-3 bg-gray-200 dark:bg-gray-700 secondary-text dark:text-white rounded-lg font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition">
                 Shop Now
               </Link>
             </div>

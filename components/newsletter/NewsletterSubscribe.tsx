@@ -44,14 +44,14 @@ export default function
 
                     {/* Form Section */}
                     <div className="flex flex-col md:ml-10 lg:text-left text-center gap-2 md:gap-10 justify-start h-full mt-4">
-                        <h2 className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl dark:text-white">
+                        <h2 className="text-3xl tracking-tight font-extrabold secondary-text sm:text-4xl dark:text-white">
                             Join our mailing list for a 10% discount
                         </h2>
-                        <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
+                        <p className="font-light secondary-text sm:text-xl dark:secondary-text">
                             Be the first to hear about our latest collections, special offers and tea-time treats.
                         </p>
 
-                        <p className="font-bold sm:text-xl dark:text-gray-400">
+                        <p className="font-bold sm:text-xl dark:secondary-text">
                             You will receive your discount code via email.
                         </p>
 
@@ -60,13 +60,13 @@ export default function
                                 <div className="relative w-full">
                                     <label
                                         htmlFor="email"
-                                        className="hidden mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                        className="hidden mb-2 text-sm font-medium secondary-text dark:secondary-text"
                                     >
                                         Email address
                                     </label>
                                     <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                                         <svg
-                                            className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                            className="w-5 h-5 secondary-text dark:secondary-text"
                                             fill="currentColor"
                                             viewBox="0 0 20 20"
                                             xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +80,7 @@ export default function
                                         id="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="block p-3 pl-10 w-full text-base text-gray-900
+                                        className="block p-3 pl-10 w-full text-base secondary-text
                                             rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg
                                             focus:ring-primary-2 focus:border-primary-2
                                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
@@ -105,7 +105,7 @@ export default function
                                     </button>
                                 </div>
                             </div>
-                            <div className="mx-auto max-w-screen-sm text-sm text-left text-gray-500 dark:text-gray-300">
+                            <div className="mx-auto max-w-screen-sm text-sm text-left secondary-text dark:secondary-text">
                                 We care about the protection of your data.{' '}
                                 <a
                                     href="/privacy-policy"

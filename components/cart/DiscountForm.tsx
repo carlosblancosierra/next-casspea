@@ -58,8 +58,8 @@ export default function DiscountForm() {
                 <button
                     onClick={handleRemoveDiscount}
                     disabled={isValidating}
-                    className="text-primary-text hover:text-gray-500 dark:text-gray-500
-                        dark:hover:text-gray-400 focus:outline-none"
+                    className="text-primary-text hover:secondary-text dark:secondary-text
+                        dark:hover:secondary-text focus:outline-none"
                     aria-label="Remove discount code"
                 >
                     <XMarkIcon className="h-5 w-5" />
@@ -78,7 +78,7 @@ export default function DiscountForm() {
                         onChange={(e) => setDiscountCode(e.target.value)}
                         placeholder="Enter discount code"
                         className="flex-1 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2
-                            text-gray-900 dark:text-gray-100 bg-main-bg dark:bg-gray-700
+                            secondary-text dark:secondary-text bg-main-bg dark:bg-gray-700
                             placeholder-gray-500 dark:placeholder-gray-400 text-base
                             focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
                             transition-colors duration-200"

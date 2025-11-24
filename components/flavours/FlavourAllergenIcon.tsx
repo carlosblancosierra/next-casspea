@@ -26,7 +26,7 @@ const FlavourAllergenIcon: React.FC<FlavourAllergenIconProps> = ({ allergenSlug,
 
     return (
         <div className="relative group">
-            <IconComponent className={`text-gray-600 hover:text-gray-800 ${className}`} size={width} />
+            <IconComponent className={`secondary-text hover:secondary-text ${className}`} size={width} />
             <div className="absolute z-10 hidden group-hover:block bg-gray-900 text-white text-sm rounded-lg px-2 py-1 mt-1">
                 {allergen.name}
                 <div className="tooltip-arrow" data-popper-arrow></div>

@@ -27,7 +27,7 @@ const FormInput: React.FC<FormInputProps> = ({
     placeholder,
 }) => (
     <div className="space-y-1">
-        <label htmlFor={id} className="block text-xs font-medium text-gray-700 dark:text-gray-200">
+        <label htmlFor={id} className="block text-xs font-medium secondary-text dark:secondary-text">
             {label} {required && '*'}
         </label>
         <input
@@ -43,7 +43,7 @@ const FormInput: React.FC<FormInputProps> = ({
             className={clsx(
                 "mt-0.5 block w-full rounded-md border text-base",
                 readOnly ? " dark:bg-gray-700" : "main-bg dark:bg-gray-800",
-                "text-gray-900 dark:text-gray-100",
+                "secondary-text dark:secondary-text",
                 "border-gray-300 dark:border-gray-600",
                 "shadow-sm focus:border-primary-2 focus:ring-primary-2"
             )}

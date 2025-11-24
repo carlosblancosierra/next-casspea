@@ -30,6 +30,7 @@ module.exports = {
 				'secondary-bg': '#480607',
 				'primary-button-text': '#FFF',
 				'primary-text': '#FFF',
+				'secondary-text': '#FFF',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

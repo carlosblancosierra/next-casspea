@@ -10,8 +10,8 @@ const AddressDisplay = ({ address, title }: { address: Address | undefined, titl
 
     return (
         <div>
-            <h3 className="font-medium text-gray-900 dark:text-gray-100">{title}</h3>
-            <div className="text-gray-600 dark:text-gray-400">
+            <h3 className="font-medium secondary-text dark:secondary-text">{title}</h3>
+            <div className="secondary-text dark:secondary-text">
                 <p>{address.full_name}</p>
                 <p>{address.street_address}</p>
                 {address.street_address2 && <p>{address.street_address2}</p>}
@@ -34,7 +34,7 @@ const CheckoutDetails: React.FC<CheckoutDetailsProps> = ({ session }) => {
 
     return (
         <div className="main-bg p-6 rounded-lg shadow dark:bg-gray-800">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Order Details</h2>
+            <h2 className="text-xl font-semibold mb-4 secondary-text dark:secondary-text">Order Details</h2>
             <div className="space-y-4">
                 <AddressDisplay
                     address={session.shipping_address}
@@ -44,8 +44,8 @@ const CheckoutDetails: React.FC<CheckoutDetailsProps> = ({ session }) => {
                     <AddressDisplay address={session.billing_address} title="Billing Address" />
                 }
                 <div>
-                    <h3 className="font-medium text-gray-900 dark:text-gray-100">Contact</h3>
-                    <p className="text-gray-600 dark:text-gray-400">{session.email}</p>
+                    <h3 className="font-medium secondary-text dark:secondary-text">Contact</h3>
+                    <p className="secondary-text dark:secondary-text">{session.email}</p>
                 </div>
             </div>
         </div>

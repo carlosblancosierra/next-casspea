@@ -36,7 +36,7 @@ export default function CategoryDetailPage() {
   return (
     <div className="container mx-auto min-h-[80vh] py-2 mb-[300px]">
       <div className="md:text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white text-center">
+        <h1 className="text-3xl font-bold secondary-text dark:text-white text-center">
           { category.name }
         </h1>
       </div>
@@ -58,7 +58,7 @@ export default function CategoryDetailPage() {
 
       {categoryError && <div className="text-red-500 text-center">Error loading products</div>}
       {filteredProducts?.length === 0 ? (
-        <div className="text-center text-gray-700 dark:text-gray-300">No products found for this category.</div>
+        <div className="text-center secondary-text dark:secondary-text">No products found for this category.</div>
       ) : (
         <div className="grid gap-x-2 gap-y-2 mt-2 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
           <AnimatePresence>

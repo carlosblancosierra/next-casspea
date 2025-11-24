@@ -34,15 +34,15 @@ const FlavorSection: React.FC<{ flavorSelections?: { flavor_name: string; quanti
     <div className="flex flex-col mt-2">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="text-sm text-gray-700 hover:text-gray-900 flex items-center gap-1"
+        className="text-sm secondary-text hover:secondary-text flex items-center gap-1"
       >
         Flavours {isOpen ? '▼' : '▶'}
       </button>
       {isOpen &&
         flavorSelections.map((flavor, i) => (
-          <div key={i} className="text-sm text-gray-500 pl-4 flex justify-between">
+          <div key={i} className="text-sm secondary-text pl-4 flex justify-between">
             <span>{flavor.flavor_name || 'Unknown Flavour'}</span>
-            <span className="text-gray-400">×{flavor.quantity}</span>
+            <span className="secondary-text">×{flavor.quantity}</span>
           </div>
         ))}
     </div>
@@ -62,17 +62,17 @@ const BoxCustomizationExtras: React.FC<{ customization: any, products: Product[]
   return (
     <div className="mt-2 flex flex-col">
       {hot_chocolate ? (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm secondary-text">
           Hot Chocolate: {getProductName(hot_chocolate, "Hot Chocolate")}
         </div>
       ) : null}
       {chocolate_bark ? (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm secondary-text">
           Chocolate Bark: {getProductName(chocolate_bark, "Chocolate Bark")}
         </div>
       ) : null}
       {gift_card ? (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm secondary-text">
           Gift Card: {getProductName(gift_card, "Gift Card")}
         </div>
       ) : null}
@@ -99,7 +99,7 @@ const PaymentStatus = ({ status }: { status?: string }) => {
 const ShippingBadge = ({ date }: { date?: string | null }) => {
   if (!date) {
     return (
-      <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700">
+      <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium secondary-text ring-1 ring-inset ring-gray-500/10 dark:bg-gray-800 dark:secondary-text dark:ring-gray-700">
         ASAP
       </span>
     );
@@ -119,9 +119,9 @@ const OrderStatusBadge: React.FC<{ status: string }> = ({ status }) => {
       case 'shipped':
         return 'bg-green-100 text-green-800';
       case 'delivered':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 secondary-text';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 secondary-text';
     }
   };
   return (
@@ -150,7 +150,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
     <div className="bg-gray-50 dark:bg-main-bg-dark rounded-lg shadow-sm overflow-hidden">
       {/* Header with Order ID and Status */}
       <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+        <h3 className="text-base font-semibold secondary-text dark:secondary-text">
           Order Details
         </h3>
         <PaymentStatus status={order.checkout_session?.payment_status} />
@@ -161,22 +161,22 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
         <dl className="divide-y divide-gray-100 dark:divide-gray-700">
           {/* Order ID */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Order ID</dt>
-            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium secondary-text dark:secondary-text">Order ID</dt>
+            <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
               {order.order_id}
             </dd>
           </div>
           {/* Order Time */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Order Time</dt>
-            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium secondary-text dark:secondary-text">Order Time</dt>
+            <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
               {time}
             </dd>
           </div>
           {/* Items Section */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Items</dt>
-            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium secondary-text dark:secondary-text">Items</dt>
+            <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
               {order.checkout_session?.cart?.items?.map((item, index) => {
                 const customization = getCustomization(item.box_customization, item.pack_customization);
                 return (
@@ -185,7 +185,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       {item.product?.name || 'Unknown Product'} {item.quantity && `(x${item.quantity})`}
                     </div>
                     {customization && (
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm secondary-text">
                         {formatSelectionType(customization.selection_type)}
                       </div>
                     )}
@@ -199,16 +199,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           </div>
           {/* Shipping Date */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping Date</dt>
-            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium secondary-text dark:secondary-text">Shipping Date</dt>
+            <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
               <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
             </dd>
           </div>
           {/* Pickup Date & Time if present */}
           {order.checkout_session?.cart?.pickup_date && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Pickup Date</dt>
-              <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+              <dt className="text-sm font-medium secondary-text dark:secondary-text">Pickup Date</dt>
+              <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
                 {order.checkout_session.cart.pickup_date}
                 {order.checkout_session.cart.pickup_time && (
                   <> at {order.checkout_session.cart.pickup_time}</>
@@ -218,18 +218,18 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           )}
           {/* Shipping Address */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Delivery Address</dt>
-            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium secondary-text dark:secondary-text">Delivery Address</dt>
+            <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
               {formatShippingAddress(order.checkout_session?.shipping_address)}
             </dd>
           </div>
           {/* Discount if present */}
           {order.checkout_session?.cart?.discount && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">
+              <dt className="text-sm font-medium secondary-text dark:secondary-text">
                 Discount Applied
               </dt>
-              <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+              <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
                 {order.checkout_session.cart.discount}
               </dd>
             </div>
@@ -237,10 +237,10 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           {/* Gift Message if present */}
           {order.checkout_session?.cart?.gift_message && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">
+              <dt className="text-sm font-medium secondary-text dark:secondary-text">
                 Gift Message
               </dt>
-              <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+              <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
                 {order.checkout_session.cart.gift_message}
               </dd>
             </div>
@@ -248,24 +248,24 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           {/* Shipping Option */}
           {order.checkout_session?.shipping_option && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Shipping Option</dt>
-              <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+              <dt className="text-sm font-medium secondary-text dark:secondary-text">Shipping Option</dt>
+              <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
                 {order.checkout_session.shipping_option.name} - £{order.checkout_session.shipping_option.price}
               </dd>
             </div>
           )}
           {/* Order Total */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-gray-50 dark:bg-main-bg-dark">
-            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Order Total</dt>
-            <dd className="mt-1 text-sm font-semibold text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium secondary-text dark:secondary-text">Order Total</dt>
+            <dd className="mt-1 text-sm font-semibold secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
               £{order.checkout_session.total_with_shipping.toFixed(2)}
             </dd>
           </div>
 
           {/* Customer Orders Summary */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Customer Orders</dt>
-            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium secondary-text dark:secondary-text">Customer Orders</dt>
+            <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
               {order.past_orders && order.past_orders.length > 0
                 ? `${order.past_orders.length + 1} total orders, past: (${order.past_orders.join(', ')})`
                 : '1 total order, no past orders'}
@@ -274,16 +274,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
 
           {/* Shipping Details & Actions */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">
+            <dt className="text-sm font-medium secondary-text dark:secondary-text">
               Shipping Details
             </dt>
-            <dd className="mt-1 text-sm text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
+            <dd className="mt-1 text-sm secondary-text dark:secondary-text sm:col-span-2 sm:mt-0">
               {order.shipping_order_id ? (
                 <div className="space-y-3">
                   {/* Shipping Order ID */}
                   <div>
                     <span className="font-medium">Shipping Order ID: </span>
-                    <span className="text-gray-600 dark:text-gray-400">
+                    <span className="secondary-text dark:secondary-text">
                       {order.shipping_order_id}
                     </span>
                   </div>
@@ -292,7 +292,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                   {order.tracking_number && (
                     <div>
                       <span className="font-medium">Tracking Number: </span>
-                      <span className="text-gray-600 dark:text-gray-400">
+                      <span className="secondary-text dark:secondary-text">
                         {order.tracking_number}
                       </span>
                     </div>
@@ -302,7 +302,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                   <div className="flex flex-col gap-2 mt-2">
                     <button
                       onClick={() => onDownloadLabel(order.order_id)}
-                      className="w-full inline-flex items-center gap-1 px-3 py-2 rounded bg-main-bg dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                      className="w-full inline-flex items-center gap-1 px-3 py-2 rounded bg-main-bg dark:bg-gray-700 border border-gray-300 dark:border-gray-600 secondary-text dark:secondary-text hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                     >
                       <ArrowDownTrayIcon className="h-5 w-5" />
                       Download Label
@@ -340,14 +340,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       }
                     }}
                     disabled={isCreating}
-                    className={`inline-flex items-center gap-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
+                    className={`inline-flex items-center gap-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-gray-700 secondary-text dark:secondary-text hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
                       isCreating ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
                     <PlusIcon className="h-5 w-5" />
                     {isCreating ? 'Creating...' : 'Create Shipping Order'}
                   </button>
-                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  <p className="mt-2 text-sm secondary-text dark:secondary-text">
                     No shipping order created yet
                   </p>
                 </div>

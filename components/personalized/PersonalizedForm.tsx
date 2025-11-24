@@ -230,7 +230,7 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                         >
                             <div>
                                 <h3 className="font-medium">{slot.layer_type.name}</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                <p className="text-sm secondary-text dark:secondary-text">
                                     {getSelectedColorName(slot.order)}
                                 </p>
                             </div>
@@ -246,7 +246,7 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                 {/* New email and comments fields with Request button */}
                 <div className="space-y-4">
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                        <label htmlFor="email" className="block text-sm font-medium secondary-text dark:secondary-text">
                             Email
                         </label>
                         <input
@@ -259,7 +259,7 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                         />
                     </div>
                     <div>
-                        <label htmlFor="comments" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                        <label htmlFor="comments" className="block text-sm font-medium secondary-text dark:secondary-text">
                             Comments
                         </label>
                         <textarea

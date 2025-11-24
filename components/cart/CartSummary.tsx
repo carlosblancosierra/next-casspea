@@ -42,8 +42,8 @@ const CartSummary: React.FC = () => {
 
         {/* Uncomment when shipping is implemented
         <dl className="flex items-center justify-between gap-4">
-          <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Shipping</dt>
-          <dd className="text-base font-medium text-gray-900 dark:text-white">
+          <dt className="text-base font-normal secondary-text dark:secondary-text">Shipping</dt>
+          <dd className="text-base font-medium secondary-text dark:text-white">
             {formatCurrency('0')}
           </dd>
         </dl> */}

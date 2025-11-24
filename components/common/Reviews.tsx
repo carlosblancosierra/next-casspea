@@ -42,12 +42,12 @@ const Reviews = () => {
             className="flex space-x-2 bg-main-bg dark:bg-gray-800 p-4 rounded-lg shadow-md dark:shadow-lg"
           >
             <div>
-              <p className="text-[10px] text-gray-500 dark:text-gray-400">
+              <p className="text-[10px] secondary-text dark:secondary-text">
                 {review.date}
               </p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-medium secondary-text dark:secondary-text">
                 {review.name}
               </p>
               <div className="flex items-center">
@@ -55,10 +55,10 @@ const Reviews = () => {
                   <FaStar key={i} className="w-3 h-3 text-yellow-400" />
                 ))}
               </div>
-              <h4 className="text-xs font-medium text-gray-900 dark:text-gray-100 mt-1">
+              <h4 className="text-xs font-medium secondary-text dark:secondary-text mt-1">
                 {review.title}
               </h4>
-              <p className="text-xs mt-1 text-gray-600 dark:text-gray-300">
+              <p className="text-xs mt-1 secondary-text dark:secondary-text">
                 {review.review}
               </p>
             </div>

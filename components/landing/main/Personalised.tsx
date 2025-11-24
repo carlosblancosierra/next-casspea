@@ -49,7 +49,7 @@ export default function Personalised({ config }: PersonalisedProps) {
                 <h2 className="text-2xl md:text-3xl font-bold mb-3">
                     {config.personalisedText.heading}
                 </h2>
-                <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-2">
+                <p className="secondary-text dark:secondary-text text-lg leading-relaxed mb-2">
                     {config.personalisedText.subheading}
                 </p>
                 {/* <ColoredList
@@ -75,7 +75,7 @@ export default function Personalised({ config }: PersonalisedProps) {
                             />
                         </div>
                         <h2 className="text-xl font-semibold mb-2">{template.title}</h2>
-                        <p className="text-gray-600 dark:text-gray-400">
+                        <p className="secondary-text dark:secondary-text">
                             {config.personalisedText.templateCardLabel}
                         </p>
                     </Link>

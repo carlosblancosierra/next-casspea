@@ -51,7 +51,7 @@ const ColoredList: React.FC<ColoredListProps> = ({ items, useCustomColors, class
   return (
     <div>
       {title && <h3 className="text-2xl font-bold mb-2 text-white dark:text-white">{title}</h3>}
-      {subtitle && <p className="text-gray-600 mb-4 text-white dark:text-white">{subtitle}</p>}
+      {subtitle && <p className="secondary-text mb-4 text-white dark:text-white">{subtitle}</p>}
     <ol className={`mt-4 space-y-1 list-decimal list-inside ${className}`}>
       {items.map((item, idx) => {
         if (typeof item === "string" || !useCustomColors) {

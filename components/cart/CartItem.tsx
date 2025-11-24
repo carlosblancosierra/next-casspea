@@ -230,7 +230,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
           <div className="bg-main-bg rounded-lg shadow dark:bg-gray-700 max-w-md w-full">
             <div className="flex items-center justify-between p-4 border-b dark:border-gray-600">
               <h3 className="text-xl text-primary-text">Remove Item</h3>
-              <button onClick={() => setIsDeleteModalOpen(false)} className="text-gray-400">
+              <button onClick={() => setIsDeleteModalOpen(false)} className="secondary-text">
                 <span className="sr-only">Close modal</span>×
               </button>
             </div>

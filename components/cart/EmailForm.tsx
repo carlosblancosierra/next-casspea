@@ -47,7 +47,7 @@ export default function EmailForm({ onValidEmail, initialEmail = '' }: EmailForm
                     onChange={handleEmailChange}
                     placeholder="Enter your email address"
                     className={`w-full border rounded-md px-3 py-2
-                        text-gray-900 dark:text-gray-100
+                        secondary-text dark:secondary-text
                         bg-main-bg dark:bg-gray-700 text-base
                         placeholder-gray-500 dark:placeholder-gray-400
                         ${!isValid ? 'border-red-500 dark:border-red-400' :

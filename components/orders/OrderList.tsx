@@ -83,7 +83,7 @@ export default function OrderList() {
   return (
     <div className="max-w-7xl mx-auto lg:px-8 py-6">
       {/* siempre visibles */}
-      <div className="mb-2 text-center font-semibold text-gray-900 dark:text-gray-100">
+      <div className="mb-2 text-center font-semibold secondary-text dark:secondary-text">
         Filtrar pedidos por fecha
       </div>
       <div className="flex justify-center space-x-4 mb-4">
@@ -126,7 +126,7 @@ export default function OrderList() {
       ) : error ? (
         <p className="text-center text-red-600">Error cargando pedidos</p>
       ) : !orders?.length ? (
-        <p className="text-center text-gray-500">No hay pedidos en este rango</p>
+        <p className="text-center secondary-text">No hay pedidos en este rango</p>
       ) : (
         <div className="space-y-4">
           {Object.entries(grouped)

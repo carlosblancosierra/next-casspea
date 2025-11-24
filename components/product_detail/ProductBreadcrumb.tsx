@@ -11,14 +11,14 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
             <ol role="list" className="flex space-x-2 py-2">
                 <li>
                     <div className="flex items-center">
-                        <a href="/shop-now/" className="mr-2 text-sm text-gray-900 dark:text-gray-400">Store</a>
+                        <a href="/shop-now/" className="mr-2 text-sm secondary-text dark:secondary-text">Store</a>
                         <svg
                             fill="currentColor"
                             width={16}
                             height={20}
                             viewBox="0 0 16 20"
                             aria-hidden="true"
-                            className="h-5 w-4 text-gray-300 dark:text-gray-500"
+                            className="h-5 w-4 secondary-text dark:secondary-text"
                         >
                             <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
                         </svg>
@@ -26,7 +26,7 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
                 </li>
                 <li>
                     <div className="flex items-center">
-                        <a href="/shop-now/" className="mr-2 text-sm text-gray-900 dark:text-gray-400">
+                        <a href="/shop-now/" className="mr-2 text-sm secondary-text dark:secondary-text">
                             {product.category?.name}
                         </a>
                         {/* <svg
@@ -35,14 +35,14 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
                             height={20}
                             viewBox="0 0 16 20"
                             aria-hidden="true"
-                            className="h-5 w-4 text-gray-300 dark:text-gray-500"
+                            className="h-5 w-4 secondary-text dark:secondary-text"
                         >
                             <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
                         </svg> */}
                     </div>
                 </li>
                 {/* <li className="text-sm">
-                    <a aria-current="page" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300">
+                    <a aria-current="page" className="secondary-text hover:secondary-text dark:secondary-text dark:hover:secondary-text">
                         {product.name_short || product.slug.split('-').join(' ')}
                     </a>
                 </li> */}

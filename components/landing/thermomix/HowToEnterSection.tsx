@@ -13,7 +13,7 @@ export default function HowToEnterSection() {
           <StepCard key={idx} index={idx + 1} text={step} />
         ))}
       </ol>
-      <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">{C.HOW_TO_ENTER_NOTE}</p>
+      <p className="mt-3 text-sm secondary-text dark:secondary-text">{C.HOW_TO_ENTER_NOTE}</p>
 
       <div className="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
         <a
@@ -36,7 +36,7 @@ export default function HowToEnterSection() {
         </a>
       </div>
 
-      <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">{C.TAGGING_NOTE}</p>
+      <p className="mt-4 text-xs secondary-text dark:secondary-text">{C.TAGGING_NOTE}</p>
     </Section>
   );
 }

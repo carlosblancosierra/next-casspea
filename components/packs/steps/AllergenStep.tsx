@@ -18,7 +18,7 @@ export default function AllergenStep({
   return (
     <>
       <h2 className="text-xl font-semibold mb-4">Step 6: Select Allergens</h2>
-      <p className="text-sm text-gray-500 mb-4">
+      <p className="text-sm secondary-text mb-4">
         Only for bonbons of the signature box.
       </p>
       <AllergenSelection

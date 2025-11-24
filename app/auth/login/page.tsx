@@ -22,7 +22,7 @@ export default function Page() {
 					priority
 					alt='CassPea Chocolates Logo'
 				/>
-				<h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
+				<h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight secondary-text'>
 					Sign in to your account
 				</h2>
 			</div>
@@ -31,7 +31,7 @@ export default function Page() {
 				<LoginForm />
 				{/* <SocialButtons /> */}
 
-				<p className='mt-10 text-center text-sm text-gray-500'>
+				<p className='mt-10 text-center text-sm secondary-text'>
 					Don&apos;t have an account?{' '}
 					<Link
 						href='/auth/register'

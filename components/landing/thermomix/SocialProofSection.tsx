@@ -5,7 +5,7 @@ export default function SocialProofSection() {
   if (!C.SOCIAL_PROOF_ITEMS?.length) return null;
   return (
     <Section title={C.SOCIAL_PROOF_TITLE} extraClass="mt-10">
-      <ul className="grid md:grid-cols-3 gap-4 text-gray-700 dark:text-gray-300">
+      <ul className="grid md:grid-cols-3 gap-4 secondary-text dark:secondary-text">
         {C.SOCIAL_PROOF_ITEMS.map((item: string, i: number) => (
           <li
             key={i}

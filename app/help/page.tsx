@@ -69,8 +69,8 @@ const HelpPage = () => {
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Contact Section */}
                 <section className="main-bg dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Contact Us</h2>
-                    <div className="space-y-2 text-gray-600 dark:text-gray-300">
+                    <h2 className="text-2xl font-bold secondary-text dark:text-white mb-4">Contact Us</h2>
+                    <div className="space-y-2 secondary-text dark:secondary-text">
                         <p>
                             <span className="font-medium">Tel:</span>{' '}
                             <a href="tel:07859790386" className="hover:text-primary dark:hover:text-primary-2">
@@ -94,25 +94,25 @@ const HelpPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="text-center p-4  dark:bg-gray-700 rounded-lg">
                             <h3 className="font-bold text-primary dark:text-primary-2">FREE SHIPPING</h3>
-                            <p className="text-gray-600 dark:text-gray-300">On all orders over £50</p>
+                            <p className="secondary-text dark:secondary-text">On all orders over £50</p>
                         </div>
                         <div className="text-center p-4 dark:bg-gray-700 rounded-lg">
                             <h3 className="font-bold text-primary dark:text-primary-2">10% OFF</h3>
-                            <p className="text-gray-600 dark:text-gray-300">Subscribe to our newsletter</p>
+                            <p className="secondary-text dark:secondary-text">Subscribe to our newsletter</p>
                         </div>
                     </div>
                 </section>
 
                 {/* FAQs Section */}
                 <section className="main-bg dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Frequently Asked Questions</h2>
+                    <h2 className="text-2xl font-bold secondary-text dark:text-white mb-6">Frequently Asked Questions</h2>
                     <div className="space-y-6">
                         {faqs.map((faq, index) => (
                             <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0">
-                                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                                <h3 className="text-lg font-medium secondary-text dark:text-white mb-2">
                                     {faq.question}
                                 </h3>
-                                <p className="text-gray-600 dark:text-gray-300">
+                                <p className="secondary-text dark:secondary-text">
                                     {faq.answer}
                                 </p>
                             </div>
@@ -121,7 +121,7 @@ const HelpPage = () => {
                 </section>
 
                 {/* Company Info Footer */}
-                <footer className="mt-8 text-sm text-gray-500 dark:text-gray-400">
+                <footer className="mt-8 text-sm secondary-text dark:secondary-text">
                     <p>Company Name: CassPea Ltd</p>
                     <p>Company Number: 14307063</p>
                 </footer>

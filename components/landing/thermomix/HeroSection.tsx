@@ -33,7 +33,7 @@ export default function HeroSection() {
           </h1>
           <h2 className="text-2xl mb-2 text-white font-semibold drop-shadow">{C.HERO_SUBTITLE}</h2>
 
-          <div className="my-2 flex items-start gap-3 text-sm text-gray-100">
+          <div className="my-2 flex items-start gap-3 text-sm secondary-text">
             {/* <FaRegClock className="mt-1 shrink-0" /> */}
             <p>
               {/* <span className="font-semibold">{C.COUNTDOWN_TITLE}:</span>{' '} */}
@@ -41,7 +41,7 @@ export default function HeroSection() {
             </p>
           </div>
 
-          <p className="hidden md:block md:mb-6 font-light text-sm text-gray-200 lg:mb-8 md:text-base">
+          <p className="hidden md:block md:mb-6 font-light text-sm secondary-text lg:mb-8 md:text-base">
             {C.HERO_PARAGRAPH}
           </p>
 
@@ -98,7 +98,7 @@ export default function HeroSection() {
           <p className="md:hidden md:mb-6 text-3xl font-bold mt-2 font-playfair lg:mb-8 md:text-lg lg:text-xl text-white drop-shadow">
             {('HERO_MOBILE_TITLE' in C ? (C.HERO_MOBILE_TITLE as string) : C.HERO_TITLE)}
           </p>
-          <p className="md:hidden md:mb-6 font-light text-md mt-2 text-gray-200 lg:mb-8 md:text-lg lg:text-xl">
+          <p className="md:hidden md:mb-6 font-light text-md mt-2 secondary-text lg:mb-8 md:text-lg lg:text-xl">
             {('HERO_MOBILE_PARAGRAPH' in C ? (C.HERO_MOBILE_PARAGRAPH as string) : C.HERO_PARAGRAPH)}
           </p>
         </div>

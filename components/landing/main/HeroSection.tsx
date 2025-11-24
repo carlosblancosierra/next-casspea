@@ -61,7 +61,7 @@ export default function HeroSection({ config }: HeroSectionProps) {
           {config.hero.heading}
         </h1>
 
-        <p className="mt-4 max-w-2xl text-base md:text-xl text-gray-100/90">
+        <p className="mt-4 max-w-2xl text-base md:text-xl secondary-text/90">
           {config.hero.subheading}
         </p>
 

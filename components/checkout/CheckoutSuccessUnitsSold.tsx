@@ -42,7 +42,7 @@ const CheckoutSuccessUnitsSold: React.FC<{ className?: string }> = ({ className 
   return (
     <div className={`px-4 py-6 flex flex-col items-center w-full bg-gradient-autumn rounded-md shadow ${className}`}>
       {isLoading ? (
-        <span className="text-sm text-gray-100 dark:text-gray-200 flex items-center"><Spinner md /> Updating…</span>
+        <span className="text-sm secondary-text dark:secondary-text flex items-center"><Spinner md /> Updating…</span>
       ) : (
         <>
           <span className="text-3xl font-extrabold text-white tracking-tight drop-shadow mb-2">
