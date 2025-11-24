@@ -12,7 +12,7 @@ const AccordionItem = ({ i, expanded, setExpanded, title, content }) => {
         initial={false}
         className={`
         border-grey-20 group border-t last:mb-0 last:border-b py-3
-        ${isOpen ? "bg-[#f9f9f9] dark:bg-gray-800" : "main-bg dark:bg-gray-900"}
+        ${isOpen ? "bg-[#f9f9f9] dark:bg-gray-800" : "main-bg dark:bg-main-bg-dark"}
         `}
         onClick={() => setExpanded(isOpen ? false : i)}
       >

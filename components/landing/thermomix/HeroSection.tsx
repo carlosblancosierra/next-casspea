@@ -12,7 +12,7 @@ const IG_URL_UTM = `${C.INSTAGRAM_URL}?utm_source=website&utm_medium=landing&utm
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 dark:bg-gray-900">
+    <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 dark:bg-main-bg-dark">
       <div className="absolute inset-0 z-0">
         <Image
           src="/landings/thermomix/hero-1.jpg"

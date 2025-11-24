@@ -27,7 +27,7 @@ const HomeValentines: React.FC<HomeValentinesProps> = () => {
 	};
 
 	return (
-		<section className="dark:bg-gray-900">
+		<section className="dark:bg-main-bg-dark">
 			<div
 				className={`grid gap-x-4 gap-y-4 mt-2 mx-auto grid-cols-2 md:grid-cols-4 place-items-center`}
 			>

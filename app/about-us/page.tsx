@@ -7,7 +7,7 @@ const playfair = Playfair_Display({ subsets: ['latin'] });
 
 export default function AboutUsPage() {
     return (
-        <main className="dark:bg-gray-900 min-h-screen py-8">
+        <main className="dark:bg-main-bg-dark min-h-screen py-8">
             <div className="max-w-7xl mx-auto px-0">
                 {/* Who Are We Section */}
                 <section className="grid grid-cols-1 lg:grid-cols-2 gap-2 items-center mb-2">

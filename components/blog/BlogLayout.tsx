@@ -13,7 +13,7 @@ interface BlogLayoutProps {
 
 export default function BlogLayout({ title, date, heroSrc, children }: BlogLayoutProps) {
   return (
-    <main className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen py-8 px-4">
+    <main className="bg-white dark:bg-main-bg-dark text-gray-900 dark:text-gray-100 min-h-screen py-8 px-4">
       <header className="max-w-3xl mx-auto text-center mb-12">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 drop-shadow-lg">
           {title}

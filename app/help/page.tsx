@@ -65,7 +65,7 @@ const faqs = [
 
 const HelpPage = () => {
     return (
-        <div className=" dark:bg-gray-900 min-h-screen">
+        <div className=" dark:bg-main-bg-dark min-h-screen">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Contact Section */}
                 <section className="main-bg dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">

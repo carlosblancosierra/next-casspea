@@ -32,7 +32,7 @@ const HomeProducts: React.FC<HomeProductsProps> = ({
 	};
 
 	return (
-		<section className="dark:bg-gray-900">
+		<section className="dark:bg-main-bg-dark">
 			<div
 				className={`grid gap-x-2 gap-y-2 mt-2 justify-center ${boxes?.length < 3
 					? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'

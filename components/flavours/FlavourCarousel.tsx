@@ -46,7 +46,7 @@ export default function FlavourCarousel() {
   return (
     <div
       ref={containerRef}
-      className="flex overflow-x-hidden py-5 bg-main-bg dark:bg-gray-900" // Background adjusted for dark mode
+      className="flex overflow-x-hidden py-5 bg-main-bg dark:bg-main-bg-dark" // Background adjusted for dark mode
     >
       <motion.div
         ref={carouselRef}
@@ -136,7 +136,7 @@ export default function FlavourCarousel() {
           .map((_, index) => (
             <motion.div
               key={index}
-              className="flex-shrink-0 w-56 h-96 flex flex-col items-center justify-center bg-main-bg dark:bg-gray-900 text-black dark:text-white rounded-lg"
+              className="flex-shrink-0 w-56 h-96 flex flex-col items-center justify-center bg-main-bg dark:bg-main-bg-dark text-black dark:text-white rounded-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

@@ -646,7 +646,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
 
             {/* Add to Cart Button - Only show on final step when ready */}
             {((!isPack && currentStep === 3) || (isPack && currentStep === 6)) && canAddToCart() && (
-                <div className="sticky md:static bottom-[55px] md:bottom-auto bg-main-bg dark:bg-gray-900 pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="sticky md:static bottom-[55px] md:bottom-auto bg-main-bg dark:bg-main-bg-dark pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
                     <AddToCartButton
                         onClick={handleAddToCart}
                         isLoading={isLoading}

@@ -172,7 +172,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
             {/* Updated Modal */}
             {isModalOpen && (
                 <div
-                    className="fixed inset-0 bg-gray-600 dark:bg-gray-900 bg-opacity-50 dark:bg-opacity-80 flex items-center justify-center overflow-auto z-[100]"
+                    className="fixed inset-0 bg-gray-600 dark:bg-main-bg-dark bg-opacity-50 dark:bg-opacity-80 flex items-center justify-center overflow-auto z-[100]"
                     onClick={handleModalClick}
                 >
                     <div className="relative bg-main-bg dark:bg-gray-800 p-6 rounded-lg max-w-[90vw] w-full max-h-[85vh] mx-auto shadow-lg overflow-y-auto">

@@ -10,7 +10,7 @@ export default function Page() {
 
   return (
     <>
-      <main className="container mx-auto min-h-[80vh] dark:bg-gray-900">
+      <main className="container mx-auto min-h-[80vh] dark:bg-main-bg-dark">
         <div className="text-center mb-4">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Shop Now

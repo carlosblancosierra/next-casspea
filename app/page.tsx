@@ -69,7 +69,7 @@ const playfair = Playfair_Display({ subsets: ['latin'] });
 
 // Hero section component (grid now splits at md instead of lg)
 const HeroSection = () => (
-  <section className="dark:bg-gray-900">
+  <section className="dark:bg-main-bg-dark">
     <div className="grid grid-cols-1 md:grid-cols-12 mx-auto md:gap-8 xl:gap-0 md:pb-8 relative">
       <div className="md:mr-10 md:col-span-6">
         <div className="hidden md:block mb-6 mt-2">
@@ -144,7 +144,7 @@ const LoadingSection = () => (
 
 export default function HomePage() {
   return (
-    <main className="dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto">
+    <main className="dark:bg-main-bg-dark min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <HeroSection />
 
       <Section title="" extraClass="mt-8">

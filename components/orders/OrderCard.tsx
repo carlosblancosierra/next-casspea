@@ -147,7 +147,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-gray-50 dark:bg-main-bg-dark rounded-lg shadow-sm overflow-hidden">
       {/* Header with Order ID and Status */}
       <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
@@ -255,7 +255,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
             </div>
           )}
           {/* Order Total */}
-          <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-gray-50 dark:bg-gray-900">
+          <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-gray-50 dark:bg-main-bg-dark">
             <dt className="text-sm font-medium text-gray-900 dark:text-gray-200">Order Total</dt>
             <dd className="mt-1 text-sm font-semibold text-gray-700 dark:text-gray-300 sm:col-span-2 sm:mt-0">
               £{order.checkout_session.total_with_shipping.toFixed(2)}

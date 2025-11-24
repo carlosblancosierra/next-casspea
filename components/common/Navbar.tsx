@@ -28,7 +28,7 @@ export default function Nav() {
   // const cart = useSelector(selectCart);
 
   return (
-    <Disclosure as="nav" className="main-bg border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <Disclosure as="nav" className="main-bg border-b border-gray-200 dark:main-bg-dark dark:border-gray-700">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-screen-2xl px-2 sm:px-6 lg:px-8">
@@ -62,7 +62,7 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src='/logos/brown.png'
+                      src='/logos/logo-white-hat.png'
                       width={0}
                       height={0}
                       sizes="100vw"

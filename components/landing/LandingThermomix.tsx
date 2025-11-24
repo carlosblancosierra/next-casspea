@@ -26,7 +26,7 @@ export default function LandingThermomix() {
   };
 
   return (
-    <main className="dark:bg-gray-900 min-h-[100vh] max-w-screen-2xl md:mx-auto">
+    <main className="dark:bg-main-bg-dark min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <HeroSection />
       <Section title={C.ENTER_GIVEAWAY_TITLE} extraClass="mt-8" id="enter-form">
