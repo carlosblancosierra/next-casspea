@@ -52,13 +52,13 @@ export default function DiscountForm() {
     if (cart?.discount) {
         return (
             <div className="flex items-center justify-between  dark:bg-gray-700 px-3 py-2 rounded-md">
-                <span className="text-xs font-medium text-gray-900 dark:text-gray-100">
+                <span className="text-xs font-medium text-primary-text">
                     {cart.discount.code}
                 </span>
                 <button
                     onClick={handleRemoveDiscount}
                     disabled={isValidating}
-                    className="text-gray-400 hover:text-gray-500 dark:text-gray-500
+                    className="text-primary-text hover:text-gray-500 dark:text-gray-500
                         dark:hover:text-gray-400 focus:outline-none"
                     aria-label="Remove discount code"
                 >
@@ -87,7 +87,7 @@ export default function DiscountForm() {
                     <button
                         type="submit"
                         disabled={isValidating || !discountCode}
-                        className="bg-primary dark:bg-primary-2 text-white text-xs px-4 py-2 rounded-md
+                        className="bg-primary dark:bg-primary-2 text-primary-text text-xs px-4 py-2 rounded-md
                             hover:bg-primary-2 dark:hover:bg-primary-2
                             disabled:bg-gray-300 dark:disabled:bg-gray-600
                             disabled:cursor-not-allowed"
@@ -96,7 +96,7 @@ export default function DiscountForm() {
                     </button>
                 </div>
                 {errorMessage && (
-                    <div className="flex items-center text-red-600 dark:text-red-400 text-xs mt-1">
+                    <div className="flex items-center text-primary-text text-xs mt-1">
                         <ExclamationTriangleIcon className="h-4 w-4 mr-1" />
                         <span>{errorMessage}</span>
                     </div>

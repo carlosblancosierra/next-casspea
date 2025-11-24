@@ -19,11 +19,11 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 	const products: Product[] = data ?? [];
 
 	if (isLoading) {
-		return <div>Loading products...</div>;
+		return <div className="text-primary-text">Loading products...</div>;
 	}
 
 	if (error) {
-		return <div>Error loading products.</div>;
+		return <div className="text-primary-text">Error loading products.</div>;
 	}
 
 	const product = products.find((p) => p.slug === slug);
@@ -95,18 +95,18 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 			</div>
 
 			<div className="my-16">
-				<h2 className="text-center text-xl font-bold">Our Flavours</h2>
+				<h2 className="text-center text-xl font-bold text-primary-text">Our Flavours</h2>
 				<FlavourGrid />
 			</div>
 
 			<div className="mt-10">
-				<h2 className="text-center text-xl my-5 font-bold">Reviews</h2>
+				<h2 className="text-center text-xl my-5 font-bold text-primary-text">Reviews</h2>
 				<Reviews />
 			</div>
 
 			{/* Other Boxes */}
 			<div className="mt-5">
-				<h2 className="text-center text-xl my-5 font-bold">Need More Boxes?</h2>
+				<h2 className="text-center text-xl my-5 font-bold text-primary-text">Need More Boxes?</h2>
 				<div className="flex justify-center">
 				<div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
 						{otherBoxes.map((prod: Product) => (
@@ -118,7 +118,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 
 			{/* Chocolate Barks */}
 			<div className="mt-5">
-				<h2 className="text-center text-xl my-5 font-bold">Introducing our Chocolate Barks</h2>
+				<h2 className="text-center text-xl my-5 font-bold text-primary-text">Introducing our Chocolate Barks</h2>
 				<div className="flex justify-center">
 					<div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
 						{chocolateBarks.map((prod: Product) => (
@@ -130,7 +130,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 
 			{/* Hot Chocolate */}
 			<div className="mt-5">
-				<h2 className="text-center text-xl my-5 font-bold">Try Our Hot Chocolate</h2>
+				<h2 className="text-center text-xl my-5 font-bold text-primary-text">Try Our Hot Chocolate</h2>
 				<div className="flex justify-center">
 					<div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
 						{hotChocolate.map((prod: Product) => (

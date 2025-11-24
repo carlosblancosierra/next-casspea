@@ -57,7 +57,7 @@ export default function EmailForm({ onValidEmail, initialEmail = '' }: EmailForm
                     required
                 />
                 {!isValid && (
-                    <p className="text-red-500 dark:text-red-400 text-sm">
+                    <p className="text-primary-text text-sm">
                         Please enter a valid email address
                     </p>
                 )}
