@@ -83,7 +83,7 @@ export default function
                                         className="block p-3 pl-10 w-full text-base text-primary-text
                                             rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg
                                             focus:ring-primary-2 focus:border-primary-2
-                                            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                                            dark:bg-main-bg-dark dark:border-gray-600 dark:placeholder-gray-400
                                             dark:text-white dark:focus:ring-primary-2 dark:focus:border-primary-2"
                                         placeholder="Enter your email"
                                         required

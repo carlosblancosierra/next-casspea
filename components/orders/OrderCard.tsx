@@ -99,7 +99,7 @@ const PaymentStatus = ({ status }: { status?: string }) => {
 const ShippingBadge = ({ date }: { date?: string | null }) => {
   if (!date) {
     return (
-      <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-primary-text ring-1 ring-inset ring-gray-500/10 dark:bg-gray-800 dark:text-primary-text dark:ring-gray-700">
+      <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-primary-text ring-1 ring-inset ring-gray-500/10 dark:bg-main-bg-dark dark:text-primary-text dark:ring-gray-700">
         ASAP
       </span>
     );
@@ -302,7 +302,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                   <div className="flex flex-col gap-2 mt-2">
                     <button
                       onClick={() => onDownloadLabel(order.order_id)}
-                      className="w-full inline-flex items-center gap-1 px-3 py-2 rounded bg-main-bg dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-primary-text dark:text-primary-text hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                      className="w-full inline-flex items-center gap-1 px-3 py-2 rounded bg-main-bg dark:bg-main-bg-dark border border-gray-300 dark:border-gray-600 text-primary-text dark:text-primary-text hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                     >
                       <ArrowDownTrayIcon className="h-5 w-5" />
                       Download Label
@@ -340,7 +340,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       }
                     }}
                     disabled={isCreating}
-                    className={`inline-flex items-center gap-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-gray-700 text-primary-text dark:text-primary-text hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
+                    className={`inline-flex items-center gap-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
                       isCreating ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >

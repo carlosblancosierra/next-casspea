@@ -197,7 +197,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     if (!allShippingOptions.length && !deliveryType) return null;
 
     return (
-        <div className="main-bg p-6 rounded-lg shadow dark:bg-gray-800">
+        <div className="main-bg p-6 rounded-lg shadow dark:bg-main-bg-dark">
             <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text">
                 {deliveryType ? 'Shipping Options' : 'How would you like to receive your order?'}
             </h2>

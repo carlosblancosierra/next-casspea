@@ -68,7 +68,7 @@ const HelpPage = () => {
         <div className=" dark:bg-main-bg-dark min-h-screen">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Contact Section */}
-                <section className="main-bg dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
+                <section className="main-bg dark:bg-main-bg-dark rounded-lg shadow-sm p-6 mb-8">
                     <h2 className="text-2xl font-bold text-primary-text dark:text-white mb-4">Contact Us</h2>
                     <div className="space-y-2 text-primary-text dark:text-primary-text">
                         <p>
@@ -90,13 +90,13 @@ const HelpPage = () => {
                 </section>
 
                 {/* Quick Info Section */}
-                <section className="main-bg dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
+                <section className="main-bg dark:bg-main-bg-dark rounded-lg shadow-sm p-6 mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="text-center p-4  dark:bg-gray-700 rounded-lg">
+                        <div className="text-center p-4  dark:bg-main-bg-dark rounded-lg">
                             <h3 className="font-bold text-primary dark:text-primary-2">FREE SHIPPING</h3>
                             <p className="text-primary-text dark:text-primary-text">On all orders over £50</p>
                         </div>
-                        <div className="text-center p-4 dark:bg-gray-700 rounded-lg">
+                        <div className="text-center p-4 dark:bg-main-bg-dark rounded-lg">
                             <h3 className="font-bold text-primary dark:text-primary-2">10% OFF</h3>
                             <p className="text-primary-text dark:text-primary-text">Subscribe to our newsletter</p>
                         </div>
@@ -104,7 +104,7 @@ const HelpPage = () => {
                 </section>
 
                 {/* FAQs Section */}
-                <section className="main-bg dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                <section className="main-bg dark:bg-main-bg-dark rounded-lg shadow-sm p-6">
                     <h2 className="text-2xl font-bold text-primary-text dark:text-white mb-6">Frequently Asked Questions</h2>
                     <div className="space-y-6">
                         {faqs.map((faq, index) => (

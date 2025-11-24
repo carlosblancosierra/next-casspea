@@ -34,7 +34,7 @@ const CartUnitsSold: React.FC<Props> = ({ className = '' }) => {
   const loading = soldLoading || cartLoading;
 
   return (
-    <div className={`rounded-md border p-4 bg-white dark:bg-gray-800 ${className}`}>
+    <div className={`rounded-md border p-4 bg-main-bg dark:bg-main-bg-dark ${className}`}>
       {loading ? (
         <span className="text-sm text-primary-text">Updating…</span>
       ) : (

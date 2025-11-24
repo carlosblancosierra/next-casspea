@@ -120,7 +120,7 @@ export default function CartCheckout() {
     return (
         <div className="space-y-4 mt-4">
             {/* Order Summary - Moved to top */}
-            <div className="space-y-4 rounded-lg border border-gray-200 bg-main-bg p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6 px-5">
+            <div className="space-y-4 rounded-lg border border-gray-200 bg-main-bg p-4 shadow-sm dark:border-gray-700 dark:bg-main-bg-dark sm:p-6 px-5">
                 <p className="text-xl font-semibold text-primary-text">Order summary</p>
 
                 <div className="space-y-4">
@@ -182,7 +182,7 @@ export default function CartCheckout() {
                                     }
                                     setAddShippingDate(e.target.checked);
                                 }}
-                                className="rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-primary-2"
+                                className="rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-main-bg-dark dark:focus:ring-primary-2"
                             />
                             <span className="text-sm font-medium text-primary-text">
                                 Add Shipping Date
@@ -199,7 +199,7 @@ export default function CartCheckout() {
                     {showModal && (
                         <div className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex items-center justify-center bg-black bg-opacity-50">
                             <div className="relative w-full max-w-md max-h-full">
-                                <div className="relative bg-main-bg rounded-lg shadow dark:bg-gray-700">
+                                <div className="relative bg-main-bg rounded-lg shadow dark:bg-main-bg-dark">
                                     <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                         <h3 className="text-xl font-medium text-primary-text">
                                             Shipping Date Information
@@ -241,7 +241,7 @@ export default function CartCheckout() {
                                 type="checkbox"
                                 checked={addGiftMessage}
                                 onChange={(e) => setAddGiftMessage(e.target.checked)}
-                                className="rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-primary-2"
+                                className="rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-main-bg-dark dark:focus:ring-primary-2"
                             />
                             <span className="text-sm font-medium text-primary-text dark:text-white">Add Gift Message</span>
                         </label>
@@ -260,7 +260,7 @@ export default function CartCheckout() {
                                 checked={addDiscount}
                                 onChange={(e) => setAddDiscount(e.target.checked)}
                                 className="rounded border-gray-300 text-primary focus:ring-primary
-                                    dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-primary-2"
+                                    dark:border-gray-600 dark:bg-main-bg-dark dark:focus:ring-primary-2"
                             />
                             <span className="text-sm font-medium text-primary-text">
                                 Add Discount Code
@@ -313,7 +313,7 @@ export default function CartCheckout() {
                         className={`w-full rounded-md px-4 py-4 text-xl font-bold text-primary-text
                             shadow-lg transition-all duration-200 flex items-center justify-center
                             ${isProcessing
-                                ? 'bg-gray-400 dark:bg-gray-600 cursor-wait opacity-70'
+                                ? 'bg-gray-400 dark:bg-main-bg-dark cursor-wait opacity-70'
                                 : 'bg-gradient-autumn dark:bg-primary-2 hover:shadow-xl hover:scale-[1.02] dark:hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
                             }`}
                     >
@@ -389,7 +389,7 @@ export default function CartCheckout() {
                         {/* Center modal */}
                         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-                        <div className="inline-block align-bottom bg-main-bg dark:bg-gray-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                        <div className="inline-block align-bottom bg-main-bg dark:bg-main-bg-dark rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
                             <div>
                                 <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900">
                                     <svg className="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -418,7 +418,7 @@ export default function CartCheckout() {
                                     className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-primary-text focus:outline-none focus:ring-2 focus:ring-offset-2 sm:col-start-2 sm:text-sm
                                         ${modalEmail
                                             ? 'bg-primary dark:bg-primary-2 hover:bg-primary-2 dark:hover:bg-primary focus:ring-primary'
-                                            : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                                            : 'bg-gray-300 dark:bg-main-bg-dark cursor-not-allowed'
                                         }`}
                                 >
                                     Continue to Checkout
@@ -426,7 +426,7 @@ export default function CartCheckout() {
                                 <button
                                     type="button"
                                     onClick={() => setShowEmailModal(false)}
-                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-main-bg dark:bg-gray-700 text-base font-medium text-primary-text hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:col-start-1 sm:text-sm"
+                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-main-bg dark:bg-main-bg-dark text-base font-medium text-primary-text hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:col-start-1 sm:text-sm"
                                 >
                                     Cancel
                                 </button>

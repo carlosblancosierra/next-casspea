@@ -9,7 +9,7 @@ const ConfirmCartItem: React.FC<ConfirmCartItemProps> = ({ entry }) => {
     const boxSize = entry.product.units_per_box;
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 border border-gray-200 bg-main-bg p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 border border-gray-200 bg-main-bg p-4 rounded-lg shadow-sm dark:border-gray-700 dark:bg-main-bg-dark md:p-6">
             {/* Product Image */}
             <a href="#" className="col-span-1">
                 <img

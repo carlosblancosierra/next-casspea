@@ -30,7 +30,7 @@ export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffPro
         heading: 'text-3xl md:text-4xl font-extrabold text-white mb-2 text-center',
         subheading: 'text-lg text-white/90 mb-2 text-center',
         note: 'text-base text-white/80 mb-4 text-center font-medium',
-        input: 'w-full sm:w-auto flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-600 dark:text-white',
+        input: 'w-full sm:w-auto flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-main-bg-dark dark:border-gray-600 dark:text-white',
         button: 'px-6 py-3 rounded-lg bg-blue-700 text-white font-semibold shadow hover:bg-blue-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed',
         privacy: 'text-xs text-white/80 mt-3 text-center',
         privacyLink: 'underline hover:text-blue-200 dark:hover:text-blue-300',

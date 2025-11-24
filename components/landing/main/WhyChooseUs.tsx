@@ -14,7 +14,7 @@ interface WhyChooseUsProps { config: typeof import('../constants').LANDING_CONFI
 
 export default function WhyChooseUs({ config }: WhyChooseUsProps) {
   return (
-    <section className="py-12 bg-gray-100 dark:bg-gray-800">
+    <section className="py-12 bg-gray-100 dark:bg-main-bg-dark">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-center text-2xl sm:text-3xl font-bold mb-8">Handcrafted with Purpose</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 text-center">

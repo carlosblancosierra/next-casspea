@@ -39,7 +39,7 @@ const Reviews = () => {
         {reviews.map((review, index) => (
           <div
             key={index}
-            className="flex space-x-2 bg-main-bg dark:bg-gray-800 p-4 rounded-lg shadow-md dark:shadow-lg"
+            className="flex space-x-2 bg-main-bg dark:bg-main-bg-dark p-4 rounded-lg shadow-md dark:shadow-lg"
           >
             <div>
               <p className="text-[10px] text-primary-text dark:text-primary-text">

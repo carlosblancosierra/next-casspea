@@ -34,7 +34,7 @@ export default function AboutUsPage() {
                 </section>
 
                 {/* CassPea Story Section */}
-                <section className="relative bg-[url('../public/bg-lot-1.jpeg')] bg-cover bg-center dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-16 mb-4 my-4">
+                <section className="relative bg-[url('../public/bg-lot-1.jpeg')] bg-cover bg-center dark:bg-main-bg-dark rounded-lg shadow-lg p-4 md:p-16 mb-4 my-4">
                     <div className="absolute inset-0 bg-black/70 rounded-lg"></div>
                     <div className="relative">
                         <Image
@@ -75,7 +75,7 @@ export default function AboutUsPage() {
 
                 {/* Mission & Vision Section */}
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-                    <div className="bg-primary-light dark:bg-gray-800 p-8 rounded-lg">
+                    <div className="bg-primary-light dark:bg-main-bg-dark p-8 rounded-lg">
                         <h2 className={`text-2xl font-bold text-center mb-4 text-primary-text dark:text-white`}>
                             Mission
                         </h2>
@@ -84,7 +84,7 @@ export default function AboutUsPage() {
                             in design, flavours and packaging to create a brand that is inclusive and warm.
                         </p>
                     </div>
-                    <div className="bg-pink-50 dark:bg-gray-800 p-8 rounded-lg">
+                    <div className="bg-pink-50 dark:bg-main-bg-dark p-8 rounded-lg">
                         <h2 className={`text-2xl font-bold text-center mb-4 text-primary-text dark:text-white`}>
                             Vision
                         </h2>

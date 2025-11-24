@@ -18,7 +18,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden flex justify-center items-center bg-black bg-opacity-50">
       <div className="relative p-4 w-full max-w-md">
-        <div className="relative bg-main-bg rounded-lg shadow dark:bg-gray-700">
+        <div className="relative bg-main-bg rounded-lg shadow dark:bg-main-bg-dark">
           <button
             type="button"
             onClick={onClose}
@@ -44,7 +44,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
             <button
               onClick={onClose}
               type="button"
-              className="text-primary-text bg-main-bg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-primary-text focus:z-10 dark:bg-gray-700 dark:text-primary-text dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+              className="text-primary-text bg-main-bg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-primary-text focus:z-10 dark:bg-main-bg-dark dark:text-primary-text dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
             >
               No, cancel
             </button>

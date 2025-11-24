@@ -19,9 +19,9 @@ export default function CategoryCard({ category }: CategoryCardProps) {
   return (
     <Link
       href={`/shop-now/categories/${category.slug}`}
-      className="block group relative shadow-lg rounded-lg p-0 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-gray-800 hover:opacity-90 transition-opacity"
+      className="block group relative shadow-lg rounded-lg p-0 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-main-bg-dark hover:opacity-90 transition-opacity"
     >
-      <div className="aspect-w-16 aspect-h-9 w-full overflow-hidden rounded-t-lg bg-gray-200 dark:bg-gray-700 lg:aspect-none group-hover:opacity-75">
+      <div className="aspect-w-16 aspect-h-9 w-full overflow-hidden rounded-t-lg bg-gray-200 dark:bg-main-bg-dark lg:aspect-none group-hover:opacity-75">
         <Image
           alt={category.name}
           src={displayImage}

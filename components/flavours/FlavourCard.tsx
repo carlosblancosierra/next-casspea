@@ -10,7 +10,7 @@ interface FlavourCardProps {
 const FlavourCard: React.FC<FlavourCardProps> = ({ flavour, height = 'h-96' }) => {
     return (
         <div
-            className={`border p-4 rounded-lg flex-shrink-0 bg-main-bg shadow-md dark:bg-gray-800 dark:text-white dark:border-gray-700 w-full flex flex-col justify-between ${height}`}
+            className={`border p-4 rounded-lg flex-shrink-0 bg-main-bg shadow-md dark:bg-main-bg-dark dark:text-white dark:border-gray-700 w-full flex flex-col justify-between ${height}`}
             style={{ overflow: 'hidden', position: 'relative' }}
         >
             {/* Featured Badge */}

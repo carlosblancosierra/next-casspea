@@ -33,7 +33,7 @@ export default function GiveawayPopup() {
         if (e.target === e.currentTarget) handleClose();
       }}
     >
-      <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full mx-4">
+      <div className="relative bg-main-bg dark:bg-main-bg-dark rounded-lg shadow-lg max-w-md w-full mx-4">
         <button
           onClick={handleClose}
           className="absolute top-2 right-2 text-primary-text hover:text-primary-text dark:hover:text-white rounded-lg text-sm w-8 h-8 flex items-center justify-center focus:outline-none"

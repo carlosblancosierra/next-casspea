@@ -71,7 +71,7 @@ export default function Store() {
 						className={`${
 							selectedCategory === categorySlug
 								? 'text-primary-text bg-primary border-primary dark:bg-primary dark:border-primary'
-								: 'text-primary-text bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700'
+								: 'text-primary-text bg-main-bg border border-gray-200 dark:bg-main-bg-dark dark:border-gray-700'
 						} hover:bg-blue-700 hover:text-primary-text dark:hover:bg-blue-600 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 rounded-full
               text-xs px-3 py-2
               sm:text-xs sm:px-4 sm:py-2

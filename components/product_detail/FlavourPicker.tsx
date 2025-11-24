@@ -116,7 +116,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                             <button
                                 type="button"
                                 onClick={() => handleDecrement(flavour.flavor)}
-                                className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-s-lg p-3 h-11 focus:ring-2 focus:outline-none"
+                                className="bg-gray-100 hover:bg-gray-200 dark:bg-main-bg-dark dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-s-lg p-3 h-11 focus:ring-2 focus:outline-none"
                             >
                                 <FiMinus />
                             </button>
@@ -124,12 +124,12 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 type="text"
                                 value={getFlavorQuantity(flavour.flavor.id)}
                                 readOnly
-                                className=" dark:bg-gray-800 border-x-0 border-gray-300 dark:border-gray-600 h-11 text-center text-primary-text dark:text-primary-text text-base block w-[3rem] py-2.5"
+                                className=" dark:bg-main-bg-dark border-x-0 border-gray-300 dark:border-gray-600 h-11 text-center text-primary-text dark:text-primary-text text-base block w-[3rem] py-2.5"
                             />
                             <button
                                 type="button"
                                 onClick={() => addFlavour(flavour.flavor)}
-                                className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-e-lg p-3 h-11 focus:ring-2 focus:outline-none"
+                                className="bg-gray-100 hover:bg-gray-200 dark:bg-main-bg-dark dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-e-lg p-3 h-11 focus:ring-2 focus:outline-none"
                             >
                                 <FiPlus />
                             </button>
@@ -153,7 +153,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                 className={`mt-4 cursor-pointer group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium focus:outline-none
                 ${remainingChocolates > 0
                         ? 'bg-primary-2 dark:bg-primary text-white border-gray-300 dark:border-primary hover:bg-primary dark:hover:bg-primary'
-                        : 'bg-gray-300 dark:bg-gray-700 text-primary-text cursor-not-allowed border-gray-300 dark:border-gray-600'
+                        : 'bg-gray-300 dark:bg-main-bg-dark text-primary-text cursor-not-allowed border-gray-300 dark:border-gray-600'
                     }`}
             >
                 {remainingChocolates > 0 ? 'Add Flavour' : 'All Flavours Selected'}
@@ -175,11 +175,11 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                     className="fixed inset-0 bg-gray-600 dark:bg-main-bg-dark bg-opacity-50 dark:bg-opacity-80 flex items-center justify-center overflow-auto z-[100]"
                     onClick={handleModalClick}
                 >
-                    <div className="relative bg-main-bg dark:bg-gray-800 p-6 rounded-lg max-w-[90vw] w-full max-h-[85vh] mx-auto shadow-lg overflow-y-auto">
+                    <div className="relative bg-main-bg dark:bg-main-bg-dark p-6 rounded-lg max-w-[90vw] w-full max-h-[85vh] mx-auto shadow-lg overflow-y-auto">
                         <h2 className="text-center text-sm font-semibold mb-1 dark:text-primary-text">Select a Flavour</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                             {getFilteredFlavours()?.map((flavour) => (
-                                <div key={flavour.id} className="flavour-card border dark:border-gray-700 px-3 py-2 rounded-lg flex flex-col justify-between dark:bg-gray-800">
+                                <div key={flavour.id} className="flavour-card border dark:border-gray-700 px-3 py-2 rounded-lg flex flex-col justify-between dark:bg-main-bg-dark">
                                     <div className="flex items-center gap-2">
                                         <div className="flex-shrink-0 relative w-16 h-16">
                                             {flavour.image && (
@@ -253,10 +253,10 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                         </button>
 
                         {/* Sticky footer for both mobile and desktop */}
-                        <div className="fixed bottom-0 left-0 right-0 bg-main-bg dark:bg-gray-800 border-t dark:border-gray-700 p-4 shadow-lg">
+                        <div className="fixed bottom-0 left-0 right-0 bg-main-bg dark:bg-main-bg-dark border-t dark:border-gray-700 p-4 shadow-lg">
                             <div className="max-w-[95vw] mx-auto space-y-3">
                                 {/* Progress bar */}
-                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                <div className="w-full bg-gray-200 dark:bg-main-bg-dark rounded-full h-2.5">
                                     <div
                                         className="bg-primary h-2.5 rounded-full transition-all duration-300"
                                         style={{ width: `${((maxChocolates - remainingChocolates) / maxChocolates) * 100}%` }}

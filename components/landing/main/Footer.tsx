@@ -7,7 +7,7 @@ interface FooterProps { config: typeof import('../constants').LANDING_CONFIG.gol
 
 export default function Footer({ config }: FooterProps) {
   return (
-    <footer className="bg-gray-100 dark:bg-gray-800 text-primary-text dark:text-primary-text py-8 px-4">
+    <footer className="bg-gray-100 dark:bg-main-bg-dark text-primary-text dark:text-primary-text py-8 px-4">
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <div>
           <h3 className="font-semibold mb-2">Shop</h3>

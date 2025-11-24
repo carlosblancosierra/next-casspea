@@ -24,7 +24,7 @@ export default function PreviewModal({ layers, onClose }: PreviewModalProps) {
             onClick={onClose}
         >
             <div 
-                className="main-bg dark:bg-gray-800 p-4 rounded-lg max-w-2xl w-full mx-4"
+                className="main-bg dark:bg-main-bg-dark p-4 rounded-lg max-w-2xl w-full mx-4"
                 onClick={e => e.stopPropagation()}
             >
                 <div className="grid grid-cols-2 gap-4">
@@ -39,7 +39,7 @@ export default function PreviewModal({ layers, onClose }: PreviewModalProps) {
                 </div>
                 <button
                     onClick={onClose}
-                    className="mt-4 w-full bg-gray-100 dark:bg-gray-700 py-2 rounded-md"
+                    className="mt-4 w-full bg-gray-100 dark:bg-main-bg-dark py-2 rounded-md"
                 >
                     Close
                 </button>

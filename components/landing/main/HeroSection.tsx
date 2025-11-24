@@ -85,7 +85,7 @@ export default function HeroSection({ config }: HeroSectionProps) {
             className="
               inline-flex items-center justify-center px-7 py-3 rounded-lg font-medium
               border border-white/80 text-white/95 backdrop-blur-[2px]
-              hover:bg-white/10 transition-colors
+              hover:bg-main-bg/10 transition-colors
               focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70
             "
           >

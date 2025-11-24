@@ -20,7 +20,7 @@ const DayHeader: React.FC<DayHeaderProps> = ({ date, orders, isExpanded, onToggl
   return (
     <button
       onClick={onToggle}
-      className="w-full flex items-center gap-4 text-left p-4 bg-main-bg dark:bg-gray-800 rounded-lg shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+      className="w-full flex items-center gap-4 text-left p-4 bg-main-bg dark:bg-main-bg-dark rounded-lg shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
     >
       <div className="flex items-center gap-3 flex-1">
         <ChevronRightIcon

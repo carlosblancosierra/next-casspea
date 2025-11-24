@@ -52,7 +52,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-[1fr,3fr] gap-x-4 gap-y-1 border bg-main-bg p-4 rounded-lg shadow-sm dark:bg-gray-800 md:p-6">
+      <div className="grid grid-cols-2 md:grid-cols-[1fr,3fr] gap-x-4 gap-y-1 border bg-main-bg p-4 rounded-lg shadow-sm dark:bg-main-bg-dark md:p-6">
         {/* Imagen */}
         <a href="#" className="col-span-1">
           <img
@@ -227,7 +227,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
       {/* Modal de confirmación de borrado */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-main-bg rounded-lg shadow dark:bg-gray-700 max-w-md w-full">
+          <div className="bg-main-bg rounded-lg shadow dark:bg-main-bg-dark max-w-md w-full">
             <div className="flex items-center justify-between p-4 border-b dark:border-gray-600">
               <h3 className="text-xl text-primary-text">Remove Item</h3>
               <button onClick={() => setIsDeleteModalOpen(false)} className="text-primary-text">

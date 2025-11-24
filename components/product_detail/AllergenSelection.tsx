@@ -109,7 +109,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                                 id={`allergen-${allergen.id}`}
                                 name={`${allergen.id}-free`}
                                 value={allergen.id}
-                                className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary-2 dark:bg-gray-700 dark:border-gray-600"
+                                className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary-2 dark:bg-main-bg-dark dark:border-gray-600"
                                 checked={selectedAllergens.includes(allergen.id)}
                                 onChange={() => handleAllergenChange(allergen.id)}
                             />

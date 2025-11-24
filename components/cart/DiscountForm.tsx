@@ -51,7 +51,7 @@ export default function DiscountForm() {
     // If cart has an active discount code
     if (cart?.discount) {
         return (
-            <div className="flex items-center justify-between  dark:bg-gray-700 px-3 py-2 rounded-md">
+            <div className="flex items-center justify-between  dark:bg-main-bg-dark px-3 py-2 rounded-md">
                 <span className="text-xs font-medium text-primary-text">
                     {cart.discount.code}
                 </span>
@@ -78,7 +78,7 @@ export default function DiscountForm() {
                         onChange={(e) => setDiscountCode(e.target.value)}
                         placeholder="Enter discount code"
                         className="flex-1 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2
-                            text-primary-text dark:text-primary-text bg-main-bg dark:bg-gray-700
+                            text-primary-text dark:text-primary-text bg-main-bg dark:bg-main-bg-dark
                             placeholder-gray-500 dark:placeholder-gray-400 text-base
                             focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
                             transition-colors duration-200"

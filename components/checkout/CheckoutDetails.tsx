@@ -33,7 +33,7 @@ const CheckoutDetails: React.FC<CheckoutDetailsProps> = ({ session }) => {
         session.shipping_address.full_name === session.billing_address.full_name;
 
     return (
-        <div className="main-bg p-6 rounded-lg shadow dark:bg-gray-800">
+        <div className="main-bg p-6 rounded-lg shadow dark:bg-main-bg-dark">
             <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text">Order Details</h2>
             <div className="space-y-4">
                 <AddressDisplay

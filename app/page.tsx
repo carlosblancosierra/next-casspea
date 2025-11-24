@@ -139,7 +139,7 @@ export const metadata: Metadata = {
 
 // Loading placeholder component
 const LoadingSection = () => (
-  <div className="w-full animate-pulse bg-gray-200 dark:bg-gray-800 rounded-lg" />
+  <div className="w-full animate-pulse bg-gray-200 dark:bg-main-bg-dark rounded-lg" />
 );
 
 export default function HomePage() {

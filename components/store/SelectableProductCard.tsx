@@ -15,9 +15,9 @@ export default function SelectableProductCard({ product, onSelect, price }: Prop
   return (
     <div
       onClick={onSelect}
-      className="block group relative shadow-lg rounded-lg p-2 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-gray-800 hover:opacity-90 transition-opacity cursor-pointer"
+      className="block group relative shadow-lg rounded-lg p-2 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-main-bg-dark hover:opacity-90 transition-opacity cursor-pointer"
     >
-      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700 lg:aspect-none group-hover:opacity-75 lg:h-80">
+      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-main-bg-dark lg:aspect-none group-hover:opacity-75 lg:h-80">
         <Image
           alt={product.name}
           src={displayImage}

@@ -147,7 +147,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
                             step <= currentStep
                                 ? 'bg-primary border-primary text-primary-text'
-                                : 'border-gray-300 text-primary-text bg-gray-50 dark:bg-gray-800'
+                                : 'border-gray-300 text-primary-text bg-gray-50 dark:bg-main-bg-dark'
                         }`}>
                             {step}
                         </div>
@@ -400,7 +400,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                 value={quantity}
                                                 onChange={handleQuantityChange}
                                                 className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
-                                                    bg-main-bg dark:bg-transparent shadow-sm focus:border-primary-2
+                                                    bg-main-bg dark:bg-main-bg-dark shadow-sm focus:border-primary-2
                                                     focus:ring-primary-2"
                                             >
                                                 {Array.from({ length: 20 }, (_, i) => (
@@ -444,7 +444,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         ) : (
                             // RANDOM selection - show summary and options
                             <div className="space-y-4">
-                                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                                <div className="p-4 rounded-lg">
                                     <p className="text-sm text-primary-text">
                                         We'll select {maxChocolates} chocolates for you, avoiding your specified allergens.
                                     </p>
@@ -660,7 +660,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             {/* Upgrade Popup */}
             {showUpgradePopup && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
+                    <div className="bg-main-bg dark:bg-main-bg-dark rounded-lg max-w-md w-full p-6">
                         <div className="text-center">
                             <h3 className="text-lg font-semibold text-primary-text mb-4">
                                 Make your signature box more indulgent.
@@ -679,7 +679,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                         setShowUpgradePopup(false);
                                         handleAddToCart();
                                     }}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                    className="flex-1 px-4 py-2 border border-gray-300 text-primary-text rounded-md hover:main-bg dark:hover:bg-main-bg-dark transition-colors"
                                 >
                                     Continue to cart
                                 </button>

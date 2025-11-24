@@ -17,7 +17,7 @@ const CartSummary: React.FC = () => {
 
   return (
     <div className="hidden md:block space-y-4 rounded-lg border border-gray-200 bg-main-bg p-4 shadow-sm
-      dark:border-gray-700 dark:bg-gray-800 sm:p-6">
+      dark:border-gray-700 dark:bg-main-bg-dark sm:p-6">
       <p className="text-xl font-semibold text-primary-text">Order summary</p>
 
       <div className="space-y-4">

@@ -24,7 +24,7 @@ const DaySection: React.FC<DaySectionProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="main-bg dark:bg-gray-800 rounded-lg shadow">
+    <div className="main-bg dark:bg-main-bg-dark rounded-lg shadow">
       <DayHeader
         date={date}
         orders={orders}

@@ -39,7 +39,7 @@ export default function AddressesStatsPage() {
                         >
                             Download CSV
                         </button>
-                        <table className="min-w-full bg-white border border-gray-200">
+                        <table className="min-w-full bg-main-bg border border-gray-200">
                             <thead>
                                 <tr>
                                     <th className="px-4 py-2 border-b">Postcode</th>

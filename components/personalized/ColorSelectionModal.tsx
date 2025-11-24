@@ -66,10 +66,10 @@ export default function ColorSelectionModal({
             onClick={onClose}
         >
             <div 
-                className="main-bg dark:bg-gray-800 p-6 w-[95vw] max-w-[95vw] max-h-[90vh] overflow-y-auto"
+                className="main-bg dark:bg-main-bg-dark p-6 w-[95vw] max-w-[95vw] max-h-[90vh] overflow-y-auto"
                 onClick={e => e.stopPropagation()}
             >
-                <div className="sticky top-0 bg-main-bg dark:bg-gray-800 pb-4 mb-4 border-b">
+                <div className="sticky top-0 bg-main-bg dark:bg-main-bg-dark pb-4 mb-4 border-b">
                     <div className="flex justify-between items-center">
                         <h2 className="text-xl font-bold">Select {layer.layer_type.name}</h2>
                         <button
@@ -100,7 +100,7 @@ export default function ColorSelectionModal({
                                 >
                                     <div className="relative aspect-square rounded-lg">
                                         {!loadedStates[color.slug] && (
-                                            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+                                            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-main-bg-dark">
                                                 <div className="animate-spin rounded-full h-8 w-8 border-4 border-primary dark:border-primary-2 border-t-transparent"></div>
                                             </div>
                                         )}

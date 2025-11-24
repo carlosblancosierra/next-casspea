@@ -50,21 +50,21 @@ export default function PersonalizedQuantities({ orderDetails, setOrderDetails }
   };
 
   return (
-    <div className="p-4 space-y-6 bg-main-bg dark:bg-gray-800 rounded shadow">
+    <div className="p-4 space-y-6 bg-main-bg dark:bg-main-bg-dark rounded shadow">
       <div>
         <label htmlFor="quantity" className="block text-sm font-medium text-primary-text dark:text-primary-text">
           Quantity
         </label>
         <div className="flex items-center mt-1 space-x-2">
-          <button onClick={handleDecrement} className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded">-</button>
+          <button onClick={handleDecrement} className="px-2 py-1 bg-gray-200 dark:bg-main-bg-dark rounded">-</button>
           <input
             id="quantity"
             type="number"
             value={quantity}
             onChange={handleInputChange}
-            className="w-24 text-center rounded-md border border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-gray-700 shadow-sm focus:outline-none focus:border-primary focus:ring-primary"
+            className="w-24 text-center rounded-md border border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark shadow-sm focus:outline-none focus:border-primary focus:ring-primary"
           />
-          <button onClick={handleIncrement} className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded">+</button>
+          <button onClick={handleIncrement} className="px-2 py-1 bg-gray-200 dark:bg-main-bg-dark rounded">+</button>
         </div>
         <p className="text-sm text-primary-text dark:text-primary-text mt-1">
           Adjust quantity in steps of 50. (You can type any value ≥ 50.)
