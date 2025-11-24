@@ -114,13 +114,13 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                 </div>
             )}
 
-            {product.slug === "advent-calendar" && (
+            {/* {product.slug === "advent-calendar" && (
                 <div className="mt-4">
                     <p className="text-lg font-semibold text-primary-text dark:text-primary-text">
                     Shipping begins on Nov 21st.
                     </p>
                 </div>
-            )}
+            )} */}
 
             {product.sold_out ? (
                 <button

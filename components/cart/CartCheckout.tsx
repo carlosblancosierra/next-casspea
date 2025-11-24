@@ -278,7 +278,7 @@ export default function CartCheckout() {
             {/* Contact Information - Optional */}
             {email && (
                 <div className="border-b border-gray-900/10 pb-6 dark:border-gray-700">
-                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                    <div className="bg-main-bg dark:bg-main-bg-dark border border-green-200 dark:border-green-800 rounded-lg p-4">
                         <div className="flex items-start">
                             <svg className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
@@ -357,9 +357,9 @@ export default function CartCheckout() {
                             <svg className="w-5 h-5 text-red-500 dark:text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>
                             </svg>
-                            <p className="text-xs text-primary-text">
+                            {/* <p className="text-xs text-primary-text">
                                 Advent Calendar shipping begins on November 21st
-                            </p>
+                            </p> */}
                         </div>
                     </div>
 
