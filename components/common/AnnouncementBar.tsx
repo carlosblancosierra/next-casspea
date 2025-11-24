@@ -34,7 +34,7 @@ export default function AnnouncementBar() {
 
   const handleCopyCode = async () => {
     try {
-      await navigator.clipboard.writeText('CaspeaFriday');
+      await navigator.clipboard.writeText('CasspeaFriday');
       setCopiedCode(true);
       setTimeout(() => setCopiedCode(false), 2000);
     } catch (err) {
@@ -112,9 +112,9 @@ export default function AnnouncementBar() {
            Code: <button
              onClick={handleCopyCode}
              className="font-bold text-red-600 text-sm hover:text-red-500 transition-colors cursor-pointer underline decoration-dotted underline-offset-2"
-             aria-label="Copy discount code CaspeaFriday"
+             aria-label="Copy discount code CasspeaFriday"
            >
-             {copiedCode ? 'Copied!' : 'CaspeaFriday'}
+             {copiedCode ? 'Copied!' : 'CasspeaFriday'}
            </button> for 15% OFF <span aria-hidden="true">&rarr;</span>
           </p>
         </div>
