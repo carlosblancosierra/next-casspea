@@ -13,7 +13,7 @@ type ColoredListProps = {
 };
 
 const colorDict: Record<string, string> = {
-  black: "text-black dark:text-white",
+  black: "text-white dark:text-white",
   red: "text-red-500 dark:text-red-400",
   orange: "text-orange-500 dark:text-orange-400",
   yellow: "text-yellow-500 dark:text-yellow-400",
@@ -50,8 +50,8 @@ const ColoredList: React.FC<ColoredListProps> = ({ items, useCustomColors, class
 
   return (
     <div>
-      {title && <h3 className="text-2xl font-bold mb-2 text-black dark:text-white">{title}</h3>}
-      {subtitle && <p className="text-gray-600 mb-4 text-black dark:text-white">{subtitle}</p>}
+      {title && <h3 className="text-2xl font-bold mb-2 text-white dark:text-white">{title}</h3>}
+      {subtitle && <p className="text-gray-600 mb-4 text-white dark:text-white">{subtitle}</p>}
     <ol className={`mt-4 space-y-1 list-decimal list-inside ${className}`}>
       {items.map((item, idx) => {
         if (typeof item === "string" || !useCustomColors) {

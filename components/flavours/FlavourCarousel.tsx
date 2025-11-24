@@ -136,7 +136,7 @@ export default function FlavourCarousel() {
           .map((_, index) => (
             <motion.div
               key={index}
-              className="flex-shrink-0 w-56 h-96 flex flex-col items-center justify-center bg-main-bg dark:bg-main-bg-dark text-black dark:text-white rounded-lg"
+              className="flex-shrink-0 w-56 h-96 flex flex-col items-center justify-center bg-main-bg dark:bg-main-bg-dark text-white dark:text-white rounded-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

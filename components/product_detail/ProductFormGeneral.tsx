@@ -83,7 +83,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                 )}
                 {!product.sold_out && (
                     <>
-                        <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                        <label htmlFor="quantity" className="block text-sm font-medium text-primary-text">
                             Quantity
                         </label>
                         <select
@@ -116,7 +116,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
 
             {product.slug === "advent-calendar" && (
                 <div className="mt-4">
-                    <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+                    <p className="text-lg font-semibold text-primary-text">
                     Shipping begins on Nov 21st.
                     </p>
                 </div>
@@ -126,7 +126,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                 <button
                     type="button"
                     disabled
-                    className="mt-8 w-full py-3 rounded bg-gray-400 text-white cursor-not-allowed flex items-center justify-center text-sm gap-2"
+                    className="mt-8 w-full py-3 rounded bg-gray-400 text-primary-text cursor-not-allowed flex items-center justify-center text-sm gap-2"
                 >
                     Sold Out
                 </button>
@@ -134,7 +134,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                 <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="mt-8 w-full py-3 rounded bg-primary-2 text-white dark:bg-primary cursor-pointer flex items-center justify-center text-sm gap-2"
+                    className="mt-8 w-full py-3 rounded bg-primary-2 text-primary-text dark:bg-primary cursor-pointer flex items-center justify-center text-sm gap-2"
                 >
                     Add to Cart
                 </button>
