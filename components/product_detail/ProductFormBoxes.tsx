@@ -147,7 +147,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
                             step <= currentStep
                                 ? 'bg-primary border-primary text-primary-text'
-                                : 'border-gray-300 text-primary-text bg-gray-50 dark:bg-main-bg-dark'
+                                : 'border-gray-300 text-primary-text bg-main-bg dark:bg-main-bg-dark'
                         }`}>
                             {step}
                         </div>

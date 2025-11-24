@@ -79,7 +79,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
   // Calendar UI: simple grid of availableDays
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-primary-text">Select Pickup Date</h3>
+      <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text">Select Pickup Date</h3>
       <div className="grid grid-cols-3 gap-2">
         {availableDays.map(day => {
           const dayStr = format(day, 'EEE dd MMM', { locale: enGB });
@@ -97,7 +97,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
       </div>
       {selectedDate && (
         <>
-          <h4 className="text-md font-semibold mt-4 text-primary-text">Select Time Slot</h4>
+          <h4 className="text-md font-semibold mt-4 text-primary-text dark:text-primary-text">Select Time Slot</h4>
           <div className="grid grid-cols-2 gap-2">
             {slots.map(slot => (
               <button

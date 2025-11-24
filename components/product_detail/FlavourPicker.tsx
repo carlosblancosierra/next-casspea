@@ -39,7 +39,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     if (!propAvailableFlavours && isLoading) return <div className="flex items-center justify-center min-h-screen">
                 <Spinner md />
             </div>;
-    if (!propAvailableFlavours && error) return <div>Error:</div>;
+    if (!propAvailableFlavours && error) return <div className="text-primary-text">Error:</div>;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -152,7 +152,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                 disabled={remainingChocolates <= 0}
                 className={`mt-4 cursor-pointer group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium focus:outline-none
                 ${remainingChocolates > 0
-                        ? 'bg-primary-2 dark:bg-primary text-white border-gray-300 dark:border-primary hover:bg-primary dark:hover:bg-primary'
+                        ? 'bg-primary-2 dark:bg-primary text-primary-text border-gray-300 dark:border-primary hover:bg-primary dark:hover:bg-primary'
                         : 'bg-gray-300 dark:bg-main-bg-dark text-primary-text cursor-not-allowed border-gray-300 dark:border-gray-600'
                     }`}
             >
@@ -176,7 +176,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                     onClick={handleModalClick}
                 >
                     <div className="relative bg-main-bg dark:bg-main-bg-dark p-6 rounded-lg max-w-[90vw] w-full max-h-[85vh] mx-auto shadow-lg overflow-y-auto">
-                        <h2 className="text-center text-sm font-semibold mb-1 dark:text-primary-text">Select a Flavour</h2>
+                        <h2 className="text-center text-sm font-semibold mb-1 text-primary-text dark:text-primary-text">Select a Flavour</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                             {getFilteredFlavours()?.map((flavour) => (
                                 <div key={flavour.id} className="flavour-card border dark:border-gray-700 px-3 py-2 rounded-lg flex flex-col justify-between dark:bg-main-bg-dark">
@@ -193,7 +193,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             )}
                                         </div>
                                         <div className="flex-1">
-                                            <h3 className="text-lg font-semibold dark:text-primary-text text-sm">{flavour.name}</h3>
+                                            <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text text-sm">{flavour.name}</h3>
                                             <p className="text-[0.7rem] text-primary-text dark:text-primary-text text-xs leading-3 mt-1">{flavour.mini_description}</p>
                                             {flavour.allergens && flavour.allergens.length > 0 && (
                                                 <p className="text-[8px] text-primary-text md:text-xs mt-1">
@@ -216,13 +216,13 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             disabled={getFlavorQuantity(flavour.id) === 0}
                                             className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-2
                                             ${getFlavorQuantity(flavour.id) > 0
-                                                    ? 'bg-primary text-white hover:bg-primary'
+                                                    ? 'bg-primary text-primary-text hover:bg-primary'
                                                     : 'bg-gray-300 text-primary-text cursor-not-allowed'
                                                 }`}
                                         >
                                             <FiMinus size={16} />
                                         </button>
-                                        <span className="mx-4 text-sm dark:text-primary-text">
+                                        <span className="mx-4 text-sm text-primary-text dark:text-primary-text">
                                             {getFlavorQuantity(flavour.id)}
                                         </span>
                                         <button
@@ -231,7 +231,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             disabled={remainingChocolates <= 0 && getFlavorQuantity(flavour.id) === 0}
                                             className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-2
                                             ${remainingChocolates > 0 || getFlavorQuantity(flavour.id) > 0
-                                                    ? 'bg-primary text-white hover:bg-primary'
+                                                    ? 'bg-primary text-primary-text hover:bg-primary'
                                                     : 'bg-gray-300 text-primary-text cursor-not-allowed'
                                                 }`}
                                         >
@@ -246,7 +246,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                         <button
                             type="button"
                             onClick={() => setIsModalOpen(false)}
-                            className="absolute top-4 right-4 text-primary-text dark:text-primary-text hover:text-primary-text dark:hover:text-primary-text focus:outline-none"
+                            className="absolute top-4 right-4 text-primary-text dark:text-primary-text hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none"
                             aria-label="Close Modal"
                         >
                             <FiX size={24} />
@@ -272,7 +272,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary transition-colors"
+                                    className="w-full bg-primary text-primary-text py-3 rounded-lg hover:bg-primary transition-colors"
                                 >
                                     Done
                                 </button>
