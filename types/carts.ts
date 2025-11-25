@@ -30,6 +30,7 @@ export interface CartItemPackCustomization {
     id: number;
     cart_item: number;
     selection_type: 'RANDOM' | 'PICK_AND_MIX';
+    allergens?: Allergen[];
     flavor_selections?: CartItemBoxFlavorSelection[];
     hot_chocolate?: number;
     chocolate_bark?: number;
@@ -51,6 +52,7 @@ export interface CartItemRequest {
     };
     pack_customization?: {
         selection_type: 'PICK_AND_MIX' | 'RANDOM';
+        allergens?: number[];
         flavor_selections?: CartItemBoxFlavorSelectionRequest[] | null;
         hot_chocolate?: number;
         chocolate_bark?: number;
