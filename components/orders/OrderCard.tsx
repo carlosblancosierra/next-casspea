@@ -147,7 +147,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-main-bg-dark rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-main-bg dark:bg-main-bg-dark rounded-lg shadow-sm overflow-hidden">
       {/* Header with Order ID and Status */}
       <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
         <h3 className="text-base font-semibold text-primary-text dark:text-primary-text">
