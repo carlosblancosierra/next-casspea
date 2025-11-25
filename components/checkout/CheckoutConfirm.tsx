@@ -41,6 +41,12 @@ const CheckoutConfirm = () => {
             return;
         }
 
+        // Validate store pickup selection
+        if (selectedShippingOption === 34 && !storePickup) {
+            toast.error('Please select a pickup date and time slot');
+            return;
+        }
+
         try {
             setIsProcessing(true);
 
@@ -118,7 +124,7 @@ const CheckoutConfirm = () => {
                     />
                     <button
                         onClick={handleProceedToPayment}
-                        disabled={isProcessing || !selectedShippingOption}
+                        disabled={isProcessing || !selectedShippingOption || (selectedShippingOption === 34 && !storePickup)}
                         className="w-full bg-gradient-autumn text-primary-text dark:text-primary-text py-3 px-4 rounded-md
                             hover:bg-primary focus:outline-none focus:ring-2
                             focus:ring-primary-2 focus:ring-offset-2 disabled:bg-main-bg

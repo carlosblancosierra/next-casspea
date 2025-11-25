@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { addDays, format, isWeekend, startOfDay } from 'date-fns';
 import { enGB } from 'date-fns/locale';
 
@@ -51,7 +51,7 @@ function getNextWeekdays(startDate: Date, count = 14) {
 type Slot = { start: string; end: string; value: string };
 
 type CheckoutStorePickUpProps = {
-  onChange?: (val: { date: Date; slot: Slot }) => void;
+  onChange?: (val: { date: Date; slot: Slot } | null) => void;
 };
 
 const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) => {
@@ -76,6 +76,19 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
     return getTimeSlots(false);
   }, [selectedDate, now, isBeforeNoon]);
 
+  // Notify parent when selection changes (null if incomplete)
+  useEffect(() => {
+    if (selectedDate && selectedSlot) {
+      const slot = slots.find(s => s.value === selectedSlot);
+      if (slot && onChange) {
+        onChange({ date: selectedDate, slot });
+      }
+    } else if (onChange) {
+      // If either is missing, notify parent that selection is incomplete
+      onChange(null);
+    }
+  }, [selectedDate, selectedSlot, slots, onChange]);
+
   // Calendar UI: simple grid of availableDays
   return (
     <div className="space-y-4">
@@ -87,6 +100,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
           return (
             <button
               key={dayStr}
+              type="button"
               className={`px-2 py-2 rounded border ${isSelected ? 'bg-primary text-primary-text' : 'bg-main-bg dark:bg-main-bg-dark text-primary-text'} hover:bg-primary/10`}
               onClick={() => { setSelectedDate(day); setSelectedSlot(null); }}
             >
@@ -102,8 +116,9 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
             {slots.map(slot => (
               <button
                 key={slot.value}
+                type="button"
                 className={`px-2 py-2 rounded border ${selectedSlot === slot.value ? 'bg-primary text-primary-text' : 'bg-main-bg dark:bg-main-bg-dark text-primary-text'} hover:bg-primary/10`}
-                onClick={() => { setSelectedSlot(slot.value); onChange && onChange({ date: selectedDate, slot }); }}
+                onClick={() => { setSelectedSlot(slot.value); }}
               >
                 {slot.start} - {slot.end}
               </button>
