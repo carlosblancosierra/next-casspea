@@ -99,7 +99,7 @@ const PaymentStatus = ({ status }: { status?: string }) => {
 const ShippingBadge = ({ date }: { date?: string | null }) => {
   if (!date) {
     return (
-      <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-primary-text ring-1 ring-inset ring-gray-500/10 dark:bg-main-bg-dark dark:text-primary-text dark:ring-gray-700">
+      <span className="inline-flex items-center rounded-md bg-main-bg px-2 py-1 text-xs font-medium text-primary-text ring-1 ring-inset ring-gray-500/10 dark:bg-main-bg-dark dark:text-primary-text dark:ring-gray-700">
         ASAP
       </span>
     );
@@ -255,7 +255,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
             </div>
           )}
           {/* Order Total */}
-          <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-gray-50 dark:bg-main-bg-dark">
+          <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-main-bg dark:bg-main-bg-dark">
             <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Order Total</dt>
             <dd className="mt-1 text-sm font-semibold text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
               £{order.checkout_session.total_with_shipping.toFixed(2)}

@@ -114,7 +114,7 @@ export default function OrderList() {
         </button>
       </div>
 
-      <div className="mb-4 text-center font-semibold">
+      <div className="mb-4 text-center font-semibold text-primary-text dark:text-primary-text">
         Mostrando de {startDate.toLocaleDateString()} a {endDate.toLocaleDateString()}
       </div>
 
