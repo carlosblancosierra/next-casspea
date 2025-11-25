@@ -94,7 +94,7 @@ export default function OrderList() {
           startDate={startDate}
           endDate={endDate}
           dateFormat="yyyy-MM-dd"
-          className="text-white"
+          className="text-primary-text bg-main-bg dark:bg-main-bg-dark border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
         />
         <DatePicker
           selected={endDate}
@@ -104,7 +104,7 @@ export default function OrderList() {
           endDate={endDate}
           minDate={startDate}
           dateFormat="yyyy-MM-dd"
-          className="text-white"
+          className="text-primary-text bg-main-bg dark:bg-main-bg-dark border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
         />
         <button
           className="px-4 py-2 bg-blue-600 text-white rounded"
