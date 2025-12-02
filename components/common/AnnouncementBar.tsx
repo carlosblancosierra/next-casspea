@@ -99,14 +99,14 @@ export default function AnnouncementBar() {
             Free Shipping over £50
           </p>
           
-          {/* <Link
+          <Link
             href="/subscribe"
             className="w-full md:w-auto text-center rounded-full bg-red-600 px-3.5 py-1 text-sm text-white shadow-sm hover:bg-primary-light transition"
           >
             Subscribe for 10% off <span aria-hidden="true">&rarr;</span>
-          </Link> */}
+          </Link>
 
-          <p
+          {/* <p
             className="w-full md:w-auto text-center px-3.5 py-1 text-sm text-primary-text"
           >
            Code: <button
@@ -116,7 +116,7 @@ export default function AnnouncementBar() {
            >
              {copiedCode ? 'Copied!' : 'cyber25'}
            </button> for 20% OFF <span aria-hidden="true">&rarr;</span>
-          </p>
+          </p> */}
         </div>
 
         <button
