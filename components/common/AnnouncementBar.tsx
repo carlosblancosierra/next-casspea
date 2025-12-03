@@ -34,7 +34,7 @@ export default function AnnouncementBar() {
 
   const handleCopyCode = async () => {
     try {
-      await navigator.clipboard.writeText('cyber25');
+      await navigator.clipboard.writeText('MerryChristmas');
       setCopiedCode(true);
       setTimeout(() => setCopiedCode(false), 2000);
     } catch (err) {
@@ -99,24 +99,24 @@ export default function AnnouncementBar() {
             Free Shipping over £50
           </p>
           
-          <Link
+          {/* <Link
             href="/subscribe"
             className="w-full md:w-auto text-center rounded-full bg-red-600 px-3.5 py-1 text-sm text-white shadow-sm hover:bg-primary-light transition"
           >
             Subscribe for 10% off <span aria-hidden="true">&rarr;</span>
-          </Link>
+          </Link> */}
 
-          {/* <p
+          <p
             className="w-full md:w-auto text-center px-3.5 py-1 text-sm text-primary-text"
           >
            Code: <button
              onClick={handleCopyCode}
              className="font-bold text-red-600 text-sm hover:text-red-500 transition-colors cursor-pointer underline decoration-dotted underline-offset-2"
-             aria-label="Copy discount code cyber25"
+             aria-label="Copy discount code MerryChristmas"
            >
-             {copiedCode ? 'Copied!' : 'cyber25'}
-           </button> for 20% OFF <span aria-hidden="true">&rarr;</span>
-          </p> */}
+             {copiedCode ? 'Copied!' : 'MerryChristmas'}
+           </button> for 12% OFF <span aria-hidden="true">&rarr;</span>
+          </p>
         </div>
 
         <button
