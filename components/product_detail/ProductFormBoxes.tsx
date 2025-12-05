@@ -48,6 +48,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [hotChocolate, setHotChocolate] = useState<Product | null>(null);
     const [giftCard, setGiftCard] = useState<Product | null>(null);
     const [giftMessage, setGiftMessage] = useState<string>('');
+    const [showGiftMessagePopup, setShowGiftMessagePopup] = useState<boolean>(false);
 
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -93,9 +94,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const canAddToCart = () => {
         if (!canProceedToNextStep()) return false;
 
-        // If pack is selected, check that all pack items are selected
+        // If pack is selected, check that hot chocolate and chocolate bark are selected
+        // Gift card is optional
         if (isPack) {
-            return hotChocolate !== null && chocolateBark !== null && giftCard !== null;
+            return hotChocolate !== null && chocolateBark !== null;
         }
 
         return true;
@@ -235,6 +237,12 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     };
 
     const handleAddToCart = async () => {
+        // Check if gift card is selected but no gift message is provided
+        if (isPack && giftCard && giftMessage.trim() === '') {
+            setShowGiftMessagePopup(true);
+            return;
+        }
+
         try {
             let cartItemRequest: CartItemRequest;
 
@@ -670,6 +678,66 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     className="flex-1 px-4 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 transition-colors"
                                 >
                                     Make an indulgence pack
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Gift Message Confirmation Popup */}
+            {showGiftMessagePopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-main-bg dark:bg-main-bg-dark rounded-lg max-w-md w-full p-6">
+                        <div className="text-center">
+                            <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">
+                                Add a personal message?
+                            </h3>
+                            <p className="text-sm text-primary-text dark:text-primary-text-light mb-6">
+                                You've selected a gift card but haven't added a personal message. Would you like to add one?
+                            </p>
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => {
+                                        setShowGiftMessagePopup(false);
+                                        setCurrentStep(6); // Go back to gift card step to add message
+                                    }}
+                                    className="flex-1 px-4 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                >
+                                    Add Message
+                                </button>
+                                <button
+                                    onClick={async () => {
+                                        setShowGiftMessagePopup(false);
+                                        // Proceed with adding to cart without gift message
+                                        try {
+                                            const packProductId = ID_MAP[product.units_per_box || 0] || product.id;
+                                            const cartItemRequest: CartItemRequest = {
+                                                product: packProductId,
+                                                quantity: quantity,
+                                                pack_customization: {
+                                                    selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
+                                                    flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
+                                                        flavor: f.flavor!.id,
+                                                        quantity: f.quantity
+                                                    })) : [],
+                                                    chocolate_bark: chocolateBark?.id ?? undefined,
+                                                    hot_chocolate: hotChocolate?.id ?? undefined,
+                                                    gift_card: giftCard?.id ?? undefined
+                                                }
+                                            };
+
+                                            const response = await addToCart(cartItemRequest).unwrap();
+                                            toast.success('Pack added to cart successfully!');
+                                            router.push('/cart');
+                                        } catch (error) {
+                                            toast.error('Failed to add item to cart');
+                                            console.error('Add to cart error:', error);
+                                        }
+                                    }}
+                                    className="flex-1 px-4 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 transition-colors"
+                                >
+                                    Continue to Cart
                                 </button>
                             </div>
                         </div>

@@ -48,7 +48,7 @@ export default function SelectableGiftCard({
           className="object-cover"
         />
       </div>
-      <p className="text-md font-medium text-primary-text my-2 px-2">{title}</p>
+      <p className="text-md font-medium text-primary-text dark:text-primary-text-light my-2 px-2">{title}</p>
     </div>
   )
 }
