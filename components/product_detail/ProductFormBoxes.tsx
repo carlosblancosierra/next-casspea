@@ -147,7 +147,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
                             step <= currentStep
                                 ? 'bg-primary border-primary text-primary-text'
-                                : 'border-gray-300 text-primary-text bg-main-bg dark:bg-main-bg-dark'
+                                : 'border-gray-300 text-primary-text-light bg-main-bg dark:bg-main-bg-dark'
                         }`}>
                             {step}
                         </div>
@@ -318,7 +318,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={!canProceedToStep2()}
-                                className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 Next
                             </button>
@@ -349,7 +349,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={!canProceedToStep3()}
-                                className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 Next
                             </button>
@@ -423,7 +423,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                     type="button"
                                                     onClick={handleNextStep}
                                                     disabled={!canProceedToNextStep()}
-                                                    className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                                    className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                                 >
                                                     Continue to Pack
                                                 </button>
@@ -432,7 +432,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                     type="button"
                                                     onClick={() => setShowUpgradePopup(true)}
                                                     disabled={!canAddToCart()}
-                                                    className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                                    className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                                 >
                                                     Add to Cart
                                                 </button>
@@ -484,7 +484,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             type="button"
                                             onClick={handleNextStep}
                                             disabled={!canProceedToNextStep()}
-                                            className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                         >
                                             Continue to Pack
                                         </button>
@@ -493,7 +493,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             type="button"
                                             onClick={() => setShowUpgradePopup(true)}
                                             disabled={!canAddToCart()}
-                                            className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                         >
                                             Add to Cart
                                         </button>
@@ -543,7 +543,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={hotChocolate === null}
-                                className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 Next
                             </button>
@@ -590,7 +590,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={chocolateBark === null}
-                                className="px-6 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 Next
                             </button>
@@ -617,11 +617,11 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 onClick={() => setGiftCard(null)}
                                 className={`flex items-center justify-center p-6 border rounded cursor-pointer ${
                                     giftCard === null
-                                        ? 'border-primary bg-primary text-white'
+                                        ? 'border-primary bg-primary text-primary-text-light'
                                         : 'border-gray-300 dark:border-gray-600 hover:border-primary'
                                 }`}
                             >
-                                <span className="text-primary-text">No Gift Card</span>
+                                <span className={giftCard === null ? 'text-primary-text-light' : 'text-primary-text'}>No Gift Card</span>
                             </div>
                         </div>
 
@@ -689,7 +689,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                         setIsPack(true);
                                         handleNextStep();
                                     }}
-                                    className="flex-1 px-4 py-2 bg-primary text-primary-text rounded-md hover:bg-primary/90 transition-colors"
+                                    className="flex-1 px-4 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 transition-colors"
                                 >
                                     Make an indulgence pack
                                 </button>

@@ -30,8 +30,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                         )}
                         {discountedPrice ? (
                             <p className="text-xl text-primary-text font-semibold">
-                                <span className="text-primary-text">£{discountedPrice} GBP</span>
-                                <span className="ml-1 text-primary-text bg-[#CC0C38] p-1 text-sm rounded -mt-2">{discount_percentage}% off</span>
+                                <span className="text-primary-text-light">£{discountedPrice} GBP</span>
+                                <span className="ml-1 text-primary-text bg-primary p-1 text-sm rounded -mt-2">{discount_percentage}% off</span>
                             </p>
                         ) : (
                             <p className="text-xl text-primary-text">
