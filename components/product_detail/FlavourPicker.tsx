@@ -152,7 +152,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                 disabled={remainingChocolates <= 0}
                 className={`mt-4 cursor-pointer group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium focus:outline-none
                 ${remainingChocolates > 0
-                        ? 'bg-primary-2 dark:bg-primary text-primary-text border-gray-300 dark:border-primary hover:bg-primary dark:hover:bg-primary'
+                        ? 'bg-primary-2 dark:bg-primary text-primary-text-light border-gray-300 dark:border-primary hover:bg-primary dark:hover:bg-primary'
                         : 'bg-main-bg dark:bg-main-bg-dark text-primary-text cursor-not-allowed border-gray-300 dark:border-gray-600'
                     }`}
             >
@@ -272,7 +272,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="w-full bg-primary text-primary-text py-3 rounded-lg hover:bg-primary transition-colors"
+                                    className="w-full bg-primary text-primary-text-light py-3 rounded-lg hover:bg-primary transition-colors"
                                 >
                                     Done
                                 </button>

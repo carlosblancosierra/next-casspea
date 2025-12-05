@@ -310,11 +310,11 @@ export default function CartCheckout() {
                         type="button"
                         onClick={handleCheckout}
                         disabled={isProcessing}
-                        className={`w-full rounded-md px-4 py-4 text-xl font-bold text-primary-text
+                        className={`w-full rounded-md px-4 py-4 text-xl font-bold
                             shadow-lg transition-all duration-200 flex items-center justify-center
                             ${isProcessing
-                                ? 'bg-gray-400 dark:bg-main-bg-dark cursor-wait opacity-70'
-                                : 'bg-gradient-autumn dark:bg-primary-2 hover:shadow-xl hover:scale-[1.02] dark:hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
+                                ? 'text-primary-text bg-gray-400 dark:bg-main-bg-dark cursor-wait opacity-70'
+                                : 'text-primary-text-light bg-gradient-autumn dark:bg-primary-2 hover:shadow-xl hover:scale-[1.02] dark:hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
                             }`}
                     >
                         {isProcessing ? (

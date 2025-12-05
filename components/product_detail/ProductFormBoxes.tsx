@@ -146,8 +146,8 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                     <React.Fragment key={step}>
                         <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
                             step <= currentStep
-                                ? 'bg-primary border-primary text-primary-text'
-                                : 'border-gray-300 text-primary-text-light bg-main-bg dark:bg-main-bg-dark'
+                                ? 'bg-primary border-primary text-primary-text-light'
+                                : 'border-gray-300 text-primary-text bg-main-bg dark:bg-main-bg-dark'
                         }`}>
                             {step}
                         </div>
