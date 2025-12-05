@@ -125,7 +125,7 @@ const CheckoutConfirm = () => {
                     <button
                         onClick={handleProceedToPayment}
                         disabled={isProcessing || !selectedShippingOption || (selectedShippingOption === 34 && !storePickup)}
-                        className="w-full bg-gradient-autumn text-primary-text dark:text-primary-text py-3 px-4 rounded-md
+                        className="w-full bg-gradient-autumn text-primary-text-light dark:text-primary-text-light py-3 px-4 rounded-md
                             hover:bg-primary focus:outline-none focus:ring-2
                             focus:ring-primary-2 focus:ring-offset-2 disabled:bg-main-bg
                             disabled:cursor-not-allowed transition-colors duration-200"

@@ -124,10 +124,10 @@ const GiftCardPage = () => {
                     <p className="text-primary-text mb-4">{error}</p>
                 )}
                 <div className="flex flex-col sm:flex-row gap-4 justify-end">
-                    <button 
-                        onClick={handleAddGiftCard} 
-                        disabled={isProcessing} 
-                        className="w-full sm:w-auto bg-primary text-primary-text px-4 py-2 rounded-md hover:bg-primary-2 sm:order-2"
+                    <button
+                        onClick={handleAddGiftCard}
+                        disabled={isProcessing}
+                        className="w-full sm:w-auto bg-primary text-primary-text-light px-4 py-2 rounded-md hover:bg-primary-2 sm:order-2"
                     >
                         {isProcessing ? 'Adding...' : 'Add Gift Card'}
                     </button>

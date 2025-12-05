@@ -414,7 +414,7 @@ export default function CartCheckout() {
                                     onClick={handleModalCheckout}
                                     className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-primary-text focus:outline-none focus:ring-2 focus:ring-offset-2 sm:col-start-2 sm:text-sm
                                         ${modalEmail
-                                            ? 'bg-primary dark:bg-primary-2 hover:bg-primary-2 dark:hover:bg-primary focus:ring-primary'
+                                            ? 'bg-primary text-primary-text-light dark:bg-primary-2 hover:bg-primary-2 dark:hover:bg-primary focus:ring-primary'
                                             : 'bg-main-bg dark:bg-main-bg-dark cursor-not-allowed'
                                         }`}
                                 >
