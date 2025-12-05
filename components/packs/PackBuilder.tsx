@@ -29,6 +29,7 @@ export default function PackBuilder() {
   const router = useRouter()
 
   const [step, setStep] = useState(0)
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set([0]))
   const [signatureBox, setSignatureBox] = useState<Product | null>(null)
   const [chocolateBark, setChocolateBark] = useState<Product | null>(null)
   const [hotChocolate, setHotChocolate] = useState<Product | null>(null)
@@ -46,6 +47,50 @@ export default function PackBuilder() {
       setFlavours([])
     }
   }, [signatureBox])
+
+  // Check if a step can be navigated to
+  const canNavigateToStep = (targetStep: number): boolean => {
+    // Always allow going back to completed steps
+    if (completedSteps.has(targetStep)) return true
+
+    // Allow navigating to the next step if current step is completed
+    if (targetStep === step + 1) {
+      return isCurrentStepCompleted()
+    }
+
+    // Don't allow skipping ahead
+    return false
+  }
+
+  // Check if current step is completed
+  const isCurrentStepCompleted = (): boolean => {
+    switch (step) {
+      case 0: return signatureBox !== null
+      case 1: return chocolateBark !== null
+      case 2: return hotChocolate !== null
+      case 3: return true // Gift card is optional
+      case 4: return boxType !== null
+      case 5: return allergenOption !== null
+      case 6: return boxType === 'RANDOM' || remaining === 0
+      case 7: return true // Summary step
+      default: return false
+    }
+  }
+
+  // Enhanced step setter with validation
+  const navigateToStep = (targetStep: number) => {
+    if (canNavigateToStep(targetStep)) {
+      setStep(targetStep)
+    }
+  }
+
+  // Mark current step as completed and move to next
+  const completeStepAndAdvance = (nextStep: number) => {
+    const newCompletedSteps = new Set(completedSteps)
+    newCompletedSteps.add(step)
+    setCompletedSteps(newCompletedSteps)
+    setStep(nextStep)
+  }
 
   // Updated handleAddFlavour to use FlavourType
   const handleAddFlavour = (flavour) => {
@@ -149,29 +194,29 @@ const steps: React.ReactNode[] = [
   <SignatureBoxStep
     products={products}
     priceMap={PRICE_MAP}
-    onSelect={(p: Product) => { setSignatureBox(p); setStep(1); }}
+    onSelect={(p: Product) => { setSignatureBox(p); completeStepAndAdvance(1); }}
   />,
   <ChocolateBarkStep
     products={products}
-    onSelect={(p: Product) => { setChocolateBark(p); setStep(2); }}
+    onSelect={(p: Product) => { setChocolateBark(p); completeStepAndAdvance(2); }}
   />,
   <HotChocolateStep
     products={products}
-    onSelect={(p: Product) => { setHotChocolate(p); setStep(3); }}
+    onSelect={(p: Product) => { setHotChocolate(p); completeStepAndAdvance(3); }}
   />,
   <GiftCardStep
     products={products}
     selected={giftCard}
-    onSelect={(p: Product) => setGiftCard(p)}
+    onSelect={(p: Product | null) => setGiftCard(p)}
     giftMessage={giftMessage}
     onMessageChange={setGiftMessage}
-    onNext={() => setStep(4)}
+    onNext={() => completeStepAndAdvance(4)}
   />,
   <BoxTypeStep
     options={PREBUILDS}
     selected={boxType}
     onChange={(option: 'PICK_AND_MIX' | 'RANDOM') => setBoxType(option)}
-    onNext={() => setStep(5)}
+    onNext={() => completeStepAndAdvance(5)}
   />,
   <AllergenStep
     allergens={ALLERGENS}
@@ -179,7 +224,7 @@ const steps: React.ReactNode[] = [
     setSelectedAllergens={setSelectedAllergens}
     allergenOption={selectedAllergens !== undefined ? allergenOption : null}
     setAllergenOption={setAllergenOption}
-    onNext={() => setStep(boxType === 'RANDOM' ? 7 : 6)}
+    onNext={() => completeStepAndAdvance(boxType === 'RANDOM' ? 7 : 6)}
   />,
   // this one should stay conditional (needs signatureBox info)
   signatureBox && (
@@ -193,7 +238,7 @@ const steps: React.ReactNode[] = [
       deleteFlavour={handleDec}
       handleClear={handleClear}
       selectedAllergens={selectedAllergens}
-      onNext={() => setStep(7)}
+      onNext={() => completeStepAndAdvance(7)}
       allFlavours={allFlavours}
     />
   ),
@@ -209,7 +254,7 @@ const steps: React.ReactNode[] = [
         : `${ALLERGENS.filter(a => selectedAllergens.includes(a.id)).map(a => a.name).join(' and ')} (only for bonbons)`
     }
     price={PRICE_MAP[signatureBox?.units_per_box ?? 0]}
-    onEdit={setStep}
+    onEdit={navigateToStep}
     onConfirm={handleConfirm}
   />
 ]
@@ -221,12 +266,12 @@ const steps: React.ReactNode[] = [
           labels={STEP_LABELS}
           borders={STEP_BORDER}
           current={step}
-          onChange={setStep}
+          onChange={navigateToStep}
         />
       </aside>
       <section className="md:col-span-3">
         <div className="mb-4">
-          <p className="text-sm text-primary-text">{STEP_EXPLANATIONS[step]}</p>
+          <p className="text-sm text-primary-text dark:text-primary-text-light">{STEP_EXPLANATIONS[step]}</p>
         </div>
         {steps[step]}
       </section>
