@@ -26,7 +26,7 @@ const FlavourCard: React.FC<FlavourCardProps> = ({ flavour, height = 'h-96' }) =
                         textAlign: 'center',
                         pointerEvents: 'none',
                     }}
-                    className="bg-pink-600 text-primary-text font-bold py-1 px-2 text-xs shadow-lg select-none"
+                    className="bg-pink-600 text-primary-text-light font-bold py-1 px-2 text-xs shadow-lg select-none"
                 >
                     {flavour.featured_message}
                 </div>
@@ -42,7 +42,7 @@ const FlavourCard: React.FC<FlavourCardProps> = ({ flavour, height = 'h-96' }) =
                 />
             </div>
             <h3 className="text-lg font-bold md:text-md text-center min-h-[2rem] mt-3 leading-5
-            text-primary-text">{flavour.name}</h3>
+            text-primary-text dark:text-primary-text-light">{flavour.name}</h3>
             <p className="text-primary-text dark:text-primary-text text-md min-h-[6.5rem] text-center overflow-hidden text-ellipsis">{flavour.description}</p>
             <p className="mt-1 text-[10px] text-secondary-text md:text-xs text-center">
                 {flavour.allergens?.map((allergen, index) => (

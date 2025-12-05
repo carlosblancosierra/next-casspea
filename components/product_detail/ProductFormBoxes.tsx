@@ -290,26 +290,26 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             e.preventDefault();
         }}>
             <div className="space-y-6 pb-6 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
-                <h2 className="text-2xl font-semibold text-primary-text mb-4">Create your Signature Box</h2>
+                <h2 className="text-2xl font-semibold text-primary-text dark:text-primary-text-light mb-4">Create your Signature Box</h2>
 
                 <StepIndicator />
 
                 {/* Step 1: Selection Type */}
                 {currentStep === 1 && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">Step 1: Choose your experience</h3>
+                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 1: Choose your experience</h3>
                         <BoxSelection
                             options={prebulids}
                             selected={selection}
                             onChange={setSelection}
                         />
                         {selection === 'RANDOM' && (
-                            <p className="text-sm text-primary-text mt-2">
+                            <p className="text-sm text-primary-text dark:text-primary-text-light mt-2">
                                 We will pick you {maxChocolates} amazing bonbons with your selected preferences.
                             </p>
                         )}
                         {selection === 'PICK_AND_MIX' && (
-                            <p className="text-sm text-primary-text mt-2">
+                            <p className="text-sm text-primary-text dark:text-primary-text-light mt-2">
                                 Choose your own {maxChocolates} flavours and create your perfect box.
                             </p>
                         )}
@@ -329,7 +329,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 2: Allergens */}
                 {currentStep === 2 && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">Step 2: Any allergens to avoid?</h3>
+                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 2: Any allergens to avoid?</h3>
                         <AllergenSelection
                             allergens={allergens}
                             selectedAllergens={selectedAllergens}
@@ -341,7 +341,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                             >
                                 Back
                             </button>
@@ -360,7 +360,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 3: Flavours or Final Options */}
                 {currentStep === 3 && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">
+                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">
                             Step 3: {selection === 'PICK_AND_MIX' ? 'Pick your flavours' : 'Review your selection'}
                         </h3>
 
@@ -380,7 +380,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 />
 
                                 <div className="mt-4">
-                                    <p className="text-sm mb-1 text-primary-text">{getProgressText()}</p>
+                                    <p className="text-sm mb-1 text-primary-text dark:text-primary-text-light">{getProgressText()}</p>
                                     <ProgressBar
                                         value={maxChocolates - remainingChocolates}
                                         max={maxChocolates}
@@ -391,7 +391,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     <div className="mt-6 space-y-4">
                                         {/* Quantity Selection */}
                                         <div>
-                                            <label htmlFor="quantity" className="block text-sm font-medium text-primary-text">
+                                            <label htmlFor="quantity" className="block text-sm font-medium text-primary-text dark:text-primary-text-light">
                                                 Number of Boxes
                                             </label>
                                             <select
@@ -400,7 +400,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                 value={quantity}
                                                 onChange={handleQuantityChange}
                                                 className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
-                                                    bg-main-bg dark:bg-main-bg-dark text-primary-text shadow-sm focus:border-primary-2
+                                                    bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light shadow-sm focus:border-primary-2
                                                     focus:ring-primary-2"
                                             >
                                                 {Array.from({ length: 20 }, (_, i) => (
@@ -414,7 +414,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             <button
                                                 type="button"
                                                 onClick={handlePrevStep}
-                                                className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                             >
                                                 Back
                                             </button>
@@ -434,14 +434,14 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             // RANDOM selection - show summary and options
                             <div className="space-y-4">
                                 <div className="p-4 rounded-lg">
-                                    <p className="text-sm text-primary-text">
+                                    <p className="text-sm text-primary-text dark:text-primary-text-light">
                                         We'll select {maxChocolates} chocolates for you, avoiding your specified allergens.
                                     </p>
                                 </div>
 
                                 {/* Quantity Selection */}
                                 <div>
-                                    <label htmlFor="quantity" className="block text-sm font-medium text-primary-text">
+                                    <label htmlFor="quantity" className="block text-sm font-medium text-primary-text dark:text-primary-text-light">
                                         Number of Boxes
                                     </label>
                                     <select
@@ -450,7 +450,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                         value={quantity}
                                         onChange={handleQuantityChange}
                                         className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600
-                                            bg-main-bg dark:bg-transparent text-primary-text shadow-sm focus:border-primary-2
+                                            bg-main-bg dark:bg-transparent text-primary-text dark:text-primary-text-light shadow-sm focus:border-primary-2
                                             focus:ring-primary-2"
                                     >
                                         {Array.from({ length: 20 }, (_, i) => (
@@ -464,7 +464,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     <button
                                         type="button"
                                         onClick={handlePrevStep}
-                                        className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                        className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                     >
                                         Back
                                     </button>
@@ -485,10 +485,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 4: Hot Chocolate Selection (Pack only) */}
                 {currentStep === 4 && isPack && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">Step 4: Choose your Hot Chocolate</h3>
+                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 4: Choose your Hot Chocolate</h3>
 
                         <div className="mb-4">
-                            <label htmlFor="hot-chocolate-select" className="block text-sm font-medium text-primary-text mb-2">
+                            <label htmlFor="hot-chocolate-select" className="block text-sm font-medium text-primary-text dark:text-primary-text-light mb-2">
                                 Select Hot Chocolate
                             </label>
                             <select
@@ -499,7 +499,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     setHotChocolate(selectedProduct || null);
                                 }}
                                 className="block w-full rounded-md border-gray-300 dark:border-gray-600
-                                    bg-main-bg dark:bg-transparent text-primary-text shadow-sm focus:border-primary-2
+                                    bg-main-bg dark:bg-transparent text-primary-text dark:text-primary-text-light shadow-sm focus:border-primary-2
                                     focus:ring-primary-2 px-3 py-2"
                             >
                                 <option value="">Choose a hot chocolate...</option>
@@ -513,7 +513,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                             >
                                 Back
                             </button>
@@ -532,10 +532,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 5: Chocolate Bark Selection (Pack only) */}
                 {currentStep === 5 && isPack && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">Step 5: Choose your Chocolate Bark</h3>
+                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 5: Choose your Chocolate Bark</h3>
 
                         <div className="mb-4">
-                            <label htmlFor="chocolate-bark-select" className="block text-sm font-medium text-primary-text mb-2">
+                            <label htmlFor="chocolate-bark-select" className="block text-sm font-medium text-primary-text dark:text-primary-text-light mb-2">
                                 Select Chocolate Bark
                             </label>
                             <select
@@ -546,7 +546,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     setChocolateBark(selectedProduct || null);
                                 }}
                                 className="block w-full rounded-md border-gray-300 dark:border-gray-600
-                                    bg-main-bg dark:bg-transparent text-primary-text shadow-sm focus:border-primary-2
+                                    bg-main-bg dark:bg-transparent text-primary-text dark:text-primary-text-light shadow-sm focus:border-primary-2
                                     focus:ring-primary-2 px-3 py-2"
                             >
                                 <option value="">Choose a chocolate bark...</option>
@@ -560,7 +560,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                             >
                                 Back
                             </button>
@@ -579,7 +579,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 6: Gift Card Selection (Pack only) */}
                 {currentStep === 6 && isPack && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text mb-4">Step 6: Choose your Gift Card</h3>
+                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 6: Choose your Gift Card</h3>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
                             {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
@@ -599,7 +599,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                         : 'border-gray-300 dark:border-gray-600 hover:border-primary'
                                 }`}
                             >
-                                <span className={giftCard === null ? 'text-primary-text-light' : 'text-primary-text'}>No Gift Card</span>
+                                <span className={giftCard === null ? 'text-primary-text-light' : 'text-primary-text dark:text-primary-text-light'}>No Gift Card</span>
                             </div>
                         </div>
 
@@ -613,7 +613,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                             >
                                 Back
                             </button>

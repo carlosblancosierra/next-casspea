@@ -39,7 +39,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     if (!propAvailableFlavours && isLoading) return <div className="flex items-center justify-center min-h-screen">
                 <Spinner md />
             </div>;
-    if (!propAvailableFlavours && error) return <div className="text-primary-text">Error:</div>;
+    if (!propAvailableFlavours && error) return <div className="text-primary-text dark:text-primary-text-light">Error:</div>;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -196,7 +196,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text text-sm">{flavour.name}</h3>
                                             <p className="text-[0.7rem] text-primary-text dark:text-primary-text text-xs leading-3 mt-1">{flavour.mini_description}</p>
                                             {flavour.allergens && flavour.allergens.length > 0 && (
-                                                <p className="text-[8px] text-primary-text md:text-xs mt-1">
+                                                <p className="text-[8px] text-primary-text dark:text-primary-text-light md:text-xs mt-1">
                                                     {flavour.allergens.map((allergen, index, array) => (
                                                         <span key={allergen.id} className="mr-1">
                                                             {allergen.name}
