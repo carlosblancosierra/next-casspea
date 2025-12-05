@@ -31,7 +31,7 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                         relative block cursor-pointer rounded-lg border px-6 py-4
                         ${checked
                             ? 'bg-primary border-primary text-white'
-                            : 'main-bg dark:bg-transparent border-gray-300 dark:border-gray-600 text-primary-text dark:text-primary-text'
+                            : 'main-bg dark:bg-transparent border-gray-300 dark:border-gray-600 text-primary-text dark:text-primary-text-light'
                         }
                         hover:border-primary transition-colors duration-200
                     `}
@@ -49,7 +49,7 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                                         </RadioGroup.Label>
                                         <RadioGroup.Description
                                             as="span"
-                                            className={checked ? 'text-white' : 'text-primary-text dark:text-primary-text'}
+                                            className={checked ? 'text-white' : 'text-primary-text dark:text-primary-text-light'}
                                         >
                                             {option.description}
                                         </RadioGroup.Description>
