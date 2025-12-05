@@ -72,7 +72,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
     return (
         <div className="space-y-8">
             <div className="main-bg p-6 rounded-lg shadow dark:bg-main-bg-dark">
-                <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text">Shipping Address</h2>
+                <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text-light">Shipping Address</h2>
                 <AddressForm
                     onAddressSubmit={handleShippingSubmit}
                     buttonText="Save Shipping Address"
@@ -88,14 +88,14 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
                         onChange={handleCheckboxChange}
                         className="h-4 w-4 text-primary focus:ring-primary-2 border-gray-300 rounded"
                     />
-                    <label htmlFor="sameAsShipping" className="ml-2 block text-sm text-primary-text dark:text-primary-text">
+                    <label htmlFor="sameAsShipping" className="ml-2 block text-sm text-primary-text dark:text-primary-text-light">
                         Billing address same as shipping?
                     </label>
                 </div>
 
                 {!sameAsShipping && (
                     <div className="mt-6">
-                        <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text">Billing Address</h2>
+                        <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text-light">Billing Address</h2>
                         <AddressForm
                             onAddressSubmit={handleBillingSubmit}
                             buttonText="Save Billing Address"
@@ -105,14 +105,14 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSubmit }) =>
             </div>
 
             {error && (
-                <div className="text-primary-text dark:text-primary-text text-sm mt-2">
+                <div className="text-primary-text dark:text-primary-text-light text-sm mt-2">
                     {error}
                 </div>
             )}
 
             <button
                 onClick={handleSubmit}
-                className="w-full bg-primary text-primary-text dark:text-primary-text py-2 px-4 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
+                className="w-full bg-primary text-primary-text dark:text-primary-text-light py-2 px-4 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
             >
                 Continue to Payment
             </button>

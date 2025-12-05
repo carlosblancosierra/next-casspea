@@ -93,7 +93,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text">
+        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light">
           {selectedDate ? 'Selected Pickup Date' : 'Select Pickup Date'}
         </h3>
 
@@ -134,7 +134,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
       {selectedDate && (
         <>
           <div className="space-y-2">
-            <h4 className="text-md font-semibold text-primary-text dark:text-primary-text">Select Time Slot</h4>
+            <h4 className="text-md font-semibold text-primary-text dark:text-primary-text-light">Select Time Slot</h4>
             <div className="grid grid-cols-2 gap-2">
               {slots.map(slot => (
                 <button

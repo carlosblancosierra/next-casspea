@@ -42,19 +42,19 @@ const CheckoutSuccessUnitsSold: React.FC<{ className?: string }> = ({ className 
   return (
     <div className={`px-4 py-6 flex flex-col items-center w-full bg-gradient-autumn rounded-md shadow ${className}`}>
       {isLoading ? (
-        <span className="text-sm text-primary-text dark:text-primary-text flex items-center"><Spinner md /> Updating…</span>
+        <span className="text-sm text-primary-text dark:text-primary-text-light flex items-center"><Spinner md /> Updating…</span>
       ) : (
         <>
-          <span className="text-3xl font-extrabold text-primary-text dark:text-primary-text tracking-tight drop-shadow mb-2">
+          <span className="text-3xl font-extrabold text-primary-text dark:text-primary-text-light tracking-tight drop-shadow mb-2">
             {displayedCount.toLocaleString()}
           </span>
-          <span className="text-lg font-semibold text-primary-text dark:text-primary-text mb-1 text-center">
+          <span className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-1 text-center">
             Thank you for your order!
           </span>
-          <span className="text-base text-primary-text dark:text-primary-text text-center mb-1">
+          <span className="text-base text-primary-text dark:text-primary-text-light text-center mb-1">
             With your purchase, we've now reached this many chocolates sold.
           </span>
-          <span className="text-base text-primary-text dark:text-primary-text text-center">You're part of something delicious – cheers!</span>
+          <span className="text-base text-primary-text dark:text-primary-text-light text-center">You're part of something delicious – cheers!</span>
         </>
       )}
     </div>

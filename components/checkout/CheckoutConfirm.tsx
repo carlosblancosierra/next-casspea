@@ -96,7 +96,7 @@ const CheckoutConfirm = () => {
         return (
             <div className=" dark:bg-main-bg-dark min-h-screen">
                 <div className="max-w-7xl mx-auto px-0">
-                    <div className="text-primary-text dark:text-primary-text">Error loading checkout details</div>
+                    <div className="text-primary-text dark:text-primary-text-light">Error loading checkout details</div>
                 </div>
             </div>
         );
@@ -107,7 +107,7 @@ const CheckoutConfirm = () => {
             <div className="max-w-7xl mx-auto px-0">
                 <div className="space-y-6">
                     {/* <div className="space-y-4">
-                        <h2 className="text-xl font-semibold text-primary-text dark:text-primary-text">Order Items</h2>
+                        <h2 className="text-xl font-semibold text-primary-text dark:text-primary-text-light">Order Items</h2>
                         {cart?.items?.map((item) => (
                             <ReadOnlyCartItem key={item.id} entry={item} />
                         ))}
