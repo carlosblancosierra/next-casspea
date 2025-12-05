@@ -37,7 +37,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
                     ? 'bg-gray-100 text-primary-text dark:bg-main-bg-dark dark:text-primary-text cursor-not-allowed'
                     : isDisabled
                         ? 'bg-gray-100 text-primary-text dark:bg-main-bg-dark dark:text-primary-text cursor-not-allowed'
-                        : 'bg-primary text-white hover:bg-primary dark:bg-primary-2 dark:hover:bg-primary'
+                        : 'bg-primary text-primary-text-light hover:bg-primary dark:bg-primary-2 dark:hover:bg-primary'
                 }
                 disabled:cursor-not-allowed disabled:opacity-50
             `}

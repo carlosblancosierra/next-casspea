@@ -418,25 +418,14 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             >
                                                 Back
                                             </button>
-                                            {isPack ? (
-                                                <button
-                                                    type="button"
-                                                    onClick={handleNextStep}
-                                                    disabled={!canProceedToNextStep()}
-                                                    className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                                >
-                                                    Continue to Pack
-                                                </button>
-                                            ) : (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setShowUpgradePopup(true)}
-                                                    disabled={!canAddToCart()}
-                                                    className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                                >
-                                                    Add to Cart
-                                                </button>
-                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowUpgradePopup(true)}
+                                                disabled={!canAddToCart()}
+                                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            >
+                                                Add to Cart
+                                            </button>
                                         </div>
                                     </div>
                                 )}
@@ -479,25 +468,14 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     >
                                         Back
                                     </button>
-                                    {isPack ? (
-                                        <button
-                                            type="button"
-                                            onClick={handleNextStep}
-                                            disabled={!canProceedToNextStep()}
-                                            className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                        >
-                                            Continue to Pack
-                                        </button>
-                                    ) : (
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowUpgradePopup(true)}
-                                            disabled={!canAddToCart()}
-                                            className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                        >
-                                            Add to Cart
-                                        </button>
-                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowUpgradePopup(true)}
+                                        disabled={!canAddToCart()}
+                                        className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        Add to Cart
+                                    </button>
                                 </div>
                             </div>
                         )}
@@ -662,7 +640,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-main-bg dark:bg-main-bg-dark rounded-lg max-w-md w-full p-6">
                         <div className="text-center">
-                            <h3 className="text-lg font-semibold text-primary-text mb-4">
+                            <h3 className="text-lg font-semibold text-primary-text-light mb-4">
                                 Make your signature box more indulgent.
                             </h3>
                             <p className="text-sm text-primary-text mb-4">
@@ -687,7 +665,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     onClick={() => {
                                         setShowUpgradePopup(false);
                                         setIsPack(true);
-                                        handleNextStep();
+                                        setCurrentStep(4);
                                     }}
                                     className="flex-1 px-4 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 transition-colors"
                                 >
