@@ -603,11 +603,11 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 onClick={() => setGiftCard(null)}
                                 className={`flex items-center justify-center p-6 border rounded cursor-pointer ${
                                     giftCard === null
-                                        ? 'border-primary bg-primary text-primary-text-light'
+                                        ? 'border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark hover:border-primary'
                                         : 'border-gray-300 dark:border-gray-600 hover:border-primary'
                                 }`}
                             >
-                                <span className={giftCard === null ? 'text-primary-text-light' : 'text-primary-text dark:text-primary-text-light'}>No Gift Card</span>
+                                <span className="text-primary-text dark:text-primary-text-light">No Gift Card</span>
                             </div>
                         </div>
 
