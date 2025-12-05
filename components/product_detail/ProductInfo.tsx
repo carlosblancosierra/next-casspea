@@ -24,7 +24,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                     </h2>
                     <div className="space-y-1">
                         {product.is_preorder_active && (
-                            <p className="text-sm text-primary-text">
+                            <p className="text-sm text-primary">
                                 <span className="font-medium">Regular price:</span> £{product.base_price} GBP
                             </p>
                         )}
