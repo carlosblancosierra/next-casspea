@@ -74,6 +74,17 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         }))
     ) || [];
 
+    // Auto-select option when delivery type changes
+    useEffect(() => {
+        if (deliveryType && allShippingOptions.length > 0 && !localSelectedOption) {
+            const firstEnabled = allShippingOptions.find(opt => !opt.disabled);
+            if (firstEnabled) {
+                setLocalSelectedOption(firstEnabled.id.toString());
+                onShippingOptionChange(firstEnabled.id);
+            }
+        }
+    }, [deliveryType, allShippingOptions, localSelectedOption, onShippingOptionChange]);
+
     // Filter by delivery type
     if (deliveryType === 'pickup') {
         allShippingOptions = allShippingOptions.filter(option => option.id === 34); // Store pickup option
@@ -103,16 +114,16 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         return a.disabled ? 1 : -1;
     });
 
-    // Set default option if none selected, and never select a disabled option
+    // Set default option if none selected, and never select a disabled option (only when no delivery type is selected)
     useEffect(() => {
-        if (allShippingOptions.length && !localSelectedOption) {
+        if (allShippingOptions.length && !localSelectedOption && !deliveryType) {
             const firstEnabled = allShippingOptions.find(opt => !opt.disabled);
             if (firstEnabled) {
                 setLocalSelectedOption(firstEnabled.id.toString());
                 onShippingOptionChange(firstEnabled.id);
             }
         }
-    }, [allShippingOptions, localSelectedOption]);
+    }, [allShippingOptions, localSelectedOption, deliveryType]);
 
     const handleShippingChange = async (optionId: string) => {
         if (isUpdating) return;
