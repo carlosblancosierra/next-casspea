@@ -109,7 +109,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 )}
                             </div>
                             <div className='col-span-3 mt-1 mx-1 md:mx-4'>
-                                <p className="font-bold text-xs md:text-sm dark:text-primary-text">{flavour.flavor.name}</p>
+                                <p className="font-bold text-xs md:text-sm dark:text-primary-text-light">{flavour.flavor.name}</p>
                             </div>
                         </div>
                         <div className="quantity-controls flex items-center">
@@ -124,7 +124,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 type="text"
                                 value={getFlavorQuantity(flavour.flavor.id)}
                                 readOnly
-                                className=" dark:bg-main-bg-dark border-x-0 border-gray-300 dark:border-gray-600 h-11 text-center text-primary-text dark:text-primary-text text-base block w-[3rem] py-2.5"
+                                className=" dark:bg-main-bg-dark border-x-0 border-gray-300 dark:border-gray-600 h-11 text-center text-primary-text dark:text-primary-text-light text-base block w-[3rem] py-2.5"
                             />
                             <button
                                 type="button"
@@ -138,7 +138,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 onClick={() => deleteFlavour(index)}
                                 className="px-2 py-1 rounded focus:ring-2 focus:outline-none"
                             >
-                                <FiTrash className="dark:text-primary-text" />
+                                <FiTrash className="dark:text-primary-text-light" />
                             </button>
                         </div>
                     </div>
@@ -150,7 +150,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                 type="button"
                 onClick={() => setIsModalOpen(true)}
                 disabled={remainingChocolates <= 0}
-                className={`mt-4 cursor-pointer group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium focus:outline-none
+                className={`mt-4 cursor-pointer group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium focus:outline-none text-primary-text dark:text-primary-text-light
                 ${remainingChocolates > 0
                         ? 'bg-primary-2 dark:bg-primary text-primary-text-light border-gray-300 dark:border-primary hover:bg-primary dark:hover:bg-primary'
                         : 'bg-main-bg dark:bg-main-bg-dark text-primary-text cursor-not-allowed border-gray-300 dark:border-gray-600'
@@ -163,7 +163,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
             {/* <button
                 type="button"
                 onClick={handleDeleteAllFlavours}
-                className="mt-4 py-4 flex items-center justify-center text-sm gap-2 text-primary-text dark:text-primary-text"
+                className="mt-4 py-4 flex items-center justify-center text-sm gap-2 text-primary-text dark:text-primary-text-light"
             >
                 <FiRefreshCw />
                 Start over
@@ -176,7 +176,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                     onClick={handleModalClick}
                 >
                     <div className="relative bg-main-bg dark:bg-main-bg-dark p-6 rounded-lg max-w-[90vw] w-full max-h-[85vh] mx-auto shadow-lg overflow-y-auto">
-                        <h2 className="text-center text-sm font-semibold mb-1 text-primary-text dark:text-primary-text">Select a Flavour</h2>
+                        <h2 className="text-center text-sm font-semibold mb-1 text-primary-text dark:text-primary-text-light">Select a Flavour</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                             {getFilteredFlavours()?.map((flavour) => (
                                 <div key={flavour.id} className="flavour-card border dark:border-gray-700 px-3 py-2 rounded-lg flex flex-col justify-between dark:bg-main-bg-dark">
@@ -193,8 +193,8 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             )}
                                         </div>
                                         <div className="flex-1">
-                                            <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text text-sm">{flavour.name}</h3>
-                                            <p className="text-[0.7rem] text-primary-text dark:text-primary-text text-xs leading-3 mt-1">{flavour.mini_description}</p>
+                                            <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light text-sm">{flavour.name}</h3>
+                                            <p className="text-[0.7rem] text-primary-text dark:text-primary-text-light text-xs leading-3 mt-1">{flavour.mini_description}</p>
                                             {flavour.allergens && flavour.allergens.length > 0 && (
                                                 <p className="text-[8px] text-primary-text dark:text-primary-text-light md:text-xs mt-1">
                                                     {flavour.allergens.map((allergen, index, array) => (
@@ -222,7 +222,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                         >
                                             <FiMinus size={16} />
                                         </button>
-                                        <span className="mx-4 text-sm text-primary-text dark:text-primary-text">
+                                        <span className="mx-4 text-sm text-primary-text dark:text-primary-text-light">
                                             {getFlavorQuantity(flavour.id)}
                                         </span>
                                         <button
@@ -246,7 +246,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                         <button
                             type="button"
                             onClick={() => setIsModalOpen(false)}
-                            className="absolute top-4 right-4 text-primary-text dark:text-primary-text hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none"
+                            className="absolute top-4 right-4 text-primary-text dark:text-primary-text-light hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none"
                             aria-label="Close Modal"
                         >
                             <FiX size={24} />
@@ -264,7 +264,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 </div>
 
                                 {/* Progress text */}
-                                <div className="text-sm text-primary-text dark:text-primary-text text-center">
+                                <div className="text-sm text-primary-text dark:text-primary-text-light text-center">
                                     {maxChocolates - remainingChocolates} of {maxChocolates} chocolates selected
                                 </div>
 

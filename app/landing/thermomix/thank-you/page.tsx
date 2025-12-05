@@ -17,7 +17,7 @@ export default function GiveawayThankYou() {
           />
           <div className="p-4">
             <h1 className="text-3xl md:text-5xl font-extrabold text-primary-text dark:text-white mb-2 text-center">Thank You for Entering!</h1>
-            <p className="text-lg text-primary-text dark:text-primary-text mb-6 text-center">
+            <p className="text-lg text-primary-text dark:text-primary-text-light mb-6 text-center">
               Your entry for the Thermomix Giveaway has been received.<br />
               Good luck!
             </p>

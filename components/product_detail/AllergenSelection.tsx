@@ -32,17 +32,17 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
 
     return (
         <div className="rounded-lg shadow-sm pointer-events-auto">
-            {/* <h3 className="text-lg font-semibold text-secondary-text dark:text-secondary-text-light mb-4">
+            {/* <h3 className="text-lg font-semibold text-secondary-text dark:text-gray-400 mb-4">
                 2- Allergens
             </h3> */}
-            <p className="text-sm text-secondary-text dark:text-secondary-text-light mb-4">2. If you have any allergies, please select the allergens you are allergic to.</p>
+            <p className="text-sm text-secondary-text dark:text-gray-400 mb-4">2. If you have any allergies, please select the allergens you are allergic to.</p>
             <RadioGroup value={allergenOption} onChange={setAllergenOption} className="space-y-3">
                 <RadioGroup.Option
                     value="NONE"
                     className={({ checked }) =>
                         `${checked
                             ? 'bg-primary text-white'
-                            : 'main-bg dark:bg-transparent text-secondary-text dark:text-secondary-text-light'
+                            : 'main-bg dark:bg-transparent text-secondary-text dark:text-gray-400'
                         }
                         relative rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
                     }
@@ -54,7 +54,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                                     <RadioGroup.Label as="p" className="font-medium">
                                         No Allergens
                                     </RadioGroup.Label>
-                                    <RadioGroup.Description as="span" className={`inline ${checked ? 'text-white' : 'text-secondary-text dark:text-secondary-text-light'}`}>
+                                    <RadioGroup.Description as="span" className={`inline ${checked ? 'text-white' : 'text-secondary-text dark:text-gray-400'}`}>
                                         I have no allergies.
                                     </RadioGroup.Description>
                                 </div>
@@ -73,7 +73,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                     className={({ checked }) =>
                         `${checked
                             ? 'bg-primary text-white'
-                            : 'main-bg dark:bg-transparent text-secondary-text dark:text-secondary-text-light'
+                            : 'main-bg dark:bg-transparent text-secondary-text dark:text-gray-400'
                         }
                         relative rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-4 shadow-sm cursor-pointer flex focus:outline-none`
                     }
@@ -85,7 +85,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                                     <RadioGroup.Label as="p" className="font-medium">
                                         Specify Allergens
                                     </RadioGroup.Label>
-                                    <RadioGroup.Description as="span" className={`inline ${checked ? 'text-white' : 'text-secondary-text dark:text-secondary-text-light'}`}>
+                                    <RadioGroup.Description as="span" className={`inline ${checked ? 'text-white' : 'text-secondary-text dark:text-gray-400'}`}>
                                         Select one or more allergens you need to avoid.
                                     </RadioGroup.Description>
                                 </div>
@@ -115,7 +115,7 @@ const AllergenSelection: React.FC<AllergenSelectionProps> = ({
                             />
                             <label
                                 htmlFor={`allergen-${allergen.id}`}
-                                className="ml-2 block text-sm font-medium text-secondary-text dark:text-secondary-text-light cursor-pointer"
+                                className="ml-2 block text-sm font-medium text-secondary-text dark:text-gray-400 cursor-pointer"
                             >
                                 {allergen.name} Free
                             </label>
