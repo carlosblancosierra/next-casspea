@@ -216,7 +216,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             disabled={getFlavorQuantity(flavour.id) === 0}
                                             className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-2
                                             ${getFlavorQuantity(flavour.id) > 0
-                                                    ? 'bg-primary text-primary-text hover:bg-primary'
+                                                    ? 'bg-primary text-primary-text-light hover:bg-primary'
                                                     : 'bg-main-bg text-primary-text cursor-not-allowed'
                                                 }`}
                                         >
@@ -231,7 +231,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                             disabled={remainingChocolates <= 0 && getFlavorQuantity(flavour.id) === 0}
                                             className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-2
                                             ${remainingChocolates > 0 || getFlavorQuantity(flavour.id) > 0
-                                                    ? 'bg-primary text-primary-text hover:bg-primary'
+                                                    ? 'bg-primary text-primary-text-light hover:bg-primary'
                                                     : 'bg-main-bg text-primary-text cursor-not-allowed'
                                                 }`}
                                         >
