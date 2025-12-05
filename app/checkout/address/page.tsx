@@ -135,14 +135,14 @@ export default function AddressPage() {
         <main className='mx-auto max-w-3xl md:py-8 py-4 px-4 sm:px-6 bg-main-bg dark:bg-main-bg-dark min-h-screen'>
             <div className="space-y-4">
                 <div>
-                    <p className="text-md text-primary-text">
+                    <p className="text-md text-primary-text dark:text-primary-text-light">
                         Please enter your delivery details
                     </p>
                 </div>
 
                 {/* Shipping Address Form */}
                 <div className="main-bg dark:bg-main-bg-dark p-6 rounded-lg shadow">
-                    <h2 className="text-lg font-medium mb-4 text-primary-text">Shipping Address</h2>
+                    <h2 className="text-lg font-medium mb-4 text-primary-text dark:text-primary-text-light">Shipping Address</h2>
                     <AddressForm
                         onAddressSubmit={handleShippingSubmit}
                         addressType="SHIPPING"
@@ -162,14 +162,14 @@ export default function AddressPage() {
                             className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-primary
                                 dark:text-primary-2 focus:ring-primary-2"
                         />
-                        <span className="text-sm text-primary-text">
+                        <span className="text-sm text-primary-text dark:text-primary-text-light">
                             Billing address is the same as shipping address
                         </span>
                     </label>
 
                     {!useSameAddress && (
                         <div className="mt-6">
-                            <h2 className="text-lg font-medium mb-4 text-primary-text">Billing Address</h2>
+                            <h2 className="text-lg font-medium mb-4 text-primary-text dark:text-primary-text-light">Billing Address</h2>
                             <AddressForm
                                 onAddressSubmit={handleBillingSubmit}
                                 addressType="BILLING"
@@ -182,7 +182,7 @@ export default function AddressPage() {
                 </div>
 
                 {error && (
-                    <div className="text-primary-text text-sm whitespace-pre-line">
+                    <div className="text-primary-text dark:text-primary-text-light text-sm whitespace-pre-line">
                         {error}
                     </div>
                 )}
