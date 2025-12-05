@@ -64,13 +64,13 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
 
         {/* Info, acciones y selección */}
         <div className="col-span-1 space-y-4">
-          <a href="#" className="text-base font-medium hover:underline text-primary-text">
+          <a href="#" className="text-base font-medium hover:underline text-primary-text dark:text-primary-text-light">
             {entry.product.name}
           </a>
 
           {customization && customization.selection_type && (
             <p className="flex flex-wrap items-center gap-2">
-              <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text ring-1 ring-inset ring-gray-500/10">
+              <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text dark:text-primary-text-light ring-1 ring-inset ring-gray-500/10">
                 {customization.selection_type === 'PICK_AND_MIX' ? 'Pick & Mix' : null}
                 {customization.selection_type === 'RANDOM' ? 'Surprise Me' : null}
               </span>
@@ -78,7 +78,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
                 ? customization.allergens.map((a: Allergen) => (
                     <span
                       key={a.id}
-                      className="rounded-md px-2 py-1 text-xs font-medium text-primary-text ring-1 ring-inset ring-gray-500/10"
+                      className="rounded-md px-2 py-1 text-xs font-medium text-primary-text dark:text-primary-text-light ring-1 ring-inset ring-gray-500/10"
                     >
                       {a.name} Free
                     </span>
@@ -87,7 +87,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
             </p>
           )}
 
-          <p className="text-base font-bold text-primary-text">£{entry.product.current_price}</p>
+          <p className="text-base font-bold text-primary-text dark:text-primary-text-light">£{entry.product.current_price}</p>
 
           {/* Controles de cantidad y borrado */}
           <div className="flex items-center space-x-2">
@@ -101,10 +101,10 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
               className="p-1.5 rounded-md border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
               aria-label="Decrease quantity"
             >
-              <FiMinus className="w-4 h-4 text-primary-text" />
+              <FiMinus className="w-4 h-4 text-primary-text dark:text-primary-text-light" />
             </button>
 
-            <span className="px-2 py-1 min-w-[40px] text-center font-medium text-primary-text">
+            <span className="px-2 py-1 min-w-[40px] text-center font-medium text-primary-text dark:text-primary-text-light">
               {entry.quantity}
             </span>
 
@@ -114,7 +114,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
               className="p-1.5 rounded-md border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
               aria-label="Increase quantity"
             >
-              <FiPlus className="w-4 h-4 text-primary-text" />
+              <FiPlus className="w-4 h-4 text-primary-text dark:text-primary-text-light" />
             </button>
           </div>
 
@@ -124,24 +124,24 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
               <p className="flex flex-col gap-4 mt-4">
                 {hotChocolate && (
                   <div>
-                    <p className="text-xs text-primary-text italic">Hot Chocolate</p>
-                    <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text">
+                    <p className="text-xs text-primary-text dark:text-primary-text-light italic">Hot Chocolate</p>
+                    <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text dark:text-primary-text-light">
                     {hotChocolate.name}
                     </span>
                   </div>
                 )}
                 {giftCard && (
                   <div>
-                    <p className="text-xs text-primary-text italic">Gift Card</p>
-                    <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text">
+                    <p className="text-xs text-primary-text dark:text-primary-text-light italic">Gift Card</p>
+                    <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text dark:text-primary-text-light">
                       {giftCard.name}
                     </span>
                   </div>
                 )}
                 {bark && (
                   <div>
-                    <p className="text-xs text-primary-text italic">Chocolate Bark</p>
-                    <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text">
+                    <p className="text-xs text-primary-text dark:text-primary-text-light italic">Chocolate Bark</p>
+                    <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text dark:text-primary-text-light">
                       {bark.name}
                     </span>
                   </div>
@@ -157,7 +157,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
                 <div className="hidden md:block md:col-start-2">
                   <button
                     onClick={() => setShowFlavours(prev => !prev)}
-                    className="px-4 py-2 text-primary-text rounded-md text-sm border border-text-primary-text"
+                    className="px-4 py-2 text-primary-text dark:text-primary-text-light rounded-md text-sm border border-text-primary-text dark:text-primary-text-light"
                   >
                     {showFlavours ? 'Hide flavours' : 'Show flavours'}
                   </button>
@@ -178,24 +178,24 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
             <p className="flex flex-col gap-4 mt-4">
               {hotChocolate && (
                 <div>
-                  <p className="text-xs text-primary-text italic">Hot Chocolate</p>
-                  <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text">
+                  <p className="text-xs text-primary-text dark:text-primary-text-light italic">Hot Chocolate</p>
+                  <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text dark:text-primary-text-light">
                    {hotChocolate.name}
                   </span>
                 </div>
               )}
               {giftCard && (
                 <div>
-                  <p className="text-xs text-primary-text italic">Gift Card</p>
-                  <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text">
+                  <p className="text-xs text-primary-text dark:text-primary-text-light italic">Gift Card</p>
+                  <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text dark:text-primary-text-light">
                     {giftCard.name}
                   </span>
                 </div>
               )}
               {bark && (
                 <div>
-                  <p className="text-xs text-primary-text italic">Chocolate Bark</p>
-                  <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text">
+                  <p className="text-xs text-primary-text dark:text-primary-text-light italic">Chocolate Bark</p>
+                  <span className="rounded-md px-2 py-1 text-xs font-medium text-primary-text dark:text-primary-text-light">
                     {bark.name}
                   </span>
                 </div>
@@ -210,7 +210,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
             <div className="flex justify-end">
               <button
                 onClick={() => setShowFlavours(prev => !prev)}
-                className="px-4 py-2 text-primary-text rounded-md text-sm border border-text-primary-text"
+                className="px-4 py-2 text-primary-text dark:text-primary-text-light rounded-md text-sm border border-text-primary-text dark:text-primary-text-light"
               >
                 {showFlavours ? 'Hide flavours' : 'Show flavours'}
               </button>
@@ -229,12 +229,12 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-main-bg rounded-lg shadow dark:bg-main-bg-dark max-w-md w-full">
             <div className="flex items-center justify-between p-4 border-b dark:border-gray-600">
-              <h3 className="text-xl text-primary-text">Remove Item</h3>
-              <button onClick={() => setIsDeleteModalOpen(false)} className="text-primary-text">
+              <h3 className="text-xl text-primary-text dark:text-primary-text-light">Remove Item</h3>
+              <button onClick={() => setIsDeleteModalOpen(false)} className="text-primary-text dark:text-primary-text-light">
                 <span className="sr-only">Close modal</span>×
               </button>
             </div>
-            <div className="p-4 text-primary-text">
+            <div className="p-4 text-primary-text dark:text-primary-text-light">
               Are you sure you want to remove {entry.product.name}?
             </div>
             <div className="flex justify-end p-4 border-t dark:border-gray-600">
@@ -243,7 +243,7 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
                   handleRemove();
                   setIsDeleteModalOpen(false);
                 }}
-                className="px-5 py-2.5 text-sm font-medium text-primary-text bg-red-600 rounded-lg"
+                className="px-5 py-2.5 text-sm font-medium text-primary-text dark:text-primary-text-light bg-red-600 rounded-lg"
               >
                 Yes, remove
               </button>
