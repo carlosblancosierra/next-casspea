@@ -25,7 +25,7 @@ export default function AboutUsPage() {
                         <h2 className={`mt-2 text-3xl font-bold text-center mb-2 text-primary-text dark:text-white`}>
                             About Us
                         </h2>
-                        <p className="text-primary-text dark:text-primary-text md:p-10">
+                        <p className="text-primary-text dark:text-primary-text-light md:p-10">
                             We are a new company, created by a team of dedicated chefs with over a decade of experience in the chocolate
                             industry. <span className="text-pink-500 font-bold">We have worked in some amazing kitchens around the world, which taught us discipline and perfection in
                                 our craft.</span> We want you to enjoy eating our chocolates as much as we enjoy making them.
@@ -66,7 +66,7 @@ export default function AboutUsPage() {
                     <h2 className={`text-3xl font-bold text-center mb-6 text-primary-text dark:text-white`}>
                         Company's Objective
                     </h2>
-                    <p className="text-center text-primary-text dark:text-primary-text">
+                    <p className="text-center text-primary-text dark:text-primary-text-light">
                         CassPea is a brand that crafts artisan hand-painted chocolate bonbons. Each bonbon creates a fun experience and
                         evokes a sense of creativity and wonder. In CassPea we are convinced that high-level food can be inclusive and
                         fun to enjoy anytime and anywhere.
@@ -131,7 +131,7 @@ export default function AboutUsPage() {
                                 <h3 className={`text-xl font-bold mb-4 text-primary-text dark:text-white`}>
                                     {value.title}
                                 </h3>
-                                <p className="text-primary-text dark:text-primary-text">
+                                <p className="text-primary-text dark:text-primary-text-light">
                                     {value.description}
                                 </p>
                             </div>

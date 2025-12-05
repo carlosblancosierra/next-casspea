@@ -70,7 +70,7 @@ const HelpPage = () => {
                 {/* Contact Section */}
                 <section className="main-bg dark:bg-main-bg-dark rounded-lg shadow-sm p-6 mb-8">
                     <h2 className="text-2xl font-bold text-primary-text dark:text-white mb-4">Contact Us</h2>
-                    <div className="space-y-2 text-primary-text dark:text-primary-text">
+                    <div className="space-y-2 text-primary-text dark:text-primary-text-light">
                         <p>
                             <span className="font-medium">Tel:</span>{' '}
                             <a href="tel:07859790386" className="hover:text-primary dark:hover:text-primary-2">
@@ -94,11 +94,11 @@ const HelpPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="text-center p-4  dark:bg-main-bg-dark rounded-lg">
                             <h3 className="font-bold text-primary dark:text-primary-2">FREE SHIPPING</h3>
-                            <p className="text-primary-text dark:text-primary-text">On all orders over £50</p>
+                            <p className="text-primary-text dark:text-primary-text-light">On all orders over £50</p>
                         </div>
                         <div className="text-center p-4 dark:bg-main-bg-dark rounded-lg">
                             <h3 className="font-bold text-primary dark:text-primary-2">10% OFF</h3>
-                            <p className="text-primary-text dark:text-primary-text">Subscribe to our newsletter</p>
+                            <p className="text-primary-text dark:text-primary-text-light">Subscribe to our newsletter</p>
                         </div>
                     </div>
                 </section>
@@ -112,7 +112,7 @@ const HelpPage = () => {
                                 <h3 className="text-lg font-medium text-primary-text dark:text-white mb-2">
                                     {faq.question}
                                 </h3>
-                                <p className="text-primary-text dark:text-primary-text">
+                                <p className="text-primary-text dark:text-primary-text-light">
                                     {faq.answer}
                                 </p>
                             </div>
@@ -121,7 +121,7 @@ const HelpPage = () => {
                 </section>
 
                 {/* Company Info Footer */}
-                <footer className="mt-8 text-sm text-primary-text dark:text-primary-text">
+                <footer className="mt-8 text-sm text-primary-text dark:text-primary-text-light">
                     <p>Company Name: CassPea Ltd</p>
                     <p>Company Number: 14307063</p>
                 </footer>

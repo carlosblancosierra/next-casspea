@@ -25,6 +25,7 @@ module.exports = {
 				'primary-2': '#800020',
 				'primary-dark': '#832830',
 				'primary-light': '#8a5949',
+				'primary-text-dark': '#000',
 				'main-bg': '#fff',
 				'main-bg-dark': '#0a0c10',
 				'secondary-bg': '#480607',
@@ -32,6 +33,7 @@ module.exports = {
 				'primary-text': '#000',
 				'primary-text-light': '#fff',
 				'secondary-text': '#000',
+				'secondary-text-dark': '#fff',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

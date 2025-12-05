@@ -28,7 +28,7 @@ export default function Nav() {
   // const cart = useSelector(selectCart);
 
   return (
-    <Disclosure as="nav" className="main-bg border-b border-gray-200 dark:main-bg-dark dark:border-gray-700">
+    <Disclosure as="nav" className="bg-main-bg dark:bg-main-bg-dark border-b border-gray-200 dark:border-gray-700">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-screen-2xl px-2 sm:px-6 lg:px-8">
@@ -82,7 +82,7 @@ export default function Nav() {
                         className={classNames(
                           item.current
                             ? 'bg-gray-900 text-white'
-                            : 'text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white',
+                            : 'text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text-light dark:hover:bg-gray-700 dark:hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
                         )}
                       >
@@ -98,9 +98,9 @@ export default function Nav() {
                 <Link href="/cart" className="group relative -m-2 flex items-center p-2">
                   <ShoppingBagIcon
                     aria-hidden="true"
-                    className="h-6 w-6 text-primary-text group-hover:text-primary-text dark:text-primary-text dark:group-hover:text-white"
+                    className="h-6 w-6 text-primary-text group-hover:text-primary-text dark:text-primary-text-light dark:group-hover:text-white"
                   />
-                  {/* <span className="ml-2 text-xs font-medium text-primary-text group-hover:text-primary-text dark:text-primary-text dark:group-hover:text-white">
+                  {/* <span className="ml-2 text-xs font-medium text-primary-text group-hover:text-primary-text dark:text-primary-text-light dark:group-hover:text-white">
                     {totalItems} (£{totalValue.toFixed(2)})
                   </span> */}
                   <span className="sr-only">items in cart, view bag</span>
@@ -121,7 +121,7 @@ export default function Nav() {
                 >
                   <DisclosureButton
                     className={classNames(
-                      item.current ? 'bg-gray-900 text-white' : 'text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white',
+                      item.current ? 'bg-gray-900 text-white' : 'text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text-light dark:hover:bg-gray-700 dark:hover:text-white',
                       'block w-full rounded-md px-3 py-2 text-base font-medium text-left'
                     )}
                   >
