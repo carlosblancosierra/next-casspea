@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 
 // Constants
 const HIDDEN_PATHS = ['/blog', '/landing/gold'];
-const BACKGROUND_COLOR = "#000";
+const BACKGROUND_COLOR = "#6f0f11";
 
 type AnnouncementLink = {
   href: string;
@@ -57,7 +57,7 @@ export default function AnnouncementBar() {
       />
       <a
         href="https://uk.trustpilot.com/review/www.casspea.co.uk"
-        className="text-sm font-medium inline-block text-primary-text hover:underline"
+        className="text-sm font-medium inline-block text-primary-text-light hover:underline"
         rel="noopener noreferrer"
         target="_blank"
       >
@@ -67,15 +67,15 @@ export default function AnnouncementBar() {
   );
   
   const renderContactInfo = () => (
-    <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text">
+    <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
       Tel: <a
         href={CONTACT_INFO.phone.href}
-        className="underline hover:no-underline transition underline-offset-2 text-primary-text"
+        className="underline hover:no-underline transition underline-offset-2 text-primary-text-light"
       >
         {CONTACT_INFO.phone.number}
       </a> / email: <a
         href={CONTACT_INFO.email.href}
-        className="underline hover:no-underline transition underline-offset-2 text-primary-text"
+        className="underline hover:no-underline transition underline-offset-2 text-primary-text-light"
       >
         {CONTACT_INFO.email.address}
       </a>
@@ -87,7 +87,7 @@ export default function AnnouncementBar() {
       className="relative isolate overflow-hidden px-6 py-2.5 sm:px-3.5" 
       style={{ backgroundColor: BACKGROUND_COLOR }}
     >
-      <div className="flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-x-6 max-w-screen-2xl mx-auto text-primary-text">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-x-6 max-w-screen-2xl mx-auto text-primary-text-light">
         <div className="flex flex-col md:flex-row flex-1 justify-center items-center gap-y-2 md:gap-x-8 w-full">
           <div className="text-sm leading-6 w-full md:w-auto text-center">
             {renderTrustpilotRating()}
@@ -95,7 +95,7 @@ export default function AnnouncementBar() {
           
           {renderContactInfo()}
           
-          <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text">
+          <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
             Free Shipping over £50
           </p>
           
@@ -107,7 +107,7 @@ export default function AnnouncementBar() {
           </Link> */}
 
           <p
-            className="w-full md:w-auto text-center px-3.5 py-1 text-sm text-primary-text"
+            className="w-full md:w-auto text-center px-3.5 py-1 text-sm text-primary-text-light"
           >
            Code: <button
              onClick={handleCopyCode}
@@ -126,7 +126,7 @@ export default function AnnouncementBar() {
           aria-label="Dismiss announcement"
         >
           <span className="sr-only">Dismiss</span>
-          <XMarkIcon aria-hidden="true" className="h-5 w-5 text-primary-text" />
+          <XMarkIcon aria-hidden="true" className="h-5 w-5 text-primary-text-light" />
         </button>
       </div>
     </div>

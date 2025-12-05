@@ -76,19 +76,19 @@ export default function AboutUsPage() {
                 {/* Mission & Vision Section */}
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
                     <div className="bg-primary-light dark:bg-main-bg-dark p-8 rounded-lg">
-                        <h2 className={`text-2xl font-bold text-center mb-4 text-primary-text dark:text-white`}>
+                        <h2 className={`text-2xl font-bold text-center mb-4 text-primary-text-light dark:text-white`}>
                             Mission
                         </h2>
-                        <p className="text-primary-text dark:text-primary-text">
+                        <p className="text-primary-text-light dark:text-primary-text-light">
                             To change the perspective of gourmet chocolates, to make them fun and accessible. We want to use our expertise
                             in design, flavours and packaging to create a brand that is inclusive and warm.
                         </p>
                     </div>
                     <div className="bg-pink-600 dark:bg-pink-600 p-8 rounded-lg">
-                        <h2 className={`text-2xl font-bold text-center mb-4 text-primary-text dark:text-white`}>
+                        <h2 className={`text-2xl font-bold text-center mb-4 text-primary-text-light dark:text-white`}>
                             Vision
                         </h2>
-                        <p className="text-primary-text dark:text-primary-text">
+                        <p className="text-primary-text-light dark:text-primary-text-light">
                             We want our chocolates to make someone's day better. Regardless, if they buy them or follow them on social
                             media, we want it to be an experience that will enrich their day. Having suffered from mental health issues,
                             making something that can give someone even a split second of joy during a dark moment is something we strive to
