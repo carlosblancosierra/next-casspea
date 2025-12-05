@@ -640,7 +640,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-main-bg dark:bg-main-bg-dark rounded-lg max-w-md w-full p-6">
                         <div className="text-center">
-                            <h3 className="text-lg font-semibold text-primary-text-light mb-4">
+                            <h3 className="text-lg font-semibold text-primary-text mb-4">
                                 Make your signature box more indulgent.
                             </h3>
                             <p className="text-sm text-primary-text mb-4">
