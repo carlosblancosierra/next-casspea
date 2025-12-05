@@ -100,7 +100,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
         {selectedDate ? (
           // Show selected date with option to change
           <div className="flex items-center justify-between p-3 bg-main-bg dark:bg-main-bg-dark rounded border">
-            <span className="text-primary-text font-medium">
+            <span className="text-primary-text dark:text-primary-text-light font-medium">
               {format(selectedDate, 'EEEE, dd MMMM yyyy', { locale: enGB })}
             </span>
             <button
@@ -120,7 +120,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
                 <button
                   key={dayStr}
                   type="button"
-                  className="px-2 py-3 rounded border bg-main-bg dark:bg-main-bg-dark text-primary-text hover:bg-primary/10 hover:border-primary transition-colors"
+                  className="px-2 py-3 rounded border bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light hover:bg-primary/10 hover:border-primary transition-colors"
                   onClick={() => { setSelectedDate(day); setSelectedSlot(null); }}
                 >
                   {dayStr}
@@ -143,7 +143,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
                   className={`px-2 py-3 rounded border transition-colors ${
                     selectedSlot === slot.value
                       ? 'bg-primary text-primary-text-light border-primary'
-                      : 'bg-main-bg dark:bg-main-bg-dark text-primary-text hover:bg-primary/10 hover:border-primary'
+                      : 'bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light hover:bg-primary/10 hover:border-primary'
                   }`}
                   onClick={() => { setSelectedSlot(slot.value); }}
                 >
