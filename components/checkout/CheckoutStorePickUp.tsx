@@ -89,40 +89,68 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
     }
   }, [selectedDate, selectedSlot, slots, onChange]);
 
-  // Calendar UI: simple grid of availableDays
+  // Calendar UI: collapsible date selection
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text">Select Pickup Date</h3>
-      <div className="grid grid-cols-3 gap-2">
-        {availableDays.map(day => {
-          const dayStr = format(day, 'EEE dd MMM', { locale: enGB });
-          const isSelected = selectedDate && format(day, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
-          return (
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text">
+          {selectedDate ? 'Selected Pickup Date' : 'Select Pickup Date'}
+        </h3>
+
+        {selectedDate ? (
+          // Show selected date with option to change
+          <div className="flex items-center justify-between p-3 bg-main-bg dark:bg-main-bg-dark rounded border">
+            <span className="text-primary-text font-medium">
+              {format(selectedDate, 'EEEE, dd MMMM yyyy', { locale: enGB })}
+            </span>
             <button
-              key={dayStr}
               type="button"
-              className={`px-2 py-2 rounded border ${isSelected ? 'bg-primary text-primary-text' : 'bg-main-bg dark:bg-main-bg-dark text-primary-text'} hover:bg-primary/10`}
-              onClick={() => { setSelectedDate(day); setSelectedSlot(null); }}
+              onClick={() => { setSelectedDate(null); setSelectedSlot(null); }}
+              className="text-primary text-sm hover:text-primary/80 underline"
             >
-              {dayStr}
+              Change Date
             </button>
-          );
-        })}
+          </div>
+        ) : (
+          // Show date selection grid
+          <div className="grid grid-cols-3 gap-2">
+            {availableDays.map(day => {
+              const dayStr = format(day, 'EEE dd MMM', { locale: enGB });
+              return (
+                <button
+                  key={dayStr}
+                  type="button"
+                  className="px-2 py-3 rounded border bg-main-bg dark:bg-main-bg-dark text-primary-text hover:bg-primary/10 hover:border-primary transition-colors"
+                  onClick={() => { setSelectedDate(day); setSelectedSlot(null); }}
+                >
+                  {dayStr}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
+
       {selectedDate && (
         <>
-          <h4 className="text-md font-semibold mt-4 text-primary-text dark:text-primary-text">Select Time Slot</h4>
-          <div className="grid grid-cols-2 gap-2">
-            {slots.map(slot => (
-              <button
-                key={slot.value}
-                type="button"
-                className={`px-2 py-2 rounded border ${selectedSlot === slot.value ? 'bg-primary text-primary-text' : 'bg-main-bg dark:bg-main-bg-dark text-primary-text'} hover:bg-primary/10`}
-                onClick={() => { setSelectedSlot(slot.value); }}
-              >
-                {slot.start} - {slot.end}
-              </button>
-            ))}
+          <div className="space-y-2">
+            <h4 className="text-md font-semibold text-primary-text dark:text-primary-text">Select Time Slot</h4>
+            <div className="grid grid-cols-2 gap-2">
+              {slots.map(slot => (
+                <button
+                  key={slot.value}
+                  type="button"
+                  className={`px-2 py-3 rounded border transition-colors ${
+                    selectedSlot === slot.value
+                      ? 'bg-primary text-primary-text-light border-primary'
+                      : 'bg-main-bg dark:bg-main-bg-dark text-primary-text hover:bg-primary/10 hover:border-primary'
+                  }`}
+                  onClick={() => { setSelectedSlot(slot.value); }}
+                >
+                  {slot.start} - {slot.end}
+                </button>
+              ))}
+            </div>
           </div>
         </>
       )}
