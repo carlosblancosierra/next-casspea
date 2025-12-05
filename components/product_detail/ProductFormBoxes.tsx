@@ -147,7 +147,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
                             step <= currentStep
                                 ? 'bg-primary border-primary text-primary-text-light'
-                                : 'border-gray-300 text-primary-text bg-main-bg dark:bg-main-bg-dark'
+                                : 'border-gray-300 text-primary-text dark:text-primary-text-light bg-main-bg dark:bg-main-bg-dark'
                         }`}>
                             {step}
                         </div>
@@ -640,13 +640,13 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-main-bg dark:bg-main-bg-dark rounded-lg max-w-md w-full p-6">
                         <div className="text-center">
-                            <h3 className="text-lg font-semibold text-primary-text mb-4">
+                            <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">
                                 Make your signature box more indulgent.
                             </h3>
-                            <p className="text-sm text-primary-text mb-4">
+                            <p className="text-sm text-primary-text dark:text-primary-text-light mb-4">
                                 For £{getPackPrice()} pounds more add:
                             </p>
-                            <ul className="text-sm text-primary-text mb-6 space-y-1">
+                            <ul className="text-sm text-primary-text dark:text-primary-text-light mb-6 space-y-1">
                                 <li>• Gourmet chocolate bark</li>
                                 <li>• Luxury hot chocolate</li>
                                 <li>• Personalized gift card</li>
@@ -657,7 +657,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                         setShowUpgradePopup(false);
                                         handleAddToCart();
                                     }}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-primary-text rounded-md hover:main-bg dark:hover:bg-main-bg-dark transition-colors"
+                                    className="flex-1 px-4 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:main-bg dark:hover:bg-main-bg-dark transition-colors"
                                 >
                                     Continue to cart
                                 </button>

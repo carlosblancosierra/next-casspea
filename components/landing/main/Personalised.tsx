@@ -5,9 +5,6 @@ import Link from 'next/link';
 import CustomChocolate from '@/components/personalized/CustomChocolate';
 import { UserChosenLayer } from '@/types/personalized';
 import { useMemo } from 'react';
-import { PERSONALISED_TEXT } from '../constants';
-import ColoredList from '@/components/common/ColoredList';
-import { PERSONALISED_STEPS_BLUE_COLORS, PERSONALISED_STEPS_GOLD_COLORS } from '../constants';
 
 interface PersonalisedProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
 
