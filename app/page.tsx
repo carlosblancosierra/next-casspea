@@ -81,12 +81,10 @@ const HeroSection = () => (
           Luxury Chocolate Gifts, Handcrafted in London
         </h1>
         <h2 className="text-2xl mb-2 dark:text-white text-primary-text">
-          Beautifully Crafted Chocolates Made for Christmas Gifting
+          Share the joy this Christmas with our handcrafted bonbons
         </h2>
         <p className="hidden md:block md:mb-6 font-light text-sm text-primary-text lg:mb-8 md:text-base dark:text-primary-text-light">
-          Share the joy this Christmas with beautifully handcrafted chocolates.
-          Our signature bonbons are made in London using over 20 exquisite flavours, each crafted to delight. 
-          A gift that feels thoughtful, elegant, and unforgettable.
+          Perfect for Christmas gifting — from cosy moments at home to meaningful corporate gestures. Each handcrafted bonbon offers a burst of creativity and indulgence, turning every bite into a little moment of festive joy.
         </p>
         <ButtonGroup />
       </div>
@@ -117,7 +115,7 @@ const HeroSection = () => (
           <UnitSoldCounter />
         </div>
         <p className={`md:hidden md:mb-6 text-3xl font-bold mt-2 text-primary-text dark:text-primary-text-light ${playfair.className} lg:mb-8 md:text-lg lg:text-xl`}>
-          Share the love with CassPea Chocolates
+          Share the joy this Christmas with our handcrafted bonbons
         </p>
         <p className="md:hidden md:mb-6 font-light text-md mt-2 text-primary-text lg:mb-8 md:text-lg lg:text-xl dark:text-primary-text-light">
           Perfect for Christmas gifting — from cosy moments at home to meaningful corporate gestures. Each handcrafted bonbon offers a burst of creativity and indulgence, turning every bite into a little moment of festive joy.
