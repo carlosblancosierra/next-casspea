@@ -120,10 +120,7 @@ const HeroSection = () => (
           Share the love with CassPea Chocolates
         </p>
         <p className="md:hidden md:mb-6 font-light text-md mt-2 text-primary-text lg:mb-8 md:text-lg lg:text-xl dark:text-primary-text-light">
-          Perfect for personal indulgence, birthdays, corporate events, and
-          special celebrations. With over 20 exquisite flavours, each handcrafted
-          to perfection by our skilled chocolatiers, every bite is a work of art
-          and a journey through inspired flavours.
+          Perfect for Christmas gifting — from cosy moments at home to meaningful corporate gestures. Each handcrafted bonbon offers a burst of creativity and indulgence, turning every bite into a little moment of festive joy.
         </p>
       </div>
     </div>
