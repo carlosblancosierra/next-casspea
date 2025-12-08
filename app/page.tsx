@@ -78,17 +78,15 @@ const HeroSection = () => (
         <h1
           className={`${playfair.className} mb-2 text-5xl text-primary-text font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}
         >
-          London's Finest Artisan Chocolates
+          Luxury Chocolate Gifts, Handcrafted in London
         </h1>
         <h2 className="text-2xl mb-2 dark:text-white text-primary-text">
-          Celebrate Every Occasion with Our Signature Gift Boxes
+          Beautifully Crafted Chocolates Made for Christmas Gifting
         </h2>
         <p className="hidden md:block md:mb-6 font-light text-sm text-primary-text lg:mb-8 md:text-base dark:text-primary-text-light">
-          Share the love with CassPea Chocolates—perfect for personal indulgence,
-          birthdays, corporate events, and special celebrations. With over 20
-          exquisite flavours, each handcrafted to perfection by our skilled
-          chocolatiers, every bite is a work of art and a journey through inspired
-          flavours.
+          Share the joy this Christmas with beautifully handcrafted chocolates.
+          Our signature bonbons are made in London using over 20 exquisite flavours, each crafted to delight. 
+          A gift that feels thoughtful, elegant, and unforgettable.
         </p>
         <ButtonGroup />
       </div>
@@ -104,8 +102,8 @@ const HeroSection = () => (
         />
         <ImageGallery
           images={[
-            '/home/2025-10/tinified/1.jpg',
             '/home/2025-10/tinified/2.jpg',
+            '/home/2025-10/tinified/1.jpg',
             '/home/2025-10/tinified/3.jpg',
             '/home/2025-10/tinified/4.jpg',
             '/home/2025-10/tinified/5.jpg',
