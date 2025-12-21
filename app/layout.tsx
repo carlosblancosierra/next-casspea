@@ -9,6 +9,7 @@ import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
 import GiveawayPopup from '@/components/common/GiveawayPopup';
 import dynamic from 'next/dynamic';
+import LastCallChristmasPopup from '@/components/common/LasCallChirstmasPopup';
 
 const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
   ssr: false
@@ -92,6 +93,7 @@ export default function RootLayout({
         <Provider>
           <Setup />
           {/* <GiveawayPopup /> */}
+          <LastCallChristmasPopup />
           <LayoutWrapper>
             <div className="flex flex-col min-h-screen relative z-1">
               <AnnouncementBar />

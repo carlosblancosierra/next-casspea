@@ -34,7 +34,7 @@ export default function AnnouncementBar() {
 
   const handleCopyCode = async () => {
     try {
-      await navigator.clipboard.writeText('MerryChristmas');
+      await navigator.clipboard.writeText('SUBSCRIBER15');
       setCopiedCode(true);
       setTimeout(() => setCopiedCode(false), 2000);
     } catch (err) {
@@ -93,10 +93,11 @@ export default function AnnouncementBar() {
             {renderTrustpilotRating()}
           </div>
           
-          {renderContactInfo()}
+          {/* {renderContactInfo()} */}
           
           <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
-            Free Shipping over £50
+            Order before noon Monday 22nd to make it in time for Christmas!
+            {/* Free Shipping over £50 */}
           </p>
           
           {/* <Link
@@ -111,11 +112,11 @@ export default function AnnouncementBar() {
           >
            Code: <button
              onClick={handleCopyCode}
-             className="font-bold text-red-600 text-sm hover:text-red-500 transition-colors cursor-pointer underline decoration-dotted underline-offset-2"
-             aria-label="Copy discount code MerryChristmas"
+             className="font-bold text-white text-sm hover:text-gray-100 transition-colors cursor-pointer underline decoration-dotted underline-offset-2"
+             aria-label="Copy discount code SUBSCRIBER15"
            >
-             {copiedCode ? 'Copied!' : 'MerryChristmas'}
-           </button> for 12% OFF <span aria-hidden="true">&rarr;</span>
+             {copiedCode ? 'Copied!' : 'SUBSCRIBER15'}
+           </button> for 15% OFF <span aria-hidden="true">&rarr;</span>
           </p>
         </div>
 
