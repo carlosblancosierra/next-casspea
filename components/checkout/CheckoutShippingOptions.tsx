@@ -52,6 +52,11 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     const [storePickup, setStorePickup] = useState<{ date: Date; slot: Slot } | null>(null);
     const [deliveryType, setDeliveryType] = useState<'shipping' | 'pickup' | null>(null);
 
+    // Check if we're past January 10th, 2025
+    const currentDate = new Date();
+    const january10th2025 = new Date('2025-01-10');
+    const isAfterJanuary10th = currentDate > january10th2025;
+
     // Expose storePickup to parent if onChangeStorePickup is provided
     useEffect(() => {
         if (onChangeStorePickup) {
@@ -141,13 +146,13 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     };
 
     const getEstimatedDeliveryDates = (minDays: number, maxDays: number) => {
-        const today = new Date();
-        const shippingDate = addBusinessDays(today, 1);
-        const minDeliveryDate = addBusinessDays(shippingDate, minDays);
-        const maxDeliveryDate = addBusinessDays(shippingDate, maxDays);
+        // All orders will be dispatched on January 10th
+        const dispatchDate = new Date('2025-01-10');
+        const minDeliveryDate = addBusinessDays(dispatchDate, minDays);
+        const maxDeliveryDate = addBusinessDays(dispatchDate, maxDays);
 
         return {
-            shipping: format(shippingDate, 'EEE, d MMM'),
+            shipping: format(dispatchDate, 'EEE, d MMM'),
             delivery: minDays === maxDays
                 ? format(minDeliveryDate, 'EEE, d MMM')
                 : `${format(minDeliveryDate, 'EEE, d MMM')} - ${format(maxDeliveryDate, 'EEE, d MMM')}`
@@ -206,6 +211,22 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     };
 
     if (!allShippingOptions.length && !deliveryType) return null;
+
+    // Hide shipping options after January 10th, 2025
+    if (isAfterJanuary10th) {
+        return (
+            <div className="main-bg p-6 rounded-lg shadow dark:bg-main-bg-dark">
+                <div className="text-center">
+                    <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text-light">
+                        Order Processing Temporarily Unavailable
+                    </h2>
+                    <p className="text-primary-text dark:text-primary-text-light">
+                        We are currently processing orders. Please check back later.
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="main-bg p-6 rounded-lg shadow dark:bg-main-bg-dark">
@@ -278,7 +299,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     <div className="flex items-center justify-between mb-4">
                         <p className="text-sm text-primary-text dark:text-primary-text-light">
                             {deliveryType === 'shipping'
-                                ? 'Orders will be shipped ASAP, usually within 24 hours. Delivery Date depends on the shipping option selected.'
+                                ? 'All orders will be dispatched on January 10th. Delivery dates shown are from the dispatch date.'
                                 : 'Pick up your order from our Bedford Hill store. Choose a convenient time slot.'
                             }
                         </p>

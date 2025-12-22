@@ -96,28 +96,17 @@ export default function AnnouncementBar() {
           {/* {renderContactInfo()} */}
           
           <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
-            Order before noon Monday 22nd to make it in time for Christmas!
+            🎄 Holiday Notice: All orders will be dispatched on <span className="font-semibold text-yellow-300">January 10th</span> 🎄
             {/* Free Shipping over £50 */}
           </p>
           
-          {/* <Link
+          <Link
             href="/subscribe"
             className="w-full md:w-auto text-center rounded-full bg-red-600 px-3.5 py-1 text-sm text-white shadow-sm hover:bg-primary-light transition"
           >
             Subscribe for 10% off <span aria-hidden="true">&rarr;</span>
-          </Link> */}
+          </Link>
 
-          <p
-            className="w-full md:w-auto text-center px-3.5 py-1 text-sm text-primary-text-light"
-          >
-           Code: <button
-             onClick={handleCopyCode}
-             className="font-bold text-white text-sm hover:text-gray-100 transition-colors cursor-pointer underline decoration-dotted underline-offset-2"
-             aria-label="Copy discount code SUBSCRIBER15"
-           >
-             {copiedCode ? 'Copied!' : 'SUBSCRIBER15'}
-           </button> for 15% OFF <span aria-hidden="true">&rarr;</span>
-          </p>
         </div>
 
         <button

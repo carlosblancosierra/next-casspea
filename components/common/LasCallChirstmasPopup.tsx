@@ -6,7 +6,6 @@ import Image from "next/image";
 
 export default function LastCallChristmasPopup() {
   const [show, setShow] = useState(false);
-  const [copiedCode, setCopiedCode] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -23,16 +22,6 @@ export default function LastCallChristmasPopup() {
     // if (typeof window !== 'undefined') {
     //   sessionStorage.setItem('hideChristmasPopup', 'true');
     // }
-  };
-
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText('SUBSCRIBER15');
-      setCopiedCode(true);
-      setTimeout(() => setCopiedCode(false), 2000); // Reset after 2 seconds
-    } catch (err) {
-      console.error('Failed to copy: ', err);
-    }
   };
 
   if (pathname && pathname.startsWith("/landing/thermomix")) return null;
@@ -58,40 +47,28 @@ export default function LastCallChristmasPopup() {
 
         <div className="p-8 text-center">
           <h3 className="text-2xl font-bold text-white mb-6 leading-tight">
-            It's not too late to send a beautiful Christmas gift!
+            🎄 Merry Christmas from CassPea! 🎄
           </h3>
           
 
           <div className="text-white space-y-4 mb-6">
-
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
-              <p className="font-semibold text-white">
-                ⏰ Order before noon Monday 22nd to make it in time for Christmas!
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-600">
+              <p className="text-lg leading-relaxed mb-4">
+                Thank you so much for such an amazing Christmas, always for being so greatly appreciated.
               </p>
-            </div>
-
-            {/* Discount code with dark styling */}
-            <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
-              <p className="text-lg font-bold mb-1">🎁 SPECIAL OFFER</p>
-              <p className="text-xl font-black tracking-wider">USE CODE</p>
-              <button
-                onClick={copyToClipboard}
-                className="bg-white hover:bg-gray-100 text-black px-4 py-2 rounded-full font-bold text-lg inline-block mt-2 shadow-inner transition-colors duration-200 cursor-pointer"
-                aria-label="Copy discount code SUBSCRIBER15"
-              >
-                {copiedCode ? 'COPIED!' : 'SUBSCRIBER15'}
-              </button>
-              <p className="text-lg font-semibold mt-2">for 15% OFF</p>
+              <p className="text-lg font-semibold text-center text-yellow-300 mb-4">
+                🎄 We are now closed until the 6th of January 🎄
+              </p>
+              <p className="text-lg leading-relaxed">
+                We'll see you then. Hope you have a lovely Christmas and New Year's, and timely luck.
+              </p>
             </div>
 
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
-              <p className="text-sm leading-relaxed">
-                Orders placed by <span className="font-semibold text-white">Monday 22nd, before 12pm (noon)</span> will be dispatched via
-                <span className="font-semibold text-white"> Royal Mail Tracked 24®</span>,
-                ensuring delivery in time for Christmas.
+              <p className="text-base leading-relaxed">
+                <span className="font-semibold">📦 Important:</span> Any orders placed from now on will be dispatched on the <span className="font-semibold text-yellow-300">10th of January</span>.
               </p>
             </div>
-
           </div>
 
           <Link
@@ -99,7 +76,7 @@ export default function LastCallChristmasPopup() {
             className="inline-flex items-center px-8 py-4 bg-white hover:bg-gray-100 text-black font-bold rounded-full shadow-lg transform transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/30"
             onClick={handleClose}
           >
-            Shop Christmas Gifts
+            🎁 Place Order for January Delivery
           </Link>
         </div>
       </div>
