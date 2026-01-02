@@ -107,9 +107,9 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const getPackPrice = () => {
         const units = product.units_per_box || 0;
         switch (units) {
-            case 9: return 11;
-            case 15: return 8;
-            case 24: return 8;
+            case 9: return 9.5;
+            case 15: return 7.5;
+            case 24: return 5;
             case 48: return 5;
             default: return 10; // fallback
         }

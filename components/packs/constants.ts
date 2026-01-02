@@ -1,8 +1,8 @@
 export const PRICE_MAP: Record<number, number> = {
-  9: 28,
-  15: 38,
-  24: 53,
-  48: 90,
+  9: 32.5,
+  15: 45,
+  24: 60,
+  48: 105,
 };
 
 export const ID_MAP: Record<number, number> = {
