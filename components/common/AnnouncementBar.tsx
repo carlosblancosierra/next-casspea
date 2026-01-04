@@ -93,11 +93,10 @@ export default function AnnouncementBar() {
             {renderTrustpilotRating()}
           </div>
           
-          {/* {renderContactInfo()} */}
+          {renderContactInfo()}
           
           <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
-            🎄 Holiday Notice: All orders will be dispatched on <span className="font-semibold text-yellow-300">January 10th</span> 🎄
-            {/* Free Shipping over £50 */}
+            Free Shipping over £50
           </p>
           
           <Link

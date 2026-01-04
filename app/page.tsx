@@ -76,15 +76,19 @@ const HeroSection = () => (
           <UnitSoldCounter />
         </div>
         <h1
-          className={`${playfair.className} mb-2 text-5xl text-primary-text font-extrabold tracking-tight leading-none md:text-8xl dark:text-white`}
+          className={`${playfair.className} mb-2 text-5xl text-primary-text font-bold tracking-tight leading-none md:text-8xl dark:text-white`}
         >
           Luxury Chocolate Gifts, Handcrafted in London
         </h1>
-        <h2 className="text-2xl mb-2 dark:text-white text-primary-text">
-          Share the joy this Christmas with our handcrafted bonbons
+        <h2 className="text-2xl mb-2 dark:text-white text-primary-text hidden md:block">
+          Celebrate Every Occasion with Our Signature Gift Boxes
         </h2>
         <p className="hidden md:block md:mb-6 font-light text-sm text-primary-text lg:mb-8 md:text-base dark:text-primary-text-light">
-          Perfect for Christmas gifting — from cosy moments at home to meaningful corporate gestures. Each handcrafted bonbon offers a burst of creativity and indulgence, turning every bite into a little moment of festive joy.
+          Share the love with CassPea Chocolates—perfect for personal indulgence,
+          birthdays, corporate events, and special celebrations. With over 20
+          exquisite flavours, each handcrafted to perfection by our skilled
+          chocolatiers, every bite is a work of art and a journey through inspired
+          flavours.
         </p>
         <ButtonGroup />
       </div>
@@ -115,11 +119,14 @@ const HeroSection = () => (
           <UnitSoldCounter />
         </div>
         <p className={`md:hidden md:mb-6 text-3xl font-bold mt-2 text-primary-text dark:text-primary-text-light ${playfair.className} lg:mb-8 md:text-lg lg:text-xl`}>
-          Share the joy this Christmas with our handcrafted bonbons
+          Celebrate Every Occasion with Our Signature Gift Boxes
         </p>
         <p className="md:hidden md:mb-6 font-light text-md mt-2 text-primary-text lg:mb-8 md:text-lg lg:text-xl dark:text-primary-text-light">
-          Perfect for Christmas gifting — from cosy moments at home to meaningful corporate gestures. Each handcrafted bonbon offers a burst of creativity and indulgence, turning every bite into a little moment of festive joy.
-        </p>
+          Share the love with CassPea Chocolates—perfect for personal indulgence,
+          birthdays, corporate events, and special celebrations. With over 20
+          exquisite flavours, each handcrafted to perfection by our skilled
+          chocolatiers, every bite is a work of art and a journey through inspired
+          flavours.        </p>
       </div>
     </div>
   </section>

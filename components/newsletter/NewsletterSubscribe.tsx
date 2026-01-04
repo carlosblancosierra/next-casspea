@@ -47,11 +47,11 @@ export default function
                         <h2 className="text-3xl tracking-tight font-extrabold text-primary-text sm:text-4xl dark:text-white">
                             Join our mailing list for a 10% discount
                         </h2>
-                        <p className="font-light text-primary-text sm:text-xl dark:text-primary-text">
+                        <p className="font-light text-primary-text sm:text-xl dark:text-white">
                             Be the first to hear about our latest collections, special offers and tea-time treats.
                         </p>
 
-                        <p className="font-bold sm:text-xl dark:text-primary-text">
+                        <p className="font-bold sm:text-xl dark:text-white">
                             You will receive your discount code via email.
                         </p>
 
@@ -60,13 +60,13 @@ export default function
                                 <div className="relative w-full">
                                     <label
                                         htmlFor="email"
-                                        className="hidden mb-2 text-sm font-medium text-primary-text dark:text-primary-text"
+                                        className="hidden mb-2 text-sm font-medium text-primary-text dark:text-white"
                                     >
                                         Email address
                                     </label>
                                     <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                                         <svg
-                                            className="w-5 h-5 text-primary-text dark:text-primary-text"
+                                            className="w-5 h-5 text-primary-text dark:text-white"
                                             fill="currentColor"
                                             viewBox="0 0 20 20"
                                             xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +105,7 @@ export default function
                                     </button>
                                 </div>
                             </div>
-                            <div className="mx-auto max-w-screen-sm text-sm text-left text-primary-text dark:text-primary-text">
+                            <div className="mx-auto max-w-screen-sm text-sm text-left text-primary-text dark:text-white">
                                 We care about the protection of your data.{' '}
                                 <a
                                     href="/privacy-policy"
