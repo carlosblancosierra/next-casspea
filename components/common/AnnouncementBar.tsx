@@ -61,7 +61,7 @@ export default function AnnouncementBar() {
         rel="noopener noreferrer"
         target="_blank"
       >
-        4.4 on Trustpilot
+        4.6 on Trustpilot (56 reviews)
       </a>
     </div>
   );
@@ -96,7 +96,7 @@ export default function AnnouncementBar() {
           {renderContactInfo()}
           
           <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
-            Free Shipping over £50
+            Free Shipping over £55
           </p>
           
           <Link
