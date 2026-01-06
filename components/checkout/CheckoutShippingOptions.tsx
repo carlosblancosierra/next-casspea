@@ -52,10 +52,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     const [storePickup, setStorePickup] = useState<{ date: Date; slot: Slot } | null>(null);
     const [deliveryType, setDeliveryType] = useState<'shipping' | 'pickup' | null>(null);
 
-    // Check if we're past January 10th, 2025
-    const currentDate = new Date();
-    const january10th2025 = new Date('2025-01-10');
-    const isAfterJanuary10th = currentDate > january10th2025;
 
     // Expose storePickup to parent if onChangeStorePickup is provided
     useEffect(() => {
@@ -212,21 +208,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
 
     if (!allShippingOptions.length && !deliveryType) return null;
 
-    // Hide shipping options after January 10th, 2025
-    if (isAfterJanuary10th) {
-        return (
-            <div className="main-bg p-6 rounded-lg shadow dark:bg-main-bg-dark">
-                <div className="text-center">
-                    <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text-light">
-                        Order Processing Temporarily Unavailable
-                    </h2>
-                    <p className="text-primary-text dark:text-primary-text-light">
-                        We are currently processing orders. Please check back later.
-                    </p>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="main-bg p-6 rounded-lg shadow dark:bg-main-bg-dark">
