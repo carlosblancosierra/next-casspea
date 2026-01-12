@@ -104,9 +104,9 @@ const HeroSection = () => (
         />
         <ImageGallery
           images={[
-            '/home/2025-10/tinified/2.jpg',
-            '/home/2025-10/tinified/1.jpg',
-            '/home/2025-10/tinified/3.jpg',
+            '/home/2026/01/1.jpg',
+            '/home/2026/01/2.jpg',
+            '/home/2026/01/3.jpg',
             '/home/2025-10/tinified/4.jpg',
             '/home/2025-10/tinified/5.jpg',
             '/home/2025-10/tinified/6.jpg',
