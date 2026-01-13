@@ -52,7 +52,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
                 {images.map((url, idx) => (
                     <motion.div
                         key={idx}
-                        className="min-w-[calc(100%-8px)] pr-2 box-border"
+                        className="min-w-full"
                     >
                         <div className="aspect-[4/5] relative rounded-lg shadow overflow-hidden">
                             <Image

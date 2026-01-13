@@ -107,11 +107,11 @@ const HeroSection = () => (
             '/home/2026/01/1.jpg',
             '/home/2026/01/2.jpg',
             '/home/2026/01/3.jpg',
-            '/home/2025-10/tinified/4.jpg',
-            '/home/2025-10/tinified/5.jpg',
-            '/home/2025-10/tinified/6.jpg',
-            '/home/2025-10/tinified/7.jpg',
-            '/home/2025-10/tinified/8.jpg',
+            '/home/2026/01/4.jpg',
+            '/home/2026/01/5.jpg',
+            '/home/2026/01/6.jpg',
+            '/home/2026/01/7.jpg',
+            '/home/2026/01/8.jpg',
           ]}
           className="block md:hidden"
         />
