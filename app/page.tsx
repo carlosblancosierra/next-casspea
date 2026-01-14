@@ -42,7 +42,7 @@ export const Section = ({
 
 // Button group for hero section
 const ButtonGroup = () => (
-  <div className="hidden md:flex gap-2">
+  <div className="hidden lg:flex gap-2">
     <Link
       href="/shop-now/"
       className="inline-flex items-center justify-center px-8 py-4 mr-3 text-xl font-medium text-primary-button-text rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light"
@@ -70,38 +70,73 @@ const playfair = Playfair_Display({ subsets: ['latin'] });
 // Hero section component (grid now splits at md instead of lg)
 const HeroSection = () => (
   <section className="dark:bg-main-bg-dark">
-    <div className="grid grid-cols-1 md:grid-cols-12 mx-auto md:gap-8 xl:gap-0 md:pb-8 relative">
-      <div className="md:mr-10 md:col-span-6">
-        <div className="hidden md:block mb-6 mt-2">
-          <UnitSoldCounter />
+    <div className="grid grid-cols-1 lg:grid-cols-12 mx-auto lg:gap-8 xl:gap-0 lg:pb-8 relative">
+      <div className="col-span-1 lg:col-span-6">
+        {/* <div className="hidden md:grid md:grid-cols-2 md:gap-4">
+          <div className="aspect-square">
+            <Image
+              src="/home/2026/01/1.jpg"
+              width={0}
+              height={0}
+              sizes="50vw"
+              priority
+              className="w-full h-full object-cover rounded-lg"
+              alt="CassPea Chocolates 1"
+            />
+          </div>
+          <div className="aspect-square">
+            <Image
+              src="/home/2026/01/5.jpg"
+              width={0}
+              height={0}
+              sizes="50vw"
+              priority
+              className="w-full h-full object-cover rounded-lg"
+              alt="CassPea Chocolates 2"
+            />
+          </div>
+          <div className="aspect-square">
+            <Image
+              src="/home/2026/01/4.jpg"
+              width={0}
+              height={0}
+              sizes="50vw"
+              priority
+              className="w-full h-full object-cover rounded-lg"
+              alt="CassPea Chocolates 3"
+            />
+          </div>
+          <div className="aspect-square">
+            <Image
+              src="/home/2026/01/2.jpg"
+              width={0}
+              height={0}
+              sizes="50vw"
+              priority
+              className="w-full h-full object-cover rounded-lg"
+              alt="CassPea Chocolates 4"
+            />
+          </div>
+        </div> */}
+        <div className="hidden lg:block aspect-square">
+          <Image
+            src="/home/2026/01/1.jpg"
+            width={0}
+            height={0}
+            sizes="100vw"
+            priority
+            className="w-full h-full object-cover rounded-lg"
+            alt="CassPea Chocolates"
+          />
         </div>
-        <h1
-          className={`${playfair.className} mb-2 text-5xl text-primary-text font-bold tracking-tight leading-none md:text-8xl dark:text-white`}
-        >
-          Luxury Chocolate Gifts, Handcrafted in London
-        </h1>
-        <h2 className="text-2xl mb-2 dark:text-white text-primary-text hidden md:block">
-          Celebrate Every Occasion with Our Signature Gift Boxes
-        </h2>
-        <p className="hidden md:block md:mb-6 font-light text-sm text-primary-text lg:mb-8 md:text-base dark:text-primary-text-light">
-          Share the love with CassPea Chocolates—perfect for personal indulgence,
-          birthdays, corporate events, and special celebrations. With over 20
-          exquisite flavours, each handcrafted to perfection by our skilled
-          chocolatiers, every bite is a work of art and a journey through inspired
-          flavours.
-        </p>
-        <ButtonGroup />
-      </div>
-      <div className="col-span-1 md:col-span-6">
-        <Image
-          src="/home/hero-1.png"
-          width={0}
-          height={0}
-          sizes="100vw"
-          priority
-          className="w-full h-auto hidden md:block"
-          alt="CassPea Chocolates"
-        />
+        <div className="lg:hidden">
+          <h1 className={`${playfair.className} mb-2 text-4xl md:text-[5rem] text-primary-text font-bold tracking-tight leading-none dark:text-white`}>
+            Luxury Chocolate Gifts, Handcrafted in London
+          </h1>
+          <h2 className="text-2xl mb-4 dark:text-white text-primary-text">
+            Celebrate Every Occasion with Our Signature Gift Boxes
+          </h2>
+        </div>
         <ImageGallery
           images={[
             '/home/2026/01/1.jpg',
@@ -113,20 +148,39 @@ const HeroSection = () => (
             '/home/2026/01/7.jpg',
             '/home/2026/01/8.jpg',
           ]}
-          className="block md:hidden"
+          className="block lg:hidden"
         />
-        <div className="md:hidden mb-6">
+        <div className="lg:hidden mb-6">
           <UnitSoldCounter />
         </div>
-        <p className={`md:hidden md:mb-6 text-3xl font-bold mt-2 text-primary-text dark:text-primary-text-light ${playfair.className} lg:mb-8 md:text-lg lg:text-xl`}>
-          Celebrate Every Occasion with Our Signature Gift Boxes
-        </p>
-        <p className="md:hidden md:mb-6 font-light text-md mt-2 text-primary-text lg:mb-8 md:text-lg lg:text-xl dark:text-primary-text-light">
+        <p className="lg:hidden font-light text-md mt-4 text-primary-text dark:text-primary-text-light">
           Share the love with CassPea Chocolates—perfect for personal indulgence,
           birthdays, corporate events, and special celebrations. With over 20
           exquisite flavours, each handcrafted to perfection by our skilled
           chocolatiers, every bite is a work of art and a journey through inspired
-          flavours.        </p>
+          flavours.
+        </p>
+      </div>
+      <div className="lg:col-span-6 lg:pl-8">
+        <div className="hidden lg:block mb-6 mt-2">
+          <UnitSoldCounter />
+        </div>
+        <h1
+          className={`${playfair.className} mb-2 text-5xl text-primary-text font-bold tracking-tight leading-none lg:text-8xl dark:text-white hidden lg:block`}
+        >
+          Luxury Chocolate Gifts, Handcrafted in London
+        </h1>
+        <h2 className="text-2xl mb-2 dark:text-white text-primary-text hidden lg:block">
+          Celebrate Every Occasion with Our Signature Gift Boxes
+        </h2>
+        <p className="hidden lg:block lg:mb-6 font-light text-sm text-primary-text xl:mb-8 lg:text-base dark:text-primary-text-light">
+          Share the love with CassPea Chocolates—perfect for personal indulgence,
+          birthdays, corporate events, and special celebrations. With over 20
+          exquisite flavours, each handcrafted to perfection by our skilled
+          chocolatiers, every bite is a work of art and a journey through inspired
+          flavours.
+        </p>
+        <ButtonGroup />
       </div>
     </div>
   </section>
