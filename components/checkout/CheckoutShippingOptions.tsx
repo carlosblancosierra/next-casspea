@@ -177,7 +177,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     <span className="text-base font-semibold text-primary dark:text-primary-2">
                         FREE
                     </span>
-                    <span className="text-sm text-primary-text line-through">
+                    <span className="text-sm text-primary-text dark:text-primary-text-light line-through">
                         Was {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(originalPrice)}
                     </span>
                 </div>
@@ -191,7 +191,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     <span className="text-base font-semibold text-primary-text dark:text-primary-text-light">
                         {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(discountedPrice)}
                     </span>
-                    <span className="text-sm text-primary-text line-through">
+                    <span className="text-sm text-primary-text dark:text-primary-text-light line-through">
                         Was {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(originalPrice)}
                     </span>
                 </div>
