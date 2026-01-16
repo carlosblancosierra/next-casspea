@@ -2,6 +2,8 @@
 import { Metadata } from 'next';
 import BlogLayout from '@/components/blog/BlogLayout';
 import Image from 'next/image';
+import Section from '@/components/landing/thermomix/Section';
+import HomeProducts from '@/components/home/HomeProducts';
 
 export const metadata: Metadata = {
   title: 'Why Do Different Brands of Chocolate Taste Different?',
@@ -129,6 +131,10 @@ export default function WhyChocolateTastesDifferentPage() {
         </a>
         — I'd love to hear your thoughts on chocolate, terroir, or whether you spotted that 300 reference.
       </p>
+
+      <Section title="Try the Difference Yourself" extraClass="mt-10">
+        <HomeProducts />
+      </Section>
     </BlogLayout>
   );
 }
