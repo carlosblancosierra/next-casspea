@@ -15,7 +15,7 @@ export default function BlogLayout({ title, date, heroSrc, children }: BlogLayou
   return (
     <main className="bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text min-h-screen py-8 px-4">
       <header className="max-w-3xl mx-auto text-center mb-12">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 drop-shadow-lg">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2">
           {title}
         </h1>
         <p className="text-sm text-primary-text dark:text-primary-text">{date}</p>
