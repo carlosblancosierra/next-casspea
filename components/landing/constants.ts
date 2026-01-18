@@ -10,8 +10,8 @@ export const blueGradient = 'gradient-45-blue-4'
 export const HERO_SECTION_TEXT_BASE = {
   heading: 'Share the Love, One Bonbon at a Time',
   subheading: 'Luxury handmade chocolates crafted in London.',
-  mainBtnLabel: 'Get 20% off',
-  mainBtnAriaLabel: 'Get 20% off',
+  mainBtnLabel: 'Get 15% off',
+  mainBtnAriaLabel: 'Get 15% off',
   secondaryBtnLabel: 'Explore Our Store',
   secondaryBtnAriaLabel: 'Explore Our Store',
 };

@@ -1,96 +1,124 @@
 // app/landing/HeroSection.tsx
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Playfair_Display } from 'next/font/google';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
+import ImageGallery from '@/components/product_detail/ImageGallery';
 
-const playfair = Playfair_Display({ subsets: ['latin'], weight: ['700'] });
+const playfair = Playfair_Display({ subsets: ['latin'] });
 
 interface HeroSectionProps {
   config: typeof import('../constants').LANDING_CONFIG.gold;
 }
 
-export default function HeroSection({ config }: HeroSectionProps) {
-  const bgRef = useRef<HTMLDivElement | null>(null);
-
-  // Parallax ligero con rAF (se desactiva si el usuario prefiere reducir movimiento)
-  useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
-
-    let raf = 0;
-    const onScroll = () => {
-      if (!bgRef.current) return;
-      const y = window.scrollY || 0;
-      // factor 0.3: slower movement than scroll
-      bgRef.current.style.transform = `translateY(${y * 0.3}px) scale(1.2)`; // increased scale for full coverage
-    };
-    const loop = () => { onScroll(); raf = requestAnimationFrame(loop); };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
-  return (
-    <section id="lead-capture-twenty-off" className="scroll-mt-24 relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden mt-2">
-      {/* Capa de fondo con parallax */}
-      <div
-        ref={bgRef}
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 will-change-transform"
+// Button group for hero section
+const ButtonGroup = ({ config }: { config: typeof import('../constants').LANDING_CONFIG.gold }) => (
+  <div className="hidden lg:flex gap-2">
+    <a
+      href="#enter-form"
+      aria-label={config.hero.mainBtnAriaLabel.replace('20%', '15%')}
+      className={`
+        inline-flex items-center justify-center px-8 py-4 mr-3 text-xl font-medium text-primary-button-text rounded-lg
+        transition-colors focus:ring-4 focus:ring-primary-light
+        ${config.hero.ctaBgClass}
+        ${config.hero.ctaTextClass}
+      `}
+    >
+      Get 15% off
+      <svg
+        className="w-5 h-5 ml-2 -mr-1"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <Image
-          src={config.hero.bgImage}
-          alt=""
-          fill
-          priority
-          className="object-cover w-full h-full"
+        <path
+          fillRule="evenodd"
+          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+          clipRule="evenodd"
         />
-        <div className={`absolute inset-0 ${config.hero.overlayClassName}`} />
-        {/* Sutil gradiente para legibilidad en la base */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/40 to-transparent" />
-      </div>
+      </svg>
+    </a>
+  </div>
+);
 
-      {/* Contenido */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 md:px-8 text-center">
-        <h1
-          className={`${playfair.className} text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]`}
-        >
-          {config.hero.heading}
-        </h1>
+// Loading placeholder component
+const LoadingSection = () => (
+  <div className="w-full animate-pulse bg-gray-200 dark:bg-main-bg-dark rounded-lg" />
+);
 
-        <p className="mt-4 max-w-2xl text-base md:text-xl text-primary-text/90">
-          {config.hero.subheading}
-        </p>
-
-        <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <a
-            href="#enter-form"
-            aria-label={config.hero.mainBtnAriaLabel}
-            className={`
-              inline-flex items-center justify-center px-7 py-3 rounded-lg font-medium
-              transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70
-              ${config.hero.ctaBgClass}
-              ${config.hero.ctaTextClass}
-            `}
+export default function HeroSection({ config }: HeroSectionProps) {
+  return (
+    <section className="dark:bg-main-bg-dark">
+      <div className="grid grid-cols-1 lg:grid-cols-12 mx-auto lg:gap-8 xl:gap-0 lg:pb-8 relative">
+        <div className="col-span-1 lg:col-span-6">
+          <div className="hidden lg:block aspect-square">
+            <Image
+              src="/home/2026/01/1.jpg"
+              width={0}
+              height={0}
+              sizes="100vw"
+              priority
+              className="w-full h-full object-cover rounded-lg"
+              alt="CassPea Chocolates"
+            />
+          </div>
+          <div className="lg:hidden">
+            <h1 className={`${playfair.className} mb-2 text-4xl md:text-[5rem] text-primary-text font-bold tracking-tight leading-none dark:text-white`}>
+              {config.hero.heading}
+            </h1>
+            <h2 className="text-2xl mb-4 dark:text-white text-primary-text">
+              {config.hero.subheading}
+            </h2>
+          </div>
+          <Suspense fallback={<LoadingSection />}>
+            <ImageGallery
+              images={[
+                '/home/2026/01/1.jpg',
+                '/home/2026/01/2.jpg',
+                '/home/2026/01/3.jpg',
+                '/home/2026/01/4.jpg',
+                '/home/2026/01/5.jpg',
+                '/home/2026/01/6.jpg',
+                '/home/2026/01/7.jpg',
+                '/home/2026/01/8.jpg',
+              ]}
+              className="block lg:hidden"
+            />
+          </Suspense>
+          <div className="lg:hidden mb-6">
+            <UnitSoldCounter />
+          </div>
+          <p className="lg:hidden font-light text-md mt-4 text-primary-text dark:text-primary-text-light">
+            Share the love with CassPea Chocolates—perfect for personal indulgence,
+            birthdays, corporate events, and special celebrations. With over 20
+            exquisite flavours, each handcrafted to perfection by our skilled
+            chocolatiers, every bite is a work of art and a journey through inspired
+            flavours.
+          </p>
+        </div>
+        <div className="lg:col-span-6 lg:pl-8">
+          <div className="hidden lg:block mb-6 mt-2">
+            <UnitSoldCounter />
+          </div>
+          <h1
+            className={`${playfair.className} mb-2 text-5xl text-primary-text font-bold tracking-tight leading-none lg:text-8xl dark:text-white hidden lg:block`}
           >
-            {config.hero.mainBtnLabel}
-          </a>
-
-          <Link
-            href="/shop-now"
-            aria-label={config.hero.secondaryBtnAriaLabel}
-            className="
-              inline-flex items-center justify-center px-7 py-3 rounded-lg font-medium
-              border border-white/80 text-white/95 backdrop-blur-[2px]
-              hover:bg-main-bg/10 transition-colors
-              focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70
-            "
-          >
-            {config.hero.secondaryBtnLabel}
-          </Link>
+            {config.hero.heading}
+          </h1>
+          <h2 className="text-2xl mb-2 dark:text-white text-primary-text hidden lg:block">
+            {config.hero.subheading}
+          </h2>
+          <p className="hidden lg:block lg:mb-6 font-light text-sm text-primary-text xl:mb-8 lg:text-base dark:text-primary-text-light">
+            Share the love with CassPea Chocolates—perfect for personal indulgence,
+            birthdays, corporate events, and special celebrations. With over 20
+            exquisite flavours, each handcrafted to perfection by our skilled
+            chocolatiers, every bite is a work of art and a journey through inspired
+            flavours.
+          </p>
+          <ButtonGroup config={config} />
         </div>
       </div>
     </section>
