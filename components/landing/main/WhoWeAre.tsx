@@ -21,8 +21,8 @@ export default function WhoWeAre({ config }: WhoWeAreProps) {
         />
       </div>
       <div>
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4">Who We Are</h2>
-        <p className="leading-relaxed">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-primary-text dark:text-white">Who We Are</h2>
+        <p className="leading-relaxed text-primary-text dark:text-primary-text-light">
           CassPea is a London-based chocolate brand, handcrafting bonbons with bold flavours, stunning designs, and a touch of joy. Founded by chefs with a passion for creativity, every chocolate is made with care — and made to be shared.
         </p>
         <Link href="/about-us" className="inline-block mt-4 text-pink-500 font-semibold">

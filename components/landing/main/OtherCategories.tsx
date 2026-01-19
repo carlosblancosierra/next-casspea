@@ -18,7 +18,7 @@ export default function OtherCategories({ config }: OtherCategoriesProps) {
 
   return (
     <section className="py-12 px-4">
-      <h2 className="text-center text-2xl sm:text-3xl font-bold mb-6">Explore More Categories</h2>
+      <h2 className="text-center text-2xl sm:text-3xl font-bold mb-6 text-primary-text dark:text-white">Explore More Categories</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-w-4xl mx-auto">
         {filtered.map(category => (
           <CategoryCard key={category.id} category={category} />

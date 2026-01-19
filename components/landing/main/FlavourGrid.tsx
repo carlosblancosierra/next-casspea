@@ -18,7 +18,7 @@ export default function FlavourGrid({ }: FlavourGridProps) {
 
   return (
     <section className="py-12 px-4">
-      {/* <h2 className="text-center text-2xl sm:text-3xl font-bold mb-6">All Our Flavours</h2> */}
+      {/* <h2 className="text-center text-2xl sm:text-3xl font-bold mb-6 text-primary-text dark:text-white">All Our Flavours</h2> */}
       <div className="grid grid-cols-4 md:grid-cols-6 gap-10 max-w-6xl mx-auto">
         {flavours?.map(flavour => (
           <div key={flavour.id} onClick={() => setSelected(flavour)} className="cursor-pointer">

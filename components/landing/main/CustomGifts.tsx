@@ -21,7 +21,7 @@ export default function CustomGifts({ config }: CustomGiftsProps) {
           className="w-full h-auto rounded-lg shadow"
         />
         <div>
-          <p className="mb-6">
+          <p className="mb-6 text-primary-text dark:text-primary-text-light">
             Perfect for weddings, birthdays, corporate gifting and events. Choose your colours, flavours, and packaging.
           </p>
           <Link

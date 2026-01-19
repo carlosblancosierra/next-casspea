@@ -5,10 +5,10 @@ export default function Footer() {
 		<footer className='bg-gray-100 h-16 dark:bg-main-bg-dark'>
 			<div className='h-full px-2'>
 				<div className='flex flex-col items-center justify-center h-full gap-1'>
-					<p className='text-primary-text text-xs'>
-						&copy; 2024 CassPea LTD. All rights reserved.
+					<p className='text-primary-text text-xs dark:text-primary-text-light'>
+						&copy; 2026 CassPea LTD. All rights reserved.
 					</p>
-					<p className='text-primary-text text-xs'>
+					<p className='text-primary-text text-xs dark:text-primary-text-light'>
 						<Link href="/orders">Log In</Link>
 					</p>
 				</div>

@@ -27,22 +27,22 @@ interface TestimonialsProps { config: typeof import('../constants').LANDING_CONF
 export default function Testimonials({ config }: TestimonialsProps) {
   return (
     <section className="py-12 bg-gray-100 dark:bg-main-bg-dark px-4">
-      <h2 className="text-center text-2xl sm:text-3xl font-bold mb-8">Loved by Chocolate Lovers</h2>
+      <h2 className="text-center text-2xl sm:text-3xl font-bold mb-8 text-primary-text dark:text-white">Loved by Chocolate Lovers</h2>
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
         {TESTIMONIALS.map((t, i) => (
           <blockquote key={i} className="bg-main-bg dark:bg-main-bg-dark p-6 rounded-lg shadow">
             <div className="flex items-center gap-3 mb-2">
-              <span className="font-semibold text-lg">{t.name}</span>
-              <span className="text-xs text-primary-text">• {t.reviews} review{t.reviews>1?'s':''}</span>
-              <span className="text-xs text-primary-text ml-auto">{t.country}</span>
+              <span className="font-semibold text-lg text-primary-text dark:text-white">{t.name}</span>
+              <span className="text-xs text-primary-text dark:text-primary-text-light">• {t.reviews} review{t.reviews>1?'s':''}</span>
+              <span className="text-xs text-primary-text dark:text-primary-text-light ml-auto">{t.country}</span>
             </div>
             <div className="flex items-center gap-1 mb-1">
               {Array.from({ length: t.rating }).map((_, i) => <span key={i} className="text-yellow-400">★</span>)}
-              <span className="text-xs text-primary-text ml-2">Rated {t.rating} out of 5</span>
+              <span className="text-xs text-primary-text dark:text-primary-text-light ml-2">Rated {t.rating} out of 5</span>
             </div>
-            <div className="text-xs text-primary-text mb-2">{t.date}</div>
-            <p className="italic">“{t.text}”</p>
-            <div className="mt-2 text-xs text-primary-text">Date of experience: {t.experience}</div>
+            <div className="text-xs text-primary-text dark:text-primary-text-light mb-2">{t.date}</div>
+            <p className="italic text-primary-text dark:text-primary-text-light">"{t.text}"</p>
+            <div className="mt-2 text-xs text-primary-text dark:text-primary-text-light">Date of experience: {t.experience}</div>
           </blockquote>
         ))}
       </div>

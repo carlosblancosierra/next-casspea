@@ -16,13 +16,13 @@ export default function WhyChooseUs({ config }: WhyChooseUsProps) {
   return (
     <section className="py-12 bg-gray-100 dark:bg-main-bg-dark">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-center text-2xl sm:text-3xl font-bold mb-8">Handcrafted with Purpose</h2>
+        <h2 className="text-center text-2xl sm:text-3xl font-bold mb-8 text-primary-text dark:text-white">Handcrafted with Purpose</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 text-center">
           {REASONS.map(r => (
             <div key={r.text}>
               <div className="text-6xl mb-2">{r.icon}</div>
-              <p className="font-medium">{r.text}</p>
-            </div>
+              <p className="font-medium text-primary-text dark:text-primary-text-light">{r.text}</p>
+            </div>  
           ))}
         </div>
       </div>
