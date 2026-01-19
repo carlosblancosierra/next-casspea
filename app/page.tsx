@@ -8,9 +8,7 @@ import ImageGallery from '@/components/product_detail/ImageGallery';
 import PersonalisedHome from '@/components/personalized/PersonalisedHome';
 import CategoryProducts from '@/components/home/CategoryProducts';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
-import React, { useEffect, useState } from 'react';
-import AdventSection from '@/components/home/AdventSection';
-import AdventCountdown from '@/components/common/AdventCountdown';
+import React from 'react';
 
 // Dynamically import components that can load later
 const HomeProducts = dynamic(() => import('@/components/home/HomeProducts'));

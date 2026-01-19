@@ -7,12 +7,22 @@ import { Setup } from '@/components/utils';
 import AnnouncementBar from '@/components/common/AnnouncementBar';
 import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
-import GiveawayPopup from '@/components/common/GiveawayPopup';
 import dynamic from 'next/dynamic';
 
-const SnowEffect = dynamic(() => import('@/components/common/SnowEffect'), {
-  ssr: false
-});
+// Available effects - add new effects here
+type EffectType = 'snow' | 'heart' | 'autumn' | 'none';
+
+const EFFECTS_CONFIG: Record<EffectType, () => Promise<{ default: React.ComponentType }>> = {
+  snow: () => import('@/components/common/SnowEffect'),
+  heart: () => import('@/components/common/HeartEffect'),
+  autumn: () => import('@/components/common/AutumEffect'),
+  none: () => Promise.resolve({ default: () => null })
+};
+
+// Change this constant to switch effects - can be 'snow', 'heart', 'autumn', or 'none'
+const CURRENT_EFFECT: EffectType = 'heart';
+
+const CurrentEffect = dynamic(EFFECTS_CONFIG[CURRENT_EFFECT], { ssr: false });
 
 
 
@@ -102,7 +112,7 @@ export default function RootLayout({
               <div className="hidden md:block">
                 <Footer />
               </div>
-              <SnowEffect />
+              {CURRENT_EFFECT !== 'none' && <CurrentEffect />}
             </div>
           </LayoutWrapper>
         </Provider>

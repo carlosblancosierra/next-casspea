@@ -42,7 +42,6 @@ export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffPro
     const code = config.leadCaptureTheme === 'gold' ? 'GOLD' : 'BLUE';
     try {
       await subscribeGenericLead({ email, lead_type: 'landing_page', form_code: code }).unwrap();
-      // toast.success('Brilliant! Check your inbox for your 20% off code.');
       setEmail('');
       if (code === 'GOLD') {
         router.push('/landing/gold/thank-you');
@@ -87,7 +86,7 @@ export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffPro
           disabled={isLoading}
           className={themeClasses.button}
         >
-          {isLoading ? 'Signing you up...' : 'Claim 20% Off'}
+          {isLoading ? 'Signing you up...' : 'Claim 15% Off'}
         </button>
       </form>
       <p className={themeClasses.privacy}>

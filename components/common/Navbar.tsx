@@ -5,6 +5,9 @@ import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outli
 import Link from 'next/link'
 import Image from 'next/image';
 
+// Change this constant to switch logo paths
+const LOGO_PATH = '/logos/red.png';
+
 const navigation = [
   { name: 'Store', href: '/shop-now', current: false },
   { name: 'Flavours', href: '/flavours', current: false },
@@ -51,7 +54,7 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src='/logos/green.png'
+                      src={LOGO_PATH}
                       width={0}
                       height={0}
                       sizes="100vw"
@@ -62,7 +65,7 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src='/logos/green.png'
+                      src={LOGO_PATH}
                       width={0}
                       height={0}
                       sizes="100vw"

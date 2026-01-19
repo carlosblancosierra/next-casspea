@@ -6,7 +6,7 @@ export default function GoldThankYouPage() {
       <div className="text-2xl md:text-3xl font-mono font-bold bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-6 py-3 rounded-lg shadow mb-4 select-all">
         LandingGold20
       </div>
-      <p className="text-base text-primary-text dark:text-primary-text">Use this code at checkout for 20% off your first order. Check your email for confirmation and more details!</p>
-    </main>
+      <p className="text-base text-primary-text dark:text-primary-text">Use this code at checkout for 15% off your first order. Check your email for confirmation and more details!</p>
+    </main> 
   );
 }

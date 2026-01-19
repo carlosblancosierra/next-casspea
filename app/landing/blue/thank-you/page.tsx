@@ -6,7 +6,7 @@ export default function BlueThankYouPage() {
       <div className="text-2xl md:text-3xl font-mono font-bold bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-6 py-3 rounded-lg shadow mb-4 select-all">
         LandingBlue20
       </div>
-      <p className="text-base text-primary-text dark:text-primary-text">Use this code at checkout for 20% off your first order. Check your email for confirmation and more details!</p>
+      <p className="text-base text-primary-text dark:text-primary-text">Use this code at checkout for 15% off your first order. Check your email for confirmation and more details!</p>
     </main>
   );
 }
