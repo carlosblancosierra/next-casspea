@@ -119,8 +119,7 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
             <div>
               <span className="font-semibold text-sm text-primary-text dark:text-primary-text-light">Store Location</span>
               <p className="text-xs text-primary-text dark:text-primary-text-light">
-                CassPea Chocolates<br />
-                London, UK
+                Pick up at 104 Bedford Hill, London, SW12 9HR
               </p>
             </div>
           </div>
@@ -129,7 +128,7 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
             <div>
               <span className="font-semibold text-sm text-primary-text dark:text-primary-text-light">Collection Process</span>
               <p className="text-xs text-primary-text dark:text-primary-text-light">
-                After placing your order, you'll receive a confirmation email with pickup instructions and store hours.
+                When placing your order, set your preferred pickup slot after {product.pickup_from_date ? new Date(product.pickup_from_date).toLocaleDateString('en-GB') : 'the available date'}. You will receive an email when {product.name} are available for pickup.
               </p>
             </div>
           </div>
