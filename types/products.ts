@@ -3,6 +3,7 @@ export interface ProductCategory {
     name: string;
     slug: string;
     description?: string;
+    order?: number;
     active?: boolean;
     created?: string;
     updated?: string;
@@ -31,6 +32,7 @@ export interface Product {
     current_price?: string;
     slug: string;
     weight?: number;  // in grams
+    box_weight?: number;  // in grams
 
     active?: boolean;
     sold_out?: boolean;
@@ -52,6 +54,10 @@ export interface Product {
     preorder_finish_date?: string;
     preorder_price?: string;
     is_preorder_active?: boolean;
+
+    pickup_only?: boolean;
+    pickup_from_date?: string;
+    alert_message?: string;
 
     can_pick_allergens?: boolean;
 

@@ -3,7 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiCheckCircle, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import PaymentMethods from '../common/PaymentMethods';
 import { Product } from '@/types/products';
-const AccordionItem = ({ i, expanded, setExpanded, title, content }) => {
+const AccordionItem = ({ i, expanded, setExpanded, title, content }: {
+  i: number;
+  expanded: false | number;
+  setExpanded: (value: false | number) => void;
+  title: string;
+  content: React.ReactNode;
+}) => {
   const isOpen = i === expanded;
 
   return (
@@ -86,7 +92,52 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
         </div>
       )
     },
-    {
+  ];
+
+  // Add shipping or pickup section based on product type
+  if (product.pickup_only) {
+    accordionItems.push({
+      title: "Store Pickup",
+      content: (
+        <div className="grid grid-cols-1 gap-y-8 pt-2 pb-4">
+          <div className="flex items-start gap-x-2">
+            <FiCheckCircle />
+            <div>
+              <span className="font-semibold text-sm text-primary-text dark:text-primary-text-light">In-Store Collection</span>
+              <p className="text-xs text-primary-text dark:text-primary-text-light">
+                This product is available for in-store pickup only and cannot be shipped.
+              </p>
+              {product.pickup_from_date && (
+                <p className="text-xs text-primary-text dark:text-primary-text-light mt-2">
+                  <strong>Available from:</strong> {new Date(product.pickup_from_date).toLocaleDateString('en-GB')}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex items-start gap-x-2">
+            <FiCheckCircle />
+            <div>
+              <span className="font-semibold text-sm text-primary-text dark:text-primary-text-light">Store Location</span>
+              <p className="text-xs text-primary-text dark:text-primary-text-light">
+                CassPea Chocolates<br />
+                London, UK
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start gap-x-2">
+            <FiCheckCircle />
+            <div>
+              <span className="font-semibold text-sm text-primary-text dark:text-primary-text-light">Collection Process</span>
+              <p className="text-xs text-primary-text dark:text-primary-text-light">
+                After placing your order, you'll receive a confirmation email with pickup instructions and store hours.
+              </p>
+            </div>
+          </div>
+        </div>
+      )
+    });
+  } else {
+    accordionItems.push({
       title: "Shipping",
       content: (
         <div className="grid grid-cols-1 gap-y-8 pt-2 pb-4">
@@ -113,8 +164,8 @@ export const Example = ({ isSignatureBox, product }: { isSignatureBox: boolean, 
           </div>
         </div>
       )
-    },
-  ];
+    });
+  }
 
   // Conditionally add the "How to Order" accordion item if isSignatureBox is true
   if (isSignatureBox) {

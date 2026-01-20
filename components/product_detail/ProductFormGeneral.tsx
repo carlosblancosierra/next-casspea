@@ -67,6 +67,15 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
 
     return (
         <form>
+            {/* Alert message if exists */}
+            {product.alert_message && (
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4 mb-4">
+                    <p className="text-yellow-800 dark:text-yellow-200 text-sm">
+                        {product.alert_message}
+                    </p>
+                </div>
+            )}
+
             <div className="mt-4">
                 {product.slug == "pride-box" && (
                 <ColoredList
