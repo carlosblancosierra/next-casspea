@@ -95,12 +95,12 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 			</div>
 
 			<div className="my-16">
-				<h2 className="text-center text-xl font-bold text-primary-text">Our Flavours</h2>
+				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Our Flavours</h2>
 				<FlavourGrid />
 			</div>
 
 			<div className="mt-10">
-				<h2 className="text-center text-xl my-5 font-bold text-primary-text">Reviews</h2>
+				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Reviews</h2>
 				<Reviews />
 			</div>
 

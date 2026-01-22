@@ -18,7 +18,7 @@ const GiftCardPage = () => {
     const [removeCartItem] = useRemoveCartItemMutation();
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    
+
 
     useEffect(() => {
         if (cart?.gift_message) {
@@ -94,19 +94,19 @@ const GiftCardPage = () => {
     return (
         <div className="max-w-6xl mx-auto p-4">
             <div style={{ display: isLoading ? 'block' : 'none' }}>
-                <div>Loading...</div>
+                <div className='text-primary-text dark:text-primary-text-light'>Loading...</div>
             </div>
             <div style={{ display: isLoading ? 'none' : 'block' }}>
-                <h1 className="text-2xl font-bold mb-4 text-primary-text">
+                <h1 className="text-2xl font-bold mb-4 text-primary-text dark:text-primary-text-light">
                     Enhance Your Order with a Gift Card
                 </h1>
-                <p className="mb-4 text-primary-text">
+                <p className="mb-4 text-primary-text dark:text-primary-text-light">
                     Add a personal touch to your order! Choose one of our beautifully designed gift cards for just £1.25 each to include a heartfelt message for your recipient.
                 </p>
                 <div className="mb-6">
                     <GiftMessage onGiftMessageChange={setGiftMessage} initialMessage={giftMessage} />
                 </div>
-                <h2 className="text-xl font-semibold mb-2 text-primary-text">
+                <h2 className="text-xl font-semibold mb-2 text-primary-text dark:text-primary-text-light">
                     Choose a Gift Card
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
@@ -121,7 +121,7 @@ const GiftCardPage = () => {
                     ))}
                 </div>
                 {error && (
-                    <p className="text-primary-text mb-4">{error}</p>
+                    <p className="text-primary-text mb-4 dark:text-primary-text-light">{error}</p>
                 )}
                 <div className="flex flex-col sm:flex-row gap-4 justify-end">
                     <button
@@ -131,9 +131,9 @@ const GiftCardPage = () => {
                     >
                         {isProcessing ? 'Adding...' : 'Add Gift Card'}
                     </button>
-                    <button 
-                        onClick={handleContinueWithoutGiftCard} 
-                        disabled={isProcessing} 
+                    <button
+                        onClick={handleContinueWithoutGiftCard}
+                        disabled={isProcessing}
                         className="w-full sm:w-auto bg-main-bg text-primary-text px-4 py-2 rounded-md hover:bg-gray-400 sm:order-1"
                     >
                         Continue Without Gift Card
