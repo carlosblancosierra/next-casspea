@@ -43,26 +43,26 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 	const SLUG_SIGNATURE_BOXES = 'signature-boxes';
 	const SLUG_CHOCOLATE_BARKS = 'chocolate-barks';
 	const SLUG_HOT_CHOCOLATE = 'hot-chocolate';
-	
+
 	// const otherBoxes = products.filter((p) => 
 	// 	p.category?.slug === SLUG_SIGNATURE_BOXES ||
 	// 	p.category?.slug === SLUG_CHOCOLATE_BARKS
 	// );
 
-	const boxes = products.filter((p) => 
+	const boxes = products.filter((p) =>
 		p.category?.slug === SLUG_SIGNATURE_BOXES
 	);
 
 	const otherBoxes = boxes.filter((p) => p.id !== product.id);
 
-	const hotChocolate = products.filter((p) => 
+	const hotChocolate = products.filter((p) =>
 		p.category?.slug === SLUG_HOT_CHOCOLATE
 	);
 
-	const chocolateBarks = products.filter((p) => 
+	const chocolateBarks = products.filter((p) =>
 		p.category?.slug === SLUG_CHOCOLATE_BARKS
 	);
-	
+
 	return (
 		<div className="max-w-[95vw] mx-auto">
 			<ProductBreadcrumb product={product} />
@@ -106,9 +106,9 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 
 			{/* Other Boxes */}
 			<div className="mt-5">
-				<h2 className="text-center text-xl my-5 font-bold text-primary-text">Need More Boxes?</h2>
+				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Need More Boxes?</h2>
 				<div className="flex justify-center">
-				<div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+					<div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
 						{otherBoxes.map((prod: Product) => (
 							<ProductCard key={prod.name} product={prod} />
 						))}
@@ -118,7 +118,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 
 			{/* Chocolate Barks */}
 			<div className="mt-5">
-				<h2 className="text-center text-xl my-5 font-bold text-primary-text">Introducing our Chocolate Barks</h2>
+				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Introducing our Chocolate Barks</h2>
 				<div className="flex justify-center">
 					<div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
 						{chocolateBarks.map((prod: Product) => (
@@ -130,7 +130,7 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 
 			{/* Hot Chocolate */}
 			<div className="mt-5">
-				<h2 className="text-center text-xl my-5 font-bold text-primary-text">Try Our Hot Chocolate</h2>
+				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Try Our Hot Chocolate</h2>
 				<div className="flex justify-center">
 					<div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
 						{hotChocolate.map((prod: Product) => (
