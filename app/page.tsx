@@ -199,12 +199,16 @@ export default function HomePage() {
     <main className="dark:bg-main-bg-dark min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <HeroSection />
 
+      <Section title="Valentine's Day" extraClass="mt-5">
+        <CategoryProducts categorySlug="valentines-day" />
+      </Section>
+
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
         <HomeProducts />
       </Section>
 
       <Section title="Our Flavours" extraClass="mt-10">
-        <FlavoursGrid/>
+        <FlavoursGrid />
       </Section>
 
       <Section title="Personalised Chocolates" extraClass="mt-10">
