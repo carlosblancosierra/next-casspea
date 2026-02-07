@@ -31,7 +31,7 @@ export default function Nav() {
   // const cart = useSelector(selectCart);
 
   return (
-    <Disclosure as="nav" className="bg-main-bg dark:bg-main-bg-dark border-b border-gray-200 dark:border-gray-700">
+    <Disclosure as="nav" className="bg-white text-gray-900 border-b border-gray-200 sm:bg-main-bg sm:text-primary-text sm:dark:bg-main-bg-dark sm:dark:border-gray-700">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-screen-2xl px-2 sm:px-6 lg:px-8">
