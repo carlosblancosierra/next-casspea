@@ -31,7 +31,7 @@ export default function Nav() {
   // const cart = useSelector(selectCart);
 
   return (
-    <Disclosure as="nav" className="bg-white text-gray-900 border-b border-gray-200 sm:bg-main-bg sm:text-primary-text sm:dark:bg-main-bg-dark sm:dark:border-gray-700">
+    <Disclosure as="nav" className="bg-main-bg dark:bg-main-bg-dark border-b border-gray-200 dark:border-gray-700">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-screen-2xl px-2 sm:px-6 lg:px-8">
@@ -41,9 +41,9 @@ export default function Nav() {
                 <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-primary-text hover:bg-gray-100 hover:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-2">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    <XMarkIcon className="block h-6 w-6 dark:text-primary-text-light" aria-hidden="true" />
                   ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                    <Bars3Icon className="block h-6 w-6 dark:text-primary-text-light" aria-hidden="true" />
                   )}
                 </DisclosureButton>
               </div>
