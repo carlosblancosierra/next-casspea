@@ -230,7 +230,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Shipping Delivery Option */}
                         <button
-                            onClick={() => setDeliveryType('shipping')}
+                            onClick={() => { setLocalSelectedOption(null); setDeliveryType('shipping'); }}
                             className="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary-2 hover:bg-primary/5 dark:hover:bg-primary-2/10 transition-all duration-200 text-left group"
                         >
                             <div className="flex items-center mb-3">
@@ -251,7 +251,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
 
                         {/* Store Pickup Option */}
                         <button
-                            onClick={() => setDeliveryType('pickup')}
+                            onClick={() => { setLocalSelectedOption(null); setDeliveryType('pickup'); }}
                             className="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary-2 hover:bg-primary/5 dark:hover:bg-primary-2/10 transition-all duration-200 text-left group"
                         >
                             <div className="flex items-center mb-3">
@@ -272,14 +272,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                         </button>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
-                        <button
-                            onClick={() => setDeliveryType('shipping')}
-                            className="text-sm text-primary dark:text-primary-2 hover:text-primary-2 dark:hover:text-primary font-medium"
-                        >
-                            Skip to shipping options →
-                        </button>
-                    </div>
                 </div>
             ) : (
                 <>
@@ -295,7 +287,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                 setDeliveryType(null);
                                 setLocalSelectedOption(null);
                             }}
-                            className="text-sm text-primary dark:text-primary-2 hover:text-primary-2 dark:hover:text-primary font-medium flex items-center"
+                            className="text-sm text-primary-text dark:text-primary-text-light hover:opacity-70 font-medium flex items-center"
                         >
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -362,7 +354,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     )}
 
                     {/* Render store pickup slot picker if selected option is 34 */}
-                    {localSelectedOption === '34' && allShippingOptions.length > 0 && (
+                    {deliveryType === 'pickup' && localSelectedOption === '34' && allShippingOptions.length > 0 && (
                         <div className="mt-6">
                             <CheckoutStorePickUp onChange={(val) => {
                                 setStorePickup(val);
