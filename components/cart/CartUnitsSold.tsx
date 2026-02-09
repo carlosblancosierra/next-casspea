@@ -25,7 +25,7 @@ const CartUnitsSold: React.FC<Props> = ({ className = '' }) => {
     // Persistimos para la página de éxito
     try {
       if (cartUnits > 0) sessionStorage.setItem('pendingUnitsPurchase', String(cartUnits));
-    } catch {}
+    } catch { }
   }, [cartUnits]);
 
   if (soldError || cartError) return null;
@@ -41,7 +41,7 @@ const CartUnitsSold: React.FC<Props> = ({ className = '' }) => {
         <p className="text-sm font-medium text-primary-text dark:text-primary-text-light">
           {cartUnits > 0 ? (
             <>
-              We have sold <span className="font-extrabold">{baseSold.toLocaleString('en-GB')}</span> bonbons. With your <span className="font-extrabold">{cartUnits.toLocaleString('en-GB')}</span> chocolates, we will reach <span className="font-extrabold bg-gradient-autumn bg-clip-text text-transparent">{projectedTotal.toLocaleString('en-GB')}</span>!
+              We have sold <span className="font-extrabold">{baseSold.toLocaleString('en-GB')}</span> bonbons. With your <span className="font-extrabold">{cartUnits.toLocaleString('en-GB')}</span> chocolates, we will reach <span className="font-extrabold text-transparent">{projectedTotal.toLocaleString('en-GB')}</span>!
             </>
           ) : (
             <>We have sold <span className="font-extrabold">{baseSold.toLocaleString('en-GB')}</span> bonbons.</>

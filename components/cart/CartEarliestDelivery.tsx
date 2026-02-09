@@ -45,7 +45,7 @@ const CartEarliestDelivery: React.FC<Props> = ({ className = '' }) => {
         </svg>
         <div>
           <p className="text-sm font-medium text-primary-text dark:text-primary-text-light">
-            {orderByCutoff} for delivery as early as <span className="font-extrabold bg-gradient-autumn bg-clip-text text-transparent">{formattedDate}</span>
+            {orderByCutoff} for delivery as early as <span className="font-extrabold text-transparent">{formattedDate}</span>
           </p>
           <p className="text-xs text-primary-text/70 dark:text-primary-text-light/70 mt-0.5">
             With {fastest.name} shipping option
