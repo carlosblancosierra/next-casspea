@@ -1,13 +1,15 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-const Cart = dynamic(() => import('@/components/cart/Cart'), { ssr: false });	
+const Cart = dynamic(() => import('@/components/cart/Cart'), { ssr: false });
 import CartUnitsSold from '@/components/cart/CartUnitsSold';
+import CartEarliestDelivery from '@/components/cart/CartEarliestDelivery';
 export default function Page() {
 	return (
-			<div className='mx-auto max-w-screen-2xl md:py-6 md:py-8 py-4 sm:px-6 lg:px-8'>
-				<CartUnitsSold className="mb-6" />
-				<Cart />
-			</div>
+		<div className='mx-auto max-w-screen-2xl md:py-6 md:py-8 py-4 sm:px-6 lg:px-8'>
+			<CartUnitsSold className="mb-2" />
+			<CartEarliestDelivery className="mb-6" />
+			<Cart />
+		</div>
 	);
 }
