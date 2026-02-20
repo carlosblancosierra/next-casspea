@@ -20,7 +20,7 @@ const EFFECTS_CONFIG: Record<EffectType, () => Promise<{ default: React.Componen
 };
 
 // Change this constant to switch effects - can be 'snow', 'heart', 'autumn', or 'none'
-const CURRENT_EFFECT: EffectType = 'heart';
+const CURRENT_EFFECT: EffectType = 'none';
 
 const CurrentEffect = dynamic(EFFECTS_CONFIG[CURRENT_EFFECT], { ssr: false });
 
@@ -62,7 +62,7 @@ export default function RootLayout({
       >
         <noscript>
           <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWQTXVNR"
-            height="0" width="0" style={{display:'none', visibility:'hidden'}}></iframe>
+            height="0" width="0" style={{ display: 'none', visibility: 'hidden' }}></iframe>
         </noscript>
         <Script id="mouseflow" strategy="afterInteractive">
           {`
