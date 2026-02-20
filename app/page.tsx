@@ -21,10 +21,12 @@ export const Section = ({
   title,
   children,
   extraClass = '',
+  cardColor = false,
 }: {
   title: string;
   children: React.ReactNode;
   extraClass?: string;
+  cardColor?: boolean;
 }) => (
   <Suspense fallback={<LoadingSection />}>
     <div className={extraClass}>
@@ -33,7 +35,15 @@ export const Section = ({
           {title}
         </h2>
       )}
-      {children}
+      {cardColor
+        ? React.Children.map(children, (child) =>
+          React.isValidElement(child)
+            ? React.cloneElement(child as React.ReactElement<any>, {
+              cardClassName: 'bg-[#D41F3A]',
+            })
+            : child
+        )
+        : children}
     </div>
   </Suspense>
 );
@@ -199,9 +209,9 @@ export default function HomePage() {
     <main className="dark:bg-main-bg-dark min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <HeroSection />
 
-      <Section title="Valentine's Day" extraClass="mt-5">
-        <CategoryProducts categorySlug="valentines-day" />
-      </Section>
+      {/* <Section title="Valentine's Day" extraClass="mt-5">
+        <CategoryProducts categorySlug="valentines-day" cardClassName="!bg-pink-50 dark:!bg-pink-950/30 border-pink-100 dark:border-pink-900" />
+      </Section> */}
 
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
         <HomeProducts />
