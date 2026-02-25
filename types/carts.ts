@@ -45,6 +45,7 @@ export interface CartItemBoxFlavorSelectionRequest {
 export interface CartItemRequest {
     product: number;
     quantity: number;
+    selected_custom_option_key?: string;
     box_customization?: {
         selection_type?: 'PICK_AND_MIX' | 'RANDOM';
         allergens?: number[];
@@ -83,6 +84,7 @@ export interface CartItem {
     cart?: number;
     product: Product;
     quantity: number;
+    selected_custom_option_key?: string;
     box_customization?: CartItemBoxCustomization;
     base_price: string;
     discounted_price: string;

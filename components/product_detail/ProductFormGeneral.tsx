@@ -18,6 +18,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
     // Allergen state
     const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
     const [allergenOption, setAllergenOption] = useState<'NONE' | 'SPECIFY' | null>(null);
+    const [selectedCustomOptionKey, setSelectedCustomOptionKey] = useState<string>('');
     const dispatch = useAppDispatch();
     const router = useRouter();
 
@@ -30,6 +31,9 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
             const cartItemRequest: CartItemRequest = {
                 product: product.id,
                 quantity,
+                ...(selectedCustomOptionKey
+                    ? { selected_custom_option_key: selectedCustomOptionKey }
+                    : {}),
                 ...(product.can_pick_allergens ? {
                     box_customization: {
                         allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
@@ -77,6 +81,30 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
             )}
 
             <div className="mt-4">
+                {Array.isArray(product.custom_options) && product.custom_options.length > 0 && (
+                    <div className="mb-4">
+                        <label
+                            htmlFor="custom-option"
+                            className="block text-sm font-medium text-primary-text dark:text-primary-text-light"
+                        >
+                            Options
+                        </label>
+                        <select
+                            id="custom-option"
+                            name="custom-option"
+                            value={selectedCustomOptionKey}
+                            onChange={(e) => setSelectedCustomOptionKey(e.target.value)}
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light shadow-sm focus:border-primary-2 focus:ring-primary-2 sm:text-sm"
+                        >
+                            <option value="">Select an option (optional)</option>
+                            {product.custom_options.map((option) => (
+                                <option key={option.key} value={option.key}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
                 {product.slug == "pride-box" && (
                 <ColoredList
                     className="mb-4"

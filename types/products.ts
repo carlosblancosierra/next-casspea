@@ -20,6 +20,15 @@ export interface ProductGalleryImage {
     order?: number;
 }
 
+export interface ProductCustomOption {
+    key: string;
+    label: string;
+    description?: string;
+    price_delta?: string;
+    // Allow arbitrary extra metadata from backend without breaking typing
+    [key: string]: unknown;
+}
+
 export interface Product {
     id: number;
     name: string;
@@ -60,6 +69,8 @@ export interface Product {
     alert_message?: string;
 
     can_pick_allergens?: boolean;
+
+    custom_options?: ProductCustomOption[];
 
     gallery_images?: ProductGalleryImage[];
 
