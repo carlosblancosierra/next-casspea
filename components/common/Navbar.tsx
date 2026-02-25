@@ -41,9 +41,9 @@ export default function Nav() {
                 <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-primary-text hover:bg-gray-100 hover:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-2">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6 dark:text-primary-text-light" aria-hidden="true" />
+                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                   ) : (
-                    <Bars3Icon className="block h-6 w-6 dark:text-primary-text-light" aria-hidden="true" />
+                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                   )}
                 </DisclosureButton>
               </div>
