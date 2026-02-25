@@ -69,6 +69,8 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
         // Add more allergens as needed
     ];
 
+    const customOptions = product.custom_options ?? [];
+
     return (
         <form>
             {/* Alert message if exists */}
@@ -81,7 +83,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
             )}
 
             <div className="mt-4">
-                {Array.isArray(product.custom_options) && product.custom_options.length > 0 && (
+                {customOptions.length > 0 && (
                     <div className="mb-4">
                         <label
                             htmlFor="custom-option"
@@ -97,7 +99,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                             className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light shadow-sm focus:border-primary-2 focus:ring-primary-2 sm:text-sm"
                         >
                             <option value="">Select an option (optional)</option>
-                            {product.custom_options.map((option) => (
+                            {customOptions.map((option) => (
                                 <option key={option.key} value={option.key}>
                                     {option.label}
                                 </option>
