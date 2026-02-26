@@ -196,6 +196,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                         {formatSelectionType(customization.selection_type)}
                       </div>
                     )}
+                    {item.selected_custom_option_key && item.product?.custom_options && (
+                      <div className="text-sm text-primary-text mt-1">
+                        {(() => {
+                          const opt = item.product.custom_options.find((o) => o.key === item.selected_custom_option_key);
+                          return opt ? opt.label : item.selected_custom_option_key;
+                        })()}
+                      </div>
+                    )}
                     <AllergenBadges allergens={customization?.allergens} />
                     <FlavorSection flavorSelections={customization?.flavor_selections} />
                     {item.pack_customization && <BoxCustomizationExtras customization={item.pack_customization} products={products} />}

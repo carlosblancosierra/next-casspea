@@ -96,9 +96,10 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                             name="custom-option"
                             value={selectedCustomOptionKey}
                             onChange={(e) => setSelectedCustomOptionKey(e.target.value)}
+                            required
                             className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light shadow-sm focus:border-primary-2 focus:ring-primary-2 sm:text-sm"
                         >
-                            <option value="">Select an option (optional)</option>
+                            <option value="">Select an option</option>
                             {customOptions.map((option) => (
                                 <option key={option.key} value={option.key}>
                                     {option.label}
@@ -173,7 +174,8 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                 <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="mt-8 w-full py-3 rounded bg-primary-2 text-primary-text-light dark:bg-primary cursor-pointer flex items-center justify-center text-sm gap-2"
+                    disabled={customOptions.length > 0 && !selectedCustomOptionKey}
+                    className="mt-8 w-full py-3 rounded bg-primary-2 text-primary-text-light dark:bg-primary cursor-pointer flex items-center justify-center text-sm gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Add to Cart
                 </button>
