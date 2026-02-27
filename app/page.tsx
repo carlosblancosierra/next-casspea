@@ -142,7 +142,7 @@ const HeroSection = () => (
             Luxury Chocolate Gifts, Handcrafted in London
           </h1>
           <h2 className="text-2xl mb-4 dark:text-white text-primary-text">
-            Celebrate Every Occasion with Our Signature Gift Boxes. Celebrate Easter with Our Indulgent Handcrafted Chocolate Eggs
+            Discover Our Indulgent Easter Eggs and Gift Boxes for Every Occasion
           </h2>
         </div>
         <ImageGallery
@@ -179,7 +179,7 @@ const HeroSection = () => (
           Luxury Chocolate Gifts, Handcrafted in London
         </h1>
         <h2 className="text-2xl mb-2 dark:text-white text-primary-text hidden lg:block">
-          Celebrate Every Occasion with Our Signature Gift Boxes. Celebrate Easter with Our Indulgent Handcrafted Chocolate Eggs
+          Discover Our Indulgent Easter Eggs and Gift Boxes for Every Occasion
         </h2>
         <p className="hidden lg:block lg:mb-6 font-light text-sm text-primary-text xl:mb-8 lg:text-base dark:text-primary-text-light">
           Share the love with CassPea Chocolates—perfect for personal indulgence,
