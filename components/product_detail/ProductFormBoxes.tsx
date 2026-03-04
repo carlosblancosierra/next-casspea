@@ -26,6 +26,7 @@ interface ProductInfoProps {
 
 const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const maxChocolates = product.units_per_box || 0;
+    const isNinetySixBox = maxChocolates === 96;
     const [currentStep, setCurrentStep] = useState<number>(1);
 
     // Step 1: Selection type
@@ -428,7 +429,13 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             </button>
                                             <button
                                                 type="button"
-                                                onClick={() => setShowUpgradePopup(true)}
+                                                onClick={() => {
+                                                    if (isNinetySixBox) {
+                                                        handleAddToCart();
+                                                    } else {
+                                                        setShowUpgradePopup(true);
+                                                    }
+                                                }}
                                                 disabled={!canAddToCart()}
                                                 className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                             >
@@ -478,7 +485,13 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => setShowUpgradePopup(true)}
+                                        onClick={() => {
+                                            if (isNinetySixBox) {
+                                                handleAddToCart();
+                                            } else {
+                                                setShowUpgradePopup(true);
+                                            }
+                                        }}
                                         disabled={!canAddToCart()}
                                         className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                     >
