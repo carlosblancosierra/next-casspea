@@ -9,7 +9,9 @@ interface Props {
 }
 
 export default function SignatureBoxStep({ products, priceMap, onSelect }: Props) {
-  const items = products.filter(p => p.category?.slug === 'signature-boxes')
+  const items = products.filter(
+    p => p.category?.slug === 'signature-boxes' && p.units_per_box !== 96
+  )
   return (
     <>
         <section className="mb-8">
