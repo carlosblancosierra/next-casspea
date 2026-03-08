@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { Product as ProductType, Product } from '@/types/products';
 import FlavourPicker from './FlavourPicker';
@@ -18,7 +19,7 @@ import AddToCartButton from './AddToCartButton';
 import SelectableProductCard from '@/components/store/SelectableProductCard';
 import SelectableGiftCard from '@/components/store/SelectableGiftCard';
 import GiftMessage from '@/components/cart/GiftMessage';
-import { ID_MAP } from '@/components/packs/constants';
+import { ID_MAP, LOVE_SLEEVE_PRODUCT_ID, LOVE_SLEEVE_PRICE } from '@/components/packs/constants';
 
 interface ProductInfoProps {
     product: ProductType;
@@ -48,6 +49,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [chocolateBark, setChocolateBark] = useState<Product | null>(null);
     const [hotChocolate, setHotChocolate] = useState<Product | null>(null);
     const [giftCard, setGiftCard] = useState<Product | null>(null);
+    const [loveSleeve, setLoveSleeve] = useState<boolean>(false);
     const [giftMessage, setGiftMessage] = useState<string>('');
     const [showGiftMessagePopup, setShowGiftMessagePopup] = useState<boolean>(false);
 
@@ -117,7 +119,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     };
 
     // Dynamic step calculation
-    const getTotalSteps = () => isPack ? 6 : 3;
+    const getTotalSteps = () => isPack ? 7 : 3;
     const isPackStep = (step: number) => isPack && step > 3;
 
     const handleNextStep = () => {
@@ -131,6 +133,8 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             setCurrentStep(5);
         } else if (currentStep === 5 && chocolateBark !== null) {
             setCurrentStep(6);
+        } else if (currentStep === 6) {
+            setCurrentStep(7);
         }
     };
 
@@ -285,7 +289,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 await updateCart({ gift_message: giftMessage }).unwrap();
             }
 
-            const response = await addToCart(cartItemRequest).unwrap();
+            await addToCart(cartItemRequest).unwrap();
+            if (isPack && loveSleeve) {
+                await addToCart({ product: LOVE_SLEEVE_PRODUCT_ID, quantity: 1 }).unwrap();
+            }
             toast.success(isPack ? 'Pack added to cart successfully!' : 'Box added to cart successfully!');
             router.push('/cart');
         } catch (error) {
@@ -600,7 +607,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                 {/* Step 6: Gift Card Selection (Pack only) */}
                 {currentStep === 6 && isPack && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 6: Choose your Gift Card</h3>
+                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 6: Choose your Gift Card (optional)</h3>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
                             {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
@@ -638,13 +645,78 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             >
                                 Back
                             </button>
+                            <button
+                                type="button"
+                                onClick={handleNextStep}
+                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90"
+                            >
+                                Next
+                            </button>
                         </div>
                     </div>
                 )}
+
+                {/* Step 7: Love Sleeve (Pack only, optional) */}
+                {currentStep === 7 && isPack && (() => {
+                    const loveSleeveProduct = allProducts?.find(p => p.id === LOVE_SLEEVE_PRODUCT_ID);
+                    const firstImage = loveSleeveProduct?.gallery_images?.[0]?.image ?? loveSleeveProduct?.image;
+                    return (
+                    <div className="transition-opacity">
+                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 7: Love Sleeve (optional)</h3>
+                        {firstImage && (
+                            <div className="mb-4 w-40 h-40 relative rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
+                                <Image
+                                    src={firstImage}
+                                    alt="Love Sleeve"
+                                    fill
+                                    className="object-cover"
+                                    sizes="160px"
+                                />
+                            </div>
+                        )}
+                        <p className="text-primary-text dark:text-primary-text-light mb-4">
+                            Add a Love Sleeve to wrap your pack for £{LOVE_SLEEVE_PRICE.toFixed(2)}.
+                        </p>
+                        <div className="flex gap-4 mb-6">
+                            <button
+                                type="button"
+                                onClick={() => setLoveSleeve(true)}
+                                className={`flex-1 px-6 py-4 rounded-lg border-2 font-medium transition-colors ${
+                                    loveSleeve === true
+                                        ? 'border-primary bg-primary/10 text-primary'
+                                        : 'border-gray-300 dark:border-gray-600 hover:border-primary/50 text-primary-text dark:text-primary-text-light'
+                                }`}
+                            >
+                                Yes, add Love Sleeve (£{LOVE_SLEEVE_PRICE.toFixed(2)})
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setLoveSleeve(false)}
+                                className={`flex-1 px-6 py-4 rounded-lg border-2 font-medium transition-colors ${
+                                    loveSleeve === false
+                                        ? 'border-primary bg-primary/10 text-primary'
+                                        : 'border-gray-300 dark:border-gray-600 hover:border-primary/50 text-primary-text dark:text-primary-text-light'
+                                }`}
+                            >
+                                No thanks
+                            </button>
+                        </div>
+                        <div className="mt-6 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={handlePrevStep}
+                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                            >
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                    );
+                })()}
             </div>
 
             {/* Add to Cart Button - Only show on final step when ready */}
-            {((!isPack && currentStep === 3) || (isPack && currentStep === 6)) && canAddToCart() && (
+            {((!isPack && currentStep === 3) || (isPack && currentStep === 7)) && canAddToCart() && (
                 <div className="sticky md:static bottom-[55px] md:bottom-auto bg-main-bg dark:bg-main-bg-dark pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
                     <AddToCartButton
                         onClick={handleAddToCart}
@@ -740,7 +812,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                 }
                                             };
 
-                                            const response = await addToCart(cartItemRequest).unwrap();
+                                            await addToCart(cartItemRequest).unwrap();
+                                            if (loveSleeve) {
+                                                await addToCart({ product: LOVE_SLEEVE_PRODUCT_ID, quantity: 1 }).unwrap();
+                                            }
                                             toast.success('Pack added to cart successfully!');
                                             router.push('/cart');
                                         } catch (error) {

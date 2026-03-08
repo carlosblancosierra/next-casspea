@@ -8,13 +8,14 @@ import {
   ChocolateBarkStep,
   HotChocolateStep,
   GiftCardStep,
+  LoveSleeveStep,
   BoxTypeStep,
   AllergenStep,
   FlavourStep,
   SummaryStep
 } from '@/components/packs/steps'
 
-import { PRICE_MAP, ID_MAP, ALLERGENS, PREBUILDS, STEP_LABELS, STEP_BORDER, STEP_EXPLANATIONS } from '@/components/packs/constants'
+import { PRICE_MAP, ID_MAP, ALLERGENS, PREBUILDS, STEP_LABELS, STEP_BORDER, STEP_EXPLANATIONS, LOVE_SLEEVE_PRODUCT_ID } from '@/components/packs/constants'
 import { useRouter } from 'next/navigation'
 import Spinner from "@/components/common/Spinner";
 import { Product } from '@/types/products';
@@ -34,6 +35,7 @@ export default function PackBuilder() {
   const [chocolateBark, setChocolateBark] = useState<Product | null>(null)
   const [hotChocolate, setHotChocolate] = useState<Product | null>(null)
   const [giftCard, setGiftCard] = useState<Product | null>(null)
+  const [loveSleeve, setLoveSleeve] = useState<boolean>(false)
   const [boxType, setBoxType] = useState<'PICK_AND_MIX' | 'RANDOM'>('PICK_AND_MIX')
   const [selectedAllergens, setSelectedAllergens] = useState<number[]>([])
   const [flavours, setFlavours] = useState<CartItemBoxFlavorSelection[]>([])
@@ -69,10 +71,11 @@ export default function PackBuilder() {
       case 1: return chocolateBark !== null
       case 2: return hotChocolate !== null
       case 3: return true // Gift card is optional
-      case 4: return boxType !== null
-      case 5: return allergenOption !== null
-      case 6: return boxType === 'RANDOM' || remaining === 0
-      case 7: return true // Summary step
+      case 4: return true // Love sleeve is optional
+      case 5: return boxType !== null
+      case 6: return allergenOption !== null
+      case 7: return boxType === 'RANDOM' || remaining === 0
+      case 8: return true // Summary step
       default: return false
     }
   }
@@ -172,6 +175,9 @@ export default function PackBuilder() {
         await updateCart({ gift_message: giftMessage }).unwrap();
       }
       await addCartItem(payload).unwrap()
+      if (loveSleeve) {
+        await addCartItem({ product: LOVE_SLEEVE_PRODUCT_ID, quantity: 1 }).unwrap()
+      }
       router.push('/cart')
     } catch (e) {
       console.error('Pack add error', e)
@@ -212,11 +218,20 @@ const steps: React.ReactNode[] = [
     onMessageChange={setGiftMessage}
     onNext={() => completeStepAndAdvance(4)}
   />,
+  <LoveSleeveStep
+    selected={loveSleeve}
+    onSelect={setLoveSleeve}
+    onNext={() => completeStepAndAdvance(5)}
+    image={(() => {
+      const p = products?.find(pr => pr.id === LOVE_SLEEVE_PRODUCT_ID);
+      return p?.gallery_images?.[0]?.image ?? p?.image;
+    })()}
+  />,
   <BoxTypeStep
     options={PREBUILDS}
     selected={boxType}
     onChange={(option: 'PICK_AND_MIX' | 'RANDOM') => setBoxType(option)}
-    onNext={() => completeStepAndAdvance(5)}
+    onNext={() => completeStepAndAdvance(6)}
   />,
   <AllergenStep
     allergens={ALLERGENS}
@@ -224,7 +239,7 @@ const steps: React.ReactNode[] = [
     setSelectedAllergens={setSelectedAllergens}
     allergenOption={selectedAllergens !== undefined ? allergenOption : null}
     setAllergenOption={setAllergenOption}
-    onNext={() => completeStepAndAdvance(boxType === 'RANDOM' ? 7 : 6)}
+    onNext={() => completeStepAndAdvance(boxType === 'RANDOM' ? 8 : 7)}
   />,
   // this one should stay conditional (needs signatureBox info)
   signatureBox && (
@@ -238,7 +253,7 @@ const steps: React.ReactNode[] = [
       deleteFlavour={handleDec}
       handleClear={handleClear}
       selectedAllergens={selectedAllergens}
-      onNext={() => completeStepAndAdvance(7)}
+      onNext={() => completeStepAndAdvance(8)}
       allFlavours={allFlavours}
     />
   ),
@@ -247,6 +262,7 @@ const steps: React.ReactNode[] = [
     chocolateBark={chocolateBark}
     hotChocolate={hotChocolate}
     giftCard={giftCard}
+    loveSleeve={loveSleeve}
     flavours={flavours}
     allergenSummary={
       selectedAllergens.length === 0

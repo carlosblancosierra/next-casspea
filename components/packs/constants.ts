@@ -12,6 +12,9 @@ export const ID_MAP: Record<number, number> = {
   48: 173,
 };
 
+export const LOVE_SLEEVE_PRODUCT_ID = 434
+export const LOVE_SLEEVE_PRICE = 4.99
+
 export const ALLERGENS = [
   { id: 2, name: 'Gluten' },
   { id: 5, name: 'Alcohol' },
@@ -28,6 +31,7 @@ export const STEP_LABELS = [
   'Chocolate Bark',
   'Hot Chocolate',
   'Gift Card',
+  'Love Sleeve',
   'Box Type',
   'Select Allergens',
   'Choose Flavours',
@@ -39,6 +43,7 @@ export const STEP_BORDER = [
   'border-green-500',
   'border-red-500',
   'border-orange-400',
+  'border-pink-400',
   'border-blue-700',
   'border-yellow-300',
   'border-indigo-500',
@@ -50,6 +55,7 @@ export const STEP_EXPLANATIONS = [
   "Optionally add a layer of delicious chocolate bark.",
   "Optionally choose a hot chocolate infusion for extra warmth.",
   "Optionally include a personalized gift card with your order.",
+  "Optionally add a Love Sleeve for £4.99 to wrap your pack.",
   "Decide between Pick & Mix for custom flavour selection or Surprise Me for a curated experience.",
   "Select any allergens you wish to avoid (applies to bonbons only).",
   "Pick your favourite flavours to fill your box.",

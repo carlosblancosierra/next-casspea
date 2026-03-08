@@ -1,12 +1,14 @@
 import React from 'react'
 import { Product } from '@/types/products'
 import { CartItemBoxFlavorSelection } from '@/types/carts'
+import { LOVE_SLEEVE_PRICE } from '@/components/packs/constants'
 
 interface Props {
   signatureBox: Product
   chocolateBark: Product | null
   hotChocolate: Product | null
   giftCard: Product | null
+  loveSleeve?: boolean
   flavours: CartItemBoxFlavorSelection[]
   allergenSummary: string
   price: number
@@ -15,7 +17,7 @@ interface Props {
 }
 
 export default function SummaryStep({
-  signatureBox, chocolateBark, hotChocolate, giftCard,
+  signatureBox, chocolateBark, hotChocolate, giftCard, loveSleeve = false,
   flavours, allergenSummary, price, onEdit, onConfirm
 }: Props) {
   const items = [
@@ -23,13 +25,14 @@ export default function SummaryStep({
     { label: 'Chocolate Bark', name: chocolateBark?.name, image: chocolateBark?.image, edit: 1 },
     { label: 'Hot Chocolate',  name: hotChocolate?.name, image: hotChocolate?.image, edit: 2 },
     { label: 'Gift Card',      name: giftCard?.name || 'No Gift Card', image: giftCard?.image, edit: 3 },
-    { label: 'Allergens',      name: allergenSummary, edit: 5 },
-    { label: 'Flavours',       name: `${flavours.length} selected`, edit: 6 },
+    { label: 'Love Sleeve',    name: loveSleeve ? `Yes (£${LOVE_SLEEVE_PRICE.toFixed(2)})` : 'No', image: null, edit: 4 },
+    { label: 'Allergens',      name: allergenSummary, edit: 6 },
+    { label: 'Flavours',       name: `${flavours.length} selected`, edit: 7 },
   ]
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold mb-4">Step 8: Summary</h2>
+      <h2 className="text-xl font-semibold mb-4">Step 9: Summary</h2>
       {items.map((it, i) => (
         <div
           key={i}
