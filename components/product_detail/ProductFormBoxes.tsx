@@ -59,6 +59,13 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [updateCart] = useUpdateCartMutation();
     const { data: allProducts } = useGetActiveProductsQuery();
 
+    // If the mapped indulgence-pack SKU for this box size is sold out, we should:
+    // - suppress the indulgence upgrade UI
+    // - allow adding the regular box to cart instead
+    const indulgencePackProductId = ID_MAP[product.units_per_box || 0];
+    const indulgencePackProduct = allProducts?.find(p => p.id === indulgencePackProductId);
+    const isIndulgencePackSoldOut = Boolean(indulgencePackProduct?.sold_out);
+
     const prebulids = [
         {
             name: 'Pick & Mix',
@@ -242,8 +249,9 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     };
 
     const handleAddToCart = async () => {
+        const shouldTreatAsPack = isPack && !isIndulgencePackSoldOut;
         // Check if gift card is selected but no gift message is provided
-        if (isPack && giftCard && giftMessage.trim() === '') {
+        if (shouldTreatAsPack && giftCard && giftMessage.trim() === '') {
             setShowGiftMessagePopup(true);
             return;
         }
@@ -251,7 +259,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         try {
             let cartItemRequest: CartItemRequest;
 
-            if (isPack) {
+            if (shouldTreatAsPack) {
                 // Pack customization - use pack product ID from ID_MAP
                 const packProductId = ID_MAP[product.units_per_box || 0] || product.id;
                 cartItemRequest = {
@@ -285,15 +293,15 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             }
 
             // Handle gift message for packs
-            if (isPack && giftMessage.trim() !== '') {
+            if (shouldTreatAsPack && giftMessage.trim() !== '') {
                 await updateCart({ gift_message: giftMessage }).unwrap();
             }
 
             await addToCart(cartItemRequest).unwrap();
-            if (isPack && loveSleeve) {
+            if (shouldTreatAsPack && loveSleeve) {
                 await addToCart({ product: LOVE_SLEEVE_PRODUCT_ID, quantity: 1 }).unwrap();
             }
-            toast.success(isPack ? 'Pack added to cart successfully!' : 'Box added to cart successfully!');
+            toast.success(shouldTreatAsPack ? 'Pack added to cart successfully!' : 'Box added to cart successfully!');
             router.push('/cart');
         } catch (error) {
             toast.error('Failed to add item to cart');
@@ -437,7 +445,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    if (isNinetySixBox) {
+                                                    if (isNinetySixBox || isIndulgencePackSoldOut) {
                                                         handleAddToCart();
                                                     } else {
                                                         setShowUpgradePopup(true);
@@ -493,7 +501,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     <button
                                         type="button"
                                         onClick={() => {
-                                            if (isNinetySixBox) {
+                                            if (isNinetySixBox || isIndulgencePackSoldOut) {
                                                 handleAddToCart();
                                             } else {
                                                 setShowUpgradePopup(true);
@@ -729,7 +737,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             )}
 
             {/* Upgrade Popup */}
-            {showUpgradePopup && (
+            {showUpgradePopup && !isIndulgencePackSoldOut && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-main-bg dark:bg-main-bg-dark rounded-lg max-w-md w-full p-6">
                         <div className="text-center">

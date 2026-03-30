@@ -6,17 +6,32 @@ interface Props {
   product: Product
   onSelect: () => void
   price?: number
+  isDisabled?: boolean
+  soldOutLabel?: string
 }
 
-export default function SelectableProductCard({ product, onSelect, price }: Props) {
+export default function SelectableProductCard({
+  product,
+  onSelect,
+  price,
+  isDisabled = false,
+  soldOutLabel = 'Sold out'
+}: Props) {
   // Use product.image or default image
   const displayImage = product.image || '/images/default-product.png'
   
   return (
     <div
-      onClick={onSelect}
-      className="block group relative shadow-lg rounded-lg p-2 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-main-bg-dark hover:opacity-90 transition-opacity cursor-pointer"
+      onClick={isDisabled ? undefined : onSelect}
+      className={`block group relative shadow-lg rounded-lg p-2 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-main-bg-dark transition-opacity ${
+        isDisabled ? 'opacity-60 cursor-not-allowed hover:opacity-60' : 'hover:opacity-90 cursor-pointer'
+      }`}
     >
+      {isDisabled && (
+        <div className="absolute top-2 right-2 z-10 text-[10px] font-semibold bg-gray-900/70 text-white rounded px-2 py-1">
+          {soldOutLabel}
+        </div>
+      )}
       <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-main-bg-dark lg:aspect-none group-hover:opacity-75 lg:h-80">
         <Image
           alt={product.name}
