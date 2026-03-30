@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
 import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice'
 import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice'
 import StepSidebar from './StepSidebar'
@@ -21,6 +22,7 @@ import Spinner from "@/components/common/Spinner";
 import { Product } from '@/types/products';
 import { CartItemBoxFlavorSelection } from '@/types/carts';
 import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
+import { Flavour as FlavourType } from '@/types/flavours';
 
 export default function PackBuilder() {
   const { data: products, isLoading, error } = useGetActiveProductsQuery()
@@ -96,9 +98,9 @@ export default function PackBuilder() {
   }
 
   // Updated handleAddFlavour to use FlavourType
-  const handleAddFlavour = (flavour) => {
+  const handleAddFlavour = (flavour: FlavourType): void => {
     if (remaining === 0) return;
-    const idx = flavours.findIndex(x => x.flavor.id === flavour.id);
+    const idx = flavours.findIndex(x => x.flavor?.id === flavour.id);
     if (idx >= 0) {
       const u = [...flavours]; u[idx].quantity++; setFlavours(u)
     } else {
@@ -111,7 +113,9 @@ export default function PackBuilder() {
   }
   const handleInc = (i: number) => {
     if (remaining > 0) {
-      handleAddFlavour(flavours[i].flavor)
+      const f = flavours[i]?.flavor
+      if (!f) return
+      handleAddFlavour(f)
     }
   }
   const handleDec = (i: number): void => {
@@ -143,6 +147,22 @@ export default function PackBuilder() {
 
   const handleConfirm = async () => {
     if (!signatureBox) return
+
+    // If the selected signature-box size maps to a sold-out indulgence-pack SKU,
+    // block checkout for this configuration.
+    const mappedPackProductId =
+      typeof signatureBox.units_per_box === 'number'
+        ? ID_MAP[signatureBox.units_per_box]
+        : undefined
+
+    if (mappedPackProductId) {
+      const mappedPackProduct = products?.find(p => p.id === mappedPackProductId)
+      if (mappedPackProduct?.sold_out) {
+        toast.error('That indulgence pack size is sold out. Please choose another size.')
+        return
+      }
+    }
+
     const productId = typeof signatureBox.units_per_box === 'number'
       ? (ID_MAP[signatureBox.units_per_box] || signatureBox.id)
       : signatureBox.id
@@ -230,7 +250,7 @@ const steps: React.ReactNode[] = [
   <BoxTypeStep
     options={PREBUILDS}
     selected={boxType}
-    onChange={(option: 'PICK_AND_MIX' | 'RANDOM') => setBoxType(option)}
+    onChange={(option: string) => setBoxType(option === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX')}
     onNext={() => completeStepAndAdvance(6)}
   />,
   <AllergenStep
