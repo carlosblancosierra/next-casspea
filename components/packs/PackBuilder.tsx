@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
-import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice'
+import { useGetProductsQuery } from '@/redux/features/products/productApiSlice'
 import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice'
 import StepSidebar from './StepSidebar'
 import {
@@ -25,7 +25,7 @@ import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 import { Flavour as FlavourType } from '@/types/flavours';
 
 export default function PackBuilder() {
-  const { data: products, isLoading, error } = useGetActiveProductsQuery()
+  const { data: products, isLoading, error } = useGetProductsQuery()
   const { data: allFlavours, isLoading: isFlavoursLoading, error: flavourError } = useGetFlavoursQuery();
   const [addCartItem, { isLoading: cartLoading }] = useAddCartItemMutation()
   const [updateCart] = useUpdateCartMutation()

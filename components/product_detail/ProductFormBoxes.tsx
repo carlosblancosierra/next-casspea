@@ -9,7 +9,7 @@ import { CartItemBoxFlavorSelection, CartItemRequest } from '@/types/carts';
 import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
-import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
+import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 
 // Importing sub-components
 import BoxSelection from './BoxSelection';
@@ -57,7 +57,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const router = useRouter();
     const [addToCart, { isLoading }] = useAddCartItemMutation();
     const [updateCart] = useUpdateCartMutation();
-    const { data: allProducts } = useGetActiveProductsQuery();
+    const { data: allProducts } = useGetProductsQuery();
 
     // If the mapped indulgence-pack SKU for this box size is sold out, we should:
     // - suppress the indulgence upgrade UI
