@@ -142,7 +142,7 @@ const HeroSection = () => (
             Luxury Chocolate Gifts, Handcrafted in London
           </h1>
           <h2 className="text-2xl mb-4 dark:text-white text-primary-text">
-            Discover Our Indulgent Easter Eggs and Gift Boxes for Every Occasion
+            Celebrate Every Occasion with Our Signature Gift Boxes
           </h2>
         </div>
         <ImageGallery
@@ -179,7 +179,7 @@ const HeroSection = () => (
           Luxury Chocolate Gifts, Handcrafted in London
         </h1>
         <h2 className="text-2xl mb-2 dark:text-white text-primary-text hidden lg:block">
-          Discover Our Indulgent Easter Eggs and Gift Boxes for Every Occasion
+          Celebrate Every Occasion with Our Signature Gift Boxes
         </h2>
         <p className="hidden lg:block lg:mb-6 font-light text-sm text-primary-text xl:mb-8 lg:text-base dark:text-primary-text-light">
           Share the love with CassPea Chocolates—perfect for personal indulgence,
@@ -208,10 +208,6 @@ export default function HomePage() {
   return (
     <main className="dark:bg-main-bg-dark min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <HeroSection />
-
-      <Section title="Easter" extraClass="mt-5">
-        <CategoryProducts categorySlug="easter" />
-      </Section>
 
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
         <HomeProducts />
