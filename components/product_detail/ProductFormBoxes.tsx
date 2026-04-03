@@ -445,13 +445,11 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    // TODO: re-enable upgrade popup when fixed
-                                                    // if (isNinetySixBox || isIndulgencePackSoldOut) {
-                                                    //     handleAddToCart();
-                                                    // } else {
-                                                    //     setShowUpgradePopup(true);
-                                                    // }
-                                                    handleAddToCart();
+                                                    if (isNinetySixBox || isIndulgencePackSoldOut) {
+                                                        handleAddToCart();
+                                                    } else {
+                                                        setShowUpgradePopup(true);
+                                                    }
                                                 }}
                                                 disabled={!canAddToCart()}
                                                 className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -503,13 +501,11 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     <button
                                         type="button"
                                         onClick={() => {
-                                            // TODO: re-enable upgrade popup when fixed
-                                            // if (isNinetySixBox || isIndulgencePackSoldOut) {
-                                            //     handleAddToCart();
-                                            // } else {
-                                            //     setShowUpgradePopup(true);
-                                            // }
-                                            handleAddToCart();
+                                            if (isNinetySixBox || isIndulgencePackSoldOut) {
+                                                handleAddToCart();
+                                            } else {
+                                                setShowUpgradePopup(true);
+                                            }
                                         }}
                                         disabled={!canAddToCart()}
                                         className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
