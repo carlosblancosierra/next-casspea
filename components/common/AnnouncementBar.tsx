@@ -50,7 +50,7 @@ export default function AnnouncementBar() {
     <div className="flex items-center gap-x-2 justify-center">
       <Image
         src="/home/stars-4.5.svg"
-        alt="Trustpilot Rating 4.6"
+        alt="Trustpilot Rating 4.7"
         width={100}
         height={100}
         className="inline-block"
@@ -61,7 +61,7 @@ export default function AnnouncementBar() {
         rel="noopener noreferrer"
         target="_blank"
       >
-        4.6 on Trustpilot (63 reviews)
+        4.7 on Trustpilot (64 reviews)
       </a>
     </div>
   );
