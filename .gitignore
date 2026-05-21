@@ -62,3 +62,5 @@ next-env.d.ts
 
 # Optional eslint cache
 .eslintcache
+
+package-lock.json
