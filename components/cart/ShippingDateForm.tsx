@@ -16,8 +16,8 @@ const toLocalDateStr = (d: Date): string => {
 
 export default function ShippingDateForm({ onShippingDateChange }: ShippingDateFormProps) {
     const [value, setValue] = useState<{
-        startDate: string | null;
-        endDate: string | null;
+        startDate: Date | null;
+        endDate: Date | null;
     }>({
         startDate: null,
         endDate: null
@@ -63,7 +63,10 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
                     const dateStr = raw
                         ? typeof raw === 'string' ? raw : toLocalDateStr(raw as Date)
                         : null;
-                    setValue({ startDate: dateStr, endDate: dateStr });
+                    setValue({
+                        startDate: dateStr ? new Date(dateStr) : null,
+                        endDate: dateStr ? new Date(dateStr) : null,
+                    });
                     if (dateStr) onShippingDateChange(dateStr);
                 }}
                 displayFormat="DD/MM/YYYY"
