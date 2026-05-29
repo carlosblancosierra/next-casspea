@@ -7,51 +7,49 @@ interface ShippingDateFormProps {
     onShippingDateChange: (date: string) => void;
 }
 
+const toLocalDateStr = (d: Date): string => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 export default function ShippingDateForm({ onShippingDateChange }: ShippingDateFormProps) {
     const [value, setValue] = useState<{
-        startDate: Date | null;
-        endDate: Date | null;
+        startDate: string | null;
+        endDate: string | null;
     }>({
         startDate: null,
         endDate: null
     });
 
-    // Get all disabled dates including past dates and weekends
     const getDisabledDates = () => {
-        const disabled = [];
+        const disabled: { startDate: string; endDate: string }[] = [];
 
-        // Add all past dates including today as one range
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        disabled.push({
-            startDate: new Date("2000-01-01"),
-            endDate: today
-        });
+        disabled.push({ startDate: '2000-01-01', endDate: toLocalDateStr(today) });
 
-        // Add weekends for the next 90 days
-        const endDate = new Date();
-        endDate.setDate(endDate.getDate() + 90);
+        const limit = new Date(today);
+        limit.setDate(limit.getDate() + 90);
 
-        let currentDate = new Date(today);
-        while (currentDate <= endDate) {
-            if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
-                disabled.push({
-                    startDate: new Date(currentDate),
-                    endDate: new Date(currentDate)
-                });
+        const cursor = new Date(today);
+        cursor.setDate(cursor.getDate() + 1);
+        while (cursor <= limit) {
+            if (cursor.getDay() === 0 || cursor.getDay() === 6) {
+                const s = toLocalDateStr(cursor);
+                disabled.push({ startDate: s, endDate: s });
             }
-            currentDate.setDate(currentDate.getDate() + 1);
+            cursor.setDate(cursor.getDate() + 1);
         }
 
         return disabled;
     };
 
-    // Get tomorrow's date
-    const getTomorrow = () => {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(0, 0, 0, 0);
-        return tomorrow;
+    const getTomorrow = (): Date => {
+        const d = new Date();
+        d.setDate(d.getDate() + 1);
+        d.setHours(0, 0, 0, 0);
+        return d;
     };
 
     return (
@@ -61,19 +59,12 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
                 useRange={false}
                 value={value}
                 onChange={(newValue) => {
-                    setValue(newValue ? {
-                        startDate: newValue.startDate ? new Date(newValue.startDate) : null,
-                        endDate: newValue.endDate ? new Date(newValue.endDate) : null
-                    } : {
-                        startDate: null,
-                        endDate: null
-                    });
-                    if (newValue?.startDate) {
-                        const dateStr = typeof newValue.startDate === 'string'
-                            ? newValue.startDate
-                            : (newValue.startDate as Date).toISOString().split('T')[0];
-                        onShippingDateChange(dateStr);
-                    }
+                    const raw = newValue?.startDate ?? null;
+                    const dateStr = raw
+                        ? typeof raw === 'string' ? raw : toLocalDateStr(raw as Date)
+                        : null;
+                    setValue({ startDate: dateStr, endDate: dateStr });
+                    if (dateStr) onShippingDateChange(dateStr);
                 }}
                 displayFormat="DD/MM/YYYY"
                 placeholder="Select Shipping Date"
