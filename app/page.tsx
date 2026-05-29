@@ -3,17 +3,16 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { Suspense } from 'react';
 import { Playfair_Display } from 'next/font/google';
-import dynamic from 'next/dynamic';
 import ImageGallery from '@/components/product_detail/ImageGallery';
 import PersonalisedHome from '@/components/personalized/PersonalisedHome';
 import CategoryProducts from '@/components/home/CategoryProducts';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
+import HomeProductsServer from '@/components/home/HomeProductsServer';
+import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
+import dynamic from 'next/dynamic';
 import React from 'react';
 
-// Dynamically import components that can load later
-const HomeProducts = dynamic(() => import('@/components/home/HomeProducts'));
 const HomeGallery = dynamic(() => import('@/components/home/HomeGallery'));
-const FlavoursGrid = dynamic(() => import('@/components/landing/main/FlavourGrid'));
 
 
 // Reusable section component that wraps content in Suspense with a title
@@ -144,6 +143,24 @@ const HeroSection = () => (
           <h2 className="text-2xl mb-4 dark:text-white text-primary-text">
             Celebrate Every Occasion with Our Signature Gift Boxes
           </h2>
+          <Link
+            href="/shop-now/"
+            className="inline-flex items-center justify-center px-8 py-4 mb-4 text-xl font-medium text-primary-button-text rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light"
+          >
+            Shop Indulgence Now!
+            <svg
+              className="w-5 h-5 ml-2 -mr-1"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </Link>
         </div>
         <ImageGallery
           images={[
@@ -210,11 +227,11 @@ export default function HomePage() {
       <HeroSection />
 
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
-        <HomeProducts />
+        <HomeProductsServer />
       </Section>
 
       <Section title="Our Flavours" extraClass="mt-10">
-        <FlavoursGrid />
+        <FlavourGridServer />
       </Section>
 
       <Section title="Personalised Chocolates" extraClass="mt-10">
