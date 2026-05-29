@@ -43,12 +43,6 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
             currentDate.setDate(currentDate.getDate() + 1);
         }
 
-        // Disable July 23 to August 15, 2025
-        disabled.push({
-            startDate: new Date("2025-07-23"),
-            endDate: new Date("2025-08-15")
-        });
-
         return disabled;
     };
 
@@ -75,9 +69,10 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
                         endDate: null
                     });
                     if (newValue?.startDate) {
-                        // Format the date as YYYY-MM-DD
-                        const formattedDate = newValue.startDate.toISOString().split('T')[0];
-                        onShippingDateChange(formattedDate);
+                        const dateStr = typeof newValue.startDate === 'string'
+                            ? newValue.startDate
+                            : (newValue.startDate as Date).toISOString().split('T')[0];
+                        onShippingDateChange(dateStr);
                     }
                 }}
                 displayFormat="DD/MM/YYYY"
