@@ -27,6 +27,24 @@ html {
     }
 }
 
+@keyframes slideUpIn {
+    from { transform: translateY(32px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes slideDownIn {
+    from { transform: translateY(-32px); opacity: 0; }
+    to   { transform: translateY(0);     opacity: 1; }
+}
+
+.animate-slide-up-in {
+    animation: slideUpIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down-in {
+    animation: slideDownIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* Gold gradients */
 .gradient-45-gold-1 { background-image: linear-gradient(45deg, #fde047, #fbbf24, #fb923c); } /* lighter than before */
 .gradient-45-gold-4 { background-image: linear-gradient(45deg, #d97706, #b45309, #92400e); } /* darker */
