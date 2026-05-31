@@ -1,20 +1,34 @@
-'use client';
-
+import type { Metadata } from 'next';
 import ProductDetail from '@/components/product_detail/ProductDetail';
 
-export default function Page({ params }: { params: { product_slug: string } }) {
-	return (
-		<>
-			{/* <header className='main-bg shadow'>
-				<div className='mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8'>
-					<h1 className='text-3xl font-bold tracking-tight text-primary-text'>
-						Dashboard
-					</h1>
-				</div>
-			</header> */}
-			<main className='mx-auto max-w-screen-2xl'>
-				<ProductDetail slug={params.product_slug} />
-			</main>
-		</>
-	);
+type Props = { params: { product_slug: string } };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/api/products/${params.product_slug}/`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return {};
+    const product = await res.json();
+    return {
+      title: `${product.seo_title || product.name} | CassPea Chocolates`,
+      description: product.seo_description || product.description || '',
+      openGraph: {
+        title: product.seo_title || product.name,
+        description: product.seo_description || product.description || '',
+        images: product.image ? [{ url: product.image }] : [],
+      },
+    };
+  } catch {
+    return {};
+  }
+}
+
+export default function Page({ params }: Props) {
+  return (
+    <main className="mx-auto max-w-screen-2xl">
+      <ProductDetail slug={params.product_slug} />
+    </main>
+  );
 }

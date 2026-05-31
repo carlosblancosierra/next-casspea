@@ -8,11 +8,13 @@ import PersonalisedHome from '@/components/personalized/PersonalisedHome';
 import CategoryProducts from '@/components/home/CategoryProducts';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import HomeProductsServer from '@/components/home/HomeProductsServer';
-import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
 const HomeGallery = dynamic(() => import('@/components/home/HomeGallery'));
+const HomeValentines = dynamic(() => import('@/components/home/HomeValentines'));
+const HomeEasterEggs = dynamic(() => import('@/components/home/HomeEasterEggs'));
+const AdventSection = dynamic(() => import('@/components/home/AdventSection'));
 
 
 // Reusable section component that wraps content in Suspense with a title
@@ -213,7 +215,7 @@ const HeroSection = () => (
 
 export const metadata: Metadata = {
   title: 'CassPea Hand Crafted Chocolates',
-  description: '',
+  description: 'Luxury handcrafted chocolate gift boxes from London. Fully customisable — pick your flavours, add a gift card, and get next-day delivery. From £32.50.',
 };
 
 // Loading placeholder component
@@ -222,16 +224,33 @@ const LoadingSection = () => (
 );
 
 export default function HomePage() {
+  const month = new Date().getMonth() + 1;
+  const showValentines = month === 1 || month === 2;
+  const showEaster = month === 3 || month === 4;
+  const showAdvent = month === 11 || month === 12;
+
   return (
     <main className="dark:bg-main-bg-dark min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <HeroSection />
 
+      {showValentines && (
+        <Section title="Valentine's Gifts" extraClass="mt-5 md:mt-4">
+          <HomeValentines />
+        </Section>
+      )}
+      {showEaster && (
+        <Section title="Easter Chocolates" extraClass="mt-5 md:mt-4">
+          <HomeEasterEggs />
+        </Section>
+      )}
+      {showAdvent && (
+        <Section title="Advent & Christmas" extraClass="mt-5 md:mt-4">
+          <AdventSection />
+        </Section>
+      )}
+
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
         <HomeProductsServer />
-      </Section>
-
-      <Section title="Our Flavours" extraClass="mt-10">
-        <FlavourGridServer />
       </Section>
 
       <Section title="Personalised Chocolates" extraClass="mt-10">
@@ -242,7 +261,7 @@ export default function HomePage() {
         <HomeGallery />
       </Section>
 
-      <Section title="Chocolate Barks" extraClass="mt-5">
+      <Section title="Complete The Gift" extraClass="mt-5">
         <CategoryProducts categorySlug="chocolate-barks" />
       </Section>
 

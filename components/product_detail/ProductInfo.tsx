@@ -42,6 +42,13 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                     <p className="font-normal text-sm text-primary-text dark:text-primary-text-light">
                         {product.description}
                     </p>
+                    {product.can_pick_allergens && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                            Contains dairy &amp; gluten.{' '}
+                            <span className="font-medium text-primary">Allergen-free customisation available</span>{' '}
+                            — choose your preferences when building your box.
+                        </p>
+                    )}
                 </div>
             </div>
         </div>

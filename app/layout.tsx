@@ -109,9 +109,7 @@ export default function RootLayout({
               <main className="flex-grow pt-2 pb-16 md:pb-0 mx-4">
                 {children}
               </main>
-              <div className="hidden md:block">
-                <Footer />
-              </div>
+              <Footer />
               {CURRENT_EFFECT !== 'none' && <CurrentEffect />}
             </div>
           </LayoutWrapper>
