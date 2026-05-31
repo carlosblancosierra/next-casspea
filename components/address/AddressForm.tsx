@@ -92,6 +92,8 @@ const AddressForm: React.FC<AddressFormProps> = ({
                 label="Phone Number (Optional)"
                 value={formData.phone || ''}
                 onChange={handleInputChange}
+                pattern="^\+?(?:44|0)[\d\s]{9,11}$"
+                title="Enter a valid UK phone number (e.g. 07700 900123)"
             />
             <FormInput id="street_address" name="street_address" label="Street Address" value={formData.street_address} onChange={handleInputChange} required />
             <FormInput id="street_address2" name="street_address2" label="Address Line 2" value={formData.street_address2 || ''} onChange={handleInputChange} />
@@ -100,7 +102,16 @@ const AddressForm: React.FC<AddressFormProps> = ({
                 <FormInput id="county" name="county" label="County" value={formData.county || ''} onChange={handleInputChange} />
             </FormSection>
             <FormSection>
-                <FormInput id="postcode" name="postcode" label="Postcode" value={formData.postcode} onChange={handleInputChange} required />
+                <FormInput
+                    id="postcode"
+                    name="postcode"
+                    label="Postcode"
+                    value={formData.postcode}
+                    onChange={handleInputChange}
+                    required
+                    pattern="^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$"
+                    title="Enter a valid UK postcode (e.g. SW12 9HR)"
+                />
                 <FormInput 
                     id="country" 
                     name="country" 

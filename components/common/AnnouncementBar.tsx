@@ -6,118 +6,65 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-// Constants
 const HIDDEN_PATHS = ['/blog', '/landing/gold'];
-const BACKGROUND_COLOR = "#40a6b4";
-
-type AnnouncementLink = {
-  href: string;
-  text: string;
-};
-
-const CONTACT_INFO = {
-  phone: { number: "07859 790386", href: "tel:07859790386" },
-  email: { address: "info@casspea.co.uk", href: "mailto:info@casspea.co.uk" }
-};
+const BG_COLOR = "#40a6b4";
 
 export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
-  const [copiedCode, setCopiedCode] = useState(false);
   const pathname = usePathname();
-  
-  // Early return if on excluded paths
+
   if (HIDDEN_PATHS.some(path => pathname?.startsWith(path))) return null;
+  if (!isVisible) return null;
 
-  const handleClose = () => {
-    setIsVisible(false);
-  };
-
-  const handleCopyCode = async () => {
-    try {
-      await navigator.clipboard.writeText('SUBSCRIBER15');
-      setCopiedCode(true);
-      setTimeout(() => setCopiedCode(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy code: ', err);
-    }
-  };
-
-  if (!isVisible) {
-    return null;
-  }
-
-  const renderTrustpilotRating = () => (
-    <div className="flex items-center gap-x-2 justify-center">
-      <Image
-        src="/home/stars-4.5.svg"
-        alt="Trustpilot Rating 4.7"
-        width={100}
-        height={100}
-        className="inline-block"
-      />
-      <a
-        href="https://uk.trustpilot.com/review/www.casspea.co.uk"
-        className="text-sm font-medium inline-block text-primary-text-light hover:underline"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        4.7 on Trustpilot (66 reviews)
-      </a>
-    </div>
-  );
-  
-  const renderContactInfo = () => (
-    <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
-      Tel: <a
-        href={CONTACT_INFO.phone.href}
-        className="underline hover:no-underline transition underline-offset-2 text-primary-text-light"
-      >
-        {CONTACT_INFO.phone.number}
-      </a> / email: <a
-        href={CONTACT_INFO.email.href}
-        className="underline hover:no-underline transition underline-offset-2 text-primary-text-light"
-      >
-        {CONTACT_INFO.email.address}
-      </a>
-    </p>
-  );
-  
   return (
-    <div 
-      className="relative isolate overflow-hidden px-6 py-2.5 sm:px-3.5" 
-      style={{ backgroundColor: BACKGROUND_COLOR }}
+    <div
+      className="relative isolate overflow-hidden px-4 py-2"
+      style={{ backgroundColor: BG_COLOR }}
     >
-      <div className="flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-x-6 max-w-screen-2xl mx-auto text-primary-text-light">
-        <div className="flex flex-col md:flex-row flex-1 justify-center items-center gap-y-2 md:gap-x-8 w-full">
-          <div className="text-sm leading-6 w-full md:w-auto text-center">
-            {renderTrustpilotRating()}
-          </div>
-          
-          {renderContactInfo()}
-          
-          <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
-            Free Shipping over £55
-          </p>
-          
-          <Link
-            href="/subscribe"
-            className="w-full md:w-auto text-center rounded-full bg-[#a2a7d4] px-3.5 py-1 text-sm text-white shadow-sm hover:bg-primary-light transition"
-          >
-            Subscribe for 10% off <span aria-hidden="true">&rarr;</span>
-          </Link>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-y-1.5 sm:gap-x-8 max-w-screen-2xl mx-auto text-primary-text-light">
 
+        {/* Left: trust */}
+        <div className="flex items-center gap-x-3 justify-center">
+          <Image
+            src="/home/stars-4.5.svg"
+            alt="Trustpilot 4.7 stars"
+            width={80}
+            height={20}
+            className="inline-block"
+          />
+          <a
+            href="https://uk.trustpilot.com/review/www.casspea.co.uk"
+            className="text-sm font-medium text-primary-text-light hover:underline whitespace-nowrap"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            4.7★ Trustpilot · 66 reviews · 165K+ sold
+          </a>
         </div>
 
-        <button
-          type="button"
-          className="absolute top-2 right-2 md:relative md:top-auto md:right-auto p-2 hover:bg-gray-100/20 rounded-full transition"
-          onClick={handleClose}
-          aria-label="Dismiss announcement"
-        >
-          <span className="sr-only">Dismiss</span>
-          <XMarkIcon aria-hidden="true" className="h-5 w-5 text-primary-text-light" />
-        </button>
+        {/* Right: offer */}
+        <div className="flex items-center gap-x-4 justify-center">
+          <span className="text-sm text-primary-text-light whitespace-nowrap">
+            Free shipping over £55
+          </span>
+          <Link
+            href="/subscribe"
+            className="rounded-full bg-white/20 hover:bg-white/30 px-3.5 py-1 text-sm text-white font-medium transition whitespace-nowrap"
+          >
+            10% off — subscribe →
+          </Link>
+        </div>
+
       </div>
+
+      <button
+        type="button"
+        className="absolute top-1/2 -translate-y-1/2 right-2 p-1.5 hover:bg-white/20 rounded-full transition"
+        onClick={() => setIsVisible(false)}
+        aria-label="Dismiss announcement"
+      >
+        <XMarkIcon aria-hidden="true" className="h-4 w-4 text-primary-text-light" />
+      </button>
     </div>
-  )
+  );
 }

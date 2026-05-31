@@ -26,7 +26,10 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product }) => {
                 </li>
                 <li>
                     <div className="flex items-center">
-                        <a href="/shop-now/" className="mr-2 text-sm text-primary-text dark:text-primary-text">
+                        <a
+                            href={product.category?.slug ? `/shop-now/categories/${product.category.slug}` : '/shop-now/'}
+                            className="mr-2 text-sm text-primary-text dark:text-primary-text-light hover:underline"
+                        >
                             {product.category?.name}
                         </a>
                         {/* <svg

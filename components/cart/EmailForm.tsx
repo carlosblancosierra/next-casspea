@@ -12,7 +12,7 @@ export default function EmailForm({ onValidEmail, initialEmail = '' }: EmailForm
     const [isValid, setIsValid] = useState(true);
 
     const validateEmail = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[^\s@]{1,64}@[^\s@]{1,253}\.[a-zA-Z]{2,}$/;
         return emailRegex.test(email);
     };
 

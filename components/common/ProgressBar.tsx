@@ -8,7 +8,7 @@ interface ProgressBarProps {
 const ProgressBar: React.FC<ProgressBarProps> = ({ value, max }) => {
     const percentage = (value / max) * 100;
     return (
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
             <div
                 className="bg-primary h-2.5 rounded-full"
                 style={{ width: `${percentage}%` }}
