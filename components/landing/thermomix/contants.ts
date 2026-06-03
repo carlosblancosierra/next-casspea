@@ -56,7 +56,7 @@ export const DEADLINE_COPY =
 // Social proof
 export const SOCIAL_PROOF_TITLE = 'Loved by our community';
 export const SOCIAL_PROOF_ITEMS = [
-  '★ ★ ★ ★ ★ 63 reviews — Trustpilot', // ← update with real values
+  '★ ★ ★ ★ ★ 70 reviews — Trustpilot', // ← update with real values
   '@casspea_ is 5k+ strong — join us!',
   'As seen in: BBC Good Food, The Guardian',
 ];
