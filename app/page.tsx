@@ -7,6 +7,7 @@ import ImageGallery from '@/components/product_detail/ImageGallery';
 import PersonalisedHome from '@/components/personalized/PersonalisedHome';
 import CategoryProducts from '@/components/home/CategoryProducts';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
+import ReviewCarousel from '@/components/common/ReviewCarousel';
 import HomeProductsServer from '@/components/home/HomeProductsServer';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
 import dynamic from 'next/dynamic';
@@ -176,7 +177,7 @@ const HeroSection = () => (
           className="block lg:hidden"
         />
         <div className="lg:hidden mb-6">
-          <UnitSoldCounter />
+          <ReviewCarousel />
         </div>
         <p className="lg:hidden font-light text-md mt-4 text-primary-text dark:text-primary-text-light">
           Share the love with CassPea Chocolates—perfect for personal indulgence,
@@ -188,7 +189,7 @@ const HeroSection = () => (
       </div>
       <div className="lg:col-span-6 lg:pl-8">
         <div className="hidden lg:block mb-6 mt-2">
-          <UnitSoldCounter />
+          <ReviewCarousel />
         </div>
         <h1
           className={`${playfair.className} mb-2 text-5xl text-primary-text font-bold tracking-tight leading-none lg:text-8xl dark:text-white hidden lg:block`}
