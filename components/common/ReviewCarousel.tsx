@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { motion, useAnimation } from 'framer-motion';
 import { FaStar } from 'react-icons/fa';
 import { FiChevronRight } from 'react-icons/fi';
 
@@ -50,24 +51,23 @@ const reviews = [
 export default function ReviewCarousel() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [fading, setFading] = useState(false);
-  const touchStartX = useRef<number | null>(null);
+  const controls = useAnimation();
+
+  const slideTo = useCallback((index: number) => {
+    setCurrent(index);
+    controls.start({
+      x: `${-index * 100}%`,
+      transition: { type: 'spring', stiffness: 300, damping: 30 },
+    });
+  }, [controls]);
 
   const next = useCallback(() => {
-    setFading(true);
-    setTimeout(() => {
-      setCurrent(prev => (prev + 1) % reviews.length);
-      setFading(false);
-    }, 250);
-  }, []);
+    slideTo((current + 1) % reviews.length);
+  }, [current, slideTo]);
 
   const prev = useCallback(() => {
-    setFading(true);
-    setTimeout(() => {
-      setCurrent(p => (p - 1 + reviews.length) % reviews.length);
-      setFading(false);
-    }, 250);
-  }, []);
+    slideTo((current - 1 + reviews.length) % reviews.length);
+  }, [current, slideTo]);
 
   useEffect(() => {
     if (paused) return;
@@ -75,38 +75,26 @@ export default function ReviewCarousel() {
     return () => clearInterval(timer);
   }, [paused, next]);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    setPaused(true);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const delta = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(delta) > 40) {
-      delta > 0 ? next() : prev();
+  const handleDragEnd = (_event: any, info: any) => {
+    if (Math.abs(info.offset.x) > 50) {
+      if (info.offset.x > 0) {
+        prev();
+      } else {
+        next();
+      }
+    } else {
+      controls.start({
+        x: `${-current * 100}%`,
+        transition: { type: 'spring', stiffness: 300, damping: 30 },
+      });
     }
-    touchStartX.current = null;
-    setPaused(false);
   };
-
-  const goTo = (index: number) => {
-    setFading(true);
-    setTimeout(() => {
-      setCurrent(index);
-      setFading(false);
-    }, 250);
-  };
-
-  const review = reviews[current];
 
   return (
     <div
-      className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-main-bg-dark shadow-md p-5 select-none"
+      className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-main-bg-dark shadow-md p-5 select-none overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
     >
       {/* Header: stars + trustpilot label */}
       <div className="flex items-center justify-between mb-3">
@@ -118,18 +106,30 @@ export default function ReviewCarousel() {
         <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">Trustpilot</span>
       </div>
 
-      {/* Quote */}
-      <div
-        className="transition-opacity duration-250 min-h-[5rem]"
-        style={{ opacity: fading ? 0 : 1 }}
+      {/* Sliding strip */}
+      <motion.div
+        drag="x"
+        dragElastic={0.15}
+        onDragStart={() => setPaused(true)}
+        onDragEnd={(e, info) => {
+          handleDragEnd(e, info);
+          setPaused(false);
+        }}
+        animate={controls}
+        className="flex cursor-grab active:cursor-grabbing min-h-[5rem]"
+        style={{ x: 0 }}
       >
-        <p className="text-sm text-primary-text dark:text-primary-text-light leading-relaxed italic">
-          &ldquo;{review.quote}&rdquo;
-        </p>
-        <p className="mt-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
-          {review.name} &middot; {review.date}
-        </p>
-      </div>
+        {reviews.map((review, i) => (
+          <div key={i} className="min-w-full">
+            <p className="text-sm text-primary-text dark:text-primary-text-light leading-relaxed italic">
+              &ldquo;{review.quote}&rdquo;
+            </p>
+            <p className="mt-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
+              {review.name} &middot; {review.date}
+            </p>
+          </div>
+        ))}
+      </motion.div>
 
       {/* Footer: dots + next button */}
       <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
@@ -137,7 +137,7 @@ export default function ReviewCarousel() {
           {reviews.map((_, i) => (
             <button
               key={i}
-              onClick={() => goTo(i)}
+              onClick={() => slideTo(i)}
               aria-label={`Review ${i + 1}`}
               className={`h-1.5 rounded-full transition-all duration-300 ${
                 i === current
