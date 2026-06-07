@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { FaStar } from 'react-icons/fa';
+import { FiChevronRight } from 'react-icons/fi';
 
 const reviews = [
   {
@@ -50,6 +51,7 @@ export default function ReviewCarousel() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const [fading, setFading] = useState(false);
+  const touchStartX = useRef<number | null>(null);
 
   const next = useCallback(() => {
     setFading(true);
@@ -59,11 +61,34 @@ export default function ReviewCarousel() {
     }, 250);
   }, []);
 
+  const prev = useCallback(() => {
+    setFading(true);
+    setTimeout(() => {
+      setCurrent(p => (p - 1 + reviews.length) % reviews.length);
+      setFading(false);
+    }, 250);
+  }, []);
+
   useEffect(() => {
     if (paused) return;
     const timer = setInterval(next, 4500);
     return () => clearInterval(timer);
   }, [paused, next]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    setPaused(true);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 40) {
+      delta > 0 ? next() : prev();
+    }
+    touchStartX.current = null;
+    setPaused(false);
+  };
 
   const goTo = (index: number) => {
     setFading(true);
@@ -77,47 +102,60 @@ export default function ReviewCarousel() {
 
   return (
     <div
-      className="w-full"
+      className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-main-bg-dark shadow-md p-5 select-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
-      <div
-        className="transition-opacity duration-250"
-        style={{ opacity: fading ? 0 : 1 }}
-      >
-        {/* Stars */}
-        <div className="flex items-center gap-0.5 mb-2">
+      {/* Header: stars + trustpilot label */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-0.5">
           {[...Array(5)].map((_, i) => (
             <FaStar key={i} className="w-3.5 h-3.5 text-yellow-400" />
           ))}
-          <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">Trustpilot</span>
         </div>
+        <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">Trustpilot</span>
+      </div>
 
-        {/* Quote */}
-        <p className="text-sm text-primary-text dark:text-primary-text-light leading-relaxed italic min-h-[4.5rem]">
+      {/* Quote */}
+      <div
+        className="transition-opacity duration-250 min-h-[5rem]"
+        style={{ opacity: fading ? 0 : 1 }}
+      >
+        <p className="text-sm text-primary-text dark:text-primary-text-light leading-relaxed italic">
           &ldquo;{review.quote}&rdquo;
         </p>
-
-        {/* Name + date */}
-        <p className="mt-2 text-xs font-semibold text-gray-500 dark:text-gray-400">
+        <p className="mt-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
           {review.name} &middot; {review.date}
         </p>
       </div>
 
-      {/* Dot indicators */}
-      <div className="flex gap-1.5 mt-3">
-        {reviews.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            aria-label={`Review ${i + 1}`}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === current
-                ? 'w-4 bg-primary'
-                : 'w-1.5 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
-            }`}
-          />
-        ))}
+      {/* Footer: dots + next button */}
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
+        <div className="flex gap-1.5">
+          {reviews.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              aria-label={`Review ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === current
+                  ? 'w-4 bg-primary'
+                  : 'w-1.5 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
+              }`}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={next}
+          className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary-dark transition-colors"
+          aria-label="Next review"
+        >
+          Next review
+          <FiChevronRight className="w-3.5 h-3.5" />
+        </button>
       </div>
     </div>
   );
