@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { FaStar } from 'react-icons/fa';
 
 const reviews = [
@@ -50,6 +50,7 @@ export default function ReviewCarousel() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const [fading, setFading] = useState(false);
+  const touchStartX = useRef<number | null>(null);
 
   const next = useCallback(() => {
     setFading(true);
@@ -64,6 +65,29 @@ export default function ReviewCarousel() {
     const timer = setInterval(next, 4500);
     return () => clearInterval(timer);
   }, [paused, next]);
+
+  const prev = useCallback(() => {
+    setFading(true);
+    setTimeout(() => {
+      setCurrent(p => (p - 1 + reviews.length) % reviews.length);
+      setFading(false);
+    }, 250);
+  }, []);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    setPaused(true);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 40) {
+      delta > 0 ? next() : prev();
+    }
+    touchStartX.current = null;
+    setPaused(false);
+  };
 
   const goTo = (index: number) => {
     setFading(true);
@@ -80,6 +104,8 @@ export default function ReviewCarousel() {
       className="w-full"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <div
         className="transition-opacity duration-250"
