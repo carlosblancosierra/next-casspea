@@ -188,9 +188,6 @@ const HeroSection = () => (
         </p>
       </div>
       <div className="lg:col-span-6 lg:pl-8">
-        <div className="hidden lg:block mb-6 mt-2">
-          <ReviewCarousel />
-        </div>
         <h1
           className={`${playfair.className} mb-2 text-5xl text-primary-text font-bold tracking-tight leading-none lg:text-8xl dark:text-white hidden lg:block`}
         >
@@ -207,6 +204,9 @@ const HeroSection = () => (
           flavours.
         </p>
         <ButtonGroup />
+        <div className="hidden lg:block mt-6">
+          <ReviewCarousel />
+        </div>
       </div>
     </div>
   </section>
