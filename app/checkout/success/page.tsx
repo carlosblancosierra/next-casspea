@@ -1,23 +1,57 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation';
 import CheckoutSuccessUnitsSold from '@/components/checkout/CheckoutSuccessUnitsSold';
+import { useGetEmbeddedCheckoutSessionResultQuery } from '@/redux/features/checkout/checkoutApiSlice';
+import { getStoredUTMs } from '@/lib/utm';
 
 const ConfirmPage: React.FC = () => {
-    const params = useParams<{ session_id: string }>()
-    const sessionId = params?.session_id;
-    
-    useEffect(() => {
-        if (typeof window !== 'undefined' && (window as any).gtag && typeof (window as any).gtag === 'function') {
+    const searchParams = useSearchParams();
+    const sessionId = searchParams?.get('session_id') ?? undefined;
+    const hasFiredRef = useRef(false);
 
-            (window as any).gtag('event', 'purchase', {
+    const { data } = useGetEmbeddedCheckoutSessionResultQuery(sessionId ?? '', {
+        skip: !sessionId,
+    });
+
+    useEffect(() => {
+        if (hasFiredRef.current) return;
+        if (!sessionId) return;
+        if (typeof window === 'undefined') return;
+
+        const gtag = (window as any).gtag;
+        if (typeof gtag !== 'function') return;
+
+        // Wait for session data if still loading; fire immediately if no value available
+        const amountTotal = data?.amount_total;
+        const value = typeof amountTotal === 'number' ? amountTotal / 100 : undefined;
+        const currency = data?.currency?.toUpperCase() ?? 'GBP';
+
+        const utms = getStoredUTMs();
+
+        // GA4 purchase event with value and channel attribution params
+        gtag('event', 'purchase', {
+            transaction_id: sessionId,
+            ...(value !== undefined && { value, currency }),
+            ...utms,
+        });
+
+        // Google Ads conversion event
+        const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID;
+        const adsLabel = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL;
+        if (adsId && adsLabel) {
+            gtag('event', 'conversion', {
+                send_to: `${adsId}/${adsLabel}`,
                 transaction_id: sessionId,
+                ...(value !== undefined && { value, currency }),
             });
         }
-    }, []);
+
+        hasFiredRef.current = true;
+    }, [sessionId, data]);
 
     return (
         <section className="main-bg dark:bg-main-bg-dark">
@@ -34,7 +68,7 @@ const ConfirmPage: React.FC = () => {
                             className="rounded-lg w-full h-full"
                         />
                     </div>
-                    
+
 
                     {/* Content Section */}
                     <div className="flex flex-col md:ml-10 lg:text-left text-center gap-2 md:gap-10 justify-start h-full mt-4">

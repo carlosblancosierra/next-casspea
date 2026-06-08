@@ -8,6 +8,8 @@ import AnnouncementBar from '@/components/common/AnnouncementBar';
 import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
 import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+import UTMCapture from '@/components/utils/UTMCapture';
 
 // Available effects - add new effects here
 type EffectType = 'snow' | 'heart' | 'autumn' | 'none';
@@ -101,6 +103,9 @@ export default function RootLayout({
         <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="7ef907d7-ea0d-4a43-beec-ca187e2ea5cd" data-blockingmode="auto" type="text/javascript"></script>
         <Provider>
           <Setup />
+          <Suspense fallback={null}>
+            <UTMCapture />
+          </Suspense>
           {/* <GiveawayPopup /> */}
           <LayoutWrapper>
             <div className="flex flex-col min-h-screen relative z-1">
