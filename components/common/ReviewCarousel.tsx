@@ -77,11 +77,7 @@ export default function ReviewCarousel() {
 
   const handleDragEnd = (_event: any, info: any) => {
     if (Math.abs(info.offset.x) > 50) {
-      if (info.offset.x > 0) {
-        prev();
-      } else {
-        next();
-      }
+      info.offset.x > 0 ? prev() : next();
     } else {
       controls.start({
         x: `${-current * 100}%`,
@@ -91,48 +87,54 @@ export default function ReviewCarousel() {
   };
 
   return (
-    <div
-      className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-main-bg-dark shadow-md p-5 select-none overflow-hidden"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      {/* Header: stars + trustpilot label */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-0.5">
-          {[...Array(5)].map((_, i) => (
-            <FaStar key={i} className="w-3.5 h-3.5 text-yellow-400" />
+    <div className="w-full select-none">
+      {/* Viewport — clips the sliding strip */}
+      <div className="overflow-hidden rounded-2xl">
+        <motion.div
+          drag="x"
+          dragElastic={0.15}
+          onDragStart={() => setPaused(true)}
+          onDragEnd={(e, info) => {
+            handleDragEnd(e, info);
+            setPaused(false);
+          }}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          animate={controls}
+          className="flex cursor-grab active:cursor-grabbing"
+          style={{ x: 0 }}
+        >
+          {reviews.map((review, i) => (
+            <div
+              key={i}
+              className="min-w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-main-bg-dark shadow-md p-5"
+            >
+              {/* Stars + Trustpilot */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-0.5">
+                  {[...Array(5)].map((_, j) => (
+                    <FaStar key={j} className="w-3.5 h-3.5 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">Trustpilot</span>
+              </div>
+
+              {/* Quote */}
+              <p className="text-sm text-primary-text dark:text-primary-text-light leading-relaxed italic">
+                &ldquo;{review.quote}&rdquo;
+              </p>
+
+              {/* Name + date */}
+              <p className="mt-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                {review.name} &middot; {review.date}
+              </p>
+            </div>
           ))}
-        </div>
-        <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">Trustpilot</span>
+        </motion.div>
       </div>
 
-      {/* Sliding strip */}
-      <motion.div
-        drag="x"
-        dragElastic={0.15}
-        onDragStart={() => setPaused(true)}
-        onDragEnd={(e, info) => {
-          handleDragEnd(e, info);
-          setPaused(false);
-        }}
-        animate={controls}
-        className="flex cursor-grab active:cursor-grabbing min-h-[5rem]"
-        style={{ x: 0 }}
-      >
-        {reviews.map((review, i) => (
-          <div key={i} className="min-w-full">
-            <p className="text-sm text-primary-text dark:text-primary-text-light leading-relaxed italic">
-              &ldquo;{review.quote}&rdquo;
-            </p>
-            <p className="mt-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
-              {review.name} &middot; {review.date}
-            </p>
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Footer: dots + next button */}
-      <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
+      {/* Controls — outside the sliding area */}
+      <div className="flex items-center justify-between mt-3 px-1">
         <div className="flex gap-1.5">
           {reviews.map((_, i) => (
             <button
@@ -147,7 +149,6 @@ export default function ReviewCarousel() {
             />
           ))}
         </div>
-
         <button
           onClick={next}
           className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary-dark transition-colors"
