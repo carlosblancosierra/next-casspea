@@ -64,8 +64,28 @@ export default function RootLayout({
           `}
         </Script>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'CassPea Chocolates',
+              url: 'https://www.casspea.co.uk',
+              logo: 'https://www.casspea.co.uk/logos/red.png',
+              email: 'info@casspea.co.uk',
+              telephone: '+447859790386',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: '104 Bedford Hill',
+                addressLocality: 'London',
+                postalCode: 'SW12 9HR',
+                addressCountry: 'GB',
+              },
+            }),
+          }}
+        />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet"></link>
       </head>
       <body
         className={`${inter.className} min-h-screen bg-main-bg dark:bg-main-bg-dark dark:text-white flex flex-col relative`}
@@ -123,7 +143,7 @@ export default function RootLayout({
               <main className="flex-grow pt-2 pb-16 md:pb-0 mx-4">
                 {children}
               </main>
-              <div className="hidden md:block">
+              <div className="pb-16 md:pb-0">
                 <Footer />
               </div>
               {CURRENT_EFFECT !== 'none' && <CurrentEffect />}

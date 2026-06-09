@@ -1,4 +1,11 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Help & FAQs',
+    description: 'Shipping, storage, allergens, bespoke orders and more — everything you need to know about CassPea handcrafted chocolates. Free UK shipping over £50.',
+    alternates: { canonical: 'https://www.casspea.co.uk/help/' },
+};
 
 const faqs = [
     {
@@ -63,9 +70,23 @@ const faqs = [
     }
 ];
 
+const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(faq => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+};
+
 const HelpPage = () => {
     return (
         <div className=" dark:bg-main-bg-dark min-h-screen">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+            />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Contact Section */}
                 <section className="main-bg dark:bg-main-bg-dark rounded-lg shadow-sm p-6 mb-8">

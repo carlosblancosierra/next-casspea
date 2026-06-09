@@ -232,7 +232,7 @@ const LoadingSection = () => (
 
 export default function HomePage() {
   return (
-    <main className="dark:bg-main-bg-dark min-h-[100vh] max-w-screen-2xl md:mx-auto">
+    <div className="dark:bg-main-bg-dark min-h-[100vh] max-w-screen-2xl md:mx-auto">
       <HeroSection />
 
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
@@ -258,6 +258,6 @@ export default function HomePage() {
       <Section title="Hot Chocolate" extraClass="mt-5">
         <CategoryProducts categorySlug="hot-chocolate" />
       </Section>
-    </main>
+    </div>
   );
 }

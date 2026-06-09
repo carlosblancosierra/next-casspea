@@ -4,6 +4,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import Image from 'next/image';
+import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 
 // Change this constant to switch logo paths
 const LOGO_PATH = '/logos/red.png';
@@ -28,7 +29,8 @@ function classNames(...classes: string[]) {
 }
 
 export default function Nav() {
-  // const cart = useSelector(selectCart);
+  const { data: cart } = useGetCartQuery();
+  const totalItems = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
 
   return (
     <Disclosure as="nav" className="bg-main-bg dark:bg-main-bg-dark border-b border-gray-200 dark:border-gray-700">
@@ -103,9 +105,11 @@ export default function Nav() {
                     aria-hidden="true"
                     className="h-6 w-6 text-primary-text group-hover:text-primary-text dark:text-primary-text-light dark:group-hover:text-white"
                   />
-                  {/* <span className="ml-2 text-xs font-medium text-primary-text group-hover:text-primary-text dark:text-primary-text-light dark:group-hover:text-white">
-                    {totalItems} (£{totalValue.toFixed(2)})
-                  </span> */}
+                  {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
+                      {totalItems}
+                    </span>
+                  )}
                   <span className="sr-only">items in cart, view bag</span>
                 </Link>
 
