@@ -1,4 +1,7 @@
-import React, { Suspense } from 'react';
+'use client';
+
+import React, { Suspense, useEffect } from 'react';
+import { trackViewItem } from '@/lib/analytics';
 import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 import { notFound } from 'next/navigation';
 import ProductInfo from '@/components/product_detail/ProductInfo';
@@ -17,6 +20,17 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 	const { data, isLoading, error } = useGetProductsQuery();
 	// Default to an empty array if data is undefined
 	const products: Product[] = data ?? [];
+
+	useEffect(() => {
+		const viewed = products.find((p) => p.slug === slug);
+		if (viewed) {
+			trackViewItem({
+				item_id: viewed.id,
+				item_name: viewed.name,
+				price: parseFloat(viewed.current_price || viewed.base_price || '0') || undefined,
+			});
+		}
+	}, [slug, data]);
 
 	if (isLoading) {
 		return <div className="text-primary-text">Loading products...</div>;

@@ -20,6 +20,7 @@ import SelectableProductCard from '@/components/store/SelectableProductCard';
 import SelectableGiftCard from '@/components/store/SelectableGiftCard';
 import GiftMessage from '@/components/cart/GiftMessage';
 import { ID_MAP, LOVE_SLEEVE_PRODUCT_ID, LOVE_SLEEVE_PRICE } from '@/components/packs/constants';
+import { trackAddToCart } from '@/lib/analytics';
 
 interface ProductInfoProps {
     product: ProductType;
@@ -301,6 +302,12 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             if (shouldTreatAsPack && loveSleeve) {
                 await addToCart({ product: LOVE_SLEEVE_PRODUCT_ID, quantity: 1 }).unwrap();
             }
+            trackAddToCart({
+                item_id: product.id,
+                item_name: product.name,
+                price: parseFloat(product.current_price || product.base_price || '0') || undefined,
+                quantity: 1,
+            });
             toast.success(shouldTreatAsPack ? 'Pack added to cart successfully!' : 'Box added to cart successfully!');
             router.push('/cart');
         } catch (error) {

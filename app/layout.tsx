@@ -32,8 +32,17 @@ const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'CassPea Premium Chocolates',
-  description: 'Handcrafted premium chocolates and confectionery',
+  metadataBase: new URL('https://www.casspea.co.uk'),
+  title: {
+    default: 'CassPea Premium Chocolates',
+    template: '%s | CassPea',
+  },
+  description: 'Luxury handcrafted chocolates and gift boxes, made in London. Over 20 exquisite flavours for birthdays, corporate gifts and celebrations.',
+  openGraph: {
+    siteName: 'CassPea Chocolates',
+    type: 'website',
+    locale: 'en_GB',
+  },
 };
 
 

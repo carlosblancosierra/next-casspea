@@ -8,6 +8,7 @@ import { Product as ProductType } from '@/types/products';
 import { useAddCartItemMutation } from "@/redux/features/carts/cartApiSlice";
 import ColoredList from "../common/ColoredList";
 import AllergenSelection from './AllergenSelection';
+import { trackAddToCart } from '@/lib/analytics';
 
 interface ProductFormGeneralProps {
     product: ProductType;
@@ -43,6 +44,13 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
 
             // Actually call the mutation
             await addToCart(cartItemRequest).unwrap();
+
+            trackAddToCart({
+                item_id: product.id,
+                item_name: product.name,
+                price: parseFloat(product.current_price || product.base_price || '0') || undefined,
+                quantity,
+            });
 
             // Feedback to user, then redirect to cart
             toast.success(`${product.name} added to cart!`);

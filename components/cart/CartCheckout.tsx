@@ -10,6 +10,7 @@ import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/c
 import { CartUpdate } from '@/types/carts';
 import Link from 'next/link';
 import { useUpdateSessionMutation, useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
+import { trackBeginCheckout } from '@/lib/analytics';
 
 export default function CartCheckout() {
 
@@ -106,6 +107,8 @@ export default function CartCheckout() {
             }
 
             await updateSession({ email: emailToUse }).unwrap();
+
+            trackBeginCheckout(parseFloat(cart.discounted_total) || undefined);
 
             router.push(`/checkout/gift-card`);
 

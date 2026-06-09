@@ -213,8 +213,16 @@ const HeroSection = () => (
 );
 
 export const metadata: Metadata = {
-  title: 'CassPea Hand Crafted Chocolates',
-  description: '',
+  title: 'CassPea | Luxury Handcrafted Chocolate Gifts, Made in London',
+  description: 'Award-worthy handcrafted chocolate gift boxes with over 20 exquisite flavours, made in London. Perfect for birthdays, corporate gifts and special celebrations. Free UK delivery options.',
+  alternates: { canonical: 'https://www.casspea.co.uk/' },
+  openGraph: {
+    title: 'CassPea | Luxury Handcrafted Chocolate Gifts',
+    description: 'Handcrafted chocolate gift boxes with over 20 exquisite flavours, made in London.',
+    url: 'https://www.casspea.co.uk/',
+    type: 'website',
+    images: [{ url: 'https://www.casspea.co.uk/home/2026/01/1.jpg' }],
+  },
 };
 
 // Loading placeholder component
