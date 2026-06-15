@@ -311,8 +311,8 @@ export default function FathersDayPreBuild() {
   }
 
   return (
-    <section id="build-dads-box" className="scroll-mt-24 py-12">
-      <div className="max-w-5xl mx-auto">
+    <section id="build-dads-box" className="scroll-mt-24 py-12 overflow-x-hidden">
+      <div className="max-w-5xl mx-auto w-full">
         <div className="text-center mb-8">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-amber-600 dark:text-amber-400 mb-2">
             Father&apos;s Day · Ready in minutes
@@ -329,7 +329,7 @@ export default function FathersDayPreBuild() {
         <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-main-bg dark:bg-main-bg-dark shadow-sm overflow-hidden">
           <div className="grid lg:grid-cols-2">
             {/* Left: choices */}
-            <div className="p-6 md:p-8 space-y-8 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-700">
+            <div className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-700 min-w-0 overflow-x-hidden">
               {/* Step 1: box type */}
               <div>
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-primary-text dark:text-primary-text-light mb-3">
@@ -429,11 +429,13 @@ export default function FathersDayPreBuild() {
                       <p className="text-xs font-medium text-primary-text dark:text-primary-text-light mb-2">
                         Chocolate bark
                       </p>
-                      <OptionRow
-                        items={barks}
-                        selectedId={chocolateBark?.id ?? null}
-                        onSelect={setChocolateBark}
-                      />
+                      <div className="overflow-hidden">
+                        <OptionRow
+                          items={barks}
+                          selectedId={chocolateBark?.id ?? null}
+                          onSelect={setChocolateBark}
+                        />
+                      </div>
                     </div>
                   )}
 
@@ -442,11 +444,13 @@ export default function FathersDayPreBuild() {
                       <p className="text-xs font-medium text-primary-text dark:text-primary-text-light mb-2">
                         Hot chocolate
                       </p>
-                      <OptionRow
-                        items={hotChocolates}
-                        selectedId={hotChocolate?.id ?? null}
-                        onSelect={setHotChocolate}
-                      />
+                      <div className="overflow-hidden">
+                        <OptionRow
+                          items={hotChocolates}
+                          selectedId={hotChocolate?.id ?? null}
+                          onSelect={setHotChocolate}
+                        />
+                      </div>
                     </div>
                   )}
 
@@ -455,13 +459,15 @@ export default function FathersDayPreBuild() {
                       <p className="text-xs font-medium text-primary-text dark:text-primary-text-light mb-2">
                         Gift card (optional)
                       </p>
-                      <OptionRow
-                        items={giftCards}
-                        selectedId={giftCard?.id ?? null}
-                        onSelect={setGiftCard}
-                        allowNone
-                        noneLabel="No card"
-                      />
+                      <div className="overflow-hidden">
+                        <OptionRow
+                          items={giftCards}
+                          selectedId={giftCard?.id ?? null}
+                          onSelect={setGiftCard}
+                          allowNone
+                          noneLabel="No card"
+                        />
+                      </div>
                       {giftCard && (
                         <textarea
                           value={giftMessage}
@@ -497,24 +503,26 @@ export default function FathersDayPreBuild() {
                     ? `Add ${remainingChocolates} more to fill the box, or clear all to let us surprise him.`
                     : 'Box full — ready to go. Swap any flavour you like.'}
                 </p>
-                <FlavourPicker
-                  flavours={flavours}
-                  remainingChocolates={remainingChocolates}
-                  maxChocolates={size}
-                  handleAddFlavour={handleAddFlavour}
-                  handleFlavourChange={handleFlavourChange}
-                  incrementQuantity={incrementQuantity}
-                  decrementQuantity={decrementQuantity}
-                  deleteFlavour={deleteFlavour}
-                  handleDeleteAllFlavours={handleDeleteAllFlavours}
-                  selectedAllergens={[]}
-                  availableFlavours={flavoursData}
-                />
+                <div className="w-full overflow-x-hidden">
+                  <FlavourPicker
+                    flavours={flavours}
+                    remainingChocolates={remainingChocolates}
+                    maxChocolates={size}
+                    handleAddFlavour={handleAddFlavour}
+                    handleFlavourChange={handleFlavourChange}
+                    incrementQuantity={incrementQuantity}
+                    decrementQuantity={decrementQuantity}
+                    deleteFlavour={deleteFlavour}
+                    handleDeleteAllFlavours={handleDeleteAllFlavours}
+                    selectedAllergens={[]}
+                    availableFlavours={flavoursData}
+                  />
+                </div>
               </div>
             </div>
 
             {/* Right: summary + CTA */}
-            <div className="p-6 md:p-8 bg-slate-50 dark:bg-slate-900/40 flex flex-col">
+            <div className="p-4 sm:p-6 md:p-8 bg-slate-50 dark:bg-slate-900/40 flex flex-col min-w-0">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-primary-text dark:text-primary-text-light mb-4">
                 Your Father&apos;s Day box
               </h3>
