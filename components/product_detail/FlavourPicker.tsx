@@ -91,12 +91,12 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     };
 
     return (
-        <div className='rounded md:px-3'>
+        <div className='rounded md:px-3 w-full'>
             {/* Selected Flavours List */}
-            <div className="selected-flavours max-w-[400px]">
+            <div className="selected-flavours w-full max-w-full">
                 {flavours.map((flavour, index) => (
-                    <div key={flavour.flavor.id} className="flavour-item flex items-center mt-4">
-                        <div className="flavour-info flex-grow text-left grid grid-cols-4">
+                    <div key={flavour.flavor.id} className="flavour-item flex items-center mt-4 min-w-0">
+                        <div className="flavour-info flex-grow min-w-0 text-left grid grid-cols-4">
                             <div className="col-span-1 pr-3">
                                 {flavour.flavor.image && (
                                     <Image
