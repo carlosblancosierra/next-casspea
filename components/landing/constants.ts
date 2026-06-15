@@ -1,11 +1,14 @@
 export const LANDING_TYPES = {
   GOLD: 'gold',
   BLUE: 'blue',
+  FATHERS_DAY: 'fathersday',
 };
 
 export const goldGradient = 'gradient-radial-gold'
 
 export const blueGradient = 'gradient-45-blue-4'
+
+export const fathersDayGradient = 'gradient-fathers-day'
 
 export const HERO_SECTION_TEXT_BASE = {
   heading: 'Share the Love, One Bonbon at a Time',
@@ -34,6 +37,25 @@ export const HERO_SECTION_DEFAULTS_BLUE = {
   socialBgClass: blueGradient,
   leadCaptureBgClass: blueGradient,
   ...HERO_SECTION_TEXT_BASE,
+};
+
+export const HERO_SECTION_TEXT_FATHERS_DAY = {
+  heading: 'Gift Dad Something Unforgettable',
+  subheading: 'Curated handmade chocolate boxes, built for Father’s Day.',
+  mainBtnLabel: 'Build Dad’s box',
+  mainBtnAriaLabel: 'Build Dad’s box',
+  secondaryBtnLabel: 'Explore Our Store',
+  secondaryBtnAriaLabel: 'Explore Our Store',
+};
+
+export const HERO_SECTION_DEFAULTS_FATHERS_DAY = {
+  bgImage: '/landings/intro/bg-blue.jpg',
+  overlayClassName: 'bg-black/50',
+  ctaBgClass: fathersDayGradient,
+  ctaTextClass: 'text-white',
+  socialBgClass: fathersDayGradient,
+  leadCaptureBgClass: fathersDayGradient,
+  ...HERO_SECTION_TEXT_FATHERS_DAY,
 };
 
 export const PERSONALISED_TEXT = {
@@ -74,6 +96,17 @@ export const LANDING_CONFIG = {
     leadCaptureTheme: 'blue',
     leadCaptureBgClass: HERO_SECTION_DEFAULTS_BLUE.leadCaptureBgClass,
     socialBgClass: HERO_SECTION_DEFAULTS_BLUE.socialBgClass,
+    personalisedColors: PERSONALISED_STEPS_BLUE_COLORS,
+    personalisedText: PERSONALISED_TEXT,
+    // Add more config as needed
+  },
+  fathersday: {
+    type: LANDING_TYPES.FATHERS_DAY,
+    gradient: fathersDayGradient,
+    hero: HERO_SECTION_DEFAULTS_FATHERS_DAY,
+    leadCaptureTheme: 'fathersday',
+    leadCaptureBgClass: HERO_SECTION_DEFAULTS_FATHERS_DAY.leadCaptureBgClass,
+    socialBgClass: HERO_SECTION_DEFAULTS_FATHERS_DAY.socialBgClass,
     personalisedColors: PERSONALISED_STEPS_BLUE_COLORS,
     personalisedText: PERSONALISED_TEXT,
     // Add more config as needed
