@@ -28,7 +28,7 @@ export default function HomeProductsGrid({ products }: { products: Product[] }) 
                             variants={variants}
                             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                         >
-                            <ProductCard product={product} />
+                            <ProductCard product={product} hidePrice />
                         </motion.div>
                     ))}
                 </AnimatePresence>
