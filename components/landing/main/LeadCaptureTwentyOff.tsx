@@ -13,8 +13,19 @@ export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffPro
   const [subscribeGenericLead, { isLoading: apiLoading, isError, error }] = useSubscribeGenericLeadMutation();
   const router = useRouter();
 
-  // Gold and blue theme classes
-  const themeClasses = config.leadCaptureTheme === 'gold'
+  // Gold, blue and Father's Day theme classes
+  const themeClasses = config.leadCaptureTheme === 'fathersday'
+    ? {
+        section: 'border-slate-300 dark:border-slate-700',
+        heading: 'text-3xl md:text-4xl font-extrabold text-white mb-2 text-center',
+        subheading: 'text-lg text-white/90 mb-2 text-center',
+        note: 'text-base text-white/80 mb-4 text-center font-medium',
+        input: 'w-full sm:w-auto flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 dark:bg-slate-800 dark:border-slate-600 dark:text-white',
+        button: 'px-6 py-3 rounded-lg bg-amber-600 text-white font-semibold shadow hover:bg-amber-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed',
+        privacy: 'text-xs text-white/80 mt-3 text-center',
+        privacyLink: 'underline hover:text-amber-200 dark:hover:text-amber-300',
+      }
+    : config.leadCaptureTheme === 'gold'
     ? {
         section: 'border-yellow-200 dark:border-yellow-700',
         heading: 'text-3xl md:text-4xl font-extrabold text-white mb-2 text-center',
@@ -39,11 +50,14 @@ export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffPro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    const code = config.leadCaptureTheme === 'gold' ? 'GOLD' : 'BLUE';
+    // Father's Day reuses the GOLD lead/discount until a dedicated code exists in the backend.
+    const code = config.leadCaptureTheme === 'blue' ? 'BLUE' : 'GOLD';
     try {
       await subscribeGenericLead({ email, lead_type: 'landing_page', form_code: code }).unwrap();
       setEmail('');
-      if (code === 'GOLD') {
+      if (config.leadCaptureTheme === 'fathersday') {
+        router.push('/landing/fathers-day/thank-you');
+      } else if (code === 'GOLD') {
         router.push('/landing/gold/thank-you');
       } else {
         router.push('/landing/blue/thank-you');
