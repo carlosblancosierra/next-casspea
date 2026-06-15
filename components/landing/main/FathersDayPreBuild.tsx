@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Playfair_Display } from 'next/font/google';
@@ -8,11 +9,12 @@ import { FiCheck, FiGift, FiPackage, FiRefreshCw, FiShoppingCart } from 'react-i
 
 import FlavourPicker from '@/components/product_detail/FlavourPicker';
 import Spinner from '@/components/common/Spinner';
-import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
+import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
-import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice';
+import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { ID_MAP, PRICE_MAP } from '@/components/packs/constants';
 import { Flavour as FlavourType } from '@/types/flavours';
+import { Product } from '@/types/products';
 import { CartItemBoxFlavorSelection, CartItemRequest } from '@/types/carts';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
@@ -42,18 +44,105 @@ function buildPrebuild(size: number, curated: FlavourType[]): CartItemBoxFlavorS
 
 const money = (value: number) => `£${value.toFixed(2)}`;
 
+/** Compact horizontally-scrollable selectable option row for pack extras. */
+function OptionRow({
+  items,
+  selectedId,
+  onSelect,
+  allowNone,
+  noneLabel = 'None',
+}: {
+  items: Product[];
+  selectedId: number | null;
+  onSelect: (p: Product | null) => void;
+  allowNone?: boolean;
+  noneLabel?: string;
+}) {
+  return (
+    <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
+      {allowNone && (
+        <button
+          type="button"
+          onClick={() => onSelect(null)}
+          aria-pressed={selectedId === null}
+          className={`shrink-0 snap-start w-24 rounded-lg border-2 p-2 text-center transition-colors ${
+            selectedId === null
+              ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/40'
+              : 'border-gray-200 dark:border-gray-700 hover:border-amber-300'
+          }`}
+        >
+          <div className="h-16 flex items-center justify-center text-xs text-primary-text dark:text-primary-text-light">
+            {noneLabel}
+          </div>
+        </button>
+      )}
+      {items.map(p => {
+        const selected = p.id === selectedId;
+        return (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => onSelect(p)}
+            aria-pressed={selected}
+            className={`shrink-0 snap-start w-24 rounded-lg border-2 p-2 text-left transition-colors ${
+              selected
+                ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/40'
+                : 'border-gray-200 dark:border-gray-700 hover:border-amber-300'
+            }`}
+          >
+            <div className="relative h-16 w-full rounded overflow-hidden bg-gray-100 dark:bg-slate-800">
+              {p.image && (
+                <Image src={p.image} alt={p.name} fill sizes="96px" className="object-cover" />
+              )}
+              {selected && (
+                <span className="absolute top-1 right-1 bg-amber-500 text-white rounded-full p-0.5">
+                  <FiCheck size={12} />
+                </span>
+              )}
+            </div>
+            <p className="mt-1 text-[11px] leading-tight text-primary-text dark:text-primary-text-light line-clamp-2">
+              {p.name}
+            </p>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function FathersDayPreBuild() {
   const router = useRouter();
-  const { data: products, isLoading: productsLoading } = useGetActiveProductsQuery();
+  const { data: products, isLoading: productsLoading } = useGetProductsQuery();
   const { data: flavoursData, isLoading: flavoursLoading } = useGetFlavoursQuery();
   const [addToCart, { isLoading: adding }] = useAddCartItemMutation();
+  const [updateCart] = useUpdateCartMutation();
 
   const [size, setSize] = useState<number>(15);
   const [indulgent, setIndulgent] = useState<boolean>(true);
   const [flavours, setFlavours] = useState<CartItemBoxFlavorSelection[]>([]);
 
+  // Pack extras (only used when indulgent)
+  const [chocolateBark, setChocolateBark] = useState<Product | null>(null);
+  const [hotChocolate, setHotChocolate] = useState<Product | null>(null);
+  const [giftCard, setGiftCard] = useState<Product | null>(null);
+  const [giftMessage, setGiftMessage] = useState<string>('');
+
+  const inStock = (p: Product) => p.active !== false && !p.sold_out;
+
   const signatureBoxes = useMemo(
     () => (products ?? []).filter(p => p.category?.slug === 'signature-boxes'),
+    [products]
+  );
+  const barks = useMemo(
+    () => (products ?? []).filter(p => p.category?.slug === 'chocolate-barks' && inStock(p)),
+    [products]
+  );
+  const hotChocolates = useMemo(
+    () => (products ?? []).filter(p => p.category?.slug === 'hot-chocolate' && inStock(p)),
+    [products]
+  );
+  const giftCards = useMemo(
+    () => (products ?? []).filter(p => p.category?.slug === 'gift-cards' && inStock(p)),
     [products]
   );
   const boxForSize = (s: number) => signatureBoxes.find(p => p.units_per_box === s);
@@ -81,6 +170,14 @@ export default function FathersDayPreBuild() {
   useEffect(() => {
     setFlavours(buildPrebuild(size, curatedFlavours));
   }, [size, curatedFlavours]);
+
+  // Pre-select sensible pack-extra defaults so the box stays "quick" to add.
+  useEffect(() => {
+    if (chocolateBark === null && barks.length) setChocolateBark(barks[0]);
+  }, [barks, chocolateBark]);
+  useEffect(() => {
+    if (hotChocolate === null && hotChocolates.length) setHotChocolate(hotChocolates[0]);
+  }, [hotChocolates, hotChocolate]);
 
   const selectedCount = flavours.reduce((acc, f) => acc + f.quantity, 0);
   const remainingChocolates = Math.max(0, size - selectedCount);
@@ -151,7 +248,8 @@ export default function FathersDayPreBuild() {
   const plainAvailable = Boolean(boxForSize(size));
 
   // ---- Add to cart ----
-  const canAddToCart = (isFull || isSurprise) && (indulgent ? packAvailable : plainAvailable) && !adding;
+  const canAddToCart =
+    (isFull || isSurprise) && (indulgent ? packAvailable : plainAvailable) && !adding;
 
   const handleAddToCart = async () => {
     const fillsBox = isFull;
@@ -170,7 +268,13 @@ export default function FathersDayPreBuild() {
       request = {
         product: packId,
         quantity: 1,
-        pack_customization: { selection_type: selectionType, flavor_selections: flavorSelections },
+        pack_customization: {
+          selection_type: selectionType,
+          flavor_selections: flavorSelections,
+          chocolate_bark: chocolateBark?.id ?? undefined,
+          hot_chocolate: hotChocolate?.id ?? undefined,
+          gift_card: giftCard?.id ?? undefined,
+        },
       };
     } else {
       const box = boxForSize(size);
@@ -186,12 +290,15 @@ export default function FathersDayPreBuild() {
     }
 
     try {
+      if (indulgent && giftCard && giftMessage.trim() !== '') {
+        await updateCart({ gift_message: giftMessage }).unwrap();
+      }
       await addToCart(request).unwrap();
       toast.success("Dad's box added to your cart!");
       router.push('/cart');
     } catch (error) {
       toast.error('Failed to add to cart. Please try again.');
-      console.error('Father\'s Day add to cart error:', error);
+      console.error("Father's Day add to cart error:", error);
     }
   };
 
@@ -204,7 +311,7 @@ export default function FathersDayPreBuild() {
   }
 
   return (
-    <section id="build-dads-box" className="scroll-mt-24 py-12 px-4">
+    <section id="build-dads-box" className="scroll-mt-24 py-12">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-amber-600 dark:text-amber-400 mb-2">
@@ -219,10 +326,10 @@ export default function FathersDayPreBuild() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-main-bg-dark shadow-sm overflow-hidden">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-main-bg dark:bg-main-bg-dark shadow-sm overflow-hidden">
           <div className="grid lg:grid-cols-2">
             {/* Left: choices */}
-            <div className="p-6 md:p-8 space-y-8 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
+            <div className="p-6 md:p-8 space-y-8 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-700">
               {/* Step 1: box type */}
               <div>
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-primary-text dark:text-primary-text-light mb-3">
@@ -236,7 +343,7 @@ export default function FathersDayPreBuild() {
                     className={`text-left rounded-xl border-2 p-4 transition-colors ${
                       indulgent
                         ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/40'
-                        : 'border-gray-200 dark:border-gray-700 hover:border-amber-300'
+                        : 'border-slate-200 dark:border-slate-700 hover:border-amber-300'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -254,13 +361,13 @@ export default function FathersDayPreBuild() {
                     aria-pressed={!indulgent}
                     className={`text-left rounded-xl border-2 p-4 transition-colors ${
                       !indulgent
-                        ? 'border-primary bg-primary/10'
-                        : 'border-gray-200 dark:border-gray-700 hover:border-primary/60'
+                        ? 'border-slate-700 bg-slate-100 dark:border-slate-400 dark:bg-slate-800'
+                        : 'border-slate-200 dark:border-slate-700 hover:border-slate-400'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <FiPackage className="text-primary" size={20} />
-                      {!indulgent && <FiCheck className="text-primary" />}
+                      <FiPackage className="text-slate-700 dark:text-slate-300" size={20} />
+                      {!indulgent && <FiCheck className="text-slate-700 dark:text-slate-300" />}
                     </div>
                     <p className="mt-2 font-bold text-primary-text dark:text-white">Just the Box</p>
                     <p className="text-xs text-primary-text dark:text-primary-text-light mt-1">
@@ -277,11 +384,13 @@ export default function FathersDayPreBuild() {
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {BOX_SIZES.map(s => {
-                    const price = indulgent ? PRICE_MAP[s] : (() => {
-                      const b = signatureBoxes.find(p => p.units_per_box === s);
-                      const raw = b?.current_price ?? b?.base_price;
-                      return raw ? Number(raw) : undefined;
-                    })();
+                    const price = indulgent
+                      ? PRICE_MAP[s]
+                      : (() => {
+                          const b = signatureBoxes.find(p => p.units_per_box === s);
+                          const raw = b?.current_price ?? b?.base_price;
+                          return raw ? Number(raw) : undefined;
+                        })();
                     const selected = s === size;
                     return (
                       <button
@@ -292,7 +401,7 @@ export default function FathersDayPreBuild() {
                         className={`rounded-xl border-2 py-3 px-2 text-center transition-colors ${
                           selected
                             ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/40'
-                            : 'border-gray-200 dark:border-gray-700 hover:border-amber-300'
+                            : 'border-slate-200 dark:border-slate-700 hover:border-amber-300'
                         }`}
                       >
                         <p className="font-bold text-lg text-primary-text dark:text-white">{s}</p>
@@ -308,16 +417,75 @@ export default function FathersDayPreBuild() {
                 </div>
               </div>
 
-              {/* Step 3: flavours */}
+              {/* Step 3 (indulgent only): pack extras */}
+              {indulgent && (
+                <div className="space-y-5">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-primary-text dark:text-primary-text-light">
+                    3. Add the indulgent extras
+                  </h3>
+
+                  {barks.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-primary-text dark:text-primary-text-light mb-2">
+                        Chocolate bark
+                      </p>
+                      <OptionRow
+                        items={barks}
+                        selectedId={chocolateBark?.id ?? null}
+                        onSelect={setChocolateBark}
+                      />
+                    </div>
+                  )}
+
+                  {hotChocolates.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-primary-text dark:text-primary-text-light mb-2">
+                        Hot chocolate
+                      </p>
+                      <OptionRow
+                        items={hotChocolates}
+                        selectedId={hotChocolate?.id ?? null}
+                        onSelect={setHotChocolate}
+                      />
+                    </div>
+                  )}
+
+                  {giftCards.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-primary-text dark:text-primary-text-light mb-2">
+                        Gift card (optional)
+                      </p>
+                      <OptionRow
+                        items={giftCards}
+                        selectedId={giftCard?.id ?? null}
+                        onSelect={setGiftCard}
+                        allowNone
+                        noneLabel="No card"
+                      />
+                      {giftCard && (
+                        <textarea
+                          value={giftMessage}
+                          onChange={e => setGiftMessage(e.target.value)}
+                          placeholder="Add a message for Dad (optional)…"
+                          rows={2}
+                          className="mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-main-bg dark:bg-slate-800 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Step 4: flavours */}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-semibold uppercase tracking-wide text-primary-text dark:text-primary-text-light">
-                    3. Dad&apos;s flavours
+                    {indulgent ? '4.' : '3.'} Dad&apos;s flavours
                   </h3>
                   <button
                     type="button"
                     onClick={resetToDadsPicks}
-                    className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 dark:text-amber-300 hover:underline"
                   >
                     <FiRefreshCw size={12} /> Reset to our picks
                   </button>
@@ -346,7 +514,7 @@ export default function FathersDayPreBuild() {
             </div>
 
             {/* Right: summary + CTA */}
-            <div className="p-6 md:p-8 bg-gray-50 dark:bg-slate-900/40 flex flex-col">
+            <div className="p-6 md:p-8 bg-slate-50 dark:bg-slate-900/40 flex flex-col">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-primary-text dark:text-primary-text-light mb-4">
                 Your Father&apos;s Day box
               </h3>
@@ -368,16 +536,34 @@ export default function FathersDayPreBuild() {
                   </dd>
                 </div>
                 {indulgent && (
-                  <div className="flex justify-between">
-                    <dt className="text-primary-text dark:text-primary-text-light">Includes</dt>
-                    <dd className="font-medium text-primary-text dark:text-white text-right">
-                      Bark + hot chocolate
-                    </dd>
-                  </div>
+                  <>
+                    {chocolateBark && (
+                      <div className="flex justify-between">
+                        <dt className="text-primary-text dark:text-primary-text-light">Bark</dt>
+                        <dd className="font-medium text-primary-text dark:text-white text-right">
+                          {chocolateBark.name}
+                        </dd>
+                      </div>
+                    )}
+                    {hotChocolate && (
+                      <div className="flex justify-between">
+                        <dt className="text-primary-text dark:text-primary-text-light">Hot chocolate</dt>
+                        <dd className="font-medium text-primary-text dark:text-white text-right">
+                          {hotChocolate.name}
+                        </dd>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <dt className="text-primary-text dark:text-primary-text-light">Gift card</dt>
+                      <dd className="font-medium text-primary-text dark:text-white text-right">
+                        {giftCard ? giftCard.name : 'None'}
+                      </dd>
+                    </div>
+                  </>
                 )}
               </dl>
 
-              <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-end justify-between">
+              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-end justify-between">
                 <span className="text-primary-text dark:text-primary-text-light">Total</span>
                 <span className={`${playfair.className} text-3xl font-bold text-primary-text dark:text-white`}>
                   {displayPrice !== undefined ? money(displayPrice) : '—'}

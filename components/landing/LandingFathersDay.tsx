@@ -1,15 +1,19 @@
 // LandingFathersDay: Father's Day themed landing with quick-buy pre-built box
 'use client';
 
+import { Playfair_Display } from 'next/font/google';
 import HeroSection from './main/HeroSection';
 import FathersDayPreBuild from './main/FathersDayPreBuild';
+import MobileBuildCTA from './main/MobileBuildCTA';
 import LeadCaptureTwentyOff from './main/LeadCaptureTwentyOff';
 import WhyChooseUs from './main/WhyChooseUs';
 import FlavourGrid from './main/FlavourGrid';
-import Personalised from './main/Personalised';
 import Testimonials from './main/Testimonials';
 import Instagram from './main/Instagram';
+import ReviewCarousel from '@/components/common/ReviewCarousel';
 import { LANDING_CONFIG } from './constants';
+
+const playfair = Playfair_Display({ subsets: ['latin'] });
 
 export default function LandingFathersDay() {
   const config = LANDING_CONFIG.fathersday;
@@ -17,12 +21,18 @@ export default function LandingFathersDay() {
     <main className="bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text">
       <HeroSection config={config} />
       <FathersDayPreBuild />
+      <section className="py-10">
+        <h2 className={`text-center text-2xl font-bold mb-4 text-primary-text dark:text-primary-text-light ${playfair.className}`}>
+          What dads (and gifters) say
+        </h2>
+        <ReviewCarousel />
+      </section>
       <LeadCaptureTwentyOff config={config} />
       <WhyChooseUs config={config} />
       <FlavourGrid />
-      <Personalised config={config} />
       <Testimonials config={config} />
       <Instagram />
+      <MobileBuildCTA />
     </main>
   );
 }
