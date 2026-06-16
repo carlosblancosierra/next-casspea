@@ -6,6 +6,9 @@ const shippingApiSlice = apiSlice.injectEndpoints({
         getShippingOptions: builder.query<ShippingCompany[], void>({
             query: () => '/shipping/options/',
             transformResponse: (response: ShippingCompany[]) => response,
+            // Prices include the cart-total shipping discount, so this must be
+            // refetched whenever the cart changes (cart mutations invalidate it).
+            providesTags: ['ShippingOptions'],
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
