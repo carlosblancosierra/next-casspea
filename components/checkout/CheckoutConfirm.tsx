@@ -28,7 +28,11 @@ const CheckoutConfirm = () => {
         refetchOnMountOrArgChange: true
     });
     const { data: cart, isLoading: cartLoading, error: cartError } = useGetCartQuery();
-    const { data: shippingCompanies, isLoading: isShippingLoading } = useGetShippingOptionsQuery();
+    const { data: shippingCompanies, isLoading: isShippingLoading } = useGetShippingOptionsQuery(undefined, {
+        // Shipping prices depend on the live cart total (discount), so always
+        // refetch when landing on checkout rather than serving a stale cache.
+        refetchOnMountOrArgChange: true,
+    });
 
     const [createStripeSession] = useCreateStripeCheckoutSessionMutation();
     const [updateShippingOption] = useUpdateShippingOptionMutation();

@@ -144,6 +144,7 @@ export const apiSlice = createApi({
   tagTypes: [
     'Cart',
     'CheckoutSession',
+    'ShippingOptions',
     'Addresses',
     'Templates',
     'Flavours',

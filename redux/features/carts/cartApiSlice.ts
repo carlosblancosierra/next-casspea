@@ -16,7 +16,7 @@ const cartApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: cart,
             }),
-            invalidatesTags: ['Cart'],
+            invalidatesTags: ['Cart', 'ShippingOptions'],
         }),
 
         addCartItem: builder.mutation<CartItem, CartItemRequest>({
@@ -25,7 +25,7 @@ const cartApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: cartItem,
             }),
-            invalidatesTags: ['Cart'],
+            invalidatesTags: ['Cart', 'ShippingOptions'],
         }),
         updateCartItem: builder.mutation<CartItem, { id: number; cartItem: Partial<CartItem> }>({
             query: ({ id, cartItem }) => ({
@@ -33,14 +33,14 @@ const cartApiSlice = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: cartItem,
             }),
-            invalidatesTags: ['Cart'],
+            invalidatesTags: ['Cart', 'ShippingOptions'],
         }),
         deleteCartItem: builder.mutation<{ success: boolean }, number>({
             query: (id) => ({
                 url: `/carts/items/${id}/`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['Cart'],
+            invalidatesTags: ['Cart', 'ShippingOptions'],
         }),
         changeCartItemQuantity: builder.mutation<CartItem, { id: number; quantity: number }>({
             query: ({ id, quantity }) => ({
@@ -48,7 +48,7 @@ const cartApiSlice = apiSlice.injectEndpoints({
                 method: 'PATCH',
                 body: { quantity }
             }),
-            invalidatesTags: ['Cart'],
+            invalidatesTags: ['Cart', 'ShippingOptions'],
         }),
 
         removeCartItem: builder.mutation<void, number>({
@@ -56,7 +56,7 @@ const cartApiSlice = apiSlice.injectEndpoints({
                 url: `/carts/items/${id}/remove/`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['Cart'],
+            invalidatesTags: ['Cart', 'ShippingOptions'],
         }),
     }),
 });
