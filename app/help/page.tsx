@@ -93,7 +93,7 @@ const HelpPage = () => {
                 <section className="main-bg dark:bg-main-bg-dark rounded-lg shadow-sm p-6 mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="text-center p-4  dark:bg-main-bg-dark rounded-lg">
-                            <h3 className="font-bold text-primary dark:text-primary-2">FREE SHIPPING</h3>
+                            <h3 className="font-bold text-primary dark:text-primary-2">£5 OFF SHIPPING</h3>
                             <p className="text-primary-text dark:text-primary-text-light">On all orders over £55</p>
                         </div>
                         <div className="text-center p-4 dark:bg-main-bg-dark rounded-lg">
