@@ -10,7 +10,7 @@ interface SubscribeRequest {
 }
 
 export type LeadType = 'newsletter' | 'contact_form' | 'landing_page' | 'giveaway';
-export type FormCode = 'GOLD' | 'BLUE' | 'TM7' | null;
+export type FormCode = 'GOLD' | 'BLUE' | 'TM7' | 'FATHERS26' | null;
 
 export interface GenericLeadSubscribeRequest {
   email: string;

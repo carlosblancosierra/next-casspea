@@ -50,8 +50,11 @@ export default function LeadCaptureTwentyOff({ config }: LeadCaptureTwentyOffPro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Father's Day reuses the GOLD lead/discount until a dedicated code exists in the backend.
-    const code = config.leadCaptureTheme === 'blue' ? 'BLUE' : 'GOLD';
+    // Each theme maps to the backend campaign code that drives the welcome email + discount code.
+    const code: FormCode =
+      config.leadCaptureTheme === 'fathersday' ? 'FATHERS26'
+      : config.leadCaptureTheme === 'blue' ? 'BLUE'
+      : 'GOLD';
     try {
       await subscribeGenericLead({ email, lead_type: 'landing_page', form_code: code }).unwrap();
       setEmail('');

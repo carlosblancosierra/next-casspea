@@ -8,7 +8,7 @@ export default function FathersDayThankYouPage() {
         You&apos;re all set for Father&apos;s Day. Here is your exclusive code:
       </p>
       <div className="text-2xl md:text-3xl font-mono font-bold bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 px-6 py-3 rounded-lg shadow mb-4 select-all">
-        LandingGold20
+        FATHERS26
       </div>
       <p className="text-base text-primary-text dark:text-primary-text">
         Use this code at checkout for 15% off your first order. Check your email for confirmation and more details!
