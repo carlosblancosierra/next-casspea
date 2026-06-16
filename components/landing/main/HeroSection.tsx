@@ -12,14 +12,24 @@ const playfair = Playfair_Display({ subsets: ['latin'] });
 
 interface HeroSectionProps {
   config: typeof import('../constants').LANDING_CONFIG.gold;
+  ctaHref?: string;
+  ctaLabel?: string;
 }
 
 // Button group for hero section
-const ButtonGroup = ({ config }: { config: typeof import('../constants').LANDING_CONFIG.gold }) => (
+const ButtonGroup = ({
+  config,
+  ctaHref,
+  ctaLabel,
+}: {
+  config: typeof import('../constants').LANDING_CONFIG.gold;
+  ctaHref: string;
+  ctaLabel: string;
+}) => (
   <div className="hidden lg:flex gap-2">
     <a
-      href="#enter-form"
-      aria-label={config.hero.mainBtnAriaLabel.replace('20%', '15%')}
+      href={ctaHref}
+      aria-label={ctaLabel}
       className={`
         inline-flex items-center justify-center px-8 py-4 mr-3 text-xl font-medium text-primary-button-text rounded-lg
         transition-colors focus:ring-4 focus:ring-primary-light
@@ -27,7 +37,7 @@ const ButtonGroup = ({ config }: { config: typeof import('../constants').LANDING
         ${config.hero.ctaTextClass}
       `}
     >
-      Get 15% off
+      {ctaLabel}
       <svg
         className="w-5 h-5 ml-2 -mr-1"
         fill="currentColor"
@@ -49,7 +59,11 @@ const LoadingSection = () => (
   <div className="w-full animate-pulse bg-gray-200 dark:bg-main-bg-dark rounded-lg" />
 );
 
-export default function HeroSection({ config }: HeroSectionProps) {
+export default function HeroSection({
+  config,
+  ctaHref = '#enter-form',
+  ctaLabel = 'Get 15% off',
+}: HeroSectionProps) {
   return (
     <section className="dark:bg-main-bg-dark">
       <div className="grid grid-cols-1 lg:grid-cols-12 mx-auto lg:gap-8 xl:gap-0 lg:pb-8 relative">
@@ -118,7 +132,7 @@ export default function HeroSection({ config }: HeroSectionProps) {
             chocolatiers, every bite is a work of art and a journey through inspired
             flavours.
           </p>
-          <ButtonGroup config={config} />
+          <ButtonGroup config={config} ctaHref={ctaHref} ctaLabel={ctaLabel} />
         </div>
       </div>
     </section>
