@@ -19,6 +19,13 @@ export default function LandingFathersDay() {
   return (
     <main className="bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text">
       <HeroSection config={config} ctaHref="#build-dads-box" ctaLabel="Build Dad's box" />
+      <div className="gradient-fathers-day text-white">
+        <p className="max-w-5xl mx-auto px-4 py-3 text-center text-sm md:text-base">
+          <span className="font-medium">Father&apos;s Day treat —</span> use code{' '}
+          <span className="font-mono font-bold bg-white/20 rounded px-2 py-0.5 select-all">FATHERS26</span>{' '}
+          at checkout
+        </p>
+      </div>
       <FathersDayPreBuild />
       <section className="py-10">
         <h2 className={`text-center text-2xl font-bold mb-4 text-primary-text dark:text-primary-text-light ${playfair.className}`}>
