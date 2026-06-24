@@ -7,10 +7,9 @@ import Image from 'next/image';
 interface ProductCardProps {
     product: ProductType;
     useAlternateImage?: boolean;
-    hidePrice?: boolean;
 }
 
-export default function ProductCard({ product, useAlternateImage = false, hidePrice = false }: ProductCardProps) {
+export default function ProductCard({ product, useAlternateImage = false }: ProductCardProps) {
     const { discountedPrice, discount_percentage } = useProductDiscountedPrice(product.id, product);
     // Use the alternate image if available and requested
     const displayImage = useAlternateImage && product.gallery_images && product.gallery_images.length > 0 
@@ -34,17 +33,15 @@ export default function ProductCard({ product, useAlternateImage = false, hidePr
                     />
                 )}
             </div>
-            {!hidePrice && (
-                discountedPrice ? (
-                    <p className="text-md font-medium text-primary-text dark:text-primary-text-light mt-4">
-                        ￡ {discountedPrice}
-                        <span className="ml-1 text-xs line-through text-primary-text dark:text-primary-text-light">￡ {product.current_price}</span>
-                    </p>
-                ) : (
-                    <p className="text-md font-medium text-primary-text dark:text-primary-text-light mt-4">￡ {product.current_price}</p>
-                )
+            {discountedPrice ? (
+                <p className="text-md font-medium text-primary-text dark:text-primary-text-light mt-4">
+                    ￡ {discountedPrice}
+                    <span className="ml-1 text-xs line-through text-primary-text dark:text-primary-text-light">￡ {product.current_price}</span>
+                </p>
+            ) : (
+                <p className="text-md font-medium text-primary-text dark:text-primary-text-light mt-4">￡ {product.current_price}</p>
             )}
-            <div className={`flex justify-between ${hidePrice ? 'mt-4' : 'mt-1'}`}>
+            <div className="flex justify-between mt-1">
                 <div>
                     <h3 className="text-xs md:text-sm text-primary-text dark:text-primary-text-light h-12">
                         {product.name}
