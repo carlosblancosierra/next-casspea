@@ -50,7 +50,7 @@ const HomeProducts: React.FC<HomeProductsProps> = ({
 							variants={productVariants}
 							transition={{ type: 'spring', stiffness: 300, damping: 30 }}
 						>
-							<ProductCard product={product} hidePrice />
+							<ProductCard product={product} />
 						</motion.div>
 					))}
 				</AnimatePresence>
