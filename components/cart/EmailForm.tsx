@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useValidateEmail as validateEmail } from '@/utils/useValidateEmail';
 
 interface EmailFormProps {
     onValidEmail: (email: string) => void;
@@ -10,11 +11,6 @@ interface EmailFormProps {
 export default function EmailForm({ onValidEmail, initialEmail = '' }: EmailFormProps) {
     const [email, setEmail] = useState(initialEmail);
     const [isValid, setIsValid] = useState(true);
-
-    const validateEmail = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
 
     useEffect(() => {
         if (initialEmail) {
@@ -29,10 +25,15 @@ export default function EmailForm({ onValidEmail, initialEmail = '' }: EmailForm
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newEmail = e.target.value;
         setEmail(newEmail);
+        // Don't nag while the user is still typing
         setIsValid(true);
         if (validateEmail(newEmail)) {
             onValidEmail(newEmail);
         }
+    };
+
+    const handleBlur = () => {
+        setIsValid(email === '' || validateEmail(email));
     };
 
     return (
@@ -45,6 +46,7 @@ export default function EmailForm({ onValidEmail, initialEmail = '' }: EmailForm
                     autoComplete="email"
                     value={email}
                     onChange={handleEmailChange}
+                    onBlur={handleBlur}
                     placeholder="Enter your email address"
                     className={`w-full border rounded-md px-3 py-2
                         text-primary-text dark:text-primary-text-light
@@ -57,7 +59,7 @@ export default function EmailForm({ onValidEmail, initialEmail = '' }: EmailForm
                     required
                 />
                 {!isValid && (
-                    <p className="text-primary-text dark:text-primary-text-light text-sm">
+                    <p role="alert" className="text-red-600 dark:text-red-400 text-sm">
                         Please enter a valid email address
                     </p>
                 )}

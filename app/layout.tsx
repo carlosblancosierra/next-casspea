@@ -30,8 +30,26 @@ const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'CassPea Premium Chocolates',
-  description: 'Handcrafted premium chocolates and confectionery',
+  metadataBase: new URL('https://www.casspea.co.uk'),
+  title: {
+    default: 'CassPea Premium Chocolates',
+    template: '%s | CassPea',
+  },
+  description:
+    'Luxury chocolate gifts handcrafted in London. Over 20 exquisite flavours in signature gift boxes, personalised chocolates, barks and hot chocolate. UK delivery.',
+  openGraph: {
+    type: 'website',
+    siteName: 'CassPea',
+    locale: 'en_GB',
+    url: 'https://www.casspea.co.uk',
+    title: 'CassPea Premium Chocolates',
+    description:
+      'Luxury chocolate gifts handcrafted in London. Signature gift boxes, personalised chocolates and more.',
+    images: [{ url: '/home/2026/01/1.jpg', width: 1200, height: 1200, alt: 'CassPea handcrafted chocolates' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
 };
 
 
