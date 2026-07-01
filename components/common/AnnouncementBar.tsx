@@ -96,7 +96,7 @@ export default function AnnouncementBar() {
           {renderContactInfo()}
           
           <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
-            £5 off shipping over £60
+            Free shipping over £60
           </p>
           
           <Link
