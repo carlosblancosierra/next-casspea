@@ -2,30 +2,10 @@ import { useState, useEffect } from 'react';
 import { addBusinessDays, format } from 'date-fns';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
+import type { ShippingCompany, ShippingOption } from '@/types/shipping';
 
-export interface ShippingOption {
-    id: number;
-    name: string;
-    delivery_speed: string;
-    price: string; // Now returns discounted price as string
-    original_price?: string;
-    discounted_price?: string;
-    discount_amount?: string;
-    estimated_days_min: number;
-    estimated_days_max: number;
-    description: string;
-    disabled: boolean;
-    disabled_reason: string;
-}
-
-export interface ShippingCompany {
-    id: number;
-    name: string;
-    code: string;
-    website: string;
-    track_url: string;
-    shipping_options: ShippingOption[];
-}
+// Re-exported for existing imports of these types from this module.
+export type { ShippingCompany, ShippingOption };
 
 interface Slot {
     start: string;

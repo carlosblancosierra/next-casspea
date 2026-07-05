@@ -1,6 +1,7 @@
 import React from 'react';
 import ConfirmCartItem from '@/components/cart/ConfirmCartItem';
 import { CartItem as CartItemType } from '@/types/carts';
+import { formatCurrency } from '@/utils/currency';
 
 interface ConfirmCartItemTableProps {
   cartEntries: CartItemType[];
@@ -8,7 +9,10 @@ interface ConfirmCartItemTableProps {
 }
 
 const ConfirmCartItemTable: React.FC<ConfirmCartItemTableProps> = ({ cartEntries, shippingCost }) => {
-  const subtotal = cartEntries.reduce((acc, item) => acc + item.product.current_price * item.quantity, 0);
+  const subtotal = cartEntries.reduce(
+    (acc, item) => acc + parseFloat(item.product.current_price ?? '0') * item.quantity,
+    0
+  );
   const total = subtotal + shippingCost;
 
   return (
@@ -22,9 +26,9 @@ const ConfirmCartItemTable: React.FC<ConfirmCartItemTableProps> = ({ cartEntries
       {/* Shipping and Total */}
       <div className="flex justify-end space-x-4 mt-4">
         <div className="text-right">
-          <p className="text-primary-text dark:text-primary-text-light">Subtotal: <span className="font-semibold">£{subtotal.toFixed(2)}</span></p>
-          <p className="text-primary-text dark:text-primary-text-light">Shipping: <span className="font-semibold">£{shippingCost.toFixed(2)}</span></p>
-          <p className="text-lg font-bold text-primary-text dark:text-primary-text-light">Total: <span className="font-semibold">£{total.toFixed(2)}</span></p>
+          <p className="text-primary-text dark:text-primary-text-light">Subtotal: <span className="font-semibold">{formatCurrency(subtotal)}</span></p>
+          <p className="text-primary-text dark:text-primary-text-light">Shipping: <span className="font-semibold">{formatCurrency(shippingCost)}</span></p>
+          <p className="text-lg font-bold text-primary-text dark:text-primary-text-light">Total: <span className="font-semibold">{formatCurrency(total)}</span></p>
         </div>
       </div>
     </div>
