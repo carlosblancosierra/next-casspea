@@ -1,31 +1,16 @@
 import { useState, useEffect } from 'react';
-import { addBusinessDays, format } from 'date-fns';
+import { format } from 'date-fns';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
-
-export interface ShippingOption {
-    id: number;
-    name: string;
-    delivery_speed: string;
-    price: string; // Now returns discounted price as string
-    original_price?: string;
-    discounted_price?: string;
-    discount_amount?: string;
-    estimated_days_min: number;
-    estimated_days_max: number;
-    description: string;
-    disabled: boolean;
-    disabled_reason: string;
-}
-
-export interface ShippingCompany {
-    id: number;
-    name: string;
-    code: string;
-    website: string;
-    track_url: string;
-    shipping_options: ShippingOption[];
-}
+import ShippingDateSelector from './ShippingDateSelector';
+import {
+    DISPATCH_HOLD,
+    getDeliveryWindow,
+    getEarliestShipDate,
+    isDispatchHoldActive,
+    parseLocalDateStr,
+} from '@/utils/shippingDate';
+import { ShippingCompany, ShippingOption } from '@/types/shipping';
 
 interface Slot {
     start: string;
@@ -38,13 +23,18 @@ interface CheckoutShippingOptionsProps {
     selectedOptionId?: number;
     onShippingOptionChange: (optionId: number) => Promise<void>;
     onChangeStorePickup?: (val: { date: Date; slot: Slot } | null) => void;
+    /** YYYY-MM-DD when the customer picked a shipping date, null for ASAP. */
+    shipDate?: string | null;
+    onShipDateChange?: (date: string | null) => void;
 }
 
 const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     shippingCompanies,
     selectedOptionId,
     onShippingOptionChange,
-    onChangeStorePickup
+    onChangeStorePickup,
+    shipDate = null,
+    onShipDateChange
 }) => {
     const [localSelectedOption, setLocalSelectedOption] = useState<string | null>(null);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -141,28 +131,38 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         }
     };
 
-    const getEstimatedDeliveryDates = (minDays: number, maxDays: number) => {
-        const now = new Date();
-        // Get current hour in UK time (handles GMT/BST automatically)
-        const ukHour = parseInt(
-            new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hour12: false, timeZone: 'Europe/London' }).format(now)
-        );
-        const SHIPPING_CUTOFF_HOUR = 10;
-        // Spring Bank Holiday + high temperature delay: all orders ship on 26 May 2026
-        const HOLIDAY_SHIP_DATE = new Date('2026-05-26T00:00:00+01:00');
-        const isHolidayPeriod = now < HOLIDAY_SHIP_DATE;
-        const shippingDate = isHolidayPeriod
-            ? HOLIDAY_SHIP_DATE
-            : ukHour < SHIPPING_CUTOFF_HOUR ? now : addBusinessDays(now, 1);
-        const minDeliveryDate = addBusinessDays(shippingDate, minDays);
-        const maxDeliveryDate = addBusinessDays(shippingDate, maxDays);
+    // All delivery estimates flow from the ship date the customer chose (or
+    // the earliest possible one for ASAP), so it is only shown once above.
+    const effectiveShipDate = shipDate ? parseLocalDateStr(shipDate) : getEarliestShipDate();
 
-        return {
-            shipping: format(shippingDate, 'EEE, d MMM'),
-            delivery: minDays === maxDays
-                ? format(minDeliveryDate, 'EEE, d MMM')
-                : `${format(minDeliveryDate, 'EEE, d MMM')} - ${format(maxDeliveryDate, 'EEE, d MMM')}`
-        };
+    const renderDeliveryEstimate = (option: ShippingOption) => {
+        const window = getDeliveryWindow(
+            effectiveShipDate,
+            option.estimated_days_min,
+            option.estimated_days_max
+        );
+
+        if (window.isExactDate) {
+            return (
+                <p className="flex items-center gap-1.5 text-sm">
+                    <svg className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-primary-text dark:text-primary-text-light">
+                        Delivered <strong>{format(window.from, 'EEEE d MMM')}</strong>
+                    </span>
+                    <span className="text-xs font-semibold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900/30 rounded-full px-2 py-0.5">
+                        Guaranteed date
+                    </span>
+                </p>
+            );
+        }
+
+        return (
+            <p className="text-sm text-primary-text dark:text-primary-text-light">
+                Estimated delivery: {format(window.from, 'EEE d MMM')} &ndash; {format(window.to, 'EEE d MMM')}
+            </p>
+        );
     };
 
     // Helper function to render shipping price with discount
@@ -218,17 +218,15 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
 
     if (!allShippingOptions.length && !deliveryType) return null;
 
-    const isHolidayPeriod = new Date() < new Date('2026-05-26T00:00:00+01:00');
-
     return (
         <div className="main-bg p-6 rounded-lg shadow dark:bg-main-bg-dark">
-            {isHolidayPeriod && (
+            {isDispatchHoldActive() && DISPATCH_HOLD && (
                 <div className="mb-4 rounded-md border border-amber-200 dark:border-amber-700 p-3 bg-amber-50 dark:bg-amber-900/20 flex items-start gap-2">
                     <svg className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                     </svg>
                     <p className="text-xs text-amber-800 dark:text-amber-200">
-                        Due to the Spring Bank Holiday &amp; high temperatures, all orders placed before 26 May will ship on <strong>Tuesday 26 May</strong>.
+                        {DISPATCH_HOLD.message}
                     </p>
                 </div>
             )}
@@ -293,7 +291,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     <div className="flex items-center justify-between mb-4">
                         <p className="text-sm text-primary-text dark:text-primary-text-light">
                             {deliveryType === 'shipping'
-                                ? 'Choose your preferred shipping method below.'
+                                ? 'Tell us when to ship, then pick your delivery speed.'
                                 : 'Pick up your order from our Bedford Hill store. Choose a convenient time slot.'
                             }
                         </p>
@@ -301,6 +299,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                             onClick={() => {
                                 setDeliveryType(null);
                                 setLocalSelectedOption(null);
+                                onShipDateChange?.(null);
                             }}
                             className="text-sm text-primary-text dark:text-primary-text-light hover:opacity-70 font-medium flex items-center"
                         >
@@ -311,11 +310,21 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                         </button>
                     </div>
 
+                    {deliveryType === 'shipping' && onShipDateChange && (
+                        <div className="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+                            <ShippingDateSelector value={shipDate} onChange={onShipDateChange} />
+                        </div>
+                    )}
+
                     {allShippingOptions.length > 0 && (
                         <div className="space-y-4">
+                            {deliveryType === 'shipping' && (
+                                <h3 className="text-base font-semibold text-primary-text dark:text-primary-text-light">
+                                    Delivery speed
+                                </h3>
+                            )}
                             {allShippingOptions.map((option) => {
                                 const isOptionDisabled = option.disabled;
-                                const dates = getEstimatedDeliveryDates(option.estimated_days_min, option.estimated_days_max);
                                 return (
                                     <label
                                         key={option.id}
@@ -342,23 +351,12 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                                     <p className="text-red-600 dark:text-red-400 text-sm">
                                                         {option.disabled_reason}
                                                     </p>
+                                                ) : option.id === 34 ? (
+                                                    <p className="text-primary-text dark:text-primary-text-light text-sm font-semibold">
+                                                        Pick up at 104 Bedford Hill, London, SW12 9HR
+                                                    </p>
                                                 ) : (
-                                                    <>
-                                                        {option.id === 34 ? (
-                                                            <p className="text-primary-text dark:text-primary-text-light text-sm font-semibold">
-                                                                Pick up at 104 Bedford Hill, London, SW12 9HR
-                                                            </p>
-                                                        ) : (
-                                                            <>
-                                                                <p className="text-primary-text dark:text-primary-text-light text-sm">
-                                                                    Ships: {dates.shipping}
-                                                                </p>
-                                                                <p className="text-primary-text dark:text-primary-text-light text-sm">
-                                                                    Estimated Delivery: {dates.delivery}
-                                                                </p>
-                                                            </>
-                                                        )}
-                                                    </>
+                                                    renderDeliveryEstimate(option)
                                                 )}
                                             </div>
                                         </div>
@@ -393,10 +391,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                             )}
                         </div>
                     )}
-
-                    {/* <p className="text-sm text-primary-text dark:text-primary-text-light mb-2">
-                        Due to the current high temperatures in the UK, we have temporarily disabled the Royal Mail - Tracked 48® service.
-                    </p> */}
                 </>
             )}
         </div>

@@ -14,13 +14,15 @@ import { toast } from 'react-toastify';
 import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
 import Spinner from '@/components/common/Spinner';
 import CartItem from '@/components/cart/CartItem';
-import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
+import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [selectedShippingOption, setSelectedShippingOption] = useState<number | undefined>(undefined);
     const [storePickup, setStorePickup] = useState<{ date: Date; slot: { start: string; end: string; value: string } } | null>(null);
+    // YYYY-MM-DD when the customer picked a shipping date, null for ASAP
+    const [shipDate, setShipDate] = useState<string | null>(null);
 
     const router = useRouter();
 
@@ -36,6 +38,7 @@ const CheckoutConfirm = () => {
 
     const [createStripeSession] = useCreateStripeCheckoutSessionMutation();
     const [updateShippingOption] = useUpdateShippingOptionMutation();
+    const [updateCart] = useUpdateCartMutation();
 
 
     const handleProceedToPayment = async () => {
@@ -53,6 +56,20 @@ const CheckoutConfirm = () => {
 
         try {
             setIsProcessing(true);
+
+            // Persist the customer's shipping date on the cart (null = ASAP)
+            if (selectedShippingOption !== 34) {
+                if (shipDate) {
+                    await updateCart({ shipping_date: shipDate }).unwrap();
+                } else if (cart?.shipping_date) {
+                    // Customer switched back to ASAP after a date was stored
+                    try {
+                        await updateCart({ shipping_date: null }).unwrap();
+                    } catch (clearErr) {
+                        console.warn('Could not clear shipping date:', clearErr);
+                    }
+                }
+            }
 
             // Prepare payload
             const payload: any = {
@@ -106,26 +123,10 @@ const CheckoutConfirm = () => {
         );
     }
 
-    const isHolidayPeriod = new Date() < new Date('2026-05-26T00:00:00+01:00');
-
     return (
         <div className=" dark:bg-main-bg-dark min-h-screen">
             <div className="max-w-7xl mx-auto px-0">
                 <div className="space-y-6">
-                    {isHolidayPeriod && (
-                        <div className="rounded-md border border-amber-200 dark:border-amber-700 p-4 bg-amber-50 dark:bg-amber-900/20 flex items-start gap-3">
-                            <svg className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                            </svg>
-                            <div>
-                                <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">Shipping Delay Notice</p>
-                                <p className="text-sm text-amber-700 dark:text-amber-300 mt-0.5">
-                                    Due to the Spring Bank Holiday &amp; high temperatures, all orders placed before 26 May will ship on <strong>Tuesday 26 May</strong>.
-                                </p>
-                            </div>
-                        </div>
-                    )}
-
                     <CheckoutDetails session={session} />
                     <CheckoutShippingOptions
                         shippingCompanies={shippingCompanies}
@@ -134,6 +135,8 @@ const CheckoutConfirm = () => {
                             setSelectedShippingOption(optionId);
                         }}
                         onChangeStorePickup={setStorePickup}
+                        shipDate={shipDate}
+                        onShipDateChange={setShipDate}
                     />
                     <button
                         onClick={handleProceedToPayment}

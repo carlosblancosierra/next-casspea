@@ -5,7 +5,7 @@ import { Discount } from '@/types/discounts';
 
 export interface CartUpdate {
     gift_message?: string;
-    shipping_date?: string;
+    shipping_date?: string | null;
     discount_code?: string;
     remove_discount?: boolean;
 }
