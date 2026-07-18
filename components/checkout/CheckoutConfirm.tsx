@@ -16,6 +16,8 @@ import Spinner from '@/components/common/Spinner';
 import CartItem from '@/components/cart/CartItem';
 import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
+import NewShippingPreviewBanner from '@/components/common/NewShippingPreviewBanner';
+import { useNewShippingFlow } from '@/hooks/useNewShippingFlow';
 
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -23,6 +25,9 @@ const CheckoutConfirm = () => {
     const [storePickup, setStorePickup] = useState<{ date: Date; slot: { start: string; end: string; value: string } } | null>(null);
     // YYYY-MM-DD when the customer picked a shipping date, null for ASAP
     const [shipDate, setShipDate] = useState<string | null>(null);
+
+    // New flow: shipping date is chosen here instead of on the cart page
+    const newShippingFlow = useNewShippingFlow();
 
     const router = useRouter();
 
@@ -57,8 +62,10 @@ const CheckoutConfirm = () => {
         try {
             setIsProcessing(true);
 
-            // Persist the customer's shipping date on the cart (null = ASAP)
-            if (selectedShippingOption !== 34) {
+            // New flow only: persist the shipping date on the cart (null = ASAP).
+            // In the old flow the date is set from the cart page, so it must
+            // not be touched here.
+            if (newShippingFlow && selectedShippingOption !== 34) {
                 if (shipDate) {
                     await updateCart({ shipping_date: shipDate }).unwrap();
                 } else if (cart?.shipping_date) {
@@ -137,7 +144,9 @@ const CheckoutConfirm = () => {
                         onChangeStorePickup={setStorePickup}
                         shipDate={shipDate}
                         onShipDateChange={setShipDate}
+                        newFlow={newShippingFlow}
                     />
+                    <NewShippingPreviewBanner />
                     <button
                         onClick={handleProceedToPayment}
                         disabled={isProcessing || !selectedShippingOption || (selectedShippingOption === 34 && !storePickup)}

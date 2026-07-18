@@ -26,6 +26,8 @@ interface CheckoutShippingOptionsProps {
     /** YYYY-MM-DD when the customer picked a shipping date, null for ASAP. */
     shipDate?: string | null;
     onShipDateChange?: (date: string | null) => void;
+    /** New shipping-date flow (selector + guaranteed/estimated delivery). */
+    newFlow?: boolean;
 }
 
 const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
@@ -34,7 +36,8 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     onShippingOptionChange,
     onChangeStorePickup,
     shipDate = null,
-    onShipDateChange
+    onShipDateChange,
+    newFlow = false
 }) => {
     const [localSelectedOption, setLocalSelectedOption] = useState<string | null>(null);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -141,6 +144,22 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
             option.estimated_days_min,
             option.estimated_days_max
         );
+
+        if (!newFlow) {
+            // Old flow: repeat the ship date per option, no guarantee badge
+            return (
+                <>
+                    <p className="text-primary-text dark:text-primary-text-light text-sm">
+                        Ships: {format(effectiveShipDate, 'EEE, d MMM')}
+                    </p>
+                    <p className="text-primary-text dark:text-primary-text-light text-sm">
+                        Estimated Delivery: {window.isExactDate
+                            ? format(window.from, 'EEE, d MMM')
+                            : `${format(window.from, 'EEE, d MMM')} - ${format(window.to, 'EEE, d MMM')}`}
+                    </p>
+                </>
+            );
+        }
 
         if (window.isExactDate) {
             return (
@@ -291,7 +310,9 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     <div className="flex items-center justify-between mb-4">
                         <p className="text-sm text-primary-text dark:text-primary-text-light">
                             {deliveryType === 'shipping'
-                                ? 'Tell us when to ship, then pick your delivery speed.'
+                                ? (newFlow
+                                    ? 'Tell us when to ship, then pick your delivery speed.'
+                                    : 'Choose your preferred shipping method below.')
                                 : 'Pick up your order from our Bedford Hill store. Choose a convenient time slot.'
                             }
                         </p>
@@ -310,7 +331,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                         </button>
                     </div>
 
-                    {deliveryType === 'shipping' && onShipDateChange && (
+                    {newFlow && deliveryType === 'shipping' && onShipDateChange && (
                         <div className="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
                             <ShippingDateSelector value={shipDate} onChange={onShipDateChange} />
                         </div>
@@ -318,7 +339,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
 
                     {allShippingOptions.length > 0 && (
                         <div className="space-y-4">
-                            {deliveryType === 'shipping' && (
+                            {newFlow && deliveryType === 'shipping' && (
                                 <h3 className="text-base font-semibold text-primary-text dark:text-primary-text-light">
                                     Delivery speed
                                 </h3>
