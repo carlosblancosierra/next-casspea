@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     useGetSessionQuery,
@@ -45,6 +45,11 @@ const CheckoutConfirm = () => {
     const [updateShippingOption] = useUpdateShippingOptionMutation();
     const [updateCart] = useUpdateCartMutation();
 
+    // Stable so the child's selection-reconciliation effect doesn't re-run on
+    // every parent render.
+    const handleShippingOptionChange = useCallback(async (optionId: number) => {
+        setSelectedShippingOption(optionId);
+    }, []);
 
     const handleProceedToPayment = async () => {
         if (isProcessing) return;
@@ -56,6 +61,13 @@ const CheckoutConfirm = () => {
         // Validate store pickup selection
         if (selectedShippingOption === 34 && !storePickup) {
             toast.error('Please select a pickup date and time slot');
+            return;
+        }
+
+        // Guard against a missing checkout session: sending id 0 would hit
+        // /checkout/session/0/... and fail with no useful feedback.
+        if (!session?.id) {
+            toast.error('Your checkout session has expired. Please refresh the page and try again.');
             return;
         }
 
@@ -88,7 +100,7 @@ const CheckoutConfirm = () => {
             }
 
             await updateShippingOption({
-                checkoutSessionId: session?.id || 0,
+                checkoutSessionId: session.id,
                 data: payload
             }).unwrap();
 
@@ -97,10 +109,16 @@ const CheckoutConfirm = () => {
             if (response?.url) {
                 await new Promise(resolve => setTimeout(resolve, 500));
                 window.location.href = response.url;
+            } else {
+                // The request succeeded but returned no redirect URL (e.g. a
+                // Stripe hiccup). Don't leave the button stuck on "Processing"
+                // with no feedback — surface an error so the customer can retry.
+                toast.error('We could not start the payment. Please try again.');
+                setIsProcessing(false);
             }
 
             // router.push('/checkout/embedded');
-        
+
         } catch (err) {
             toast.error('Failed to process payment');
             console.error('Payment processing failed:', err);
@@ -138,9 +156,7 @@ const CheckoutConfirm = () => {
                     <CheckoutShippingOptions
                         shippingCompanies={shippingCompanies}
                         selectedOptionId={selectedShippingOption}
-                        onShippingOptionChange={async (optionId: number) => {
-                            setSelectedShippingOption(optionId);
-                        }}
+                        onShippingOptionChange={handleShippingOptionChange}
                         onChangeStorePickup={setStorePickup}
                         shipDate={shipDate}
                         onShipDateChange={setShipDate}

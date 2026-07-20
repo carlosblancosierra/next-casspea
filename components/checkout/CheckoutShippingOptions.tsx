@@ -10,6 +10,7 @@ import {
     isDispatchHoldActive,
     parseLocalDateStr,
 } from '@/utils/shippingDate';
+import { reconcileShippingSelection } from '@/utils/shippingSelection';
 import { ShippingCompany, ShippingOption } from '@/types/shipping';
 
 interface Slot {
@@ -68,17 +69,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         }))
     ) || [];
 
-    // Auto-select option when delivery type changes
-    useEffect(() => {
-        if (deliveryType && allShippingOptions.length > 0 && !localSelectedOption) {
-            const firstEnabled = allShippingOptions.find(opt => !opt.disabled);
-            if (firstEnabled) {
-                setLocalSelectedOption(firstEnabled.id.toString());
-                onShippingOptionChange(firstEnabled.id);
-            }
-        }
-    }, [deliveryType, allShippingOptions, localSelectedOption, onShippingOptionChange]);
-
     // Filter by delivery type
     if (deliveryType === 'pickup') {
         allShippingOptions = allShippingOptions.filter(option => option.id === 34); // Store pickup option
@@ -108,16 +98,20 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         return a.disabled ? 1 : -1;
     });
 
-    // Set default option if none selected, and never select a disabled option (only when no delivery type is selected)
+    // Keep the selection valid at all times. This both sets an initial default
+    // and, crucially, heals the selection when a refetch removes or disables the
+    // option the customer had selected (discount price changes, summer toggles,
+    // free-option de-duplication). Without this the parent keeps a stale option
+    // id, the pay button stays enabled, and the payment fails on the backend.
     useEffect(() => {
-        if (allShippingOptions.length && !localSelectedOption && !deliveryType) {
-            const firstEnabled = allShippingOptions.find(opt => !opt.disabled);
-            if (firstEnabled) {
-                setLocalSelectedOption(firstEnabled.id.toString());
-                onShippingOptionChange(firstEnabled.id);
-            }
+        if (allShippingOptions.length === 0) return;
+        const currentId = localSelectedOption ? parseInt(localSelectedOption, 10) : null;
+        const nextId = reconcileShippingSelection(allShippingOptions, currentId);
+        if (nextId !== null && nextId !== currentId) {
+            setLocalSelectedOption(nextId.toString());
+            onShippingOptionChange(nextId);
         }
-    }, [allShippingOptions, localSelectedOption, deliveryType]);
+    }, [allShippingOptions, localSelectedOption, onShippingOptionChange]);
 
     const handleShippingChange = async (optionId: string) => {
         if (isUpdating) return;
