@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
 
-const SUMMER_BREAK_CATEGORY = '/shop-now/categories/summer-break-boxes';
+const SUMMER_BREAK_CATEGORY = '/landing/summer-break';
 
 export default function SummerBreakPopup() {
   const [show, setShow] = useState(false);
