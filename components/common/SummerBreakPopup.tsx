@@ -6,12 +6,18 @@ import { useStoreStatus } from '@/hooks/useStoreStatus';
 
 const SUMMER_BREAK_CATEGORY = '/landing/summer-break';
 
+// Public announcement switch. Kept OFF while testing so the sale stays private
+// (reachable only via the direct /landing/summer-break link). Flip to `true`
+// to announce the sale to every visitor at launch.
+const ENABLED = false;
+
 export default function SummerBreakPopup() {
   const [show, setShow] = useState(false);
   const pathname = usePathname();
   const { isClosed, reopenLabel } = useStoreStatus();
 
   useEffect(() => {
+    if (!ENABLED) return;
     if (typeof window === 'undefined') return;
     if (sessionStorage.getItem('hideSummerBreakPopup') === 'true') return;
     const timer = setTimeout(() => setShow(true), 1200);
@@ -25,6 +31,7 @@ export default function SummerBreakPopup() {
     }
   };
 
+  if (!ENABLED) return null;
   if (pathname && pathname.startsWith('/landing')) return null;
   if (!show) return null;
 

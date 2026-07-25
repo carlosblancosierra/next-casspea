@@ -9,15 +9,6 @@ interface ProductCardProps {
     useAlternateImage?: boolean;
 }
 
-// Original (pre-25%-off) prices for the Summer Break clearance boxes, keyed by
-// number of chocolates, so the card can show the crossed-out "was" price.
-const SUMMER_BREAK_ORIGINALS: Record<number, string> = {
-    9: '14.99',
-    15: '24.99',
-    24: '39.99',
-    48: '74.99',
-};
-
 export default function ProductCard({ product, useAlternateImage = false }: ProductCardProps) {
     const { discountedPrice, discount_percentage } = useProductDiscountedPrice(product.id, product);
     // Use the alternate image if available and requested
@@ -26,8 +17,9 @@ export default function ProductCard({ product, useAlternateImage = false }: Prod
         : product.image;
 
     const isSummerBreakBox = product.category?.slug === 'summer-break-boxes';
-    const summerOriginal = isSummerBreakBox && product.units_per_box
-        ? SUMMER_BREAK_ORIGINALS[product.units_per_box]
+    // "Was" price comes straight from the product data (compare_at_price), not hardcoded.
+    const summerOriginal = isSummerBreakBox && product.compare_at_price
+        ? product.compare_at_price
         : undefined;
 
     return (

@@ -39,6 +39,7 @@ export interface Product {
     base_price?: string;
     stripe_price_id?: string;
     current_price?: string;
+    compare_at_price?: string | null;
     slug: string;
     weight?: number;  // in grams
     box_weight?: number;  // in grams

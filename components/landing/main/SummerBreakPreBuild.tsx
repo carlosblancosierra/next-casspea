@@ -4,7 +4,7 @@
 // Mirrors the Father's Day pre-build UX, but these boxes are "Surprise Me" only
 // (no flavour picking) — customers just pick a size and their allergens.
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Playfair_Display } from 'next/font/google';
@@ -19,16 +19,6 @@ import { Product } from '@/types/products';
 import { CartItemRequest } from '@/types/carts';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
-
-const BOX_SIZES = [9, 15, 24, 48];
-
-// Original (pre-25%-off) prices, so the summary can show the "was" price.
-const SUMMER_BREAK_ORIGINALS: Record<number, number> = {
-  9: 14.99,
-  15: 24.99,
-  24: 39.99,
-  48: 74.99,
-};
 
 // Same allergens offered in the standard box customiser.
 const ALLERGENS = [
@@ -45,7 +35,7 @@ export default function SummerBreakPreBuild() {
   const [addToCart, { isLoading: adding }] = useAddCartItemMutation();
   const { isClosed: storeClosed, reopenLabel } = useStoreStatus();
 
-  const [size, setSize] = useState<number>(24);
+  const [size, setSize] = useState<number | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [allergenOption, setAllergenOption] = useState<'NONE' | 'SPECIFY' | null>('NONE');
   const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
@@ -56,12 +46,27 @@ export default function SummerBreakPreBuild() {
     () => (products ?? []).filter(p => p.category?.slug === 'summer-break-boxes' && inStock(p)),
     [products]
   );
-  const boxForSize = (s: number) => summerBoxes.find(p => p.units_per_box === s);
-  const availableSizes = BOX_SIZES.filter(s => Boolean(boxForSize(s)));
+  // Sizes come straight from the live products, not a hardcoded list.
+  const availableSizes = useMemo(
+    () => Array.from(
+      new Set(summerBoxes.map(p => p.units_per_box).filter((n): n is number => !!n))
+    ).sort((a, b) => a - b),
+    [summerBoxes]
+  );
+  const boxForSize = (s: number | null) =>
+    s == null ? undefined : summerBoxes.find(p => p.units_per_box === s);
+
+  // Default the selected size to a sensible box once the products load.
+  useEffect(() => {
+    if (size === null && availableSizes.length) {
+      setSize(availableSizes.includes(24) ? 24 : availableSizes[0]);
+    }
+  }, [availableSizes, size]);
 
   const selectedBox = boxForSize(size);
   const unitPrice = selectedBox?.current_price ? Number(selectedBox.current_price) : undefined;
-  const wasPrice = SUMMER_BREAK_ORIGINALS[size];
+  // "Was" price comes from the product data (compare_at_price).
+  const wasPrice = selectedBox?.compare_at_price ? Number(selectedBox.compare_at_price) : undefined;
   const total = unitPrice !== undefined ? unitPrice * quantity : undefined;
 
   const canAddToCart = Boolean(selectedBox) && !adding && !storeClosed;
@@ -211,7 +216,9 @@ export default function SummerBreakPreBuild() {
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-primary-text dark:text-primary-text-light">Box</dt>
-                  <dd className="font-medium text-primary-text dark:text-white">{size} pieces</dd>
+                  <dd className="font-medium text-primary-text dark:text-white">
+                    {selectedBox?.units_per_box ?? '—'} pieces
+                  </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-primary-text dark:text-primary-text-light">Flavours</dt>
