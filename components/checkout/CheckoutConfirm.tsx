@@ -16,6 +16,7 @@ import Spinner from '@/components/common/Spinner';
 import CartItem from '@/components/cart/CartItem';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
+import { arePaymentsBlocked } from '@/constants/summerBreak';
 
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -40,6 +41,11 @@ const CheckoutConfirm = () => {
 
     const handleProceedToPayment = async () => {
         if (isProcessing) return;
+        // Shop is on its summer break — don't create a Stripe checkout session.
+        if (arePaymentsBlocked()) {
+            toast.error('We are on our summer break and cannot take new orders right now.');
+            return;
+        }
         if (!selectedShippingOption) {
             toast.error('Please select a shipping method');
             return;
@@ -107,6 +113,7 @@ const CheckoutConfirm = () => {
     }
 
     const isHolidayPeriod = new Date() < new Date('2026-05-26T00:00:00+01:00');
+    const paymentsBlocked = arePaymentsBlocked();
 
     return (
         <div className=" dark:bg-main-bg-dark min-h-screen">
@@ -126,6 +133,20 @@ const CheckoutConfirm = () => {
                         </div>
                     )}
 
+                    {paymentsBlocked && (
+                        <div className="rounded-md border border-amber-200 dark:border-amber-700 p-4 bg-amber-50 dark:bg-amber-900/20 flex items-start gap-3">
+                            <svg className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                            <div>
+                                <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">We&apos;re on our summer break</p>
+                                <p className="text-sm text-amber-700 dark:text-amber-300 mt-0.5">
+                                    The shop is closed for new orders while our family takes August off, so payment is unavailable right now. We&apos;ll be back soon &mdash; thank you for your patience!
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
                     <CheckoutDetails session={session} />
                     <CheckoutShippingOptions
                         shippingCompanies={shippingCompanies}
@@ -137,13 +158,13 @@ const CheckoutConfirm = () => {
                     />
                     <button
                         onClick={handleProceedToPayment}
-                        disabled={isProcessing || !selectedShippingOption || (selectedShippingOption === 34 && !storePickup)}
+                        disabled={paymentsBlocked || isProcessing || !selectedShippingOption || (selectedShippingOption === 34 && !storePickup)}
                         className="w-full bg-gradient-autumn text-primary-text-light dark:text-primary-text-light py-3 px-4 rounded-md
                             hover:bg-primary focus:outline-none focus:ring-2
                             focus:ring-primary-2 focus:ring-offset-2 disabled:bg-main-bg
                             disabled:cursor-not-allowed transition-colors duration-200"
                     >
-                        {isProcessing ? 'Processing...' : 'Proceed to Payment'}
+                        {paymentsBlocked ? 'Closed for Summer Break' : isProcessing ? 'Processing...' : 'Proceed to Payment'}
                     </button>
                 </div>
             </div>

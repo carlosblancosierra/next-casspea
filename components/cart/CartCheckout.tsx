@@ -10,11 +10,13 @@ import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/c
 import { CartUpdate } from '@/types/carts';
 import Link from 'next/link';
 import { useUpdateSessionMutation, useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
+import { arePaymentsBlocked } from '@/constants/summerBreak';
 
 export default function CartCheckout() {
 
     const { data: cart, isLoading, error: cartError } = useGetCartQuery();
     const router = useRouter();
+    const paymentsBlocked = arePaymentsBlocked();
 
     const [updateSession] = useUpdateSessionMutation();
     const [updateCart] = useUpdateCartMutation();
@@ -69,7 +71,10 @@ export default function CartCheckout() {
 
     const handleCheckout = async () => {
         console.log('handleCheckout email', email);
-        
+
+        // Shop is on its summer break — don't take new orders.
+        if (paymentsBlocked) return;
+
         // If no email, open modal to collect it
         if (!email) {
             setModalEmail(''); // Reset modal email
@@ -93,6 +98,9 @@ export default function CartCheckout() {
     };
 
     const proceedToCheckout = async (emailToUse: string) => {
+        // Shop is on its summer break — don't take new orders.
+        if (paymentsBlocked) return;
+
         setIsProcessing(true);
         setError(null);
 
@@ -306,6 +314,28 @@ export default function CartCheckout() {
             <div className="border-b border-gray-900/10 pb-12 dark:border-gray-700">
                 <div className="space-y-4">
 
+                    {paymentsBlocked ? (
+                        <>
+                            {/* Summer break — checkout disabled */}
+                            <div className="rounded-md border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 p-4 text-center">
+                                <p className="text-base font-semibold text-amber-800 dark:text-amber-200">
+                                    We&apos;re on our summer break
+                                </p>
+                                <p className="mt-1 text-sm text-amber-700 dark:text-amber-300">
+                                    The shop is closed for new orders while our family takes August off.
+                                    We&apos;ll be back soon &mdash; thank you for your patience!
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                disabled
+                                aria-disabled="true"
+                                className="w-full rounded-md px-4 py-4 text-xl font-bold shadow-lg flex items-center justify-center text-primary-text dark:text-primary-text-light bg-gray-400 dark:bg-main-bg-dark cursor-not-allowed opacity-70"
+                            >
+                                Checkout Closed for Summer Break
+                            </button>
+                        </>
+                    ) : (
                     <button
                         type="button"
                         onClick={handleCheckout}
@@ -334,6 +364,7 @@ export default function CartCheckout() {
                             </>
                         )}
                     </button>
+                    )}
 
                     {error && (
                         <div className="flex items-start bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3">
@@ -345,6 +376,7 @@ export default function CartCheckout() {
                     )}
 
                     <div className="rounded-md p-3 space-y-2">
+                        {!paymentsBlocked && (
                         <div className="flex items-start">
                             <svg className="w-5 h-5 text-primary-text dark:text-primary-text-light mtF-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
@@ -353,6 +385,7 @@ export default function CartCheckout() {
                                 {email ? "You'll review your complete order and enter shipping details on the next page" : "Click the button above to continue. We'll ask for your email in the next step."}
                             </p>
                         </div>
+                        )}
                         <div className="flex items-start">
                             <svg className="w-5 h-5 text-red-500 dark:text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>

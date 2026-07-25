@@ -5,6 +5,7 @@ import Provider from '@/redux/provider';
 import { Footer, Navbar } from '@/components/common';
 import { Setup } from '@/components/utils';
 import AnnouncementBar from '@/components/common/AnnouncementBar';
+import SummerBreakPopup from '@/components/common/SummerBreakPopup';
 import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
 import dynamic from 'next/dynamic';
@@ -102,6 +103,7 @@ export default function RootLayout({
         <Provider>
           <Setup />
           {/* <GiveawayPopup /> */}
+          <SummerBreakPopup />
           <LayoutWrapper>
             <div className="flex flex-col min-h-screen relative z-1">
               <AnnouncementBar />
