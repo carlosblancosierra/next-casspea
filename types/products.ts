@@ -69,6 +69,8 @@ export interface Product {
     alert_message?: string;
 
     can_pick_allergens?: boolean;
+    disable_flavour_selection?: boolean;
+    block_discount_codes?: boolean;
 
     custom_options?: ProductCustomOption[];
 

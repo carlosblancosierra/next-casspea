@@ -2,8 +2,18 @@ import { apiSlice } from '@/redux/services/apiSlice';
 import { CheckoutSession, CheckoutSessionRequest } from '@/types/checkout';
 import { toast } from 'react-toastify';
 
+export interface StoreStatus {
+    open: boolean;
+    deadline: string | null;
+    reopen_label: string;
+}
+
 export const checkoutApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+
+        getStoreStatus: builder.query<StoreStatus, void>({
+            query: () => '/checkout/store-status/',
+        }),
 
         getSession: builder.query<CheckoutSession, void>({
             query: () => '/checkout/session/',
@@ -49,6 +59,7 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetStoreStatusQuery,
     useCreateStripeCheckoutSessionMutation,
     useGetSessionQuery,
     useUpdateSessionMutation,

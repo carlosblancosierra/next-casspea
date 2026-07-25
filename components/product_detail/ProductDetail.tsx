@@ -32,8 +32,13 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 		notFound();
 	}
 
-	// Check if the product belongs to the "Signature Boxes" category
-	const isSignatureBox = product.category?.id === 1;
+	// Categories whose products are customisable "boxes" (multi-step form with
+	// allergen/flavour selection). Summer Break clearance boxes behave like
+	// Signature Boxes, just Surprise-Me only.
+	const BOX_CATEGORY_SLUGS = ['signature-boxes', 'summer-break-boxes'];
+	const isSignatureBox =
+		product.category?.id === 1 ||
+		(product.category?.slug ? BOX_CATEGORY_SLUGS.includes(product.category.slug) : false);
 
 	const galleryImagesUrls = product.gallery_images?.map((image) => image.image);
 	const images = [product.image, ...(galleryImagesUrls || [])].filter(
