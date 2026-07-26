@@ -9,6 +9,8 @@ import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
 import dynamic from 'next/dynamic';
 
+const SummerBreakPopup = dynamic(() => import('@/components/common/SummerBreakPopup'), { ssr: false });
+
 // Available effects - add new effects here
 type EffectType = 'snow' | 'heart' | 'autumn' | 'none';
 
@@ -102,6 +104,7 @@ export default function RootLayout({
         <Provider>
           <Setup />
           {/* <GiveawayPopup /> */}
+          <SummerBreakPopup />
           <LayoutWrapper>
             <div className="flex flex-col min-h-screen relative z-1">
               <AnnouncementBar />
