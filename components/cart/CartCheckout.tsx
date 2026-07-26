@@ -268,34 +268,32 @@ export default function CartCheckout() {
                         )}
                     </div> */}
 
-                    {/* Discount Option - hidden when an already-discounted Summer Break box is in the cart */}
-                    {hasSummerBreakBox ? (
-                        <div className="mt-4 rounded-md border border-pink-200 dark:border-pink-800 bg-pink-50 dark:bg-pink-900/20 p-3">
-                            <p className="text-sm text-primary-text dark:text-primary-text-light">
-                                Your Summer Break box is already <b>25% off</b> — discount codes can't be added on top.
+                    {/* Discount Option — always available. A Summer Break box just keeps
+                        its own 25% off; a code still applies to the other items. */}
+                    <div className="mt-4">
+                        <label className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                checked={addDiscount}
+                                onChange={(e) => setAddDiscount(e.target.checked)}
+                                className="rounded border-gray-300 text-primary focus:ring-primary
+                                    dark:border-gray-600 dark:bg-main-bg-dark dark:focus:ring-primary-2"
+                            />
+                            <span className="text-sm font-medium text-primary-text dark:text-primary-text-light">
+                                Add Discount Code
+                            </span>
+                        </label>
+                        {hasSummerBreakBox && (
+                            <p className="mt-1 ml-6 text-xs text-primary-text dark:text-primary-text-light">
+                                Your Summer Break box stays at <b>25% off</b>; a code applies to your other items.
                             </p>
-                        </div>
-                    ) : (
-                        <div className="mt-4">
-                            <label className="flex items-center space-x-2">
-                                <input
-                                    type="checkbox"
-                                    checked={addDiscount}
-                                    onChange={(e) => setAddDiscount(e.target.checked)}
-                                    className="rounded border-gray-300 text-primary focus:ring-primary
-                                        dark:border-gray-600 dark:bg-main-bg-dark dark:focus:ring-primary-2"
-                                />
-                                <span className="text-sm font-medium text-primary-text dark:text-primary-text-light">
-                                    Add Discount Code
-                                </span>
-                            </label>
-                            {addDiscount && (
-                                <div className="ml-6">
-                                    <DiscountForm />
-                                </div>
-                            )}
-                        </div>
-                    )}
+                        )}
+                        {addDiscount && (
+                            <div className="ml-6">
+                                <DiscountForm />
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
