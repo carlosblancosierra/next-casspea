@@ -153,13 +153,13 @@ const CheckoutConfirm = () => {
                     )}
                     <button
                         onClick={handleProceedToPayment}
-                        disabled={isProcessing || storeClosed || !selectedShippingOption || (selectedShippingOption === 34 && !storePickup)}
+                        disabled={isProcessing}
                         className="w-full bg-gradient-autumn text-primary-text-light dark:text-primary-text-light py-3 px-4 rounded-md
                             hover:bg-primary focus:outline-none focus:ring-2
-                            focus:ring-primary-2 focus:ring-offset-2 disabled:bg-main-bg
-                            disabled:cursor-not-allowed transition-colors duration-200"
+                            focus:ring-primary-2 focus:ring-offset-2
+                            disabled:opacity-60 disabled:cursor-wait transition-colors duration-200"
                     >
-                        {storeClosed ? 'Closed for Summer Break' : isProcessing ? 'Processing...' : 'Proceed to Payment'}
+                        {isProcessing ? 'Processing...' : 'Proceed to Payment'}
                     </button>
                 </div>
             </div>

@@ -31,6 +31,7 @@ export default function CartCheckout() {
     const [showModal, setShowModal] = useState(false);
     const [showEmailModal, setShowEmailModal] = useState(false);
     const [modalEmail, setModalEmail] = useState('');
+    const [modalEmailError, setModalEmailError] = useState<string | null>(null);
 
     // here, when load the page, get the session
     const { data: checkoutSession, isLoading: isSessionLoading } = useGetSessionQuery();
@@ -62,10 +63,6 @@ export default function CartCheckout() {
         setEmail(newEmail);
     };
 
-    const handleModalEmailChange = (newEmail: string) => {
-        setModalEmail(newEmail);
-    };
-
     const formatCurrency = (value: string) => {
         return new Intl.NumberFormat('en-GB', {
             style: 'currency',
@@ -85,6 +82,7 @@ export default function CartCheckout() {
         // If no email, open modal to collect it
         if (!email) {
             setModalEmail(''); // Reset modal email
+            setModalEmailError(null);
             setShowEmailModal(true);
             return;
         }
@@ -94,12 +92,18 @@ export default function CartCheckout() {
     };
 
     const handleModalCheckout = async () => {
-        if (!modalEmail) return;
-        
-        // Set the email from modal
+        // Button stays enabled: validate here and show an error instead of
+        // silently doing nothing / disabling the button.
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(modalEmail)) {
+            setModalEmailError('Please enter a valid email address to continue.');
+            return;
+        }
+
+        setModalEmailError(null);
         setEmail(modalEmail);
         setShowEmailModal(false);
-        
+
         // Proceed with checkout
         await proceedToCheckout(modalEmail);
     };
@@ -438,20 +442,24 @@ export default function CartCheckout() {
                                         </p>
                                     </div>
                                     <div className="mt-4">
-                                        <EmailForm initialEmail={modalEmail} onValidEmail={handleModalEmailChange} />
+                                        <EmailForm
+                                            onChange={(v) => { setModalEmail(v); if (modalEmailError) setModalEmailError(null); }}
+                                            invalid={!!modalEmailError}
+                                        />
+                                        {modalEmailError && (
+                                            <p className="mt-1 text-sm text-red-600 dark:text-red-400 text-left">
+                                                {modalEmailError}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             </div>
                             <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
                                 <button
                                     type="button"
-                                    disabled={!modalEmail}
+                                    disabled={isProcessing}
                                     onClick={handleModalCheckout}
-                                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-primary-text-light focus:outline-none focus:ring-2 focus:ring-offset-2 sm:col-start-2 sm:text-sm
-                                        ${modalEmail
-                                            ? 'bg-primary text-primary-text-light dark:bg-primary-2 hover:bg-primary-2 dark:hover:bg-primary focus:ring-primary'
-                                            : 'bg-main-bg dark:bg-main-bg-dark cursor-not-allowed'
-                                        }`}
+                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-primary-text-light bg-primary dark:bg-primary-2 hover:bg-primary-2 dark:hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-60 disabled:cursor-wait sm:col-start-2 sm:text-sm"
                                 >
                                     Continue to Checkout
                                 </button>
