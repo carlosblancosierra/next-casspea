@@ -26,6 +26,44 @@ function useSummerVisible() {
   return !AUTH_ONLY || isAuthenticated;
 }
 
+// The in-stock Summer Break boxes to show, or [] when the sale isn't visible.
+function useSummerBoxes(): Product[] {
+  const visible = useSummerVisible();
+  const { data: products } = useGetActiveProductsQuery();
+  if (!visible) return [];
+  return (products ?? []).filter(
+    p => p.category?.slug === 'summer-break-boxes' && p.active !== false && !p.sold_out
+  );
+}
+
+// Hides its children (the Signature Boxes section) while the Summer Break boxes
+// are actually being shown, so the home page doesn't show both at once.
+export function HomeSignatureGate({ children }: { children: React.ReactNode }) {
+  const boxes = useSummerBoxes();
+  if (boxes.length > 0) return null;
+  return <>{children}</>;
+}
+
+// A category-style card for the shop grid that links to the Summer Break landing.
+export function SummerCategoryCard() {
+  const boxes = useSummerBoxes();
+  if (boxes.length === 0) return null;
+  return (
+    <Link
+      href="/landing/summer-break"
+      className="block group relative shadow-lg rounded-lg p-0 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-main-bg-dark hover:opacity-90 transition-opacity overflow-hidden"
+    >
+      <div className="w-full min-h-[110px] aspect-w-16 aspect-h-9 bg-gradient-to-r from-amber-400 to-pink-500 flex items-center justify-center">
+        <span className="text-white font-bold text-lg px-3 text-center">25% OFF</span>
+      </div>
+      <div className="p-2">
+        <h3 className="text-lg font-bold text-primary-text dark:text-primary-text-light">Summer Break Boxes</h3>
+        <p className="mt-2 text-sm text-primary-text dark:text-primary-text-light">Handmade boxes, 25% off — surprise flavours.</p>
+      </div>
+    </Link>
+  );
+}
+
 export function HomeSummerBanner() {
   const visible = useSummerVisible();
   if (!visible) return null;
@@ -37,11 +75,7 @@ export function HomeSummerBanner() {
     >
       <div className="flex flex-col md:flex-row items-center justify-between gap-2 text-center md:text-left">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/90">Summer Break Sale</p>
-          <p className={`${playfair.className} text-2xl md:text-3xl font-bold leading-tight`}>
-            25% Off Handmade Chocolate Boxes
-          </p>
-          <p className="text-sm text-white/90 mt-1">Clearing the kitchen before we go — order by Fri 31 July, 12pm.</p>
+          <p className={`${playfair.className} text-2xl md:text-3xl font-bold leading-tight`}>Summer Break Sale</p>
         </div>
         <span className="inline-flex items-center gap-2 shrink-0 rounded-full bg-white text-pink-600 font-bold px-5 py-2 shadow">
           Shop 25% Off
@@ -55,14 +89,7 @@ export function HomeSummerBanner() {
 }
 
 export function HomeSummerBoxes() {
-  const visible = useSummerVisible();
-  const { data: products } = useGetActiveProductsQuery();
-
-  if (!visible) return null;
-
-  const boxes: Product[] = (products ?? []).filter(
-    p => p.category?.slug === 'summer-break-boxes' && p.active !== false && !p.sold_out
-  );
+  const boxes = useSummerBoxes();
   if (boxes.length === 0) return null;
 
   const variants = {
