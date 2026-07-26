@@ -34,7 +34,7 @@ const FlavorSection: React.FC<{ flavorSelections?: any[] }> = ({
     <div className="flex flex-col mt-2">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="text-sm text-primary-text hover:text-primary-text flex items-center gap-1"
+        className="text-sm text-primary-text dark:text-primary-text-light hover:opacity-80 flex items-center gap-1"
       >
         Flavours {isOpen ? '▼' : '▶'}
       </button>
@@ -46,9 +46,9 @@ const FlavorSection: React.FC<{ flavorSelections?: any[] }> = ({
           const flavorName = selection.flavor_name || selection.flavor?.name || 'Unknown Flavour';
           const quantity = selection.quantity || 0;
           return (
-            <div key={i} className="text-sm text-primary-text pl-4 flex justify-between">
+            <div key={i} className="text-sm text-primary-text dark:text-primary-text-light pl-4 flex justify-between">
               <span>{flavorName}</span>
-              <span className="text-primary-text">×{quantity}</span>
+              <span className="text-primary-text dark:text-primary-text-light">×{quantity}</span>
             </div>
           );
         })}
@@ -69,17 +69,17 @@ const BoxCustomizationExtras: React.FC<{ customization: any, products: Product[]
   return (
     <div className="mt-2 flex flex-col">
       {hot_chocolate ? (
-        <div className="text-sm text-primary-text">
+        <div className="text-sm text-primary-text dark:text-primary-text-light">
           Hot Chocolate: {getProductName(hot_chocolate, "Hot Chocolate")}
         </div>
       ) : null}
       {chocolate_bark ? (
-        <div className="text-sm text-primary-text">
+        <div className="text-sm text-primary-text dark:text-primary-text-light">
           Chocolate Bark: {getProductName(chocolate_bark, "Chocolate Bark")}
         </div>
       ) : null}
       {gift_card ? (
-        <div className="text-sm text-primary-text">
+        <div className="text-sm text-primary-text dark:text-primary-text-light">
           Gift Card: {getProductName(gift_card, "Gift Card")}
         </div>
       ) : null}
@@ -106,7 +106,7 @@ const PaymentStatus = ({ status }: { status?: string }) => {
 const ShippingBadge = ({ date }: { date?: string | null }) => {
   if (!date) {
     return (
-      <span className="inline-flex items-center rounded-md bg-main-bg px-2 py-1 text-xs font-medium text-primary-text ring-1 ring-inset ring-gray-500/10 dark:bg-main-bg-dark dark:text-primary-text dark:ring-gray-700">
+      <span className="inline-flex items-center rounded-md bg-main-bg px-2 py-1 text-xs font-medium text-primary-text ring-1 ring-inset ring-gray-500/10 dark:bg-main-bg-dark dark:text-primary-text-light dark:ring-gray-700">
         ASAP
       </span>
     );
@@ -157,7 +157,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
     <div className="bg-main-bg dark:bg-main-bg-dark rounded-lg shadow-sm overflow-hidden">
       {/* Header with Order ID and Status */}
       <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-        <h3 className="text-base font-semibold text-primary-text dark:text-primary-text">
+        <h3 className="text-base font-semibold text-primary-text dark:text-primary-text-light">
           Order Details
         </h3>
         <PaymentStatus status={order.checkout_session?.payment_status} />
@@ -168,22 +168,22 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
         <dl className="divide-y divide-gray-100 dark:divide-gray-700">
           {/* Order ID */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Order ID</dt>
-            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">Order ID</dt>
+            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
               {order.order_id}
             </dd>
           </div>
           {/* Order Time */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Order Time</dt>
-            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">Order Time</dt>
+            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
               {time}
             </dd>
           </div>
           {/* Items Section */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Items</dt>
-            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">Items</dt>
+            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
               {order.checkout_session?.cart?.items?.map((item, index) => {
                 const customization = getCustomization(item.box_customization, item.pack_customization);
                 return (
@@ -192,7 +192,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       {item.product?.name || 'Unknown Product'} {item.quantity && `(x${item.quantity})`}
                     </div>
                     {customization && (
-                      <div className="text-sm text-primary-text">
+                      <div className="text-sm text-primary-text dark:text-primary-text-light">
                         {formatSelectionType(customization.selection_type)}
                       </div>
                     )}
@@ -214,16 +214,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           </div>
           {/* Shipping Date */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Shipping Date</dt>
-            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">Shipping Date</dt>
+            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
               <ShippingBadge date={order.checkout_session?.cart?.shipping_date} />
             </dd>
           </div>
           {/* Pickup Date & Time if present */}
           {order.checkout_session?.cart?.pickup_date && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Pickup Date</dt>
-              <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+              <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">Pickup Date</dt>
+              <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
                 {order.checkout_session.cart.pickup_date}
                 {order.checkout_session.cart.pickup_time && (
                   <> at {order.checkout_session.cart.pickup_time}</>
@@ -233,18 +233,18 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           )}
           {/* Shipping Address */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Delivery Address</dt>
-            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">Delivery Address</dt>
+            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
               {formatShippingAddress(order.checkout_session?.shipping_address)}
             </dd>
           </div>
           {/* Discount if present */}
           {order.checkout_session?.cart?.discount && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-primary-text dark:text-primary-text">
+              <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">
                 Discount Applied
               </dt>
-              <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+              <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
                 {order.checkout_session.cart.discount}
               </dd>
             </div>
@@ -252,10 +252,10 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           {/* Gift Message if present */}
           {order.checkout_session?.cart?.gift_message && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-primary-text dark:text-primary-text">
+              <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">
                 Gift Message
               </dt>
-              <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+              <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
                 {order.checkout_session.cart.gift_message}
               </dd>
             </div>
@@ -263,24 +263,24 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           {/* Shipping Option */}
           {order.checkout_session?.shipping_option && (
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Shipping Option</dt>
-              <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+              <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">Shipping Option</dt>
+              <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
                 {order.checkout_session.shipping_option.name} - £{order.checkout_session.shipping_option.price}
               </dd>
             </div>
           )}
           {/* Order Total */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-main-bg dark:bg-main-bg-dark">
-            <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Order Total</dt>
-            <dd className="mt-1 text-sm font-semibold text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">Order Total</dt>
+            <dd className="mt-1 text-sm font-semibold text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
               £{order.checkout_session.total_with_shipping.toFixed(2)}
             </dd>
           </div>
 
           {/* Customer Orders Summary */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Customer Orders</dt>
-            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+            <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">Customer Orders</dt>
+            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
               {order.past_orders && order.past_orders.length > 0
                 ? `${order.past_orders.length + 1} total orders, past: (${order.past_orders.join(', ')})`
                 : '1 total order, no past orders'}
@@ -289,16 +289,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
 
           {/* Shipping Details & Actions */}
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-sm font-medium text-primary-text dark:text-primary-text">
+            <dt className="text-sm font-medium text-primary-text dark:text-primary-text-light">
               Shipping Details
             </dt>
-            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
+            <dd className="mt-1 text-sm text-primary-text dark:text-primary-text-light sm:col-span-2 sm:mt-0">
               {order.shipping_order_id ? (
                 <div className="space-y-3">
                   {/* Shipping Order ID */}
                   <div>
                     <span className="font-medium">Shipping Order ID: </span>
-                    <span className="text-primary-text dark:text-primary-text">
+                    <span className="text-primary-text dark:text-primary-text-light">
                       {order.shipping_order_id}
                     </span>
                   </div>
@@ -307,7 +307,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                   {order.tracking_number && (
                     <div>
                       <span className="font-medium">Tracking Number: </span>
-                      <span className="text-primary-text dark:text-primary-text">
+                      <span className="text-primary-text dark:text-primary-text-light">
                         {order.tracking_number}
                       </span>
                     </div>
@@ -317,7 +317,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                   <div className="flex flex-col gap-2 mt-2">
                     <button
                       onClick={() => onDownloadLabel(order.order_id)}
-                      className="w-full inline-flex items-center gap-1 px-3 py-2 rounded bg-main-bg dark:bg-main-bg-dark border border-gray-300 dark:border-gray-600 text-primary-text dark:text-primary-text hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                      className="w-full inline-flex items-center gap-1 px-3 py-2 rounded bg-main-bg dark:bg-main-bg-dark border border-gray-300 dark:border-gray-600 text-primary-text dark:text-primary-text-light hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                     >
                       <ArrowDownTrayIcon className="h-5 w-5" />
                       Download Label
@@ -355,14 +355,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       }
                     }}
                     disabled={isCreating}
-                    className={`inline-flex items-center gap-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
+                    className={`inline-flex items-center gap-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
                       isCreating ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
                     <PlusIcon className="h-5 w-5" />
                     {isCreating ? 'Creating...' : 'Create Shipping Order'}
                   </button>
-                  <p className="mt-2 text-sm text-primary-text dark:text-primary-text">
+                  <p className="mt-2 text-sm text-primary-text dark:text-primary-text-light">
                     No shipping order created yet
                   </p>
                 </div>

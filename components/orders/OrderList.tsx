@@ -83,7 +83,7 @@ export default function OrderList() {
   return (
     <div className="max-w-7xl mx-auto lg:px-8 py-6">
       {/* siempre visibles */}
-      <div className="mb-2 text-center font-semibold text-primary-text dark:text-primary-text">
+      <div className="mb-2 text-center font-semibold text-primary-text dark:text-primary-text-light">
         Filtrar pedidos por fecha
       </div>
       <div className="flex justify-center space-x-4 mb-4">
@@ -114,7 +114,7 @@ export default function OrderList() {
         </button>
       </div>
 
-      <div className="mb-4 text-center font-semibold text-primary-text dark:text-primary-text">
+      <div className="mb-4 text-center font-semibold text-primary-text dark:text-primary-text-light">
         Mostrando de {startDate.toLocaleDateString()} a {endDate.toLocaleDateString()}
       </div>
 
