@@ -76,16 +76,6 @@ export default function ReviewCarousel() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-2 px-1">
-        <div className="flex items-center gap-0.5">
-          {[...Array(5)].map((_, i) => (
-            <FaStar key={i} className="w-3.5 h-3.5 text-yellow-400" />
-          ))}
-        </div>
-        <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">Trustpilot</span>
-      </div>
-
       {/* Horizontally-scrolling row of separate review cards */}
       <div
         ref={scrollRef}
