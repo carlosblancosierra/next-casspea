@@ -5,6 +5,7 @@
 // (no flavour picking) — customers just pick a size and their allergens.
 
 import React, { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Playfair_Display } from 'next/font/google';
@@ -164,6 +165,11 @@ export default function SummerBreakPreBuild() {
                             : 'border-slate-200 dark:border-slate-700 hover:border-pink-300'
                         }`}
                       >
+                        {b?.image && (
+                          <div className="relative w-full aspect-square rounded-md overflow-hidden mb-1.5 bg-white dark:bg-slate-800">
+                            <Image src={b.image} alt={`Box of ${s} chocolates`} fill sizes="120px" className="object-cover" />
+                          </div>
+                        )}
                         <p className="font-bold text-lg text-primary-text dark:text-white">{s}</p>
                         <p className="text-[11px] text-primary-text dark:text-primary-text-light">pieces</p>
                         {price !== undefined && (
@@ -210,6 +216,20 @@ export default function SummerBreakPreBuild() {
 
             {/* Right: summary + CTA */}
             <div className="p-4 sm:p-6 md:p-8 bg-slate-50 dark:bg-slate-900/40 flex flex-col min-w-0">
+              {(() => {
+                const boxImage = selectedBox?.image ?? selectedBox?.gallery_images?.[0]?.image;
+                return boxImage ? (
+                  <div className="relative w-full aspect-square rounded-xl overflow-hidden mb-4 bg-white dark:bg-slate-800">
+                    <Image
+                      src={boxImage}
+                      alt={selectedBox?.name ?? 'Summer Break box'}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 40vw"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : null;
+              })()}
               <h3 className="text-sm font-semibold uppercase tracking-wide text-primary-text dark:text-primary-text-light mb-4">
                 Your Summer Break box
               </h3>
