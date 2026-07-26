@@ -10,6 +10,7 @@ import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import ReviewCarousel from '@/components/common/ReviewCarousel';
 import HomeProductsServer from '@/components/home/HomeProductsServer';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
+import { HomeSummerBanner, HomeSummerBoxes } from '@/components/home/HomeSummer';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
@@ -225,7 +226,11 @@ const LoadingSection = () => (
 export default function HomePage() {
   return (
     <main className="dark:bg-main-bg-dark min-h-[100vh] max-w-screen-2xl md:mx-auto">
+      <HomeSummerBanner />
+
       <HeroSection />
+
+      <HomeSummerBoxes />
 
       <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
         <HomeProductsServer />
