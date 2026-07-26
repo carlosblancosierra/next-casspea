@@ -8,7 +8,7 @@ import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 
 export default function Setup() {
-	// useVerify();
+	useVerify();
 	useGetCartQuery();
 	useGetProductsQuery();
 	useGetFlavoursQuery();
