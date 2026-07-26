@@ -10,7 +10,7 @@ import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import ReviewCarousel from '@/components/common/ReviewCarousel';
 import HomeProductsServer from '@/components/home/HomeProductsServer';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
-import { HomeSummerBanner, HomeSummerBoxes } from '@/components/home/HomeSummer';
+import { HomeSummerBanner, HomeSummerBoxes, HomeSignatureGate } from '@/components/home/HomeSummer';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
@@ -232,9 +232,11 @@ export default function HomePage() {
 
       <HomeSummerBoxes />
 
-      <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
-        <HomeProductsServer />
-      </Section>
+      <HomeSignatureGate>
+        <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
+          <HomeProductsServer />
+        </Section>
+      </HomeSignatureGate>
 
       <Section title="Our Flavours" extraClass="mt-10">
         <FlavourGridServer />

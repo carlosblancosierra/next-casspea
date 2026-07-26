@@ -1,6 +1,7 @@
 'use client';
 
 import CategoryCard from '@/components/store/CategoryCard';
+import { SummerCategoryCard } from '@/components/home/HomeSummer';
 import { useGetCategoriesQuery } from '@/redux/features/products/productApiSlice';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import Link from 'next/link';
@@ -24,6 +25,7 @@ export default function Page() {
         {error && <div>Error loading categories</div>}
         {categories && (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-5">
+            <SummerCategoryCard />
             {categories.map((category) => (
               <CategoryCard key={category.id} category={category} />
             ))}
