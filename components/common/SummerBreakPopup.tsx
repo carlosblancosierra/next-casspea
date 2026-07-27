@@ -9,7 +9,7 @@ const SUMMER_BREAK_CATEGORY = '/landing/summer-break';
 // Public announcement switch. Kept OFF while testing so the sale stays private
 // (reachable only via the direct /landing/summer-break link). Flip to `true`
 // to announce the sale to every visitor at launch.
-const ENABLED = false;
+const ENABLED = true;
 
 export default function SummerBreakPopup() {
   const [show, setShow] = useState(false);
