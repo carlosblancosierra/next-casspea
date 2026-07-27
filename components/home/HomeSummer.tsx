@@ -19,7 +19,7 @@ import { Product } from '@/types/products';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
-const AUTH_ONLY = true;
+const AUTH_ONLY = false;
 
 function useSummerVisible() {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
