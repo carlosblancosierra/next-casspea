@@ -25,7 +25,7 @@ export default function LandingSummerBreak() {
           </h1>
           {isClosed ? (
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
-              Our shop is closed for orders while we take a summer break. We&apos;ll be back on{' '}
+              Our shop is closed for orders while we take a summer break. We&apos;ll be back{' '}
               <b>{reopenLabel}</b> — see you then!
             </p>
           ) : (

@@ -74,7 +74,7 @@ export default function SummerBreakPreBuild() {
 
   const handleAddToCart = async () => {
     if (storeClosed) {
-      toast.error(`Our shop is closed for Summer Break. We'll be back on ${reopenLabel}.`);
+      toast.error(`Our shop is closed for Summer Break. We'll be back ${reopenLabel}.`);
       return;
     }
     const box = boxForSize(size);
@@ -275,7 +275,7 @@ export default function SummerBreakPreBuild() {
               {storeClosed && (
                 <div className="mt-4 flex items-start bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md p-3">
                   <p className="text-sm text-amber-800 dark:text-amber-200">
-                    We&apos;re closed for Summer Break and not taking new orders right now. We&apos;ll be back on{' '}
+                    We&apos;re closed for Summer Break and not taking new orders right now. We&apos;ll be back{' '}
                     <b>{reopenLabel}</b>.
                   </p>
                 </div>

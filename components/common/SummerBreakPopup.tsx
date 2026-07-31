@@ -59,7 +59,7 @@ export default function SummerBreakPopup() {
               <h3 className="text-xl font-semibold text-primary-text dark:text-white mb-2">We're on Summer Break</h3>
               <p className="text-base text-primary-text dark:text-primary-text mb-4">
                 Our shop is closed for orders while we take a summer break.<br />
-                We'll be back on <b>{reopenLabel}</b> — see you then!
+                We'll be back <b>{reopenLabel}</b> — see you then!
               </p>
               <button
                 onClick={handleClose}
