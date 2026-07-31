@@ -14,15 +14,18 @@ import { toast } from 'react-toastify';
 import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
 import Spinner from '@/components/common/Spinner';
 import CartItem from '@/components/cart/CartItem';
-import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
+import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
+
+const STORE_PICKUP_OPTION_ID = 34;
 
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const { isClosed: storeClosed, reopenLabel } = useStoreStatus();
     const [selectedShippingOption, setSelectedShippingOption] = useState<number | undefined>(undefined);
     const [storePickup, setStorePickup] = useState<{ date: Date; slot: { start: string; end: string; value: string } } | null>(null);
+    const [shippingDate, setShippingDate] = useState<string>('');
 
     const router = useRouter();
 
@@ -38,6 +41,7 @@ const CheckoutConfirm = () => {
 
     const [createStripeSession] = useCreateStripeCheckoutSessionMutation();
     const [updateShippingOption] = useUpdateShippingOptionMutation();
+    const [updateCart] = useUpdateCartMutation();
 
 
     const handleProceedToPayment = async () => {
@@ -51,20 +55,33 @@ const CheckoutConfirm = () => {
             return;
         }
 
+        const isPickup = selectedShippingOption === STORE_PICKUP_OPTION_ID;
+
         // Validate store pickup selection
-        if (selectedShippingOption === 34 && !storePickup) {
+        if (isPickup && !storePickup) {
             toast.error('Please select a pickup date and time slot');
+            return;
+        }
+
+        // Delivery requires a shipping date (pickup doesn't).
+        if (!isPickup && !shippingDate) {
+            toast.error('Please select a shipping date');
             return;
         }
 
         try {
             setIsProcessing(true);
 
+            // Persist the chosen shipping date on the cart for delivery orders.
+            if (!isPickup && shippingDate) {
+                await updateCart({ shipping_date: shippingDate }).unwrap();
+            }
+
             // Prepare payload
             const payload: any = {
                 shipping_option_id: selectedShippingOption
             };
-            if (selectedShippingOption === 34 && storePickup) {
+            if (isPickup && storePickup) {
                 payload.pickup_date = storePickup.date.toISOString().slice(0, 10); // YYYY-MM-DD
                 payload.pickup_time = storePickup.slot.start + ' - ' + storePickup.slot.end;
             }
@@ -140,6 +157,7 @@ const CheckoutConfirm = () => {
                             setSelectedShippingOption(optionId);
                         }}
                         onChangeStorePickup={setStorePickup}
+                        onChangeShippingDate={setShippingDate}
                     />
                     {storeClosed && (
                         <div className="rounded-md border border-amber-200 dark:border-amber-700 p-4 bg-amber-50 dark:bg-amber-900/20 flex items-start gap-3">
