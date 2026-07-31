@@ -8,7 +8,7 @@
 
 // Friday 31 July 2026, 12:00 noon UK time (BST, +01:00).
 export const STORE_ORDER_DEADLINE = '2026-07-31T12:00:00+01:00';
-export const STORE_REOPEN_LABEL = '1 September';
+export const STORE_REOPEN_LABEL = 'the first week of September';
 
 /** Deadline as a Date, or null if disabled. */
 export function getStoreDeadline(deadlineIso?: string | null): Date | null {
