@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
-import { Product as ProductType, Product } from '@/types/products';
+import { Product } from '@/types/products';
 import FlavourPicker from './FlavourPicker';
 import ProgressBar from '@/components/common/ProgressBar';
 import { Flavour as FlavourType } from '@/types/flavours';
 import { CartItemBoxFlavorSelection, CartItemRequest } from '@/types/carts';
-import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
@@ -16,13 +15,12 @@ import BoxSelection from './BoxSelection';
 import AllergenSelection from './AllergenSelection';
 import AddToCartButton from './AddToCartButton';
 // Pack-related imports
-import SelectableProductCard from '@/components/store/SelectableProductCard';
 import SelectableGiftCard from '@/components/store/SelectableGiftCard';
 import GiftMessage from '@/components/cart/GiftMessage';
 import { ID_MAP, LOVE_SLEEVE_PRODUCT_ID, LOVE_SLEEVE_PRICE } from '@/components/packs/constants';
 
 interface ProductInfoProps {
-    product: ProductType;
+    product: Product;
 }
 
 const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
@@ -31,7 +29,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [currentStep, setCurrentStep] = useState<number>(1);
 
     // Step 1: Selection type
-    const [selection, setSelection] = useState<string | null>(null);
+    const [selection, setSelection] = useState<'PICK_AND_MIX' | 'RANDOM' | null>(null);
 
     // Step 2: Allergens
     const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
@@ -53,7 +51,6 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [giftMessage, setGiftMessage] = useState<string>('');
     const [showGiftMessagePopup, setShowGiftMessagePopup] = useState<boolean>(false);
 
-    const dispatch = useAppDispatch();
     const router = useRouter();
     const [addToCart, { isLoading }] = useAddCartItemMutation();
     const [updateCart] = useUpdateCartMutation();
@@ -194,7 +191,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         }
     };
 
-    const handleFlavourChange = (index: number, field: string, value: string | number) => {
+    const handleFlavourChange = (index: number, field: 'quantity', value: number) => {
         const newFlavours = [...flavours];
         newFlavours[index] = { ...newFlavours[index], [field]: value };
         setFlavours(newFlavours);
@@ -248,7 +245,39 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         }
     };
 
+    const buildFlavourSelections = (selectionType: 'PICK_AND_MIX' | 'RANDOM') =>
+        selectionType === 'PICK_AND_MIX'
+            ? flavours.filter(f => f.flavor?.id).map(f => ({
+                flavor: f.flavor!.id,
+                quantity: f.quantity
+            }))
+            : [];
+
+    // Pack customization - use pack product ID from ID_MAP
+    const buildPackRequest = (selectionType: 'PICK_AND_MIX' | 'RANDOM'): CartItemRequest => ({
+        product: ID_MAP[product.units_per_box || 0] || product.id,
+        quantity: quantity,
+        pack_customization: {
+            selection_type: selectionType,
+            flavor_selections: buildFlavourSelections(selectionType),
+            chocolate_bark: chocolateBark?.id ?? undefined,
+            hot_chocolate: hotChocolate?.id ?? undefined,
+            gift_card: giftCard?.id ?? undefined
+        }
+    });
+
+    const buildBoxRequest = (selectionType: 'PICK_AND_MIX' | 'RANDOM'): CartItemRequest => ({
+        product: product.id,
+        quantity: quantity,
+        box_customization: {
+            selection_type: selectionType,
+            allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
+            flavor_selections: buildFlavourSelections(selectionType)
+        }
+    });
+
     const handleAddToCart = async () => {
+        if (!selection) return;
         const shouldTreatAsPack = isPack && !isIndulgencePackSoldOut;
         // Check if gift card is selected but no gift message is provided
         if (shouldTreatAsPack && giftCard && giftMessage.trim() === '') {
@@ -257,40 +286,9 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         }
 
         try {
-            let cartItemRequest: CartItemRequest;
-
-            if (shouldTreatAsPack) {
-                // Pack customization - use pack product ID from ID_MAP
-                const packProductId = ID_MAP[product.units_per_box || 0] || product.id;
-                cartItemRequest = {
-                    product: packProductId,
-                    quantity: quantity,
-                    pack_customization: {
-                        selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
-                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
-                            flavor: f.flavor!.id,
-                            quantity: f.quantity
-                        })) : [],
-                        chocolate_bark: chocolateBark?.id ?? undefined,
-                        hot_chocolate: hotChocolate?.id ?? undefined,
-                        gift_card: giftCard?.id ?? undefined
-                    }
-                };
-            } else {
-                // Regular box customization
-                cartItemRequest = {
-                    product: product.id,
-                    quantity: quantity,
-                    box_customization: {
-                        selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
-                        allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
-                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
-                            flavor: f.flavor!.id,
-                            quantity: f.quantity
-                        })) : []
-                    }
-                };
-            }
+            const cartItemRequest = shouldTreatAsPack
+                ? buildPackRequest(selection)
+                : buildBoxRequest(selection);
 
             // Handle gift message for packs
             if (shouldTreatAsPack && giftMessage.trim() !== '') {
@@ -325,7 +323,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         <BoxSelection
                             options={prebulids}
                             selected={selection}
-                            onChange={setSelection}
+                            onChange={(value) => setSelection(value === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX')}
                         />
                         {selection === 'RANDOM' && (
                             <p className="text-sm text-primary-text dark:text-primary-text-light mt-2">
@@ -802,25 +800,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 <button
                                     onClick={async () => {
                                         setShowGiftMessagePopup(false);
+                                        if (!selection) return;
                                         // Proceed with adding to cart without gift message
                                         try {
-                                            const packProductId = ID_MAP[product.units_per_box || 0] || product.id;
-                                            const cartItemRequest: CartItemRequest = {
-                                                product: packProductId,
-                                                quantity: quantity,
-                                                pack_customization: {
-                                                    selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
-                                                    flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
-                                                        flavor: f.flavor!.id,
-                                                        quantity: f.quantity
-                                                    })) : [],
-                                                    chocolate_bark: chocolateBark?.id ?? undefined,
-                                                    hot_chocolate: hotChocolate?.id ?? undefined,
-                                                    gift_card: giftCard?.id ?? undefined
-                                                }
-                                            };
-
-                                            await addToCart(cartItemRequest).unwrap();
+                                            await addToCart(buildPackRequest(selection)).unwrap();
                                             if (loveSleeve) {
                                                 await addToCart({ product: LOVE_SLEEVE_PRODUCT_ID, quantity: 1 }).unwrap();
                                             }

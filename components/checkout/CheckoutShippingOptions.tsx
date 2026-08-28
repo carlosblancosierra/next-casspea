@@ -146,7 +146,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     };
 
     // Helper function to render shipping price with discount
-    const renderShippingPrice = (option: any) => {
+    const renderShippingPrice = (option: ShippingOption) => {
         const discountedPrice = parseFloat(option.price);
         const originalPrice = parseFloat(option.original_price || option.price);
         const discountAmount = parseFloat(option.discount_amount || '0');

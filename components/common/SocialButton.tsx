@@ -1,9 +1,8 @@
 import cn from 'classnames';
 
-interface Props {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	provider: 'google' | 'facebook';
 	children: React.ReactNode;
-	[rest: string]: any;
 }
 
 export default function SocialButton({ provider, children, ...rest }: Props) {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, PanInfo } from 'framer-motion';
 import { FaStar } from 'react-icons/fa';
 import { FiChevronRight } from 'react-icons/fi';
 
@@ -75,7 +75,7 @@ export default function ReviewCarousel() {
     return () => clearInterval(timer);
   }, [paused, next]);
 
-  const handleDragEnd = (_event: any, info: any) => {
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (Math.abs(info.offset.x) > 50) {
       if (info.offset.x > 0) {
         prev();

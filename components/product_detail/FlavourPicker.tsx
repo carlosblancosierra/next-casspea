@@ -12,7 +12,7 @@ interface FlavourPickerProps {
     remainingChocolates: number;
     maxChocolates: number;
     handleAddFlavour: (flavour: FlavourType) => void;
-    handleFlavourChange: (index: number, field: string, value: string | number) => void;
+    handleFlavourChange: (index: number, field: 'quantity', value: number) => void;
     incrementQuantity: (index: number) => void;
     decrementQuantity: (index: number) => void;
     deleteFlavour: (index: number) => void;
