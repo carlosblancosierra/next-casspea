@@ -17,7 +17,7 @@ const HomeGallery = dynamic(() => import('@/components/home/HomeGallery'));
 
 
 // Reusable section component that wraps content in Suspense with a title
-export const Section = ({
+const Section = ({
   title,
   children,
   extraClass = '',

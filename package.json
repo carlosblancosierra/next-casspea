@@ -2,11 +2,13 @@
 	"name": "casspea",
 	"version": "1.0.0",
 	"private": true,
+	"packageManager": "pnpm@10.33.0",
 	"scripts": {
 		"dev": "next dev --port 3005",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
+		"typecheck": "tsc --noEmit",
 		"test": "jest",
 		"test:watch": "jest --watch"
 	},
