@@ -98,21 +98,23 @@ export default function AddressPage() {
             const response = await setAddresses(addressRequest).unwrap();
             router.push('/checkout/confirm');
 
-        } catch (err: any) {
+        } catch (err) {
             console.error('Error setting addresses:', err);
 
+            // DRF validation errors: { shipping_address?: { field: [msgs] }, ... }
+            const data = (err as { data?: Record<string, Record<string, string[]>> }).data;
+
+            const formatErrors = (fieldErrors: Record<string, string[]>) =>
+                Object.entries(fieldErrors)
+                    .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
+                    .join('\n');
+
             // Determine the type of error and set appropriate messages
-            if (err.data?.shipping_address) {
-                const errors = Object.entries(err.data.shipping_address)
-                    .map(([field, messages]) => `${field}: ${(messages as string[]).join(', ')}`)
-                    .join('\n');
-                setError(`Shipping address validation failed:\n${errors}`);
+            if (data?.shipping_address) {
+                setError(`Shipping address validation failed:\n${formatErrors(data.shipping_address)}`);
                 toast.error('Please check shipping address details');
-            } else if (err.data?.billing_address) {
-                const errors = Object.entries(err.data.billing_address)
-                    .map(([field, messages]) => `${field}: ${(messages as string[]).join(', ')}`)
-                    .join('\n');
-                setError(`Billing address validation failed:\n${errors}`);
+            } else if (data?.billing_address) {
+                setError(`Billing address validation failed:\n${formatErrors(data.billing_address)}`);
                 toast.error('Please check billing address details');
             } else {
                 setError('Failed to save addresses. Please try again.');
