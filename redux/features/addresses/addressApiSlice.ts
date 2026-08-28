@@ -1,5 +1,5 @@
 import { apiSlice } from '@/redux/services/apiSlice';
-import { Address, AddressRequest } from '@/types/addresses';
+import { Address, AddressPostcodeStat, AddressRequest } from '@/types/addresses';
 
 export const addressApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -8,7 +8,7 @@ export const addressApiSlice = apiSlice.injectEndpoints({
             providesTags: [{ type: 'Addresses', id: 'LIST' }]
         }),
 
-        getAddressesStats: builder.query<Address[], void>({
+        getAddressesStats: builder.query<AddressPostcodeStat[], void>({
             query: () => '/addresses/stats',
             providesTags: [{ type: 'Addresses', id: 'STATS' }]
         }),

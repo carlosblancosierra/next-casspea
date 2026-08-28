@@ -1,5 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
+import cn from 'classnames';
 
 interface FormInputProps {
     id: string;
@@ -40,7 +40,7 @@ const FormInput: React.FC<FormInputProps> = ({
             pattern={pattern}
             readOnly={readOnly}
             placeholder={placeholder}
-            className={clsx(
+            className={cn(
                 "mt-0.5 block w-full rounded-md border text-base",
                 readOnly ? "bg-main-bg dark:bg-main-bg-dark" : "bg-main-bg dark:bg-main-bg-dark",
                 "text-primary-text dark:text-primary-text-light",

@@ -64,13 +64,13 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
 
     // Helper function to get quantity for a flavor
     const getFlavorQuantity = (flavorId: number) => {
-        const existingFlavor = flavours.find(f => f.flavor.id === flavorId);
+        const existingFlavor = flavours.find(f => f.flavor?.id === flavorId);
         return existingFlavor?.quantity || 0;
     };
 
     // Modified addFlavour to handle both increment and new additions
     const addFlavour = (flavour: FlavourType) => {
-        const existingIndex = flavours.findIndex(f => f.flavor.id === flavour.id);
+        const existingIndex = flavours.findIndex(f => f.flavor?.id === flavour.id);
         if (existingIndex >= 0) {
             incrementQuantity(existingIndex);
         } else {
@@ -84,7 +84,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
 
     // Helper function to handle decrement
     const handleDecrement = (flavour: FlavourType) => {
-        const existingIndex = flavours.findIndex(f => f.flavor.id === flavour.id);
+        const existingIndex = flavours.findIndex(f => f.flavor?.id === flavour.id);
         if (existingIndex >= 0) {
             decrementQuantity(existingIndex);
         }
@@ -94,14 +94,17 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
         <div className='rounded md:px-3 w-full'>
             {/* Selected Flavours List */}
             <div className="selected-flavours w-full max-w-full">
-                {flavours.map((flavour, index) => (
-                    <div key={flavour.flavor.id} className="flavour-item flex items-center mt-4 min-w-0">
+                {flavours.map((flavour, index) => {
+                    const flavor = flavour.flavor;
+                    if (!flavor) return null;
+                    return (
+                    <div key={flavor.id} className="flavour-item flex items-center mt-4 min-w-0">
                         <div className="flavour-info flex-grow min-w-0 text-left grid grid-cols-4">
                             <div className="col-span-1 pr-3">
-                                {flavour.flavor.image && (
+                                {flavor.image && (
                                     <Image
-                                        src={flavour.flavor.image || '/flavours/default.png'}
-                                        alt={flavour.flavor.name}
+                                        src={flavor.image || '/flavours/default.png'}
+                                        alt={flavor.name}
                                         width={64}
                                         height={64}
                                         className='w-full h-auto rounded'
@@ -109,26 +112,26 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 )}
                             </div>
                             <div className='col-span-3 mt-1 mx-1 md:mx-4'>
-                                <p className="font-bold text-xs md:text-sm dark:text-primary-text-light">{flavour.flavor.name}</p>
+                                <p className="font-bold text-xs md:text-sm dark:text-primary-text-light">{flavor.name}</p>
                             </div>
                         </div>
                         <div className="quantity-controls flex items-center">
                             <button
                                 type="button"
-                                onClick={() => handleDecrement(flavour.flavor)}
+                                onClick={() => handleDecrement(flavor)}
                                 className="bg-gray-100 hover:bg-gray-200 dark:bg-main-bg-dark dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-s-lg p-3 h-11 focus:ring-2 focus:outline-none"
                             >
                                 <FiMinus />
                             </button>
                             <input
                                 type="text"
-                                value={getFlavorQuantity(flavour.flavor.id)}
+                                value={getFlavorQuantity(flavor.id)}
                                 readOnly
                                 className=" dark:bg-main-bg-dark border-x-0 border-gray-300 dark:border-gray-600 h-11 text-center text-primary-text dark:text-primary-text-light text-base block w-[3rem] py-2.5"
                             />
                             <button
                                 type="button"
-                                onClick={() => addFlavour(flavour.flavor)}
+                                onClick={() => addFlavour(flavor)}
                                 className="bg-gray-100 hover:bg-gray-200 dark:bg-main-bg-dark dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-e-lg p-3 h-11 focus:ring-2 focus:outline-none"
                             >
                                 <FiPlus />
@@ -142,7 +145,8 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                             </button>
                         </div>
                     </div>
-                ))}
+                    );
+                })}
             </div>
 
             {/* Add Flavour Button */}

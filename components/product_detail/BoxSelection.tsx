@@ -22,7 +22,7 @@ const BoxSelection: React.FC<BoxSelectionProps> = ({ options, selected, onChange
                1- Box Type Selection
             </h3> */}
     <p className="text-sm text-primary-text dark:text-primary-text-light mb-2">1. Choose your box type.</p>
-        <RadioGroup value={selected} onChange={onChange} className={`space-y-4 ${className}`}>
+        <RadioGroup value={selected ?? undefined} onChange={onChange} className={`space-y-4 ${className}`}>
             {options?.map((option) => (
                 <RadioGroup.Option
                     key={option.value}
