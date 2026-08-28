@@ -21,26 +21,28 @@ describe('EmailForm', () => {
         expect(onValidEmail).not.toHaveBeenCalled();
     });
 
-    it('shows an error after leaving the field with an invalid email', async () => {
-        render(<EmailForm onValidEmail={jest.fn()} />);
-        const input = screen.getByPlaceholderText(/email address/i);
+    it('reports every keystroke through onChange, valid or not', async () => {
+        const onChange = jest.fn();
+        render(<EmailForm onChange={onChange} />);
 
-        await userEvent.type(input, 'not-an-email');
-        await userEvent.tab(); // blur
+        await userEvent.type(screen.getByPlaceholderText(/email address/i), 'ab');
 
-        expect(screen.getByRole('alert')).toHaveTextContent(/valid email/i);
+        // The parent tracks the raw value so it can decide when to flag an error.
+        expect(onChange).toHaveBeenCalledWith('a');
+        expect(onChange).toHaveBeenCalledWith('ab');
     });
 
-    it('does not show an error while typing or when the field is empty', async () => {
-        render(<EmailForm onValidEmail={jest.fn()} />);
+    it('renders normally until the parent marks it invalid', async () => {
+        // Validation state lives in the parent (CartCheckout drives this via
+        // invalid={!!modalEmailError}), so the field is only red on request.
+        const { rerender } = render(<EmailForm onValidEmail={jest.fn()} />);
         const input = screen.getByPlaceholderText(/email address/i);
 
         await userEvent.type(input, 'not-an-email');
-        expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+        expect(input.className).not.toMatch(/border-red-500/);
 
-        await userEvent.clear(input);
-        await userEvent.tab();
-        expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+        rerender(<EmailForm onValidEmail={jest.fn()} invalid />);
+        expect(input.className).toMatch(/border-red-500/);
     });
 
     it('accepts and validates an initial email', () => {

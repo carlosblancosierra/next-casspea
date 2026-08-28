@@ -41,7 +41,7 @@ export default function Personalized({ theme = 'blue' }: PersonalisedProps) {
                         />
                     </div>
                     <h2 className="text-xl font-semibold mb-2">{template.title}</h2>
-                    <p className="text-primary-text dark:text-primary-text">
+                    <p className="text-primary-text dark:text-primary-text-light">
                         Customize your chocolate with this template
                     </p>
                 </Link>

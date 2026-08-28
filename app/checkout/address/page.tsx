@@ -137,7 +137,7 @@ export default function AddressPage() {
                 </div>
 
                 {/* Shipping Address Form */}
-                <div className="main-bg dark:bg-main-bg-dark p-6 rounded-lg shadow">
+                <div className="bg-white dark:bg-main-bg-dark p-6 rounded-lg shadow">
                     <h2 className="text-lg font-medium mb-4 text-primary-text dark:text-primary-text-light">Shipping Address</h2>
                     <AddressForm
                         onAddressSubmit={handleShippingSubmit}
@@ -149,7 +149,7 @@ export default function AddressPage() {
                 </div>
 
                 {/* Billing Address Option */}
-                <div className="main-bg dark:bg-main-bg-dark p-6 rounded-lg shadow">
+                <div className="bg-white dark:bg-main-bg-dark p-6 rounded-lg shadow">
                     <label className="flex items-center space-x-3">
                         <input
                             type="checkbox"
@@ -178,18 +178,18 @@ export default function AddressPage() {
                 </div>
 
                 {error && (
-                    <div className="text-primary-text dark:text-primary-text-light text-sm whitespace-pre-line">
+                    <div className="text-red-600 dark:text-red-400 text-sm whitespace-pre-line">
                         {error}
                     </div>
                 )}
 
                 <button
                     onClick={handleSubmitClick}
-                    disabled={isProcessing || !isFormValid}
+                    disabled={isProcessing}
                     className="w-full bg-primary dark:bg-primary-2 text-primary-text-light py-3 px-4 rounded-md
-                        hover:bg-primary dark:hover:bg-primary focus:outline-none focus:ring-2
+                        hover:bg-primary-dark dark:hover:bg-primary focus:outline-none focus:ring-2
                         focus:ring-primary-2 focus:ring-offset-2
-                        disabled:cursor-not-allowed transition-colors duration-200"
+                        disabled:opacity-60 disabled:cursor-wait transition-colors duration-200"
                 >
                     {isProcessing ? 'Processing...' : 'Continue to Review Order'}
                 </button>

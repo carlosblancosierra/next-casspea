@@ -1,69 +1,56 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useValidateEmail as validateEmail } from '@/utils/useValidateEmail';
 
 interface EmailFormProps {
-    onValidEmail: (email: string) => void;
+    /** Fires on every change with the raw value (valid or not). */
+    onChange?: (email: string) => void;
+    /** Fires only when the current value is a valid email. */
+    onValidEmail?: (email: string) => void;
     initialEmail?: string;
+    /** Let the parent mark the field invalid (e.g. after a failed submit). */
+    invalid?: boolean;
 }
 
-export default function EmailForm({ onValidEmail, initialEmail = '' }: EmailFormProps) {
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default function EmailForm({ onChange, onValidEmail, initialEmail = '', invalid = false }: EmailFormProps) {
     const [email, setEmail] = useState(initialEmail);
-    const [isValid, setIsValid] = useState(true);
 
     useEffect(() => {
         if (initialEmail) {
             setEmail(initialEmail);
-            if (validateEmail(initialEmail)) {
-                setIsValid(true);
-                onValidEmail(initialEmail);
-            }
+            onChange?.(initialEmail);
+            if (EMAIL_RE.test(initialEmail)) onValidEmail?.(initialEmail);
         }
-    }, [initialEmail, onValidEmail]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialEmail]);
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newEmail = e.target.value;
         setEmail(newEmail);
-        // Don't nag while the user is still typing
-        setIsValid(true);
-        if (validateEmail(newEmail)) {
-            onValidEmail(newEmail);
-        }
-    };
-
-    const handleBlur = () => {
-        setIsValid(email === '' || validateEmail(email));
+        onChange?.(newEmail);
+        if (EMAIL_RE.test(newEmail)) onValidEmail?.(newEmail);
     };
 
     return (
         <div className="mt-4">
-            <div className="space-y-1">
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={handleEmailChange}
-                    onBlur={handleBlur}
-                    placeholder="Enter your email address"
-                    className={`w-full border rounded-md px-3 py-2
-                        text-primary-text dark:text-primary-text-light
-                        bg-main-bg dark:bg-main-bg-dark text-base
-                        placeholder-gray-500 dark:placeholder-gray-400
-                        ${!isValid ? 'border-red-500 dark:border-red-400' :
-                            'border-gray-300 dark:border-gray-600'}
-                        focus:outline-none focus:ring-2
-                        focus:ring-blue-500 dark:focus:ring-blue-400`}
-                    required
-                />
-                {!isValid && (
-                    <p role="alert" className="text-red-600 dark:text-red-400 text-sm">
-                        Please enter a valid email address
-                    </p>
-                )}
-            </div>
+            <input
+                type="email"
+                name="email"
+                id="email"
+                autoComplete="email"
+                value={email}
+                onChange={handleEmailChange}
+                placeholder="Enter your email address"
+                className={`w-full border rounded-md px-3 py-2 text-base
+                    text-gray-900 dark:text-primary-text-light
+                    bg-white dark:bg-main-bg-dark
+                    placeholder-gray-400 dark:placeholder-gray-500
+                    ${invalid ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'}
+                    focus:outline-none focus:ring-2 focus:ring-primary-2 dark:focus:ring-primary-2`}
+                required
+            />
         </div>
     );
 }

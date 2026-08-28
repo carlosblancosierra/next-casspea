@@ -25,8 +25,8 @@ const DayHeader: React.FC<DayHeaderProps> = ({ date, orders, isExpanded, onToggl
         <ChevronRightIcon
           className={`h-5 w-5 text-primary-text transition-transform ${isExpanded ? 'transform rotate-90' : ''}`}
         />
-        <span className="font-semibold text-primary-text dark:text-primary-text">{date}</span>
-        <div className="hidden sm:flex items-center gap-4 text-sm text-primary-text dark:text-primary-text">
+        <span className="font-semibold text-primary-text dark:text-primary-text-light">{date}</span>
+        <div className="hidden sm:flex items-center gap-4 text-sm text-primary-text dark:text-primary-text-light">
           <span className="flex items-center gap-1">
             <DocumentTextIcon className="h-4 w-4" />
             {orders.length} orders
@@ -37,7 +37,7 @@ const DayHeader: React.FC<DayHeaderProps> = ({ date, orders, isExpanded, onToggl
           </span>
         </div>
       </div>
-      <div className="sm:hidden flex flex-col items-end text-sm text-primary-text dark:text-primary-text">
+      <div className="sm:hidden flex flex-col items-end text-sm text-primary-text dark:text-primary-text-light">
         <span>{orders.length} orders</span>
         <span>{formatCurrency(totalSales)}</span>
       </div>
