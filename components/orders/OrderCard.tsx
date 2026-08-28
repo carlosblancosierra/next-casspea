@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 import { Order } from '@/types/orders';
+import { CartItemBoxCustomization, CartItemBoxFlavorSelection, CartItemPackCustomization } from '@/types/carts';
 import { formatDate, formatSelectionType, formatShippingAddress } from './ordersUtils';
+import { formatCurrency } from '@/utils/currency';
 import { Product } from '@/types/products';
 import { useSendTrackingCodeMailMutation } from '@/redux/features/orders/ordersApiSlice';
 import { toast } from 'react-toastify';
 
-const getCustomization = (boxCustomization: any, packCustomization: any) =>
-  boxCustomization ?? packCustomization;
+const getCustomization = (
+  boxCustomization?: CartItemBoxCustomization,
+  packCustomization?: CartItemPackCustomization,
+) => boxCustomization ?? packCustomization;
 
 const AllergenBadges: React.FC<{ allergens?: { id: number; name: string }[] }> = ({ allergens }) => {
   if (!allergens || allergens.length === 0) return null;
@@ -25,7 +29,7 @@ const AllergenBadges: React.FC<{ allergens?: { id: number; name: string }[] }> =
   );
 };
 
-const FlavorSection: React.FC<{ flavorSelections?: any[] }> = ({
+const FlavorSection: React.FC<{ flavorSelections?: CartItemBoxFlavorSelection[] }> = ({
   flavorSelections,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,7 +60,7 @@ const FlavorSection: React.FC<{ flavorSelections?: any[] }> = ({
   );
 };
 
-const BoxCustomizationExtras: React.FC<{ customization: any, products: Product[] }> = ({ customization, products }) => {
+const BoxCustomizationExtras: React.FC<{ customization: CartItemPackCustomization, products: Product[] }> = ({ customization, products }) => {
   if (!customization) return null;
   const { hot_chocolate, chocolate_bark, gift_card } = customization;
   if (!hot_chocolate && !chocolate_bark && !gift_card) return null;
@@ -265,7 +269,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
               <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Shipping Option</dt>
               <dd className="mt-1 text-sm text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
-                {order.checkout_session.shipping_option.name} - £{order.checkout_session.shipping_option.price}
+                {order.checkout_session.shipping_option.name} - {formatCurrency(order.checkout_session.shipping_option.price)}
               </dd>
             </div>
           )}
@@ -273,7 +277,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
           <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 bg-main-bg dark:bg-main-bg-dark">
             <dt className="text-sm font-medium text-primary-text dark:text-primary-text">Order Total</dt>
             <dd className="mt-1 text-sm font-semibold text-primary-text dark:text-primary-text sm:col-span-2 sm:mt-0">
-              £{order.checkout_session.total_with_shipping.toFixed(2)}
+              {formatCurrency(order.checkout_session.total_with_shipping)}
             </dd>
           </div>
 

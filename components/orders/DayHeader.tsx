@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChevronRightIcon, DocumentTextIcon, CurrencyPoundIcon } from '@heroicons/react/20/solid';
-import { formatCurrency } from './ordersUtils';
+import { formatCurrency } from '@/utils/currency';
 import { Order } from '@/types/orders';
 
 interface DayHeaderProps {
@@ -13,8 +13,7 @@ interface DayHeaderProps {
 
 const DayHeader: React.FC<DayHeaderProps> = ({ date, orders, isExpanded, onToggle, dayTotal }) => {
   const totalSales = orders.reduce((sum, order) => {
-    const amount = order.checkout_session?.total_with_shipping || 0;
-    return sum + amount;
+    return sum + (Number(order.checkout_session?.total_with_shipping) || 0);
   }, 0);
 
   return (
@@ -34,13 +33,13 @@ const DayHeader: React.FC<DayHeaderProps> = ({ date, orders, isExpanded, onToggl
           </span>
           <span className="flex items-center gap-1">
             <CurrencyPoundIcon className="h-4 w-4" />
-            {formatCurrency(totalSales.toString())}
+            {formatCurrency(totalSales)}
           </span>
         </div>
       </div>
       <div className="sm:hidden flex flex-col items-end text-sm text-primary-text dark:text-primary-text">
         <span>{orders.length} orders</span>
-        <span>{formatCurrency(totalSales.toString())}</span>
+        <span>{formatCurrency(totalSales)}</span>
       </div>
     </button>
   );
