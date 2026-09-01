@@ -118,6 +118,11 @@ export default function RootLayout({
           `}
         </Script>
 
+        {/* Cookiebot must load synchronously: data-blockingmode="auto"
+            blocks tracking scripts before they fire, which is the point
+            of the consent gate. next/script would defer it and let
+            trackers run pre-consent. */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="7ef907d7-ea0d-4a43-beec-ca187e2ea5cd" data-blockingmode="auto" type="text/javascript"></script>
         <Provider>
           <Setup />

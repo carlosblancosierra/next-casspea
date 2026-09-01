@@ -206,19 +206,23 @@ export default function PackBuilder() {
   // strongly type to avoid ReactNode | false confusion
 const steps: React.ReactNode[] = [
   <SignatureBoxStep
+    key="signature-box"
     products={products}
     priceMap={PRICE_MAP}
     onSelect={(p: Product) => { setSignatureBox(p); completeStepAndAdvance(1); }}
   />,
   <ChocolateBarkStep
+    key="chocolate-bark"
     products={products}
     onSelect={(p: Product) => { setChocolateBark(p); completeStepAndAdvance(2); }}
   />,
   <HotChocolateStep
+    key="hot-chocolate"
     products={products}
     onSelect={(p: Product) => { setHotChocolate(p); completeStepAndAdvance(3); }}
   />,
   <GiftCardStep
+    key="gift-card"
     products={products}
     selected={giftCard}
     onSelect={(p: Product | null) => setGiftCard(p)}
@@ -227,6 +231,7 @@ const steps: React.ReactNode[] = [
     onNext={() => completeStepAndAdvance(4)}
   />,
   <LoveSleeveStep
+    key="love-sleeve"
     selected={loveSleeve}
     onSelect={setLoveSleeve}
     onNext={() => completeStepAndAdvance(5)}
@@ -236,12 +241,14 @@ const steps: React.ReactNode[] = [
     })()}
   />,
   <BoxTypeStep
+    key="box-type"
     options={PREBUILDS}
     selected={boxType}
     onChange={(option: string) => setBoxType(option === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX')}
     onNext={() => completeStepAndAdvance(6)}
   />,
   <AllergenStep
+    key="allergen"
     allergens={ALLERGENS}
     selectedAllergens={selectedAllergens}
     setSelectedAllergens={setSelectedAllergens}
@@ -252,6 +259,7 @@ const steps: React.ReactNode[] = [
   // this one should stay conditional (needs signatureBox info)
   signatureBox && (
     <FlavourStep
+    key="flavour"
       signatureBox={signatureBox}
       flavours={flavours}
       remaining={remaining}
@@ -266,6 +274,7 @@ const steps: React.ReactNode[] = [
     />
   ),
   <SummaryStep
+    key="summary"
     signatureBox={signatureBox as Product}
     chocolateBark={chocolateBark}
     hotChocolate={hotChocolate}

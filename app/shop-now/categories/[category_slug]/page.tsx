@@ -6,18 +6,25 @@ import ProductCard from '@/components/store/ProductCard';
 import Spinner from '@/components/common/Spinner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGetCategoryQuery } from '@/redux/features/products/productApiSlice';
+import { skipToken } from '@reduxjs/toolkit/query';
 import PackBuilder from '@/components/packs/PackBuilder';
 import { Product } from '@/types/products';
 export default function CategoryDetailPage() {
   const { category_slug } = useParams() as { category_slug: string };
-  if (category_slug === 'packs') {
+  // The packs route renders the builder instead of a category, but the hook
+  // still has to run on every render — skipToken keeps it from fetching a
+  // category that doesn't exist.
+  const isPacksRoute = category_slug === 'packs';
+  const { data: category, isLoading: categoryLoading, error: categoryError } =
+    useGetCategoryQuery(isPacksRoute ? skipToken : category_slug);
+
+  if (isPacksRoute) {
     return (
       <div className="container mx-auto min-h-[80vh] py-2">
         <PackBuilder />
       </div>
     );
   }
-  const { data: category, isLoading: categoryLoading, error: categoryError } = useGetCategoryQuery(category_slug);
 
   if (categoryLoading || !category) {
     return (

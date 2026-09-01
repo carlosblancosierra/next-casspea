@@ -54,6 +54,8 @@
 		"@types/node": "^20.10.5",
 		"@types/react": "^18.2.45",
 		"daisyui": "^5.0.0",
+		"eslint": "^8.57.1",
+		"eslint-config-next": "14.2.35",
 		"jest": "^30.4.2",
 		"jest-environment-jsdom": "^30.4.1",
 		"typescript": "^5.3.3"

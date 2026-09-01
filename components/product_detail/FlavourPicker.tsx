@@ -35,13 +35,15 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     ...rest
 }) => {
     const { data: fetchedFlavours, isLoading, error } = useGetFlavoursQuery();
+    // Every hook must run before the early returns below, otherwise the hook
+    // order changes once loading finishes and React throws.
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const availableFlavours = propAvailableFlavours ?? fetchedFlavours;
     if (!propAvailableFlavours && isLoading) return <div className="flex items-center justify-center min-h-screen">
                 <Spinner md />
             </div>;
     if (!propAvailableFlavours && error) return <div className="text-primary-text dark:text-primary-text-light">Error:</div>;
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
