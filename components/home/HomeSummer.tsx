@@ -16,6 +16,7 @@ import { useGetActiveProductsQuery } from '@/redux/features/products/productApiS
 import { useAppSelector } from '@/redux/hooks';
 import { selectIsAuthenticated } from '@/redux/features/auth/authSlice';
 import { Product } from '@/types/products';
+import { SUMMER_BREAK_ENABLED } from '@/utils/storeStatus';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
@@ -23,6 +24,9 @@ const AUTH_ONLY = false;
 
 function useSummerVisible() {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  // Campaign disabled → hide every home/shop Summer Break surface (banner, boxes
+  // grid, and the shop "Summer Break Boxes" card/link).
+  if (!SUMMER_BREAK_ENABLED) return false;
   return !AUTH_ONLY || isAuthenticated;
 }
 
