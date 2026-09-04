@@ -28,10 +28,13 @@ interface ProductInfoProps {
 const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const maxChocolates = product.units_per_box || 0;
     const isNinetySixBox = maxChocolates === 96;
+    // Summer Break clearance boxes are "Surprise Me" only: no flavour picking,
+    // and no indulgence-pack upsell. We skip the selection step entirely.
+    const surpriseOnly = !!product.disable_flavour_selection;
     const [currentStep, setCurrentStep] = useState<number>(1);
 
-    // Step 1: Selection type
-    const [selection, setSelection] = useState<string | null>(null);
+    // Step 1: Selection type — preselected to "Surprise Me" for clearance boxes.
+    const [selection, setSelection] = useState<string | null>(surpriseOnly ? 'RANDOM' : null);
 
     // Step 2: Allergens
     const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
@@ -314,16 +317,24 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             e.preventDefault();
         }}>
             <div className="space-y-6 pb-6 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
-                <h2 className="text-2xl font-semibold text-primary-text dark:text-primary-text-light mb-4">Create your Signature Box</h2>
+                <h2 className="text-2xl font-semibold text-primary-text dark:text-primary-text-light mb-4">{surpriseOnly ? 'Create your Summer Break Box' : 'Create your Signature Box'}</h2>
 
                 <StepIndicator />
 
                 {/* Step 1: Selection Type */}
                 {currentStep === 1 && (
                     <div className="transition-opacity">
-                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 1: Choose your experience</h3>
+                        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">
+                            {surpriseOnly ? 'Step 1: Your Surprise Box' : 'Step 1: Choose your experience'}
+                        </h3>
+                        {surpriseOnly && (
+                            <p className="text-sm text-primary-text dark:text-primary-text-light mb-4">
+                                These clearance boxes are <b>Surprise Me</b> only — we hand-pick the flavours to clear our
+                                kitchen before the summer break. You can still tell us about allergens next.
+                            </p>
+                        )}
                         <BoxSelection
-                            options={prebulids}
+                            options={surpriseOnly ? prebulids.filter(o => o.value === 'RANDOM') : prebulids}
                             selected={selection}
                             onChange={setSelection}
                         />
@@ -445,7 +456,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    if (isNinetySixBox || isIndulgencePackSoldOut) {
+                                                    if (isNinetySixBox || isIndulgencePackSoldOut || surpriseOnly) {
                                                         handleAddToCart();
                                                     } else {
                                                         setShowUpgradePopup(true);

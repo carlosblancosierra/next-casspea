@@ -27,6 +27,15 @@ const isWeekday = (date: Date): boolean => {
     return day !== 0 && day !== 6;
 };
 
+// We're away for the summer break (all of August 2026) — no shipping then.
+const SUMMER_BREAK_START = new Date('2026-08-01T00:00:00');
+const SUMMER_BREAK_END = new Date('2026-09-01T00:00:00'); // exclusive
+const isDuringSummerBreak = (date: Date): boolean =>
+    date >= SUMMER_BREAK_START && date < SUMMER_BREAK_END;
+
+const isSelectableShippingDate = (date: Date): boolean =>
+    isWeekday(date) && !isDuringSummerBreak(date);
+
 export default function ShippingDateForm({ onShippingDateChange }: ShippingDateFormProps) {
     const [selected, setSelected] = useState<Date | null>(null);
 
@@ -39,7 +48,7 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
                     if (date) onShippingDateChange(toLocalDateStr(date));
                 }}
                 minDate={getTomorrow()}
-                filterDate={isWeekday}
+                filterDate={isSelectableShippingDate}
                 dateFormat="dd/MM/yyyy"
                 placeholderText="Select Shipping Date"
                 className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm
@@ -51,7 +60,7 @@ export default function ShippingDateForm({ onShippingDateChange }: ShippingDateF
                 showPopperArrow={false}
             />
             <p className="text-xs text-primary-text dark:text-primary-text-light">
-                Shipping available Monday to Friday only
+                Shipping available Monday to Friday. No shipping during our summer break (August).
             </p>
         </div>
     );

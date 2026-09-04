@@ -1,9 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { FaStar } from 'react-icons/fa';
-import { FiChevronRight } from 'react-icons/fi';
 
 const reviews = [
   {
@@ -49,79 +47,55 @@ const reviews = [
 ];
 
 export default function ReviewCarousel() {
-  const [current, setCurrent] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
-  const controls = useAnimation();
 
-  const slideTo = useCallback((index: number) => {
-    setCurrent(index);
-    controls.start({
-      x: `${-index * 100}%`,
-      transition: { type: 'spring', stiffness: 300, damping: 30 },
-    });
-  }, [controls]);
-
-  const next = useCallback(() => {
-    slideTo((current + 1) % reviews.length);
-  }, [current, slideTo]);
-
-  const prev = useCallback(() => {
-    slideTo((current - 1 + reviews.length) % reviews.length);
-  }, [current, slideTo]);
+  const scrollByCard = useCallback((dir: 1 | -1) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>('[data-review-card]');
+    const gap = 16;
+    const step = card ? card.offsetWidth + gap : el.clientWidth;
+    // Loop back to the start once we reach the end.
+    if (dir === 1 && el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
+      el.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      el.scrollBy({ left: dir * step, behavior: 'smooth' });
+    }
+  }, []);
 
   useEffect(() => {
     if (paused) return;
-    const timer = setInterval(next, 4500);
+    const timer = setInterval(() => scrollByCard(1), 4500);
     return () => clearInterval(timer);
-  }, [paused, next]);
-
-  const handleDragEnd = (_event: any, info: any) => {
-    if (Math.abs(info.offset.x) > 50) {
-      if (info.offset.x > 0) {
-        prev();
-      } else {
-        next();
-      }
-    } else {
-      controls.start({
-        x: `${-current * 100}%`,
-        transition: { type: 'spring', stiffness: 300, damping: 30 },
-      });
-    }
-  };
+  }, [paused, scrollByCard]);
 
   return (
     <div
-      className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-main-bg-dark shadow-md p-5 select-none overflow-hidden"
+      className="w-full"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Header: stars + trustpilot label */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-0.5">
-          {[...Array(5)].map((_, i) => (
-            <FaStar key={i} className="w-3.5 h-3.5 text-yellow-400" />
-          ))}
-        </div>
-        <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">Trustpilot</span>
-      </div>
-
-      {/* Sliding strip */}
-      <motion.div
-        drag="x"
-        dragElastic={0.15}
-        onDragStart={() => setPaused(true)}
-        onDragEnd={(e, info) => {
-          handleDragEnd(e, info);
-          setPaused(false);
-        }}
-        animate={controls}
-        className="flex cursor-grab active:cursor-grabbing min-h-[5rem]"
-        style={{ x: 0 }}
+      {/* Horizontally-scrolling row of separate review cards */}
+      <div
+        ref={scrollRef}
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 -mx-1 px-1 [&::-webkit-scrollbar]:hidden"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
       >
         {reviews.map((review, i) => (
-          <div key={i} className="min-w-full">
-            <p className="text-sm text-primary-text dark:text-primary-text-light leading-relaxed italic">
+          <div
+            key={i}
+            data-review-card
+            className="snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[47%] lg:w-[31%] rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-main-bg-dark shadow-md p-5 flex flex-col"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-0.5">
+                {[...Array(5)].map((_, s) => (
+                  <FaStar key={s} className="w-3 h-3 text-yellow-400" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-primary-text dark:text-primary-text-light leading-relaxed italic flex-1">
               &ldquo;{review.quote}&rdquo;
             </p>
             <p className="mt-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
@@ -129,33 +103,6 @@ export default function ReviewCarousel() {
             </p>
           </div>
         ))}
-      </motion.div>
-
-      {/* Footer: dots + next button */}
-      <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
-        <div className="flex gap-1.5">
-          {reviews.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => slideTo(i)}
-              aria-label={`Review ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === current
-                  ? 'w-4 bg-primary'
-                  : 'w-1.5 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
-              }`}
-            />
-          ))}
-        </div>
-
-        <button
-          onClick={next}
-          className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary-dark transition-colors"
-          aria-label="Next review"
-        >
-          Next review
-          <FiChevronRight className="w-3.5 h-3.5" />
-        </button>
       </div>
     </div>
   );
