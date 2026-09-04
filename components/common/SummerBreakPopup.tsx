@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
+import { SUMMER_BREAK_ENABLED } from '@/utils/storeStatus';
 
 const SUMMER_BREAK_CATEGORY = '/landing/summer-break';
 
-// Public announcement switch. Kept OFF while testing so the sale stays private
-// (reachable only via the direct /landing/summer-break link). Flip to `true`
-// to announce the sale to every visitor at launch.
-const ENABLED = true;
+// Tied to the campaign master switch in utils/storeStatus. Off → the popup never
+// shows; flip SUMMER_BREAK_ENABLED back on to announce the sale to every visitor.
+const ENABLED = SUMMER_BREAK_ENABLED;
 
 export default function SummerBreakPopup() {
   const [show, setShow] = useState(false);
