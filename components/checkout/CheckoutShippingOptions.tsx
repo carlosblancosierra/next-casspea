@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { addBusinessDays, format } from 'date-fns';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
+import ShippingDateForm from '@/components/cart/ShippingDateForm';
 
 export interface ShippingOption {
     id: number;
@@ -38,19 +39,22 @@ interface CheckoutShippingOptionsProps {
     selectedOptionId?: number;
     onShippingOptionChange: (optionId: number) => Promise<void>;
     onChangeStorePickup?: (val: { date: Date; slot: Slot } | null) => void;
+    onChangeShippingDate?: (date: string) => void;
 }
 
 const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     shippingCompanies,
     selectedOptionId,
     onShippingOptionChange,
-    onChangeStorePickup
+    onChangeStorePickup,
+    onChangeShippingDate
 }) => {
     const [localSelectedOption, setLocalSelectedOption] = useState<string | null>(null);
     const [isUpdating, setIsUpdating] = useState(false);
     const { data: cart, isLoading, error: cartError } = useGetCartQuery();
     const [storePickup, setStorePickup] = useState<{ date: Date; slot: Slot } | null>(null);
     const [deliveryType, setDeliveryType] = useState<'shipping' | 'pickup' | null>(null);
+    const [shippingDate, setShippingDate] = useState<string>('');
 
 
     // Expose storePickup to parent if onChangeStorePickup is provided
@@ -59,6 +63,14 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
             onChangeStorePickup(storePickup);
         }
     }, [storePickup, onChangeStorePickup]);
+
+    // Shipping date only applies to delivery — clear it when not shipping.
+    useEffect(() => {
+        if (deliveryType !== 'shipping' && shippingDate) {
+            setShippingDate('');
+        }
+        onChangeShippingDate?.(deliveryType === 'shipping' ? shippingDate : '');
+    }, [deliveryType, shippingDate, onChangeShippingDate]);
 
     // Update local state when prop changes
     useEffect(() => {
@@ -310,6 +322,15 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                             Change method
                         </button>
                     </div>
+
+                    {deliveryType === 'shipping' && (
+                        <div className="mb-5">
+                            <label className="block text-sm font-medium text-primary-text dark:text-primary-text-light mb-2">
+                                Preferred shipping date
+                            </label>
+                            <ShippingDateForm onShippingDateChange={setShippingDate} />
+                        </div>
+                    )}
 
                     {allShippingOptions.length > 0 && (
                         <div className="space-y-4">
