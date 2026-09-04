@@ -59,7 +59,6 @@ export default function AddressPage() {
 
     const handleSubmitClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        console.log('Submit button clicked');
 
         // Validate Shipping Address
         if (!shippingAddress || !shippingAddress.street_address || !shippingAddress.city || !shippingAddress.postcode) {
@@ -77,7 +76,6 @@ export default function AddressPage() {
 
         setIsProcessing(true);
         setError(null);
-        console.log('Processing address submission');
 
         try {
             // Prepare the address request payload
@@ -96,28 +94,27 @@ export default function AddressPage() {
                         address_type: 'BILLING'
                     }
             };
-            console.log('Sending address request:', addressRequest);
 
             const response = await setAddresses(addressRequest).unwrap();
-            console.log('Address set response:', response);
-            console.log('Navigating to /checkout/confirm');
             router.push('/checkout/confirm');
 
-        } catch (err: any) {
+        } catch (err) {
             console.error('Error setting addresses:', err);
 
+            // DRF validation errors: { shipping_address?: { field: [msgs] }, ... }
+            const data = (err as { data?: Record<string, Record<string, string[]>> }).data;
+
+            const formatErrors = (fieldErrors: Record<string, string[]>) =>
+                Object.entries(fieldErrors)
+                    .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
+                    .join('\n');
+
             // Determine the type of error and set appropriate messages
-            if (err.data?.shipping_address) {
-                const errors = Object.entries(err.data.shipping_address)
-                    .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
-                    .join('\n');
-                setError(`Shipping address validation failed:\n${errors}`);
+            if (data?.shipping_address) {
+                setError(`Shipping address validation failed:\n${formatErrors(data.shipping_address)}`);
                 toast.error('Please check shipping address details');
-            } else if (err.data?.billing_address) {
-                const errors = Object.entries(err.data.billing_address)
-                    .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
-                    .join('\n');
-                setError(`Billing address validation failed:\n${errors}`);
+            } else if (data?.billing_address) {
+                setError(`Billing address validation failed:\n${formatErrors(data.billing_address)}`);
                 toast.error('Please check billing address details');
             } else {
                 setError('Failed to save addresses. Please try again.');
@@ -127,7 +124,6 @@ export default function AddressPage() {
             }
         } finally {
             setIsProcessing(false);
-            console.log('Finished processing address submission');
         }
     };
 

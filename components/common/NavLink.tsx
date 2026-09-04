@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import cn from 'classnames';
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLElement> {
 	isSelected?: boolean;
 	isMobile?: boolean;
 	isBanner?: boolean;
 	href?: string;
 	children: React.ReactNode;
-	[rest: string]: any;
 }
 
 export default function NavLink({

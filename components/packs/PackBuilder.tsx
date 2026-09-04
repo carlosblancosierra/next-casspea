@@ -20,7 +20,7 @@ import { PRICE_MAP, ID_MAP, ALLERGENS, PREBUILDS, STEP_LABELS, STEP_BORDER, STEP
 import { useRouter } from 'next/navigation'
 import Spinner from "@/components/common/Spinner";
 import { Product } from '@/types/products';
-import { CartItemBoxFlavorSelection } from '@/types/carts';
+import { CartItemBoxFlavorSelection, CartItemRequest } from '@/types/carts';
 import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 import { Flavour as FlavourType } from '@/types/flavours';
 
@@ -102,7 +102,9 @@ export default function PackBuilder() {
     if (remaining === 0) return;
     const idx = flavours.findIndex(x => x.flavor?.id === flavour.id);
     if (idx >= 0) {
-      const u = [...flavours]; u[idx].quantity++; setFlavours(u)
+      const u = [...flavours]
+      u[idx] = { ...u[idx], quantity: u[idx].quantity + 1 }
+      setFlavours(u)
     } else {
       setFlavours([
         ...flavours,
@@ -121,7 +123,9 @@ export default function PackBuilder() {
   const handleDec = (i: number): void => {
     const u = [...flavours]
     if (u[i].quantity > 1) {
-      u[i].quantity--; setFlavours(u); setRemaining(r => r + 1)
+      u[i] = { ...u[i], quantity: u[i].quantity - 1 }
+      setFlavours(u)
+      setRemaining(r => r + 1)
     } else {
       const qty = u[i].quantity
       setFlavours(f => f.filter((_,j) => j !== i))
@@ -130,19 +134,6 @@ export default function PackBuilder() {
   }
   const handleClear = (): void => {
     setFlavours([]); setRemaining(signatureBox?.units_per_box ?? 0)
-  }
-
-  // Helper: ensure we send the **Flavour** PK, not the Product PK
-  const getFlavourPk = (f: any): number => {
-    // Prefer canonical flavour FK the API expects if present on product
-    // Adjust these fallbacks to your actual product->flavour mapping
-    return (
-      f.flavour_id ??
-      f.flavor_id ??
-      f.flavour?.id ??
-      f.flavor?.id ??
-      f.id // last resort (only if product.id == flavour.id in your DB)
-    )
   }
 
   const handleConfirm = async () => {
@@ -170,16 +161,15 @@ export default function PackBuilder() {
     const allergensToSend =
       allergenOption === 'SPECIFY' ? selectedAllergens : []
 
-    const payload: any = {
+    const payload: CartItemRequest = {
       product: productId,
       quantity: 1,
       pack_customization: {
         selection_type: boxType, // must match choices in your model
         flavor_selections: boxType === 'PICK_AND_MIX'
-          ? flavours.map(f => ({
-              flavor: getFlavourPk(f.flavor),
-              quantity: f.quantity
-            }))
+          ? flavours.flatMap(f =>
+              f.flavor ? [{ flavor: f.flavor.id, quantity: f.quantity }] : []
+            )
           : [],
         chocolate_bark: chocolateBark?.id ?? null,
         hot_chocolate: hotChocolate?.id ?? null,
@@ -187,8 +177,6 @@ export default function PackBuilder() {
         allergens: allergensToSend
       }
     }
-
-    console.log('payload', payload)
 
     try {
       if (giftMessage.trim() !== '') {
@@ -218,19 +206,23 @@ export default function PackBuilder() {
   // strongly type to avoid ReactNode | false confusion
 const steps: React.ReactNode[] = [
   <SignatureBoxStep
+    key="signature-box"
     products={products}
     priceMap={PRICE_MAP}
     onSelect={(p: Product) => { setSignatureBox(p); completeStepAndAdvance(1); }}
   />,
   <ChocolateBarkStep
+    key="chocolate-bark"
     products={products}
     onSelect={(p: Product) => { setChocolateBark(p); completeStepAndAdvance(2); }}
   />,
   <HotChocolateStep
+    key="hot-chocolate"
     products={products}
     onSelect={(p: Product) => { setHotChocolate(p); completeStepAndAdvance(3); }}
   />,
   <GiftCardStep
+    key="gift-card"
     products={products}
     selected={giftCard}
     onSelect={(p: Product | null) => setGiftCard(p)}
@@ -239,6 +231,7 @@ const steps: React.ReactNode[] = [
     onNext={() => completeStepAndAdvance(4)}
   />,
   <LoveSleeveStep
+    key="love-sleeve"
     selected={loveSleeve}
     onSelect={setLoveSleeve}
     onNext={() => completeStepAndAdvance(5)}
@@ -248,12 +241,14 @@ const steps: React.ReactNode[] = [
     })()}
   />,
   <BoxTypeStep
+    key="box-type"
     options={PREBUILDS}
     selected={boxType}
     onChange={(option: string) => setBoxType(option === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX')}
     onNext={() => completeStepAndAdvance(6)}
   />,
   <AllergenStep
+    key="allergen"
     allergens={ALLERGENS}
     selectedAllergens={selectedAllergens}
     setSelectedAllergens={setSelectedAllergens}
@@ -264,6 +259,7 @@ const steps: React.ReactNode[] = [
   // this one should stay conditional (needs signatureBox info)
   signatureBox && (
     <FlavourStep
+    key="flavour"
       signatureBox={signatureBox}
       flavours={flavours}
       remaining={remaining}
@@ -278,6 +274,7 @@ const steps: React.ReactNode[] = [
     />
   ),
   <SummaryStep
+    key="summary"
     signatureBox={signatureBox as Product}
     chocolateBark={chocolateBark}
     hotChocolate={hotChocolate}

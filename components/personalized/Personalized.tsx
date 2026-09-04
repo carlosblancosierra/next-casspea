@@ -4,27 +4,11 @@ import { useGetTemplatesQuery } from '@/redux/features/personalized/personalized
 import Link from 'next/link';
 import CustomChocolate from './CustomChocolate';
 import { UserChosenLayer } from '@/types/personalized';
+import { getRandomLayers } from '@/utils/getRandomLayers';
 import { useMemo } from 'react';
 
 export default function Personalized() {
     const { data: templates, isLoading, error } = useGetTemplatesQuery();
-
-    const getRandomLayers = (template: any): UserChosenLayer[] => {
-        return template.layers.map(slot => {
-            const randomColor = slot.layer_type.colors[
-                Math.floor(Math.random() * slot.layer_type.colors.length)
-            ];
-            return {
-                chocolate_layer: {
-                    layer_type: slot.layer_type,
-                    color: randomColor,
-                    top_image: randomColor.top_image,
-                    side_image: randomColor.side_image,
-                },
-                order: slot.order,
-            };
-        });
-    };
 
     // Generate random layers for each template once when templates load
     const randomLayersMap = useMemo(() => {

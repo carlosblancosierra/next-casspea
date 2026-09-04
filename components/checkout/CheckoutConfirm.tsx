@@ -61,7 +61,7 @@ const CheckoutConfirm = () => {
             setIsProcessing(true);
 
             // Prepare payload
-            const payload: any = {
+            const payload: { shipping_option_id: number, pickup_date?: string, pickup_time?: string } = {
                 shipping_option_id: selectedShippingOption
             };
             if (selectedShippingOption === 34 && storePickup) {
