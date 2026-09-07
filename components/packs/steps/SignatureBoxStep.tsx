@@ -13,12 +13,17 @@ export default function SignatureBoxStep({ products, priceMap, onSelect }: Props
     p => p.category?.slug === 'signature-boxes' && p.units_per_box !== 96
   )
 
-  const anyIndulgenceSoldOut = items.some(p => {
+  // A size is sold out if the box itself is sold out, or the indulgence-pack SKU
+  // it maps to (what actually goes in the cart) is sold out.
+  const isSizeSoldOut = (p: Product) => {
+    if (p.sold_out) return true
     const packProductId = ID_MAP[p.units_per_box ?? 0]
     if (!packProductId) return false
     const packProduct = products.find(pr => pr.id === packProductId)
     return Boolean(packProduct?.sold_out)
-  })
+  }
+
+  const anyIndulgenceSoldOut = items.some(isSizeSoldOut)
   return (
     <>
         <section className="mb-8">
@@ -36,9 +41,7 @@ export default function SignatureBoxStep({ products, priceMap, onSelect }: Props
         )}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {items.map(p => {
-          const packProductId = ID_MAP[p.units_per_box ?? 0]
-          const packProduct = packProductId ? products.find(pr => pr.id === packProductId) : undefined
-          const soldOut = Boolean(packProduct?.sold_out)
+          const soldOut = isSizeSoldOut(p)
 
           return (
             <SelectableProductCard
