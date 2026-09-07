@@ -26,6 +26,10 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
     const [addToCart, { isLoading }] = useAddCartItemMutation();
 
     const handleAddToCart = async () => {
+        if (product.sold_out) {
+            toast.error('This product is sold out.');
+            return;
+        }
         try {
             // Build the payload required by your backend
             const cartItemRequest: CartItemRequest = {

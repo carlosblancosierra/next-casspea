@@ -22,14 +22,22 @@ export default function ProductCard({ product, useAlternateImage = false }: Prod
         ? product.compare_at_price
         : undefined;
 
+    const isSoldOut = !!product.sold_out;
+
     return (
         <Link
             href={`/shop-now/${product.slug}`}
+            aria-label={isSoldOut ? `${product.name} — sold out` : product.name}
             className="block group relative shadow-lg rounded-lg p-2 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-main-bg-dark hover:opacity-90 transition-opacity"
         >
-            {isSummerBreakBox && (
+            {isSummerBreakBox && !isSoldOut && (
                 <span className="absolute top-3 left-3 z-10 rounded-full bg-pink-600 px-2 py-0.5 text-xs font-bold text-white shadow">
                     25% OFF
+                </span>
+            )}
+            {isSoldOut && (
+                <span className="absolute top-3 left-3 z-10 rounded-full bg-gray-800/90 px-2 py-0.5 text-xs font-bold text-white shadow">
+                    Sold out
                 </span>
             )}
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-main-bg-dark group-hover:opacity-75">
@@ -40,7 +48,7 @@ export default function ProductCard({ product, useAlternateImage = false }: Prod
                         width={0}
                         height={0}
                         sizes="100vw"
-                        className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                        className={`h-full w-full object-cover object-center lg:h-full lg:w-full ${isSoldOut ? 'opacity-40 grayscale' : ''}`}
                     />
                 )}
             </div>

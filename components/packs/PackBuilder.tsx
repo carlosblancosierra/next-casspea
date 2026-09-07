@@ -139,6 +139,12 @@ export default function PackBuilder() {
   const handleConfirm = async () => {
     if (!signatureBox) return
 
+    // Block if the selected box itself is sold out.
+    if (signatureBox.sold_out) {
+      toast.error('That box is sold out. Please choose another size.')
+      return
+    }
+
     // If the selected signature-box size maps to a sold-out indulgence-pack SKU,
     // block checkout for this configuration.
     const mappedPackProductId =

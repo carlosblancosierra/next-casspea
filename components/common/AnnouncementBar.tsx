@@ -61,7 +61,7 @@ export default function AnnouncementBar() {
         rel="noopener noreferrer"
         target="_blank"
       >
-        4.7 on Trustpilot (70 reviews)
+        4.7 on Trustpilot (74 reviews)
       </a>
     </div>
   );

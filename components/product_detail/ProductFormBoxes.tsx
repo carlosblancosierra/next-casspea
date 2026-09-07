@@ -68,6 +68,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const indulgencePackProduct = allProducts?.find(p => p.id === indulgencePackProductId);
     const isIndulgencePackSoldOut = Boolean(indulgencePackProduct?.sold_out);
 
+    // The box product itself being sold out blocks the whole flow — no building a
+    // box that can't be bought (the backend also rejects sold-out items on add).
+    const isSoldOut = !!product.sold_out;
+
     const prebulids = [
         {
             name: 'Pick & Mix',
@@ -282,6 +286,17 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     });
 
     const handleAddToCart = async () => {
+        // Never let a sold-out box (or indulgence pack) be added to the cart.
+        // These run before the gift-message popup below so a sold-out box can
+        // never open it.
+        if (isSoldOut) {
+            toast.error('This box is sold out.');
+            return;
+        }
+        if (isPack && isIndulgencePackSoldOut) {
+            toast.error('This indulgence pack is sold out.');
+            return;
+        }
         if (!selection) return;
         const shouldTreatAsPack = isPack && !isIndulgencePackSoldOut;
         // Check if gift card is selected but no gift message is provided
@@ -311,6 +326,28 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             console.error('Add to cart error:', error);
         }
     };
+
+    // Sold out: don't let the customer build a box that can't be purchased.
+    if (isSoldOut) {
+        return (
+            <div className="space-y-4 border border-gray-200 dark:border-gray-700 rounded-lg p-6 text-center">
+                <h2 className="text-2xl font-semibold text-primary-text dark:text-primary-text-light">
+                    {surpriseOnly ? 'Summer Break Box' : 'Signature Box'}
+                </h2>
+                <p className="text-sm text-primary-text dark:text-primary-text-light">
+                    This box is currently sold out. Please check back soon or explore our other boxes.
+                </p>
+                <button
+                    type="button"
+                    disabled
+                    aria-disabled="true"
+                    className="w-full py-3 rounded bg-gray-400 text-primary-text dark:text-primary-text-light cursor-not-allowed flex items-center justify-center text-sm gap-2"
+                >
+                    Sold Out
+                </button>
+            </div>
+        );
+    }
 
     return (
         <form onSubmit={(e) => {
