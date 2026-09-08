@@ -78,9 +78,7 @@ describe('CheckoutShippingOptions', () => {
             />
         );
 
-        // The customer first chooses how to receive the order, then an option.
-        await userEvent.click(screen.getByText('Shipping Delivery'));
-
+        // Shipping is the default mode, so options are on screen already.
         const radios = await screen.findAllByRole('radio');
         const trackedTwentyFour = radios.find(
             r => (r as HTMLInputElement).value === '3'
@@ -88,5 +86,28 @@ describe('CheckoutShippingOptions', () => {
         await userEvent.click(trackedTwentyFour);
 
         expect(onShippingOptionChange).toHaveBeenCalledWith(3);
+    });
+
+    it('switching delivery mode clears the pick so a stale option cannot be paid for', async () => {
+        const onShippingOptionChange = jest.fn().mockResolvedValue(undefined);
+
+        render(
+            <CheckoutShippingOptions
+                shippingCompanies={companies}
+                onShippingOptionChange={onShippingOptionChange}
+            />
+        );
+
+        const radios = await screen.findAllByRole('radio');
+        const option = radios.find(r => (r as HTMLInputElement).value === '3') as HTMLInputElement;
+        await userEvent.click(option);
+        expect(option.checked).toBe(true);
+
+        await userEvent.click(screen.getByRole('radio', { name: 'Collect in store' }));
+        await userEvent.click(screen.getByRole('radio', { name: 'Ship to me' }));
+
+        const afterSwitch = screen.getAllByRole('radio')
+            .filter(r => (r as HTMLInputElement).type === 'radio' && (r as HTMLInputElement).name === 'shipping');
+        expect(afterSwitch.every(r => !(r as HTMLInputElement).checked)).toBe(true);
     });
 });

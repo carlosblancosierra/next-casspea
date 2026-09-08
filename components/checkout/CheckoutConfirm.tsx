@@ -17,6 +17,7 @@ import CartItem from '@/components/cart/CartItem';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
+import { formatCurrency } from '@/utils/currency';
 
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -126,6 +127,17 @@ const CheckoutConfirm = () => {
 
     const isHolidayPeriod = new Date() < new Date('2026-05-26T00:00:00+01:00');
 
+    // Mirrors CheckoutSession.total_with_shipping on the backend:
+    // cart.discounted_total + the shipping option's (already discounted) price.
+    // The session is not refetched between picking an option and continuing, so
+    // its own total is stale — this is the only way to show a live figure.
+    const selectedOption = shippingCompanies
+        ?.flatMap(company => company.shipping_options)
+        .find(option => option.id === selectedShippingOption);
+    const totalWithShipping = cart && selectedOption
+        ? parseFloat(cart.discounted_total) + parseFloat(selectedOption.price)
+        : undefined;
+
     return (
         <div className=" dark:bg-main-bg-dark min-h-screen">
             <div className="max-w-7xl mx-auto px-0">
@@ -163,21 +175,39 @@ const CheckoutConfirm = () => {
                             </p>
                         </div>
                     )}
-                    <button
-                        onClick={handleProceedToPayment}
-                        disabled={isProcessing || !selectedShippingOption}
-                        className="w-full bg-gradient-autumn text-primary-text-light dark:text-primary-text-light py-3 px-4 rounded-md
-                            hover:bg-primary focus:outline-none focus:ring-2
-                            focus:ring-primary-2 focus:ring-offset-2
-                            disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-200"
-                    >
-                        {isProcessing ? 'Processing...' : 'Proceed to Payment'}
-                    </button>
-                    {!selectedShippingOption && !isProcessing && (
-                        <p className="mt-2 text-sm text-center text-primary-text dark:text-primary-text-light">
-                            Choose a delivery option to continue.
-                        </p>
+                    {/* Shipping is chosen on this page and changes what gets
+                        charged, so it is the one figure worth showing here. The
+                        itemised cart is not repeated — Stripe shows that next. */}
+                    {totalWithShipping !== undefined && (
+                        <dl className="flex items-center justify-between gap-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <dt className="text-base font-bold text-primary-text dark:text-primary-text-light">
+                                Total incl. delivery
+                            </dt>
+                            <dd className="text-base font-bold text-primary-text dark:text-primary-text-light">
+                                {formatCurrency(totalWithShipping)}
+                            </dd>
+                        </dl>
                     )}
+
+                    {/* Pinned on small screens so the action is always reachable
+                        without scrolling past the delivery options. */}
+                    <div className="sticky bottom-0 -mx-4 px-4 py-3 bg-main-bg dark:bg-main-bg-dark border-t border-gray-200 dark:border-gray-700 md:static md:mx-0 md:px-0 md:py-0 md:bg-transparent md:dark:bg-transparent md:border-0">
+                        <button
+                            onClick={handleProceedToPayment}
+                            disabled={isProcessing || !selectedShippingOption}
+                            className="w-full bg-gradient-autumn text-primary-text-light dark:text-primary-text-light py-3 px-4 rounded-md
+                                hover:bg-primary focus:outline-none focus:ring-2
+                                focus:ring-primary-2 focus:ring-offset-2
+                                disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-200"
+                        >
+                            {isProcessing ? 'Processing...' : 'Continue to secure payment'}
+                        </button>
+                        {!selectedShippingOption && !isProcessing && (
+                            <p className="mt-2 text-sm text-center text-primary-text dark:text-primary-text-light">
+                                Choose a delivery option to continue.
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

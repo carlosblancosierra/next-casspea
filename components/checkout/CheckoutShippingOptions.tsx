@@ -30,7 +30,11 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     const [isUpdating, setIsUpdating] = useState(false);
     const { data: cart, isLoading, error: cartError } = useGetCartQuery();
     const [storePickup, setStorePickup] = useState<{ date: Date; slot: Slot } | null>(null);
-    const [deliveryType, setDeliveryType] = useState<'shipping' | 'pickup' | null>(null);
+    // Defaults to shipping so options and prices are visible on arrival. This
+    // is not the bug that was just fixed: defaulting the *mode* does not select
+    // an *option* — the list below starts empty and Continue stays disabled
+    // until the customer actually picks one.
+    const [deliveryType, setDeliveryType] = useState<'shipping' | 'pickup'>('shipping');
 
 
     // Expose storePickup to parent if onChangeStorePickup is provided
@@ -54,6 +58,10 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
             companyId: company.id
         }))
     ) || [];
+
+    // Captured before the delivery-type filter below narrows the list, so the
+    // "nothing to show" guard still means "the API returned no options at all".
+    const hasAnyShippingOptions = allShippingOptions.length > 0;
 
     // Filter by delivery type
     if (deliveryType === 'pickup') {
@@ -179,7 +187,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         );
     };
 
-    if (!allShippingOptions.length && !deliveryType) return null;
+    if (!hasAnyShippingOptions) return null;
 
     const isHolidayPeriod = new Date() < new Date('2026-05-26T00:00:00+01:00');
 
@@ -196,83 +204,57 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                 </div>
             )}
             <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text-light">
-                {deliveryType ? 'Shipping Options' : 'How would you like to receive your order?'}
+                Delivery
             </h2>
 
-            {!deliveryType ? (
-                <div className="space-y-4">
-                    <p className="text-sm text-primary-text dark:text-primary-text-light mb-6">
-                        Choose how you'd like to receive your chocolate order.
-                    </p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Shipping Delivery Option */}
+            {/* Segmented control, the pattern most checkouts use for this: it
+                stays visible so switching is one tap and there is no dead end,
+                and the options below are reachable without an extra screen. */}
+            <div
+                role="radiogroup"
+                aria-label="How would you like to receive your order?"
+                className="flex p-1 mb-4 rounded-lg bg-gray-100 dark:bg-gray-800"
+            >
+                {([
+                    { value: 'shipping', label: 'Ship to me' },
+                    { value: 'pickup', label: 'Collect in store' },
+                ] as const).map(({ value, label }) => {
+                    const isActive = deliveryType === value;
+                    return (
                         <button
-                            onClick={() => { setLocalSelectedOption(null); setDeliveryType('shipping'); }}
-                            className="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary-2 hover:bg-primary/5 dark:hover:bg-primary-2/10 transition-all duration-200 text-left group"
-                        >
-                            <div className="flex items-center mb-3">
-                                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-3 group-hover:bg-primary dark:group-hover:bg-primary-2 transition-colors">
-                                    <svg className="w-6 h-6 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold text-primary-text dark:text-primary-text-light">Shipping Delivery</h3>
-                                    <p className="text-sm text-primary-text dark:text-primary-text-light">Delivered to your address</p>
-                                </div>
-                            </div>
-                            <p className="text-sm text-primary-text dark:text-primary-text-light">
-                                Choose from various shipping options with different delivery speeds and costs.
-                            </p>
-                        </button>
-
-                        {/* Store Pickup Option */}
-                        <button
-                            onClick={() => { setLocalSelectedOption(null); setDeliveryType('pickup'); }}
-                            className="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary-2 hover:bg-primary/5 dark:hover:bg-primary-2/10 transition-all duration-200 text-left group"
-                        >
-                            <div className="flex items-center mb-3">
-                                <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-3 group-hover:bg-primary dark:group-hover:bg-primary-2 transition-colors">
-                                    <svg className="w-6 h-6 text-green-600 dark:text-green-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold text-primary-text dark:text-primary-text-light">Store Pickup</h3>
-                                    <p className="text-sm text-primary-text dark:text-primary-text-light">Collect from our store</p>
-                                </div>
-                            </div>
-                            <p className="text-sm text-primary-text dark:text-primary-text-light">
-                                Pick up your order from our Bedford Hill store location. Schedule a pickup time.
-                            </p>
-                        </button>
-                    </div>
-
-                </div>
-            ) : (
-                <>
-                    <div className="flex items-center justify-between mb-4">
-                        <p className="text-sm text-primary-text dark:text-primary-text-light">
-                            {deliveryType === 'shipping'
-                                ? 'Choose your preferred shipping method below.'
-                                : 'Pick up your order from our Bedford Hill store. Choose a convenient time slot.'
-                            }
-                        </p>
-                        <button
+                            key={value}
+                            type="button"
+                            role="radio"
+                            aria-checked={isActive}
                             onClick={() => {
-                                setDeliveryType(null);
+                                if (deliveryType === value) return;
+                                // Switching mode clears the pick: options in the
+                                // other mode are a different set, and leaving a
+                                // stale id selected would let the customer pay
+                                // for something no longer on screen.
+                                setDeliveryType(value);
                                 setLocalSelectedOption(null);
+                                setStorePickup(null);
                             }}
-                            className="text-sm text-primary-text dark:text-primary-text-light hover:opacity-70 font-medium flex items-center"
+                            className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-colors ${
+                                isActive
+                                    ? 'bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light shadow-sm'
+                                    : 'text-primary-text/70 dark:text-primary-text-light/70 hover:text-primary-text dark:hover:text-primary-text-light'
+                            }`}
                         >
-                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                            </svg>
-                            Change method
+                            {label}
                         </button>
-                    </div>
+                    );
+                })}
+            </div>
+
+            <>
+                    <p className="text-sm text-primary-text dark:text-primary-text-light mb-4">
+                        {deliveryType === 'shipping'
+                            ? 'Choose your preferred shipping method below.'
+                            : 'Pick up your order from our Bedford Hill store. Choose a convenient time slot.'
+                        }
+                    </p>
 
                     {allShippingOptions.length > 0 && (
                         <div className="space-y-4">
@@ -361,7 +343,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                         Due to the current high temperatures in the UK, we have temporarily disabled the Royal Mail - Tracked 48® service.
                     </p> */}
                 </>
-            )}
         </div>
     );
 };
