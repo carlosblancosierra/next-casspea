@@ -39,6 +39,18 @@ const CheckoutConfirm = () => {
     const [createStripeSession] = useCreateStripeCheckoutSessionMutation();
     const [updateShippingOption] = useUpdateShippingOptionMutation();
 
+    // Leaving for Stripe is a full navigation, so coming back through the
+    // browser's back/forward cache restores this component with isProcessing
+    // still true and the button stuck on "Processing...". pageshow fires on
+    // that restore (persisted === true), which is the only signal we get.
+    useEffect(() => {
+        const handlePageShow = (event: PageTransitionEvent) => {
+            if (event.persisted) setIsProcessing(false);
+        };
+        window.addEventListener('pageshow', handlePageShow);
+        return () => window.removeEventListener('pageshow', handlePageShow);
+    }, []);
+
 
     const handleProceedToPayment = async () => {
         if (isProcessing) return;
@@ -153,14 +165,19 @@ const CheckoutConfirm = () => {
                     )}
                     <button
                         onClick={handleProceedToPayment}
-                        disabled={isProcessing}
+                        disabled={isProcessing || !selectedShippingOption}
                         className="w-full bg-gradient-autumn text-primary-text-light dark:text-primary-text-light py-3 px-4 rounded-md
                             hover:bg-primary focus:outline-none focus:ring-2
                             focus:ring-primary-2 focus:ring-offset-2
-                            disabled:opacity-60 disabled:cursor-wait transition-colors duration-200"
+                            disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-200"
                     >
                         {isProcessing ? 'Processing...' : 'Proceed to Payment'}
                     </button>
+                    {!selectedShippingOption && !isProcessing && (
+                        <p className="mt-2 text-sm text-center text-primary-text dark:text-primary-text-light">
+                            Choose a delivery option to continue.
+                        </p>
+                    )}
                 </div>
             </div>
         </div>

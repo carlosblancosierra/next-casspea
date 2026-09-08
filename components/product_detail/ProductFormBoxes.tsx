@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { Product } from '@/types/products';
@@ -57,6 +57,9 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [showGiftMessagePopup, setShowGiftMessagePopup] = useState<boolean>(false);
 
     const router = useRouter();
+    // Steps 4-6 are long product lists, so advancing left the customer part
+    // way down the page — the next step's heading was above the fold.
+    const formRef = useRef<HTMLFormElement>(null);
     const [addToCart, { isLoading }] = useAddCartItemMutation();
     const [updateCart] = useUpdateCartMutation();
     const { data: allProducts } = useGetProductsQuery();
@@ -135,7 +138,12 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const getTotalSteps = () => isPack ? 7 : 3;
     const isPackStep = (step: number) => isPack && step > 3;
 
+    const scrollToFormTop = () => {
+        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
     const handleNextStep = () => {
+        scrollToFormTop();
         if (currentStep === 1 && canProceedToStep2()) {
             setCurrentStep(2);
         } else if (currentStep === 2 && canProceedToStep3()) {
@@ -152,6 +160,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     };
 
     const handlePrevStep = () => {
+        scrollToFormTop();
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
         }
@@ -350,7 +359,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     }
 
     return (
-        <form onSubmit={(e) => {
+        <form ref={formRef} onSubmit={(e) => {
             e.preventDefault();
         }}>
             <div className="space-y-6 pb-6 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">

@@ -128,7 +128,7 @@ export default function AddressPage() {
     };
 
     return (
-        <main className='mx-auto max-w-3xl md:py-8 py-4 px-4 sm:px-6 bg-main-bg dark:bg-main-bg-dark min-h-screen'>
+        <main className='mx-auto max-w-3xl md:py-8 py-4 bg-main-bg dark:bg-main-bg-dark min-h-screen'>
             <div className="space-y-4">
                 <div>
                     <p className="text-md text-primary-text dark:text-primary-text-light">

@@ -55,17 +55,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         }))
     ) || [];
 
-    // Auto-select option when delivery type changes
-    useEffect(() => {
-        if (deliveryType && allShippingOptions.length > 0 && !localSelectedOption) {
-            const firstEnabled = allShippingOptions.find(opt => !opt.disabled);
-            if (firstEnabled) {
-                setLocalSelectedOption(firstEnabled.id.toString());
-                onShippingOptionChange(firstEnabled.id);
-            }
-        }
-    }, [deliveryType, allShippingOptions, localSelectedOption, onShippingOptionChange]);
-
     // Filter by delivery type
     if (deliveryType === 'pickup') {
         allShippingOptions = allShippingOptions.filter(option => option.id === 34); // Store pickup option
@@ -95,16 +84,10 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         return a.disabled ? 1 : -1;
     });
 
-    // Set default option if none selected, and never select a disabled option (only when no delivery type is selected)
-    useEffect(() => {
-        if (allShippingOptions.length && !localSelectedOption && !deliveryType) {
-            const firstEnabled = allShippingOptions.find(opt => !opt.disabled);
-            if (firstEnabled) {
-                setLocalSelectedOption(firstEnabled.id.toString());
-                onShippingOptionChange(firstEnabled.id);
-            }
-        }
-    }, [allShippingOptions, localSelectedOption, deliveryType]);
+    // No option is auto-selected. Selecting one for the customer meant they
+    // could reach payment — and be charged for a shipping method — without
+    // ever choosing it, because the parent's "did you pick shipping?" guard
+    // saw a value it had set itself. The customer picks, or nothing is picked.
 
     const handleShippingChange = async (optionId: string) => {
         if (isUpdating) return;

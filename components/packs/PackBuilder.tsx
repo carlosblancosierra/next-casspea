@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { toast } from 'react-toastify'
 import { useGetProductsQuery } from '@/redux/features/products/productApiSlice'
 import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice'
@@ -44,6 +44,9 @@ export default function PackBuilder() {
   const [remaining, setRemaining] = useState(0)
   const [giftMessage, setGiftMessage] = useState('')
   const [allergenOption, setAllergenOption] = useState<'NONE' | 'SPECIFY' | null>(null)
+  // Several steps are long product lists; without this, advancing leaves the
+  // customer scrolled past the top of the next step.
+  const stepRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     if (signatureBox) {
@@ -82,9 +85,14 @@ export default function PackBuilder() {
     }
   }
 
+  const scrollToStepTop = () => {
+    stepRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   // Enhanced step setter with validation
   const navigateToStep = (targetStep: number) => {
     if (canNavigateToStep(targetStep)) {
+      scrollToStepTop()
       setStep(targetStep)
     }
   }
@@ -94,6 +102,7 @@ export default function PackBuilder() {
     const newCompletedSteps = new Set(completedSteps)
     newCompletedSteps.add(step)
     setCompletedSteps(newCompletedSteps)
+    scrollToStepTop()
     setStep(nextStep)
   }
 
@@ -308,7 +317,7 @@ const steps: React.ReactNode[] = [
           onChange={navigateToStep}
         />
       </aside>
-      <section className="md:col-span-3">
+      <section ref={stepRef} className="md:col-span-3">
         <div className="mb-4">
           <p className="text-sm text-primary-text dark:text-primary-text-light">{STEP_EXPLANATIONS[step]}</p>
         </div>
