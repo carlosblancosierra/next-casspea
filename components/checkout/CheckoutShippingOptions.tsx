@@ -3,6 +3,7 @@ import { addBusinessDays, format } from 'date-fns';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
 import type { ShippingCompany, ShippingOption } from '@/types/shipping';
+import { STORE_PICKUP_OPTION_ID } from './constants';
 
 // Re-exported for existing imports of these types from this module.
 export type { ShippingCompany, ShippingOption };
@@ -62,12 +63,13 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     // Captured before the delivery-type filter below narrows the list, so the
     // "nothing to show" guard still means "the API returned no options at all".
     const hasAnyShippingOptions = allShippingOptions.length > 0;
+    const pickupOption = allShippingOptions.find(option => option.id === STORE_PICKUP_OPTION_ID);
 
     // Filter by delivery type
     if (deliveryType === 'pickup') {
-        allShippingOptions = allShippingOptions.filter(option => option.id === 34); // Store pickup option
+        allShippingOptions = allShippingOptions.filter(option => option.id === STORE_PICKUP_OPTION_ID);
     } else if (deliveryType === 'shipping') {
-        allShippingOptions = allShippingOptions.filter(option => option.id !== 34); // All except store pickup
+        allShippingOptions = allShippingOptions.filter(option => option.id !== STORE_PICKUP_OPTION_ID);
     }
 
     // Filter out redundant free shipping options - show only the priciest one
@@ -233,8 +235,22 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                 // stale id selected would let the customer pay
                                 // for something no longer on screen.
                                 setDeliveryType(value);
-                                setLocalSelectedOption(null);
                                 setStorePickup(null);
+
+                                // Collection has exactly one option, so asking the
+                                // customer to tick it after choosing "Collect in
+                                // store" is a click that means nothing. Choosing
+                                // the mode is choosing the option — which is still
+                                // their choice, not one made for them.
+                                const pickup = value === 'pickup'
+                                    ? pickupOption
+                                    : undefined;
+                                if (pickup && !pickup.disabled) {
+                                    setLocalSelectedOption(pickup.id.toString());
+                                    onShippingOptionChange(pickup.id);
+                                } else {
+                                    setLocalSelectedOption(null);
+                                }
                             }}
                             className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-colors ${
                                 isActive
@@ -256,7 +272,19 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                         }
                     </p>
 
-                    {allShippingOptions.length > 0 && (
+                    {/* Collection needs no radio list: the toggle already chose it,
+                        and there is only one option behind it. Show what they get
+                        instead of asking them to tick a list of one. */}
+                    {deliveryType === 'pickup' && pickupOption && (
+                        <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                            <p className="text-sm font-semibold text-primary-text dark:text-primary-text-light">
+                                Pick up at 104 Bedford Hill, London, SW12 9HR
+                            </p>
+                            {renderShippingPrice(pickupOption)}
+                        </div>
+                    )}
+
+                    {deliveryType === 'shipping' && allShippingOptions.length > 0 && (
                         <div className="space-y-4">
                             {allShippingOptions.map((option) => {
                                 const isOptionDisabled = option.disabled;
@@ -289,7 +317,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                                     </p>
                                                 ) : (
                                                     <>
-                                                        {option.id === 34 ? (
+                                                        {option.id === STORE_PICKUP_OPTION_ID ? (
                                                             <p className="text-primary-text dark:text-primary-text-light text-sm font-semibold">
                                                                 Pick up at 104 Bedford Hill, London, SW12 9HR
                                                             </p>
@@ -313,8 +341,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                         </div>
                     )}
 
-                    {/* Render store pickup slot picker if selected option is 34 */}
-                    {deliveryType === 'pickup' && localSelectedOption === '34' && allShippingOptions.length > 0 && (
+                    {deliveryType === 'pickup' && pickupOption && (
                         <div className="mt-6">
                             <CheckoutStorePickUp onChange={(val) => {
                                 setStorePickup(val);

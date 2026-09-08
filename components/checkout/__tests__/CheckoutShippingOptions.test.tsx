@@ -33,6 +33,16 @@ const companies = [
                 estimated_days_max: 3,
             },
             {
+                id: 34,
+                name: 'Store pickup',
+                delivery_speed: 'PICKUP',
+                price: '0.00',
+                original_price: '0.00',
+                discount_amount: '0.00',
+                estimated_days_min: 0,
+                estimated_days_max: 0,
+            },
+            {
                 id: 3,
                 name: 'Tracked 24',
                 delivery_speed: 'PRIORITY',
@@ -86,6 +96,24 @@ describe('CheckoutShippingOptions', () => {
         await userEvent.click(trackedTwentyFour);
 
         expect(onShippingOptionChange).toHaveBeenCalledWith(3);
+    });
+
+    it('choosing Collect in store picks the pickup option without a second click', async () => {
+        const onShippingOptionChange = jest.fn().mockResolvedValue(undefined);
+
+        render(
+            <CheckoutShippingOptions
+                shippingCompanies={companies}
+                onShippingOptionChange={onShippingOptionChange}
+            />
+        );
+
+        await userEvent.click(screen.getByRole('radio', { name: 'Collect in store' }));
+
+        // Choosing the mode is choosing the option — there is only one.
+        expect(onShippingOptionChange).toHaveBeenCalledWith(34);
+        // And no leftover one-item radio list to tick.
+        expect(screen.queryByRole('radio', { name: /Royal Mail/ })).not.toBeInTheDocument();
     });
 
     it('switching delivery mode clears the pick so a stale option cannot be paid for', async () => {

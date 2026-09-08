@@ -18,6 +18,7 @@ import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
 import { formatCurrency } from '@/utils/currency';
+import { STORE_PICKUP_OPTION_ID } from './constants';
 
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -65,7 +66,7 @@ const CheckoutConfirm = () => {
         }
 
         // Validate store pickup selection
-        if (selectedShippingOption === 34 && !storePickup) {
+        if (selectedShippingOption === STORE_PICKUP_OPTION_ID && !storePickup) {
             toast.error('Please select a pickup date and time slot');
             return;
         }
@@ -77,7 +78,7 @@ const CheckoutConfirm = () => {
             const payload: { shipping_option_id: number, pickup_date?: string, pickup_time?: string } = {
                 shipping_option_id: selectedShippingOption
             };
-            if (selectedShippingOption === 34 && storePickup) {
+            if (selectedShippingOption === STORE_PICKUP_OPTION_ID && storePickup) {
                 payload.pickup_date = storePickup.date.toISOString().slice(0, 10); // YYYY-MM-DD
                 payload.pickup_time = storePickup.slot.start + ' - ' + storePickup.slot.end;
             }
@@ -194,7 +195,12 @@ const CheckoutConfirm = () => {
                     <div className="sticky bottom-0 -mx-4 px-4 py-3 bg-main-bg dark:bg-main-bg-dark border-t border-gray-200 dark:border-gray-700 md:static md:mx-0 md:px-0 md:py-0 md:bg-transparent md:dark:bg-transparent md:border-0">
                         <button
                             onClick={handleProceedToPayment}
-                            disabled={isProcessing || !selectedShippingOption}
+                            /* Only disabled while a payment is in flight — that is
+                               double-submit protection, not validation. A button
+                               disabled for missing input explains nothing, is
+                               skipped by screen readers, and leaves the customer
+                               guessing; clicking it says what is missing instead. */
+                            disabled={isProcessing}
                             className="w-full bg-gradient-autumn text-primary-text-light dark:text-primary-text-light py-3 px-4 rounded-md
                                 hover:bg-primary focus:outline-none focus:ring-2
                                 focus:ring-primary-2 focus:ring-offset-2
