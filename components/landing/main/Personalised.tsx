@@ -4,6 +4,7 @@ import { useGetTemplatesQuery } from '@/redux/features/personalized/personalized
 import Link from 'next/link';
 import CustomChocolate from '@/components/personalized/CustomChocolate';
 import { UserChosenLayer } from '@/types/personalized';
+import { getRandomLayers } from '@/utils/getRandomLayers';
 import { useMemo } from 'react';
 
 interface PersonalisedProps { config: typeof import('../constants').LANDING_CONFIG.gold; }
@@ -11,26 +12,9 @@ interface PersonalisedProps { config: typeof import('../constants').LANDING_CONF
 export default function Personalised({ config }: PersonalisedProps) {
     const { data: templates, isLoading, error } = useGetTemplatesQuery();
 
-    const getRandomLayers = (template: any): UserChosenLayer[] => {
-        return template.layers.map((slot: any) => {
-            const randomColor = slot.layer_type.colors[
-                Math.floor(Math.random() * slot.layer_type.colors.length)
-            ];
-            return {
-                chocolate_layer: {
-                    layer_type: slot.layer_type,
-                    color: randomColor,
-                    top_image: randomColor.top_image,
-                    side_image: randomColor.side_image,
-                },
-                order: slot.order,
-            };
-        });
-    };
-
     const randomLayersMap = useMemo(() => {
         const map: Record<string, UserChosenLayer[]> = {};
-        templates?.forEach((template: any) => {
+        templates?.forEach(template => {
             map[template.slug] = getRandomLayers(template);
         });
         return map;
@@ -59,7 +43,7 @@ export default function Personalised({ config }: PersonalisedProps) {
 
             {/* Grid de plantillas */}
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {templates?.map((template: any) => (
+                {templates?.map((template) => (
                     <Link 
                         key={template.slug} 
                         href={`/personalised/${template.slug}`}

@@ -8,6 +8,7 @@ import GiftMessage from './GiftMessage';
 import ShippingDateForm from './ShippingDateForm';
 import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { CartUpdate } from '@/types/carts';
+import { formatCurrency } from '@/utils/currency';
 import Link from 'next/link';
 import { useUpdateSessionMutation, useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
@@ -63,16 +64,7 @@ export default function CartCheckout() {
         setEmail(newEmail);
     };
 
-    const formatCurrency = (value: string) => {
-        return new Intl.NumberFormat('en-GB', {
-            style: 'currency',
-            currency: 'GBP'
-        }).format(parseFloat(value));
-    };
-
     const handleCheckout = async () => {
-        console.log('handleCheckout email', email);
-
         // Store closed for Summer Break — do not start checkout.
         if (storeClosed) {
             setError(`Our shop is closed for Summer Break. We'll be back ${reopenLabel}.`);

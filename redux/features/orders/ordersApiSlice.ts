@@ -1,4 +1,5 @@
 import { apiSlice } from '@/redux/services/apiSlice';
+import { Order } from '@/types/orders';
 
 export interface OrdersQueryParams {
     status?: string;
@@ -21,7 +22,7 @@ export interface DailyUnitsSold {
 
 const ordersApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
-        getOrders: builder.query<any[], OrdersQueryParams | void>({
+        getOrders: builder.query<Order[], OrdersQueryParams | void>({
             query: (params?: OrdersQueryParams) => ({
                 url: '/orders/',
                 params: params || undefined,

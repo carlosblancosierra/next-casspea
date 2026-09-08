@@ -17,6 +17,14 @@ export default function PersonalizedQuantities({ orderDetails, setOrderDetails }
   const maxFlavours = Math.floor(quantity / 50);
   const { data: flavours, isLoading, error } = useGetFlavoursQuery();
 
+  // Trim the selection when a lower quantity reduces the flavour allowance.
+  // Must run before the early returns below so the hook order is stable.
+  useEffect(() => {
+    if (selectedFlavours.length > maxFlavours) {
+      setOrderDetails((prev) => ({ ...prev, selectedFlavours: selectedFlavours.slice(0, maxFlavours) }));
+    }
+  }, [quantity, maxFlavours, selectedFlavours, setOrderDetails]);
+
   if (isLoading) return <Spinner md />;
   if (error) return <div>Error:</div>;
 
@@ -35,11 +43,6 @@ export default function PersonalizedQuantities({ orderDetails, setOrderDetails }
     }
   };
 
-  useEffect(() => {
-    if (selectedFlavours.length > maxFlavours) {
-      setOrderDetails((prev) => ({ ...prev, selectedFlavours: selectedFlavours.slice(0, maxFlavours) }));
-    }
-  }, [quantity, maxFlavours, selectedFlavours, setOrderDetails]);
 
   const handleFlavourToggle = (id: number) => {
     if (selectedFlavours.includes(id)) {

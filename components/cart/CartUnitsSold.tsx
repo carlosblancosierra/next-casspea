@@ -14,7 +14,7 @@ const CartUnitsSold: React.FC<Props> = ({ className = '' }) => {
 
   const cartUnits = useMemo(() => {
     const items = cart?.items ?? [];
-    return items.reduce((acc: number, item: any) => {
+    return items.reduce((acc: number, item) => {
       const unitsPerBox = item?.product?.units_per_box ?? 0;
       const qty = item?.quantity ?? 0;
       return acc + unitsPerBox * qty;

@@ -21,9 +21,10 @@ export default function DiscountForm() {
                 discount_code: discountCode,
                 remove_discount: false
             }).unwrap();
-        } catch (error: any) {
-            if (error?.data?.discount_code) {
-                setErrorMessage(error.data.discount_code);
+        } catch (error) {
+            const data = (error as { data?: { discount_code?: string } }).data;
+            if (data?.discount_code) {
+                setErrorMessage(data.discount_code);
             } else {
                 setErrorMessage('An unexpected error occurred while validating the discount.');
             }
@@ -41,8 +42,9 @@ export default function DiscountForm() {
                 remove_discount: true
             }).unwrap();
             setDiscountCode('');
-        } catch (error: any) {
-            setErrorMessage(error?.data?.message || 'An unexpected error occurred.');
+        } catch (error) {
+            const data = (error as { data?: { message?: string } }).data;
+            setErrorMessage(data?.message || 'An unexpected error occurred.');
         } finally {
             setIsValidating(false);
         }
