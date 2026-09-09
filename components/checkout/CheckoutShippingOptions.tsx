@@ -444,9 +444,9 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     />
                                     {neededBy && (
                                         <p className="text-sm text-primary-text dark:text-primary-text-light">
-                                            We&apos;ll time the posting so each service below aims to arrive by{' '}
-                                            <strong>{format(neededBy, 'EEE d MMM')}</strong> at the latest.
-                                            Choose one to fix the posting day.
+                                            We&apos;ll work each service below back from{' '}
+                                            <strong>{format(neededBy, 'EEE d MMM')}</strong>. Choose one to fix
+                                            the posting day.
                                         </p>
                                     )}
                                 </div>
@@ -560,8 +560,8 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                                             it is Royal Mail's, not ours. */}
                                                         {option.guaranteed ? (
                                                             <p className="mt-1 text-xs text-primary-text/70 dark:text-primary-text-light/70">
-                                                                Royal Mail guarantees this date and compensates if it is late.
-                                                                What we guarantee is that it leaves us on {plan.postingLabel}.
+                                                                Royal Mail guarantees {plan.latestLabel} and compensates if it
+                                                                is late. What we guarantee is that it leaves us on {plan.postingLabel}.
                                                             </p>
                                                         ) : byDate && plan.arrivesInTime && (
                                                             <p className="mt-1 text-xs text-amber-700 dark:text-amber-400">
@@ -572,8 +572,11 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
 
                                                         {byDate && !plan.arrivesInTime && (
                                                             <p className="mt-1 text-sm font-medium text-red-600 dark:text-red-400">
-                                                                Not expected to make {format(byDate, 'EEE d MMM')} — even
-                                                                posting on {plan.postingLabel} it is estimated {plan.rangeLabel}.
+                                                                {option.guaranteed
+                                                                    ? <>Can&apos;t make {format(byDate, 'EEE d MMM')} — posting on {plan.postingLabel},
+                                                                        the guaranteed date is {plan.latestLabel}.</>
+                                                                    : <>Not expected to make {format(byDate, 'EEE d MMM')} — even
+                                                                        posting on {plan.postingLabel} it is estimated {plan.rangeLabel}.</>}
                                                             </p>
                                                         )}
                                                     </>
@@ -588,9 +591,9 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                 every option — the distinction matters, the noise
                                 doesn't. */}
                             <p className="text-xs text-primary-text/70 dark:text-primary-text-light/70">
-                                We guarantee the day we post, and nothing more: once it is with Royal Mail
-                                the delivery date is their estimate. Special Delivery is the only service
-                                that guarantees the day it arrives.
+                                Royal Mail&apos;s delivery dates are estimates, not promises — what we
+                                guarantee is the day we post. Special Delivery is the exception: Royal Mail
+                                commits to the day on that one, and compensates if it is late.
                             </p>
                         </div>
                     )}

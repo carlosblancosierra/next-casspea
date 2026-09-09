@@ -245,7 +245,7 @@ describe('CheckoutShippingOptions', () => {
             // most of these orders are birthday gifts, so the difference is the
             // whole reason the customer is reading this list.
             expect(paragraph(/Arrives between Fri 11 Sep and Mon 14 Sep/)).toBeInTheDocument();
-            expect(screen.getByText(/Special Delivery is the only service/)).toBeInTheDocument();
+            expect(screen.getByText(/Special Delivery is the exception/)).toBeInTheDocument();
         });
 
         it('treats an option with no guaranteed flag as an estimate', () => {
@@ -315,6 +315,23 @@ describe('CheckoutShippingOptions', () => {
             const guaranteed = screen.getByText('The only service guaranteed for a set day')
                 .closest('label') as HTMLElement;
             expect(guaranteed.textContent).not.toMatch(/only confirm that we post/);
+        });
+
+        it('never describes the guaranteed service in estimate language', async () => {
+            const user = setupUser();
+            renderOptions();
+
+            await needItBy(user, /September 9th/);
+
+            // Same-day is impossible for everything, so this is the path where
+            // the "can't make it" wording shows for every option at once.
+            const guaranteed = screen.getAllByRole('radio')
+                .find(r => (r as HTMLInputElement).value === '5')!
+                .closest('label') as HTMLElement;
+
+            expect(guaranteed.textContent).toMatch(/the guaranteed date is/);
+            expect(guaranteed.textContent).not.toMatch(/estimated/);
+            expect(guaranteed.textContent).not.toMatch(/between/);
         });
 
         it('says plainly when a service cannot make the day', async () => {
