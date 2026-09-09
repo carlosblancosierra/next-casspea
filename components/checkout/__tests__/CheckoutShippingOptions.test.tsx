@@ -237,7 +237,7 @@ describe('CheckoutShippingOptions', () => {
             // most of these orders are birthday gifts, so the difference is the
             // whole reason the customer is reading this list.
             expect(screen.getByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).toBeInTheDocument();
-            expect(screen.getByText(/only Special Delivery guarantees the day it arrives/)).toBeInTheDocument();
+            expect(screen.getByText(/Special Delivery is the only service/)).toBeInTheDocument();
         });
 
         it('treats an option with no guaranteed flag as an estimate', () => {
@@ -255,7 +255,7 @@ describe('CheckoutShippingOptions', () => {
         });
     });
 
-    describe('"need it by"', () => {
+    describe('"I need it for a particular day"', () => {
         beforeEach(() => {
             jest.useFakeTimers().setSystemTime(new Date('2026-09-09T08:00:00Z'));
         });
@@ -263,59 +263,113 @@ describe('CheckoutShippingOptions', () => {
             jest.useRealTimers();
         });
 
-        const setNeededBy = async (user: ReturnType<typeof setupUser>, dayLabel: RegExp) => {
-            await user.click(screen.getByRole('button', { name: /need it for a particular day/i }));
+        const needItBy = async (user: ReturnType<typeof setupUser>, dayLabel: RegExp) => {
+            await user.click(screen.getByRole('radio', { name: 'For a particular day' }));
             await pickDate(user, 'I need it by', dayLabel);
         };
 
-        it('grades each service against the day, and never promises an estimate', async () => {
+        it('works backwards so the day they asked for is the last day of the range', async () => {
             const user = setupUser();
             renderOptions();
 
-            await setNeededBy(user, /September 11th/);
+            await needItBy(user, /September 28th/);
 
-            // Special Delivery lands Thu 10 and is contractually committed.
-            expect(screen.getByText('Guaranteed to arrive in time')).toBeInTheDocument();
-            // Tracked 24 lands Thu 10 - Fri 11: expected to make it, not promised.
-            expect(screen.getByText('Usually arrives in time')).toBeInTheDocument();
-            // Tracked 48 lands Fri 11 - Mon 14: only the optimistic end makes it.
-            expect(screen.getByText('Might just make it')).toBeInTheDocument();
+            // Tracked 48 is 2-3 working days, so it leaves on the 23rd to land
+            // by the 28th — not tomorrow, which would have it sitting around
+            // for a fortnight.
+            expect(screen.getByText(/Posting Wed 23 Sep/)).toBeInTheDocument();
+            // Both tracked services get the same honest wording.
+            expect(screen.getAllByText(/Should arrive by/).length).toBe(2);
         });
 
-        it('says plainly when a service will not make it', async () => {
+        it('never claims more than the posting day for an estimated service', async () => {
             const user = setupUser();
             renderOptions();
 
-            await setNeededBy(user, /September 10th/);
+            await needItBy(user, /September 28th/);
 
-            expect(screen.getByText('Unlikely to arrive in time')).toBeInTheDocument();
+            expect(
+                screen.getAllByText(/We can only confirm that we post it on/).length
+            ).toBeGreaterThan(0);
+            expect(screen.getAllByText(/not something we can promise/).length).toBe(2);
+        });
+
+        it('singles out the one service that does guarantee the day', async () => {
+            const user = setupUser();
+            renderOptions();
+
+            await needItBy(user, /September 28th/);
+
+            expect(screen.getByText('The only service guaranteed for a set day')).toBeInTheDocument();
+            // And it carries no "we can only confirm the posting day" caveat,
+            // because for this one we can confirm more than that.
+            const guaranteed = screen.getByText('The only service guaranteed for a set day')
+                .closest('label') as HTMLElement;
+            expect(guaranteed.textContent).not.toMatch(/only confirm that we post/);
+        });
+
+        it('says plainly when a service cannot make the day', async () => {
+            const user = setupUser();
+            renderOptions();
+
+            await needItBy(user, /September 10th/);
+
+            // Tracked 48 posted at the earliest still lands after the 10th.
+            expect(screen.getAllByText(/Not expected to make Thu 10 Sep/).length).toBeGreaterThan(0);
         });
 
         it('points at collection when nothing we post can get there in time', async () => {
             const user = setupUser();
             renderOptions();
 
-            await setNeededBy(user, /September 9th/);
+            await needItBy(user, /September 9th/);
 
             expect(screen.getByText(/don't expect any of these to reach you by/)).toBeInTheDocument();
         });
 
-        it('offers to hold the order back rather than land a gift a fortnight early', async () => {
+        it('fixes the posting day to the service the customer picks', async () => {
             const user = setupUser();
             const onDispatchDateChange = jest.fn();
             renderOptions({ onDispatchDateChange });
 
-            await setNeededBy(user, /September 28th/);
+            await needItBy(user, /September 28th/);
             const trackedFortyEight = screen.getAllByRole('radio')
                 .find(r => (r as HTMLInputElement).value === '2') as HTMLInputElement;
             await user.click(trackedFortyEight);
 
-            // Tracked 48 posted on the 23rd is expected on the 28th; posting it
-            // today would have it sitting around for a fortnight.
-            const nudge = screen.getByRole('button', { name: /post on wed 23 sep instead/i });
-            await user.click(nudge);
-
+            // A slower service has to leave earlier, so the posting day is not
+            // decided until they choose one.
             expect(onDispatchDateChange).toHaveBeenLastCalledWith('2026-09-23');
+        });
+
+        it('gives the guaranteed service its own, later posting day', async () => {
+            const user = setupUser();
+            const onDispatchDateChange = jest.fn();
+            renderOptions({ onDispatchDateChange });
+
+            await needItBy(user, /September 28th/);
+            const specialDelivery = screen.getAllByRole('radio')
+                .find(r => (r as HTMLInputElement).value === '5') as HTMLInputElement;
+            await user.click(specialDelivery);
+
+            // Next-day, so it leaves the working day before.
+            expect(onDispatchDateChange).toHaveBeenLastCalledWith('2026-09-25');
+        });
+
+        it('goes back to posting as soon as possible when the mode is switched off', async () => {
+            const user = setupUser();
+            const onDispatchDateChange = jest.fn();
+            renderOptions({ onDispatchDateChange });
+
+            await needItBy(user, /September 28th/);
+            const option = screen.getAllByRole('radio')
+                .find(r => (r as HTMLInputElement).value === '2') as HTMLInputElement;
+            await user.click(option);
+
+            await user.click(screen.getByRole('radio', { name: 'As soon as possible' }));
+
+            expect(onDispatchDateChange).toHaveBeenLastCalledWith(null);
+            expect(screen.getByText(/We'll post your order on/)).toBeInTheDocument();
         });
     });
 });
