@@ -82,6 +82,14 @@ const pickDate = async (
     await user.click(screen.getByRole('gridcell', { name: dayLabel }));
 };
 
+// The arrival lines bold their dates, and getByText's default matcher only
+// reads an element's own text nodes — so <strong> hides half the sentence.
+// These read the whole textContent of a single <p>.
+const paragraph = (re: RegExp) =>
+    screen.getByText((_, el) => el?.tagName === 'P' && re.test(el.textContent ?? ''));
+const paragraphs = (re: RegExp) =>
+    screen.queryAllByText((_, el) => el?.tagName === 'P' && re.test(el.textContent ?? ''));
+
 const renderOptions = (props: Partial<React.ComponentProps<typeof CheckoutShippingOptions>> = {}) =>
     render(
         <CheckoutShippingOptions
@@ -177,7 +185,7 @@ describe('CheckoutShippingOptions', () => {
             renderOptions();
 
             // Tracked 48 is 2-3 working days from Wednesday the 9th.
-            expect(screen.getByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).toBeInTheDocument();
+            expect(paragraph(/Arrives between Fri 11 Sep and Mon 14 Sep/)).toBeInTheDocument();
 
             await user.click(screen.getByRole('button', { name: /choose a different day/i }));
             await pickDate(user, 'Post my order on', /September 21st/);
@@ -185,8 +193,8 @@ describe('CheckoutShippingOptions', () => {
             // The bug: the estimate used to stay pinned to today, so a customer
             // holding the order to the 21st was still told it ships this week.
             expect(screen.getByText(/Holding your order to post on/)).toBeInTheDocument();
-            expect(screen.getByText(/Estimated Wed 23 Sep – Thu 24 Sep/)).toBeInTheDocument();
-            expect(screen.queryByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).not.toBeInTheDocument();
+            expect(paragraph(/Arrives between Wed 23 Sep and Thu 24 Sep/)).toBeInTheDocument();
+            expect(paragraphs(/Arrives between Fri 11 Sep and Mon 14 Sep/)).toHaveLength(0);
         });
 
         it('can go back to posting as soon as possible', async () => {
@@ -198,7 +206,7 @@ describe('CheckoutShippingOptions', () => {
             await user.click(screen.getByRole('button', { name: /post as soon as possible/i }));
 
             expect(screen.getByText(/We'll post your order on/)).toBeInTheDocument();
-            expect(screen.getByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).toBeInTheDocument();
+            expect(paragraph(/Arrives between Fri 11 Sep and Mon 14 Sep/)).toBeInTheDocument();
         });
 
         it('reports the posting date up as yyyy-mm-dd, and clears it for collection', async () => {
@@ -230,13 +238,13 @@ describe('CheckoutShippingOptions', () => {
         it('only calls a service guaranteed when the carrier actually guarantees it', () => {
             renderOptions();
 
-            expect(screen.getByText(/Arrives Thu 10 Sep/)).toBeInTheDocument();
+            expect(paragraph(/^Arrives Thu 10 Sep$/)).toBeInTheDocument();
             expect(screen.getByText('Guaranteed by Royal Mail')).toBeInTheDocument();
 
             // The tracked services are estimates and must read as estimates —
             // most of these orders are birthday gifts, so the difference is the
             // whole reason the customer is reading this list.
-            expect(screen.getByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).toBeInTheDocument();
+            expect(paragraph(/Arrives between Fri 11 Sep and Mon 14 Sep/)).toBeInTheDocument();
             expect(screen.getByText(/Special Delivery is the only service/)).toBeInTheDocument();
         });
 
@@ -250,7 +258,7 @@ describe('CheckoutShippingOptions', () => {
 
             // The field is optional so an older API degrades to honest wording
             // rather than silently promising a date.
-            expect(screen.getByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).toBeInTheDocument();
+            expect(paragraph(/Arrives between Fri 11 Sep and Mon 14 Sep/)).toBeInTheDocument();
             expect(screen.queryByText('Guaranteed by Royal Mail')).not.toBeInTheDocument();
         });
     });
@@ -278,8 +286,11 @@ describe('CheckoutShippingOptions', () => {
             // by the 28th — not tomorrow, which would have it sitting around
             // for a fortnight.
             expect(screen.getByText(/Posting Wed 23 Sep/)).toBeInTheDocument();
-            // Both tracked services get the same honest wording.
-            expect(screen.getAllByText(/Should arrive by/).length).toBe(2);
+            // Their date is the last day of the range, and it is still shown
+            // as a range — Royal Mail does not promise the day. Both tracked
+            // services land on the same window precisely because each one is
+            // timed backwards from the 28th.
+            expect(paragraphs(/Arrives between Fri 25 Sep and Mon 28 Sep/)).toHaveLength(2);
         });
 
         it('never claims more than the posting day for an estimated service', async () => {
@@ -288,10 +299,8 @@ describe('CheckoutShippingOptions', () => {
 
             await needItBy(user, /September 28th/);
 
-            expect(
-                screen.getAllByText(/We can only confirm that we post it on/).length
-            ).toBeGreaterThan(0);
-            expect(screen.getAllByText(/not something we can promise/).length).toBe(2);
+            expect(paragraphs(/Royal Mail gives this as a range, not a promise/)).toHaveLength(2);
+            expect(paragraphs(/What we guarantee is that it is posted on/)).toHaveLength(2);
         });
 
         it('singles out the one service that does guarantee the day', async () => {
@@ -315,7 +324,7 @@ describe('CheckoutShippingOptions', () => {
             await needItBy(user, /September 10th/);
 
             // Tracked 48 posted at the earliest still lands after the 10th.
-            expect(screen.getAllByText(/Not expected to make Thu 10 Sep/).length).toBeGreaterThan(0);
+            expect(paragraphs(/Not expected to make Thu 10 Sep/).length).toBeGreaterThan(0);
         });
 
         it('points at collection when nothing we post can get there in time', async () => {

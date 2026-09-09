@@ -197,6 +197,11 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
             latest,
             arrivesInTime,
             postingLabel: format(posting, 'EEE d MMM'),
+            // A single day is the carrier's promise, not our shorthand: only
+            // the guaranteed service is stored with min === max.
+            singleDay: option.estimated_days_min === option.estimated_days_max,
+            earliestLabel: format(earliest, 'EEE d MMM'),
+            latestLabel: format(latest, 'EEE d MMM'),
             rangeLabel: option.estimated_days_min === option.estimated_days_max
                 ? format(earliest, 'EEE d MMM')
                 : `${format(earliest, 'EEE d MMM')} \u2013 ${format(latest, 'EEE d MMM')}`,
@@ -524,41 +529,44 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                                             Posting {plan.postingLabel}
                                                         </p>
 
-                                                        {/* An option without the flag is treated as an
-                                                            estimate: the field is optional so an older
-                                                            API degrades to honest wording rather than
-                                                            to a promise we cannot keep. */}
-                                                        {option.guaranteed ? (
-                                                            <>
-                                                                <p className="text-primary-text dark:text-primary-text-light text-sm font-medium">
-                                                                    Arrives {plan.rangeLabel}
-                                                                </p>
-                                                                <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-xs font-medium text-green-800 dark:text-green-300">
-                                                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                                                    </svg>
-                                                                    {byDate
-                                                                        ? 'The only service guaranteed for a set day'
-                                                                        : 'Guaranteed by Royal Mail'}
-                                                                </span>
-                                                            </>
-                                                        ) : (
-                                                            <p className="text-primary-text dark:text-primary-text-light text-sm">
-                                                                {byDate && plan.arrivesInTime
-                                                                    ? <>Should arrive by <strong>{format(plan.latest, 'EEE d MMM')}</strong>, often sooner</>
-                                                                    : <>Estimated {plan.rangeLabel}</>}
-                                                            </p>
+                                                        {/* The arrival line states exactly what the
+                                                            carrier states. A range is shown as a range —
+                                                            printing one date for a service Royal Mail
+                                                            describes as "two to three working days" is a
+                                                            promise nobody has made. An option without the
+                                                            guaranteed flag is treated as an estimate, so
+                                                            an older API degrades honestly. */}
+                                                        <p className={`text-primary-text dark:text-primary-text-light text-sm ${option.guaranteed ? 'font-medium' : ''}`}>
+                                                            {plan.singleDay
+                                                                ? <>Arrives <strong>{plan.earliestLabel}</strong></>
+                                                                : <>Arrives between <strong>{plan.earliestLabel}</strong> and <strong>{plan.latestLabel}</strong></>}
+                                                        </p>
+
+                                                        {option.guaranteed && (
+                                                            <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-xs font-medium text-green-800 dark:text-green-300">
+                                                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                                </svg>
+                                                                {byDate
+                                                                    ? 'The only service guaranteed for a set day'
+                                                                    : 'Guaranteed by Royal Mail'}
+                                                            </span>
                                                         )}
 
                                                         {/* Said on the option itself, not only in the
-                                                            footnote: this is the sentence that stops a
-                                                            birthday order being bought on a promise we
-                                                            are not the ones making. */}
-                                                        {byDate && plan.arrivesInTime && !option.guaranteed && (
+                                                            footnote. The guaranteed service needs it most:
+                                                            it is the one line on the page that names a
+                                                            single arrival date, and the guarantee behind
+                                                            it is Royal Mail's, not ours. */}
+                                                        {option.guaranteed ? (
+                                                            <p className="mt-1 text-xs text-primary-text/70 dark:text-primary-text-light/70">
+                                                                Royal Mail guarantees this date and compensates if it is late.
+                                                                What we guarantee is that it leaves us on {plan.postingLabel}.
+                                                            </p>
+                                                        ) : byDate && plan.arrivesInTime && (
                                                             <p className="mt-1 text-xs text-amber-700 dark:text-amber-400">
-                                                                We can only confirm that we post it on {plan.postingLabel}.
-                                                                Royal Mail&apos;s delivery date is an estimate, not something
-                                                                we can promise.
+                                                                Royal Mail gives this as a range, not a promise. What we
+                                                                guarantee is that it is posted on {plan.postingLabel}.
                                                             </p>
                                                         )}
 
