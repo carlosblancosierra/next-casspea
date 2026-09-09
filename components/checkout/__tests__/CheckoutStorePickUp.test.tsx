@@ -27,14 +27,28 @@ describe('CheckoutStorePickUp', () => {
             expect(screen.getByRole('button', { name: /Tomorrow/ })).toBeInTheDocument();
         });
 
-        it('explains why today offers a single slot', async () => {
+        it('shows the slots the hour has closed rather than hiding them', async () => {
             const user = setupUser();
             render(<CheckoutStorePickUp />);
 
             await user.click(screen.getByRole('button', { name: /Today/ }));
 
-            expect(screen.getByText(/last slot only/i)).toBeInTheDocument();
-            expect(screen.getByRole('button', { name: '15:30–16:00' })).toBeInTheDocument();
+            // Filtering them out left today showing one lone slot with no
+            // explanation, which reads as a bug rather than a rule.
+            expect(screen.getByText(/the earlier slots are closed/i)).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: '15:30–16:00' })).toBeEnabled();
+            expect(screen.getByRole('button', { name: '10:00–10:30' })).toBeDisabled();
+        });
+
+        it('will not let a closed slot be chosen', async () => {
+            const user = setupUser();
+            const onChange = jest.fn();
+            render(<CheckoutStorePickUp onChange={onChange} />);
+
+            await user.click(screen.getByRole('button', { name: /Today/ }));
+            await user.click(screen.getByRole('button', { name: '10:00–10:30' }));
+
+            expect(onChange).toHaveBeenLastCalledWith(null);
         });
 
         it('reports the chosen day and slot to the parent', async () => {
@@ -90,7 +104,7 @@ describe('CheckoutStorePickUp', () => {
 
             await user.click(screen.getByRole('button', { name: /Tomorrow/ }));
 
-            expect(screen.queryByText(/last slot only/i)).not.toBeInTheDocument();
+            expect(screen.queryByText(/the earlier slots are closed/i)).not.toBeInTheDocument();
             expect(screen.getByRole('button', { name: '10:00–10:30' })).toBeInTheDocument();
             expect(screen.getByRole('button', { name: '15:30–16:00' })).toBeInTheDocument();
         });

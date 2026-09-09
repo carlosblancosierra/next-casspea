@@ -202,9 +202,10 @@ const CheckoutConfirm = () => {
                         </dl>
                     )}
 
-                    {/* Pinned on small screens so the action is always reachable
-                        without scrolling past the delivery options. */}
-                    <div className="sticky bottom-0 -mx-4 px-4 py-3 bg-main-bg dark:bg-main-bg-dark border-t border-gray-200 dark:border-gray-700 md:static md:mx-0 md:px-0 md:py-0 md:bg-transparent md:dark:bg-transparent md:border-0">
+                    {/* Not pinned. A sticky bar covers content on small screens
+                        and pushes people to pay before they have read the
+                        delivery choice it sits on top of. */}
+                    <div className="pt-2">
                         <button
                             onClick={handleProceedToPayment}
                             /* Only disabled while a payment is in flight — that is
