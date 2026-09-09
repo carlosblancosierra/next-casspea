@@ -14,6 +14,9 @@ export default function OrdersPage() {
                     <Link href="/addresses/stats" className="text-blue-500">
                         View Order Postcodes
                     </Link>
+                    <Link href="/admin/experiments" className="text-blue-500">
+                        View A/B Test Results
+                    </Link>
                     <Link href="/admin/summer-break" className="text-blue-500">
                         Manage Summer Break Boxes
                     </Link>

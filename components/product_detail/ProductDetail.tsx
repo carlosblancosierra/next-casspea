@@ -6,19 +6,27 @@ import ImageGallery from '@/components/product_detail/ImageGallery';
 import ProductBreadcrumb from '@/components/product_detail/ProductBreadcrumb';
 import ProductAccordion from './ProductAccordion';
 import ProductFormBoxes from './ProductFormBoxes';
+import QuickBoxBuilder from './QuickBoxBuilder';
 import ProductFormGeneral from './ProductFormGeneral';
 import FlavourGrid from '../flavours/FlavourCarousel';
 import Reviews from '../common/Reviews';
 import ProductCard from '../store/ProductCard';
 import { Product } from '@/types/products';
+import { useExperiment } from '@/hooks/useExperiment';
+import { BOX_BUILDER_EXPERIMENT, BUILDER_ADD_TO_CART } from '@/types/experiments';
 
 const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 	// Explicitly provide the type for the query result
 	const { data, isLoading, error } = useGetProductsQuery();
+	// The split point for the box-builder A/B test. Asked for on every product
+	// page so the assignment resolves alongside the product query rather than
+	// after it — a builder that appears and is then swapped is both a bad
+	// experience and a dirty impression.
+	const { variant, isLoading: variantLoading, track } = useExperiment(BOX_BUILDER_EXPERIMENT);
 	// Default to an empty array if data is undefined
 	const products: Product[] = data ?? [];
 
-	if (isLoading) {
+	if (isLoading || variantLoading) {
 		return <div className="text-primary-text">Loading products...</div>;
 	}
 
@@ -87,7 +95,17 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 				<div className="flex flex-col top-48 py-0 w-full gap-y-12">
 					<Suspense fallback="Loading...">
 						{isSignatureBox ? (
-							<ProductFormBoxes product={product} />
+							variant === 'quick' ? (
+								<QuickBoxBuilder
+									product={product}
+									onAddedToCart={() => track(BUILDER_ADD_TO_CART)}
+								/>
+							) : (
+								<ProductFormBoxes
+									product={product}
+									onAddedToCart={() => track(BUILDER_ADD_TO_CART)}
+								/>
+							)
 						) : (
 							<ProductFormGeneral product={product} />
 						)}

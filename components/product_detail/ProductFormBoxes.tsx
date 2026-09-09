@@ -21,9 +21,15 @@ import { ID_MAP, LOVE_SLEEVE_PRODUCT_ID, LOVE_SLEEVE_PRICE } from '@/components/
 
 interface ProductInfoProps {
     product: Product;
+    /**
+     * Fired once the item is actually in the cart. The A/B test needs the
+     * control arm's funnel measured the same way as the challenger's, or the
+     * two add-to-cart rates are not comparable.
+     */
+    onAddedToCart?: () => void;
 }
 
-const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
+const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }) => {
     const maxChocolates = product.units_per_box || 0;
     const isNinetySixBox = maxChocolates === 96;
     // Summer Break clearance boxes are "Surprise Me" only: no flavour picking,
@@ -328,6 +334,8 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             if (shouldTreatAsPack && loveSleeve) {
                 await addToCart({ product: LOVE_SLEEVE_PRODUCT_ID, quantity: 1 }).unwrap();
             }
+            // Only after the cart call succeeded: a failed add is not a step.
+            onAddedToCart?.();
             toast.success(shouldTreatAsPack ? 'Pack added to cart successfully!' : 'Box added to cart successfully!');
             router.push('/cart');
         } catch (error) {
