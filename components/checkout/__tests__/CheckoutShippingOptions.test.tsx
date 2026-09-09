@@ -136,14 +136,15 @@ describe('CheckoutShippingOptions', () => {
 
         renderOptions({ onShippingOptionChange });
 
-        await userEvent.click(screen.getByRole('radio', { name: new RegExp('Collect in store') }));
+        await userEvent.click(screen.getByRole('radio', { name: 'Collect in store' }));
 
         // Choosing the mode is choosing the option — there is only one.
         expect(onShippingOptionChange).toHaveBeenCalledWith(34);
-        // And no leftover one-item radio list to tick.
-        const optionRadios = screen.getAllByRole('radio')
-            .filter(r => (r as HTMLInputElement).name === 'shipping');
-        expect(optionRadios).toHaveLength(0);
+        // And no leftover one-item radio list to tick — the address and the
+        // FREE price are shown as plain text instead.
+        expect(screen.queryByRole('radio', { name: /Royal Mail/ })).not.toBeInTheDocument();
+        expect(screen.getByText(/104 Bedford Hill/)).toBeInTheDocument();
+        expect(screen.getByText('FREE')).toBeInTheDocument();
     });
 
     it('switching delivery mode clears the pick so a stale option cannot be paid for', async () => {
@@ -156,8 +157,8 @@ describe('CheckoutShippingOptions', () => {
         await userEvent.click(option);
         expect(option.checked).toBe(true);
 
-        await userEvent.click(screen.getByRole('radio', { name: new RegExp('Collect in store') }));
-        await userEvent.click(screen.getByRole('radio', { name: new RegExp('Ship to me') }));
+        await userEvent.click(screen.getByRole('radio', { name: 'Collect in store' }));
+        await userEvent.click(screen.getByRole('radio', { name: 'Ship to me' }));
 
         const afterSwitch = screen.getAllByRole('radio')
             .filter(r => (r as HTMLInputElement).type === 'radio' && (r as HTMLInputElement).name === 'shipping');
@@ -177,7 +178,8 @@ describe('CheckoutShippingOptions', () => {
         it('defaults to posting as soon as possible, with no date form in the way', () => {
             renderOptions();
 
-            expect(screen.getByText(/We'll post it on Wed 9 Sep/)).toBeInTheDocument();
+            expect(screen.getByText(/We'll post your order on/)).toBeInTheDocument();
+            expect(screen.getByText('Wed 9 Sep')).toBeInTheDocument();
             expect(screen.queryByLabelText('Post my order on')).not.toBeInTheDocument();
         });
 
@@ -206,7 +208,7 @@ describe('CheckoutShippingOptions', () => {
             await pickDate(user, 'Post my order on', /September 21st/);
             await user.click(screen.getByRole('button', { name: /post as soon as possible/i }));
 
-            expect(screen.getByText(/We'll post it on/)).toBeInTheDocument();
+            expect(screen.getByText(/We'll post your order on/)).toBeInTheDocument();
             expect(paragraph(/Arrives between Fri 11 Sep and Mon 14 Sep/)).toBeInTheDocument();
         });
 
@@ -219,12 +221,12 @@ describe('CheckoutShippingOptions', () => {
             await pickDate(user, 'Post my order on', /September 21st/);
             expect(onDispatchDateChange).toHaveBeenLastCalledWith('2026-09-21');
 
-            await user.click(screen.getByRole('radio', { name: new RegExp('Collect in store') }));
+            await user.click(screen.getByRole('radio', { name: 'Collect in store' }));
 
             // Collection has its own date and time; a posting date on a pickup
             // order is wrong data in the admin as well as a pointless question.
             expect(onDispatchDateChange).toHaveBeenLastCalledWith(null);
-            expect(screen.queryByText(/We'll post it on/)).not.toBeInTheDocument();
+            expect(screen.queryByText(/We'll post your order on/)).not.toBeInTheDocument();
         });
     });
 
@@ -273,7 +275,7 @@ describe('CheckoutShippingOptions', () => {
         });
 
         const needItBy = async (user: ReturnType<typeof setupUser>, dayLabel: RegExp) => {
-            await user.click(screen.getByRole('radio', { name: new RegExp('For a particular day') }));
+            await user.click(screen.getByRole('radio', { name: 'For a particular day' }));
             await pickDate(user, 'I need it by', dayLabel);
         };
 
@@ -393,10 +395,10 @@ describe('CheckoutShippingOptions', () => {
                 .find(r => (r as HTMLInputElement).value === '2') as HTMLInputElement;
             await user.click(option);
 
-            await user.click(screen.getByRole('radio', { name: new RegExp('As soon as possible') }));
+            await user.click(screen.getByRole('radio', { name: 'As soon as possible' }));
 
             expect(onDispatchDateChange).toHaveBeenLastCalledWith(null);
-            expect(screen.getByText(/We'll post it on/)).toBeInTheDocument();
+            expect(screen.getByText(/We'll post your order on/)).toBeInTheDocument();
         });
     });
 });

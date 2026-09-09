@@ -129,9 +129,14 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
           )}
 
           {/* The same scrolling strip as the days above, so both halves of the
-              question look like the same question. Blocked slots stay on
-              screen: hiding them left today showing one lone slot with no
-              explanation, which read as a bug rather than a rule. */}
+              question look like the same question. Only the start time is
+              shown — "10:00–10:30" is more precision than the choice needs,
+              and it doubles the width of every chip. The slot still carries
+              its end time, because that is what the order records.
+
+              Blocked slots stay on screen: hiding them left today showing one
+              lone slot with no explanation, which read as a bug rather than a
+              rule. */}
           <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
             {slots.map(slot => {
               const blocked = isSlotBlocked(slot);
@@ -152,7 +157,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
                       : 'bg-main-bg dark:bg-main-bg-dark border-gray-200 dark:border-gray-700 text-primary-text dark:text-primary-text-light hover:border-primary dark:hover:border-primary-2'
                   }`}
                 >
-                  {slot.start}–{slot.end}
+                  {slot.start}
                 </button>
               );
             })}

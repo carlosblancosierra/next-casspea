@@ -36,8 +36,8 @@ describe('CheckoutStorePickUp', () => {
             // Filtering them out left today showing one lone slot with no
             // explanation, which reads as a bug rather than a rule.
             expect(screen.getByText(/the earlier slots are closed/i)).toBeInTheDocument();
-            expect(screen.getByRole('button', { name: '15:30–16:00' })).toBeEnabled();
-            expect(screen.getByRole('button', { name: '10:00–10:30' })).toBeDisabled();
+            expect(screen.getByRole('button', { name: '15:30' })).toBeEnabled();
+            expect(screen.getByRole('button', { name: '10:00' })).toBeDisabled();
         });
 
         it('will not let a closed slot be chosen', async () => {
@@ -46,7 +46,7 @@ describe('CheckoutStorePickUp', () => {
             render(<CheckoutStorePickUp onChange={onChange} />);
 
             await user.click(screen.getByRole('button', { name: /Today/ }));
-            await user.click(screen.getByRole('button', { name: '10:00–10:30' }));
+            await user.click(screen.getByRole('button', { name: '10:00' }));
 
             expect(onChange).toHaveBeenLastCalledWith(null);
         });
@@ -57,7 +57,7 @@ describe('CheckoutStorePickUp', () => {
             render(<CheckoutStorePickUp onChange={onChange} />);
 
             await user.click(screen.getByRole('button', { name: /Tomorrow/ }));
-            await user.click(screen.getByRole('button', { name: '10:30–11:00' }));
+            await user.click(screen.getByRole('button', { name: '10:30' }));
 
             expect(onChange).toHaveBeenLastCalledWith(
                 expect.objectContaining({
@@ -72,7 +72,7 @@ describe('CheckoutStorePickUp', () => {
             render(<CheckoutStorePickUp onChange={onChange} />);
 
             await user.click(screen.getByRole('button', { name: /Tomorrow/ }));
-            await user.click(screen.getByRole('button', { name: '10:30–11:00' }));
+            await user.click(screen.getByRole('button', { name: '10:30' }));
             expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ slot: expect.anything() }));
 
             await user.click(screen.getByRole('button', { name: /Today/ }));
@@ -105,8 +105,8 @@ describe('CheckoutStorePickUp', () => {
             await user.click(screen.getByRole('button', { name: /Tomorrow/ }));
 
             expect(screen.queryByText(/the earlier slots are closed/i)).not.toBeInTheDocument();
-            expect(screen.getByRole('button', { name: '10:00–10:30' })).toBeInTheDocument();
-            expect(screen.getByRole('button', { name: '15:30–16:00' })).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: '10:00' })).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: '15:30' })).toBeInTheDocument();
         });
     });
 });

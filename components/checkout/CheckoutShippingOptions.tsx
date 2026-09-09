@@ -3,7 +3,6 @@ import { addBusinessDays, addDays, format, isAfter, startOfDay } from 'date-fns'
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
 import ShippingDatePicker from './ShippingDatePicker';
-import ChoiceCard from './ChoiceCard';
 import type { ShippingCompany, ShippingOption } from '@/types/shipping';
 import { STORE_PICKUP_OPTION_ID } from './constants';
 import { getEarliestDispatch, isShippingDay, HOLIDAY_SHIP_DATE } from '@/utils/shippingDays';
@@ -286,101 +285,134 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                 Delivery
             </h2>
 
-            {/* Stacked cards rather than a segmented tab strip. A tab bar reads
-                as navigation — two halves of one control, neither obviously
-                chosen — while these are the same shape as the delivery options
-                below, so every decision on the page looks like one kind of
-                thing. */}
-            <div className="space-y-3 mb-5">
+            {/* Segmented control, the pattern most checkouts use for this: it
+                stays visible so switching is one tap and there is no dead end,
+                and the options below are reachable without an extra screen. */}
+            <div
+                role="radiogroup"
+                aria-label="How would you like to receive your order?"
+                className="flex p-1 mb-4 rounded-lg bg-gray-100 dark:bg-gray-800"
+            >
                 {([
-                    { value: 'shipping', label: 'Ship to me', description: 'Posted by Royal Mail anywhere in the UK.' },
-                    { value: 'pickup', label: 'Collect in store', description: '104 Bedford Hill, London, SW12 9HR. Weekdays.' },
-                ] as const).map(({ value, label, description }) => (
-                    <ChoiceCard
-                        key={value}
-                        name="delivery-type"
-                        value={value}
-                        checked={deliveryType === value}
-                        title={label}
-                        description={description}
-                        aside={value === 'pickup' && pickupOption ? renderShippingPrice(pickupOption) : undefined}
-                        onSelect={() => {
-                            if (deliveryType === value) return;
-                            // Switching mode clears the pick: options in the
-                            // other mode are a different set, and leaving a
-                            // stale id selected would let the customer pay
-                            // for something no longer on screen.
-                            setDeliveryType(value);
-                            setStorePickup(null);
+                    { value: 'shipping', label: 'Ship to me' },
+                    { value: 'pickup', label: 'Collect in store' },
+                ] as const).map(({ value, label }) => {
+                    const isActive = deliveryType === value;
+                    return (
+                        <button
+                            key={value}
+                            type="button"
+                            role="radio"
+                            aria-checked={isActive}
+                            onClick={() => {
+                                if (deliveryType === value) return;
+                                // Switching mode clears the pick: options in the
+                                // other mode are a different set, and leaving a
+                                // stale id selected would let the customer pay
+                                // for something no longer on screen.
+                                setDeliveryType(value);
+                                setStorePickup(null);
 
-                            // Collection has its own date and time, so a
-                            // posting date on a pickup order is wrong data
-                            // in the admin as well as a meaningless question.
-                            if (value === 'pickup') {
-                                setDispatchDate(null);
-                                setNeededBy(null);
-                                setTiming('asap');
-                                setShowDispatchPicker(false);
-                            }
+                                // Collection has its own date and time, so a
+                                // posting date on a pickup order is wrong data
+                                // in the admin as well as a meaningless question.
+                                if (value === 'pickup') {
+                                    setDispatchDate(null);
+                                    setNeededBy(null);
+                                    setTiming('asap');
+                                    setShowDispatchPicker(false);
+                                }
 
-                            // Collection has exactly one option, so asking the
-                            // customer to tick it after choosing "Collect in
-                            // store" is a click that means nothing. Choosing
-                            // the mode is choosing the option — which is still
-                            // their choice, not one made for them.
-                            const pickup = value === 'pickup' ? pickupOption : undefined;
-                            if (pickup && !pickup.disabled) {
-                                setLocalSelectedOption(pickup.id.toString());
-                                onShippingOptionChange(pickup.id);
-                            } else {
-                                setLocalSelectedOption(null);
-                            }
-                        }}
-                    />
-                ))}
+                                // Collection has exactly one option, so asking the
+                                // customer to tick it after choosing "Collect in
+                                // store" is a click that means nothing. Choosing
+                                // the mode is choosing the option — which is still
+                                // their choice, not one made for them.
+                                const pickup = value === 'pickup'
+                                    ? pickupOption
+                                    : undefined;
+                                if (pickup && !pickup.disabled) {
+                                    setLocalSelectedOption(pickup.id.toString());
+                                    onShippingOptionChange(pickup.id);
+                                } else {
+                                    setLocalSelectedOption(null);
+                                }
+                            }}
+                            className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-colors ${
+                                isActive
+                                    ? 'bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light shadow-sm'
+                                    : 'text-primary-text/70 dark:text-primary-text-light/70 hover:text-primary-text dark:hover:text-primary-text-light'
+                            }`}
+                        >
+                            {label}
+                        </button>
+                    );
+                })}
             </div>
 
             <>
+                    <p className="text-sm text-primary-text dark:text-primary-text-light mb-4">
+                        {deliveryType === 'shipping'
+                            ? 'Choose your preferred shipping method below.'
+                            : 'Pick up your order from our Bedford Hill store. Choose a convenient time slot.'
+                        }
+                    </p>
+
                     {/* The question this whole step turns on, asked outright
                         instead of hidden behind a link. Most of these orders
                         are for a fixed day, and the customer knows the day —
-                        not how long Royal Mail takes. Each card opens its own
-                        answer inside itself, so there is never a control on
-                        screen belonging to the choice you did not make. */}
+                        not how long Royal Mail takes. */}
                     {deliveryType === 'shipping' && (
-                        <div className="mb-5 space-y-3">
+                        <div className="mb-5 space-y-3 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
                             <p className="text-sm font-medium text-primary-text dark:text-primary-text-light">
                                 When do you need it?
                             </p>
 
-                            <ChoiceCard
-                                name="timing"
-                                value="asap"
-                                checked={timing === 'asap'}
-                                title="As soon as possible"
-                                description={
-                                    dispatchDate
-                                        ? undefined
-                                        : `We'll post it on ${format(earliestDispatch, 'EEE d MMM')}`
-                                }
-                                onSelect={() => {
-                                    if (timing === 'asap') return;
-                                    setTiming('asap');
-                                    // Each mode derives the posting day
-                                    // differently, so a date carried over from
-                                    // the other one would be an answer to a
-                                    // question nobody asked.
-                                    setDispatchDate(null);
-                                    setShowDispatchPicker(false);
-                                    setNeededBy(null);
-                                }}
+                            <div
+                                role="radiogroup"
+                                aria-label="When do you need it?"
+                                className="flex p-1 rounded-lg bg-gray-100 dark:bg-gray-800"
                             >
-                                <div className="space-y-2">
-                                    {dispatchDate && (
-                                        <p className="text-sm text-primary-text dark:text-primary-text-light">
-                                            Holding your order to post on <strong>{format(dispatchDate, 'EEE d MMM')}</strong>
-                                        </p>
-                                    )}
+                                {([
+                                    { value: 'asap', label: 'As soon as possible' },
+                                    { value: 'by_date', label: 'For a particular day' },
+                                ] as const).map(({ value, label }) => (
+                                    <button
+                                        key={value}
+                                        type="button"
+                                        role="radio"
+                                        aria-checked={timing === value}
+                                        onClick={() => {
+                                            if (timing === value) return;
+                                            setTiming(value);
+                                            // Each mode derives the posting day
+                                            // differently, so a date carried
+                                            // over from the other one would be
+                                            // an answer to a question nobody
+                                            // asked.
+                                            setDispatchDate(null);
+                                            setShowDispatchPicker(false);
+                                            if (value === 'asap') setNeededBy(null);
+                                        }}
+                                        className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
+                                            timing === value
+                                                ? 'bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light shadow-sm'
+                                                : 'text-primary-text/70 dark:text-primary-text-light/70 hover:text-primary-text dark:hover:text-primary-text-light'
+                                        }`}
+                                    >
+                                        {label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {timing === 'asap' ? (
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <p className="text-sm text-primary-text dark:text-primary-text-light">
+                                        {dispatchDate
+                                            ? <>Holding your order to post on <strong>{format(dispatchDate, 'EEE d MMM')}</strong></>
+                                            : <>We&apos;ll post your order on <strong>{format(earliestDispatch, 'EEE d MMM')}</strong></>
+                                        }
+                                    </p>
                                     <div className="flex items-center gap-3">
                                         {dispatchDate && (
                                             <button
@@ -399,34 +431,8 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                             Choose a different day
                                         </button>
                                     </div>
-                                    {showDispatchPicker && (
-                                        <ShippingDatePicker
-                                            id="dispatch-date"
-                                            label="Post my order on"
-                                            selected={dispatchDate}
-                                            onChange={setDispatchDate}
-                                            minDate={earliestDispatch}
-                                            filterDate={isShippingDay}
-                                            placeholderText="Choose a posting day"
-                                            hint="We post Monday to Friday. Choosing a later day holds your order until then."
-                                        />
-                                    )}
                                 </div>
-                            </ChoiceCard>
-
-                            <ChoiceCard
-                                name="timing"
-                                value="by_date"
-                                checked={timing === 'by_date'}
-                                title="For a particular day"
-                                description="A birthday, an anniversary — we'll time the posting around it."
-                                onSelect={() => {
-                                    if (timing === 'by_date') return;
-                                    setTiming('by_date');
-                                    setDispatchDate(null);
-                                    setShowDispatchPicker(false);
-                                }}
-                            >
+                            ) : (
                                 <div className="space-y-2">
                                     <ShippingDatePicker
                                         id="needed-by-date"
@@ -444,7 +450,20 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                         </p>
                                     )}
                                 </div>
-                            </ChoiceCard>
+                            )}
+
+                            {timing === 'asap' && showDispatchPicker && (
+                                <ShippingDatePicker
+                                    id="dispatch-date"
+                                    label="Post my order on"
+                                    selected={dispatchDate}
+                                    onChange={setDispatchDate}
+                                    minDate={earliestDispatch}
+                                    filterDate={isShippingDay}
+                                    placeholderText="Choose a posting day"
+                                    hint="We post Monday to Friday. Choosing a day later than the earliest holds your order until then."
+                                />
+                            )}
                         </div>
                     )}
 
@@ -455,6 +474,18 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                 <strong>{neededBy && format(neededBy, 'EEE d MMM')}</strong>. Collecting in
                                 store may work, or pick a later day.
                             </p>
+                        </div>
+                    )}
+
+                    {/* Collection needs no radio list: the toggle already chose it,
+                        and there is only one option behind it. Show what they get
+                        instead of asking them to tick a list of one. */}
+                    {deliveryType === 'pickup' && pickupOption && (
+                        <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                            <p className="text-sm font-semibold text-primary-text dark:text-primary-text-light">
+                                Pick up at 104 Bedford Hill, London, SW12 9HR
+                            </p>
+                            {renderShippingPrice(pickupOption)}
                         </div>
                     )}
 
@@ -568,8 +599,10 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     )}
 
                     {deliveryType === 'pickup' && pickupOption && (
-                        <div className="mt-2">
-                            <CheckoutStorePickUp onChange={setStorePickup} />
+                        <div className="mt-6">
+                            <CheckoutStorePickUp onChange={(val) => {
+                                setStorePickup(val);
+                            }} />
                         </div>
                     )}
                 </>
