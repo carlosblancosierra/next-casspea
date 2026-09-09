@@ -11,6 +11,13 @@ export interface ShippingOption {
     discount_amount?: string;
     estimated_days_min: number;
     estimated_days_max: number;
+    /**
+     * True only where the carrier contractually commits to the date (Royal Mail
+     * Special Delivery). Everything else is an estimate and must be worded as
+     * one. Optional so the UI degrades to "estimated" if the API predates the
+     * field rather than silently promising a date.
+     */
+    guaranteed?: boolean;
     description: string;
     disabled: boolean;
     disabled_reason: string;

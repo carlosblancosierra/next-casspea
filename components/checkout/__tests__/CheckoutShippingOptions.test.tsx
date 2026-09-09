@@ -31,6 +31,7 @@ const companies = [
                 discount_amount: '0.00',
                 estimated_days_min: 2,
                 estimated_days_max: 3,
+                guaranteed: false,
             },
             {
                 id: 34,
@@ -51,10 +52,44 @@ const companies = [
                 discount_amount: '0.00',
                 estimated_days_min: 1,
                 estimated_days_max: 2,
+                guaranteed: false,
+            },
+            {
+                id: 5,
+                name: 'Special Delivery',
+                delivery_speed: 'PRIORITY',
+                price: '11.99',
+                original_price: '11.99',
+                discount_amount: '0.00',
+                estimated_days_min: 1,
+                estimated_days_max: 1,
+                guaranteed: true,
             },
         ],
     },
 ] as unknown as ShippingCompany[];
+
+// userEvent waits on real timers by default, which deadlocks under fake ones.
+const setupUser = () => userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+
+/** Open the posting-date calendar and click a day in it. */
+const pickDate = async (
+    user: ReturnType<typeof setupUser>,
+    fieldLabel: string,
+    dayLabel: RegExp
+) => {
+    await user.click(screen.getByLabelText(fieldLabel));
+    await user.click(screen.getByRole('gridcell', { name: dayLabel }));
+};
+
+const renderOptions = (props: Partial<React.ComponentProps<typeof CheckoutShippingOptions>> = {}) =>
+    render(
+        <CheckoutShippingOptions
+            shippingCompanies={companies}
+            onShippingOptionChange={jest.fn().mockResolvedValue(undefined)}
+            {...props}
+        />
+    );
 
 describe('CheckoutShippingOptions', () => {
     beforeEach(() => {
@@ -65,12 +100,7 @@ describe('CheckoutShippingOptions', () => {
     it("does not select a shipping option on the customer's behalf", () => {
         const onShippingOptionChange = jest.fn();
 
-        render(
-            <CheckoutShippingOptions
-                shippingCompanies={companies}
-                onShippingOptionChange={onShippingOptionChange}
-            />
-        );
+        renderOptions({ onShippingOptionChange });
 
         // Auto-selecting meant the parent's "did you pick shipping?" guard saw a
         // value it had set itself, so the customer could reach payment — and be
@@ -81,12 +111,7 @@ describe('CheckoutShippingOptions', () => {
     it('reports the option the customer actually picks', async () => {
         const onShippingOptionChange = jest.fn().mockResolvedValue(undefined);
 
-        render(
-            <CheckoutShippingOptions
-                shippingCompanies={companies}
-                onShippingOptionChange={onShippingOptionChange}
-            />
-        );
+        renderOptions({ onShippingOptionChange });
 
         // Shipping is the default mode, so options are on screen already.
         const radios = await screen.findAllByRole('radio');
@@ -101,12 +126,7 @@ describe('CheckoutShippingOptions', () => {
     it('choosing Collect in store picks the pickup option without a second click', async () => {
         const onShippingOptionChange = jest.fn().mockResolvedValue(undefined);
 
-        render(
-            <CheckoutShippingOptions
-                shippingCompanies={companies}
-                onShippingOptionChange={onShippingOptionChange}
-            />
-        );
+        renderOptions({ onShippingOptionChange });
 
         await userEvent.click(screen.getByRole('radio', { name: 'Collect in store' }));
 
@@ -119,12 +139,7 @@ describe('CheckoutShippingOptions', () => {
     it('switching delivery mode clears the pick so a stale option cannot be paid for', async () => {
         const onShippingOptionChange = jest.fn().mockResolvedValue(undefined);
 
-        render(
-            <CheckoutShippingOptions
-                shippingCompanies={companies}
-                onShippingOptionChange={onShippingOptionChange}
-            />
-        );
+        renderOptions({ onShippingOptionChange });
 
         const radios = await screen.findAllByRole('radio');
         const option = radios.find(r => (r as HTMLInputElement).value === '3') as HTMLInputElement;
@@ -137,5 +152,170 @@ describe('CheckoutShippingOptions', () => {
         const afterSwitch = screen.getAllByRole('radio')
             .filter(r => (r as HTMLInputElement).type === 'radio' && (r as HTMLInputElement).name === 'shipping');
         expect(afterSwitch.every(r => !(r as HTMLInputElement).checked)).toBe(true);
+    });
+
+    describe('posting date', () => {
+        // Wednesday 9 September 2026, 09:00 London — before the 10:00 cutoff,
+        // so the earliest posting day is that same Wednesday.
+        beforeEach(() => {
+            jest.useFakeTimers().setSystemTime(new Date('2026-09-09T08:00:00Z'));
+        });
+        afterEach(() => {
+            jest.useRealTimers();
+        });
+
+        it('defaults to posting as soon as possible, with no date form in the way', () => {
+            renderOptions();
+
+            expect(screen.getByText(/We'll post your order on/)).toBeInTheDocument();
+            expect(screen.getByText('Wed 9 Sep')).toBeInTheDocument();
+            expect(screen.queryByLabelText('Post my order on')).not.toBeInTheDocument();
+        });
+
+        it('measures every estimate from the day the customer chose, not from today', async () => {
+            const user = setupUser();
+            renderOptions();
+
+            // Tracked 48 is 2-3 working days from Wednesday the 9th.
+            expect(screen.getByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).toBeInTheDocument();
+
+            await user.click(screen.getByRole('button', { name: /choose a different day/i }));
+            await pickDate(user, 'Post my order on', /September 21st/);
+
+            // The bug: the estimate used to stay pinned to today, so a customer
+            // holding the order to the 21st was still told it ships this week.
+            expect(screen.getByText(/Holding your order to post on/)).toBeInTheDocument();
+            expect(screen.getByText(/Estimated Wed 23 Sep – Thu 24 Sep/)).toBeInTheDocument();
+            expect(screen.queryByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).not.toBeInTheDocument();
+        });
+
+        it('can go back to posting as soon as possible', async () => {
+            const user = setupUser();
+            renderOptions();
+
+            await user.click(screen.getByRole('button', { name: /choose a different day/i }));
+            await pickDate(user, 'Post my order on', /September 21st/);
+            await user.click(screen.getByRole('button', { name: /post as soon as possible/i }));
+
+            expect(screen.getByText(/We'll post your order on/)).toBeInTheDocument();
+            expect(screen.getByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).toBeInTheDocument();
+        });
+
+        it('reports the posting date up as yyyy-mm-dd, and clears it for collection', async () => {
+            const user = setupUser();
+            const onDispatchDateChange = jest.fn();
+            renderOptions({ onDispatchDateChange });
+
+            await user.click(screen.getByRole('button', { name: /choose a different day/i }));
+            await pickDate(user, 'Post my order on', /September 21st/);
+            expect(onDispatchDateChange).toHaveBeenLastCalledWith('2026-09-21');
+
+            await user.click(screen.getByRole('radio', { name: 'Collect in store' }));
+
+            // Collection has its own date and time; a posting date on a pickup
+            // order is wrong data in the admin as well as a pointless question.
+            expect(onDispatchDateChange).toHaveBeenLastCalledWith(null);
+            expect(screen.queryByText(/We'll post your order on/)).not.toBeInTheDocument();
+        });
+    });
+
+    describe('guaranteed versus estimated', () => {
+        beforeEach(() => {
+            jest.useFakeTimers().setSystemTime(new Date('2026-09-09T08:00:00Z'));
+        });
+        afterEach(() => {
+            jest.useRealTimers();
+        });
+
+        it('only calls a service guaranteed when the carrier actually guarantees it', () => {
+            renderOptions();
+
+            expect(screen.getByText(/Arrives Thu 10 Sep/)).toBeInTheDocument();
+            expect(screen.getByText('Guaranteed by Royal Mail')).toBeInTheDocument();
+
+            // The tracked services are estimates and must read as estimates —
+            // most of these orders are birthday gifts, so the difference is the
+            // whole reason the customer is reading this list.
+            expect(screen.getByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).toBeInTheDocument();
+            expect(screen.getByText(/only Special Delivery guarantees the day it arrives/)).toBeInTheDocument();
+        });
+
+        it('treats an option with no guaranteed flag as an estimate', () => {
+            const noFlag = [{
+                ...companies[0],
+                shipping_options: [{ ...companies[0].shipping_options[0], guaranteed: undefined }],
+            }] as unknown as ShippingCompany[];
+
+            renderOptions({ shippingCompanies: noFlag });
+
+            // The field is optional so an older API degrades to honest wording
+            // rather than silently promising a date.
+            expect(screen.getByText(/Estimated Fri 11 Sep – Mon 14 Sep/)).toBeInTheDocument();
+            expect(screen.queryByText('Guaranteed by Royal Mail')).not.toBeInTheDocument();
+        });
+    });
+
+    describe('"need it by"', () => {
+        beforeEach(() => {
+            jest.useFakeTimers().setSystemTime(new Date('2026-09-09T08:00:00Z'));
+        });
+        afterEach(() => {
+            jest.useRealTimers();
+        });
+
+        const setNeededBy = async (user: ReturnType<typeof setupUser>, dayLabel: RegExp) => {
+            await user.click(screen.getByRole('button', { name: /need it for a particular day/i }));
+            await pickDate(user, 'I need it by', dayLabel);
+        };
+
+        it('grades each service against the day, and never promises an estimate', async () => {
+            const user = setupUser();
+            renderOptions();
+
+            await setNeededBy(user, /September 11th/);
+
+            // Special Delivery lands Thu 10 and is contractually committed.
+            expect(screen.getByText('Guaranteed to arrive in time')).toBeInTheDocument();
+            // Tracked 24 lands Thu 10 - Fri 11: expected to make it, not promised.
+            expect(screen.getByText('Usually arrives in time')).toBeInTheDocument();
+            // Tracked 48 lands Fri 11 - Mon 14: only the optimistic end makes it.
+            expect(screen.getByText('Might just make it')).toBeInTheDocument();
+        });
+
+        it('says plainly when a service will not make it', async () => {
+            const user = setupUser();
+            renderOptions();
+
+            await setNeededBy(user, /September 10th/);
+
+            expect(screen.getByText('Unlikely to arrive in time')).toBeInTheDocument();
+        });
+
+        it('points at collection when nothing we post can get there in time', async () => {
+            const user = setupUser();
+            renderOptions();
+
+            await setNeededBy(user, /September 9th/);
+
+            expect(screen.getByText(/don't expect any of these to reach you by/)).toBeInTheDocument();
+        });
+
+        it('offers to hold the order back rather than land a gift a fortnight early', async () => {
+            const user = setupUser();
+            const onDispatchDateChange = jest.fn();
+            renderOptions({ onDispatchDateChange });
+
+            await setNeededBy(user, /September 28th/);
+            const trackedFortyEight = screen.getAllByRole('radio')
+                .find(r => (r as HTMLInputElement).value === '2') as HTMLInputElement;
+            await user.click(trackedFortyEight);
+
+            // Tracked 48 posted on the 23rd is expected on the 28th; posting it
+            // today would have it sitting around for a fortnight.
+            const nudge = screen.getByRole('button', { name: /post on wed 23 sep instead/i });
+            await user.click(nudge);
+
+            expect(onDispatchDateChange).toHaveBeenLastCalledWith('2026-09-23');
+        });
     });
 });

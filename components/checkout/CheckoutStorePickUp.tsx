@@ -1,35 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { addDays, format, isSameDay, isWeekend, startOfDay } from 'date-fns';
+import { addDays, format, isSameDay } from 'date-fns';
 import { enGB } from 'date-fns/locale';
-
-/**
- * "Now", as the London store sees it.
- *
- * The previous version derived London's DST from the *browser's* UTC offset,
- * which is only ever right by luck for a visitor outside the UK — and it
- * decides both which day counts as today and whether the noon cutoff has
- * passed. Intl with an explicit timeZone is the same approach
- * CheckoutShippingOptions already uses for its dispatch cutoff.
- */
-function getLondonNow(): { date: Date; hour: number } {
-  const now = new Date();
-  const parts = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Europe/London',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    hour12: false,
-  }).formatToParts(now);
-
-  const get = (type: string) => Number(parts.find(part => part.type === type)?.value ?? '0');
-  // A local Date standing for the London calendar day — only the date parts are
-  // read from it, so no offset arithmetic is needed.
-  return {
-    date: new Date(get('year'), get('month') - 1, get('day')),
-    hour: get('hour'),
-  };
-}
+import { getLondonNow, getNextShippingDays } from '@/utils/shippingDays';
 
 const SLOT_START = 10; // 10:00
 const SLOT_END = 16;   // 16:00
@@ -56,17 +28,6 @@ function getTimeSlots(forToday = false) {
   return slots;
 }
 
-function getNextWeekdays(startDate: Date, count = 14) {
-  // Returns up to 'count' weekdays from startDate
-  const days: Date[] = [];
-  let d = startOfDay(startDate);
-  while (days.length < count) {
-    if (!isWeekend(d)) days.push(new Date(d));
-    d = addDays(d, 1);
-  }
-  return days;
-}
-
 type Slot = { start: string; end: string; value: string };
 
 type CheckoutStorePickUpProps = {
@@ -79,7 +40,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
 
   // Same-day collection only while there is still time to make the order up.
   const minDate = isBeforeCutoff ? londonToday : addDays(londonToday, 1);
-  const availableDays = useMemo(() => getNextWeekdays(minDate, 14), [minDate]);
+  const availableDays = useMemo(() => getNextShippingDays(minDate, 14), [minDate]);
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);

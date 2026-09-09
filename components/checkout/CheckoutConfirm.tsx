@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
 import Spinner from '@/components/common/Spinner';
 import CartItem from '@/components/cart/CartItem';
-import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
+import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
 import { formatCurrency } from '@/utils/currency';
@@ -25,6 +25,8 @@ const CheckoutConfirm = () => {
     const { isClosed: storeClosed, reopenLabel } = useStoreStatus();
     const [selectedShippingOption, setSelectedShippingOption] = useState<number | undefined>(undefined);
     const [storePickup, setStorePickup] = useState<{ date: Date; slot: { start: string; end: string; value: string } } | null>(null);
+    // yyyy-mm-dd to hold the order back, or null to post as soon as we can.
+    const [dispatchDate, setDispatchDate] = useState<string | null>(null);
 
     const router = useRouter();
 
@@ -40,6 +42,7 @@ const CheckoutConfirm = () => {
 
     const [createStripeSession] = useCreateStripeCheckoutSessionMutation();
     const [updateShippingOption] = useUpdateShippingOptionMutation();
+    const [updateCart] = useUpdateCartMutation();
 
     // Leaving for Stripe is a full navigation, so coming back through the
     // browser's back/forward cache restores this component with isProcessing
@@ -81,6 +84,14 @@ const CheckoutConfirm = () => {
             if (selectedShippingOption === STORE_PICKUP_OPTION_ID && storePickup) {
                 payload.pickup_date = storePickup.date.toISOString().slice(0, 10); // YYYY-MM-DD
                 payload.pickup_time = storePickup.slot.start + ' - ' + storePickup.slot.end;
+            }
+
+            // Saved here rather than on every change: updateCart invalidates
+            // ShippingOptions, so persisting as the customer picks dates would
+            // refetch the whole options list underneath them. Sent even when
+            // null so switching to collection clears a date saved earlier.
+            if ((cart?.shipping_date ?? null) !== dispatchDate) {
+                await updateCart({ shipping_date: dispatchDate }).unwrap();
             }
 
             await updateShippingOption({
@@ -165,6 +176,7 @@ const CheckoutConfirm = () => {
                             setSelectedShippingOption(optionId);
                         }}
                         onChangeStorePickup={setStorePickup}
+                        onDispatchDateChange={setDispatchDate}
                     />
                     {storeClosed && (
                         <div className="rounded-md border border-amber-200 dark:border-amber-700 p-4 bg-amber-50 dark:bg-amber-900/20 flex items-start gap-3">

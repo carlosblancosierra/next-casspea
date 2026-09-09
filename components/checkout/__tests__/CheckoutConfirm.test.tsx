@@ -11,6 +11,10 @@ jest.mock('next/navigation', () => ({
 
 jest.mock('@/redux/features/carts/cartApiSlice', () => ({
     useGetCartQuery: jest.fn(),
+    useUpdateCartMutation: jest.fn(() => [
+        jest.fn(() => ({ unwrap: () => Promise.resolve({}) })),
+        {},
+    ]),
 }));
 
 jest.mock('@/redux/features/shipping/shippingApiSlice', () => ({

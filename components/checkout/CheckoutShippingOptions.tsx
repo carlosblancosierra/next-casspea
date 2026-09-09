@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { addBusinessDays, format } from 'date-fns';
+import { addBusinessDays, addDays, format, isAfter, startOfDay } from 'date-fns';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
+import ShippingDatePicker from './ShippingDatePicker';
 import type { ShippingCompany, ShippingOption } from '@/types/shipping';
 import { STORE_PICKUP_OPTION_ID } from './constants';
+import { getEarliestDispatch, isShippingDay, HOLIDAY_SHIP_DATE } from '@/utils/shippingDays';
 
 // Re-exported for existing imports of these types from this module.
 export type { ShippingCompany, ShippingOption };
@@ -19,13 +21,25 @@ interface CheckoutShippingOptionsProps {
     selectedOptionId?: number;
     onShippingOptionChange: (optionId: number) => Promise<void>;
     onChangeStorePickup?: (val: { date: Date; slot: Slot } | null) => void;
+    /** yyyy-mm-dd to hold the order back, or null to post as soon as possible. */
+    onDispatchDateChange?: (date: string | null) => void;
 }
+
+/** How we describe an option's chance of making the day the customer needs. */
+type Verdict = { tone: 'good' | 'warn' | 'bad'; label: string };
+
+const VERDICT_CLASSES: Record<Verdict['tone'], string> = {
+    good: 'text-green-700 dark:text-green-400',
+    warn: 'text-amber-700 dark:text-amber-400',
+    bad: 'text-red-600 dark:text-red-400',
+};
 
 const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     shippingCompanies,
     selectedOptionId,
     onShippingOptionChange,
-    onChangeStorePickup
+    onChangeStorePickup,
+    onDispatchDateChange
 }) => {
     const [localSelectedOption, setLocalSelectedOption] = useState<string | null>(null);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -36,7 +50,15 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     // an *option* — the list below starts empty and Continue stays disabled
     // until the customer actually picks one.
     const [deliveryType, setDeliveryType] = useState<'shipping' | 'pickup'>('shipping');
-
+    // null means "post it as soon as you can" — what most people want. A date
+    // holds the parcel back, for a gift that shouldn't land three weeks early.
+    const [dispatchDate, setDispatchDate] = useState<Date | null>(null);
+    // Optional: the day the customer needs it for. Used only to say which
+    // services are likely to make it — never to promise one will, and never to
+    // change what we actually do.
+    const [neededBy, setNeededBy] = useState<Date | null>(null);
+    const [showDispatchPicker, setShowDispatchPicker] = useState(false);
+    const [showNeededByPicker, setShowNeededByPicker] = useState(false);
 
     // Expose storePickup to parent if onChangeStorePickup is provided
     useEffect(() => {
@@ -51,6 +73,11 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
             setLocalSelectedOption(selectedOptionId.toString());
         }
     }, [selectedOptionId]);
+
+    useEffect(() => {
+        if (!onDispatchDateChange) return;
+        onDispatchDateChange(dispatchDate ? format(dispatchDate, 'yyyy-MM-dd') : null);
+    }, [dispatchDate, onDispatchDateChange]);
 
     let allShippingOptions = shippingCompanies?.flatMap(company =>
         company.shipping_options.map(option => ({
@@ -88,7 +115,9 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         allShippingOptions = [...freeOptions, ...paidOptions];
     }
 
-    // Sort: enabled options first, then disabled
+    // Sort: enabled options first, then disabled. Deliberately *not* re-sorted
+    // by how well each fits the "need it by" date — shuffling radio buttons
+    // under someone mid-decision is worse than annotating them in place.
     allShippingOptions = allShippingOptions.sort((a, b) => {
         if (a.disabled === b.disabled) return 0;
         return a.disabled ? 1 : -1;
@@ -114,29 +143,83 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         }
     };
 
+    const earliestDispatch = getEarliestDispatch();
+
+    // Previously this always measured from today, so a customer who asked us to
+    // hold the order until the 20th was still shown "ships tomorrow" and an
+    // arrival estimate to match. The date they picked is the one that counts.
+    const effectiveDispatch = dispatchDate ?? earliestDispatch;
+
     const getEstimatedDeliveryDates = (minDays: number, maxDays: number) => {
-        const now = new Date();
-        // Get current hour in UK time (handles GMT/BST automatically)
-        const ukHour = parseInt(
-            new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hour12: false, timeZone: 'Europe/London' }).format(now)
-        );
-        const SHIPPING_CUTOFF_HOUR = 10;
-        // Spring Bank Holiday + high temperature delay: all orders ship on 26 May 2026
-        const HOLIDAY_SHIP_DATE = new Date('2026-05-26T00:00:00+01:00');
-        const isHolidayPeriod = now < HOLIDAY_SHIP_DATE;
-        const shippingDate = isHolidayPeriod
-            ? HOLIDAY_SHIP_DATE
-            : ukHour < SHIPPING_CUTOFF_HOUR ? now : addBusinessDays(now, 1);
-        const minDeliveryDate = addBusinessDays(shippingDate, minDays);
-        const maxDeliveryDate = addBusinessDays(shippingDate, maxDays);
+        const minDeliveryDate = addBusinessDays(effectiveDispatch, minDays);
+        const maxDeliveryDate = addBusinessDays(effectiveDispatch, maxDays);
 
         return {
-            shipping: format(shippingDate, 'EEE, d MMM'),
+            shipping: format(effectiveDispatch, 'EEE d MMM'),
             delivery: minDays === maxDays
-                ? format(minDeliveryDate, 'EEE, d MMM')
-                : `${format(minDeliveryDate, 'EEE, d MMM')} - ${format(maxDeliveryDate, 'EEE, d MMM')}`
+                ? format(minDeliveryDate, 'EEE d MMM')
+                : `${format(minDeliveryDate, 'EEE d MMM')} – ${format(maxDeliveryDate, 'EEE d MMM')}`,
+            earliest: minDeliveryDate,
+            latest: maxDeliveryDate,
         };
     };
+
+    /**
+     * How an option looks against the day the customer needs it.
+     *
+     * The wording carries the distinction that matters: only a service the
+     * carrier contractually commits to gets "guaranteed". Everything else
+     * "usually arrives" — true, and not a promise we cannot keep.
+     */
+    const getVerdict = (option: { guaranteed?: boolean }, earliest: Date, latest: Date): Verdict | null => {
+        if (!neededBy) return null;
+        const by = startOfDay(neededBy);
+
+        if (!isAfter(startOfDay(latest), by)) {
+            return option.guaranteed
+                ? { tone: 'good', label: 'Guaranteed to arrive in time' }
+                : { tone: 'good', label: 'Usually arrives in time' };
+        }
+        if (!isAfter(startOfDay(earliest), by)) {
+            return { tone: 'warn', label: 'Might just make it' };
+        }
+        return { tone: 'bad', label: 'Unlikely to arrive in time' };
+    };
+
+    const selectableOptions = allShippingOptions.filter(option => !option.disabled);
+    const nothingArrivesInTime = Boolean(neededBy)
+        && selectableOptions.length > 0
+        && selectableOptions.every(option => {
+            const { earliest, latest } = getEstimatedDeliveryDates(option.estimated_days_min, option.estimated_days_max);
+            return getVerdict(option, earliest, latest)?.tone === 'bad';
+        });
+
+    /**
+     * The last day we could post and still expect it to land by `neededBy`.
+     *
+     * Chocolate for a birthday arriving eight days early is a real problem for
+     * a shop selling fresh product, and this is the only point in the flow
+     * where we know both dates. Suggestion only — it never moves on its own.
+     */
+    const suggestLaterDispatch = (maxDays: number): Date | null => {
+        if (!neededBy) return null;
+        let day = startOfDay(neededBy);
+        for (let i = 0; i < 60; i++) {
+            if (isShippingDay(day) && !isAfter(startOfDay(addBusinessDays(day, maxDays)), startOfDay(neededBy))) {
+                return isAfter(startOfDay(earliestDispatch), day) ? null : day;
+            }
+            day = addDays(day, -1);
+        }
+        return null;
+    };
+
+    const selectedOption = selectableOptions.find(option => option.id.toString() === localSelectedOption);
+    const suggestedDispatch = !dispatchDate && selectedOption
+        ? suggestLaterDispatch(selectedOption.estimated_days_max)
+        : null;
+    // Only worth interrupting for if it moves things by more than a day or two.
+    const showPostLaterNudge = suggestedDispatch
+        && isAfter(startOfDay(suggestedDispatch), addDays(startOfDay(earliestDispatch), 2));
 
     // Helper function to render shipping price with discount
     const renderShippingPrice = (option: ShippingOption) => {
@@ -191,7 +274,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
 
     if (!hasAnyShippingOptions) return null;
 
-    const isHolidayPeriod = new Date() < new Date('2026-05-26T00:00:00+01:00');
+    const isHolidayPeriod = new Date() < HOLIDAY_SHIP_DATE;
 
     return (
         <div className="main-bg p-6 rounded-lg shadow dark:bg-main-bg-dark">
@@ -237,6 +320,16 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                 setDeliveryType(value);
                                 setStorePickup(null);
 
+                                // Collection has its own date and time, so a
+                                // posting date on a pickup order is wrong data
+                                // in the admin as well as a meaningless question.
+                                if (value === 'pickup') {
+                                    setDispatchDate(null);
+                                    setNeededBy(null);
+                                    setShowDispatchPicker(false);
+                                    setShowNeededByPicker(false);
+                                }
+
                                 // Collection has exactly one option, so asking the
                                 // customer to tick it after choosing "Collect in
                                 // store" is a click that means nothing. Choosing
@@ -272,6 +365,96 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                         }
                     </p>
 
+                    {/* The two date questions sit above the options because they
+                        are what every estimate below is measured from. Both are
+                        collapsed: most orders want posting as soon as possible,
+                        and making everyone answer a date question first is
+                        friction for the many to serve the few. */}
+                    {deliveryType === 'shipping' && (
+                        <div className="mb-5 space-y-3 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                <p className="text-sm text-primary-text dark:text-primary-text-light">
+                                    {dispatchDate
+                                        ? <>Holding your order to post on <strong>{format(dispatchDate, 'EEE d MMM')}</strong></>
+                                        : <>We&apos;ll post your order on <strong>{format(earliestDispatch, 'EEE d MMM')}</strong></>
+                                    }
+                                </p>
+                                <div className="flex items-center gap-3">
+                                    {dispatchDate && (
+                                        <button
+                                            type="button"
+                                            onClick={() => { setDispatchDate(null); setShowDispatchPicker(false); }}
+                                            className="text-sm font-medium text-primary dark:text-primary-2 underline"
+                                        >
+                                            Post as soon as possible
+                                        </button>
+                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowDispatchPicker(open => !open)}
+                                        className="text-sm font-medium text-primary dark:text-primary-2 underline"
+                                    >
+                                        Choose a different day
+                                    </button>
+                                </div>
+                            </div>
+
+                            {showDispatchPicker && (
+                                <ShippingDatePicker
+                                    id="dispatch-date"
+                                    label="Post my order on"
+                                    selected={dispatchDate}
+                                    onChange={setDispatchDate}
+                                    minDate={earliestDispatch}
+                                    filterDate={isShippingDay}
+                                    placeholderText="Choose a posting day"
+                                    hint="We post Monday to Friday. Choosing a day later than the earliest holds your order until then."
+                                />
+                            )}
+
+                            {!showNeededByPicker && !neededBy ? (
+                                <button
+                                    type="button"
+                                    onClick={() => setShowNeededByPicker(true)}
+                                    className="text-sm font-medium text-primary dark:text-primary-2 underline"
+                                >
+                                    Need it for a particular day?
+                                </button>
+                            ) : (
+                                <div className="space-y-2">
+                                    <ShippingDatePicker
+                                        id="needed-by-date"
+                                        label="I need it by"
+                                        selected={neededBy}
+                                        onChange={setNeededBy}
+                                        minDate={earliestDispatch}
+                                        placeholderText="Choose the day you need it"
+                                        hint="We'll show how each service looks against that day. It doesn't change your order."
+                                    />
+                                    {neededBy && (
+                                        <button
+                                            type="button"
+                                            onClick={() => { setNeededBy(null); setShowNeededByPicker(false); }}
+                                            className="text-sm font-medium text-primary dark:text-primary-2 underline"
+                                        >
+                                            Clear
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {nothingArrivesInTime && (
+                        <div className="mb-4 rounded-md border border-red-200 dark:border-red-800 p-3 bg-red-50 dark:bg-red-900/20">
+                            <p className="text-sm text-red-800 dark:text-red-200">
+                                We don&apos;t expect any of these to reach you by{' '}
+                                <strong>{neededBy && format(neededBy, 'EEE d MMM')}</strong>. Collecting in
+                                store may work, or pick a later day.
+                            </p>
+                        </div>
+                    )}
+
                     {/* Collection needs no radio list: the toggle already chose it,
                         and there is only one option behind it. Show what they get
                         instead of asking them to tick a list of one. */}
@@ -289,6 +472,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                             {allShippingOptions.map((option) => {
                                 const isOptionDisabled = option.disabled;
                                 const dates = getEstimatedDeliveryDates(option.estimated_days_min, option.estimated_days_max);
+                                const verdict = isOptionDisabled ? null : getVerdict(option, dates.earliest, dates.latest);
                                 return (
                                     <label
                                         key={option.id}
@@ -317,19 +501,34 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                                     </p>
                                                 ) : (
                                                     <>
-                                                        {option.id === STORE_PICKUP_OPTION_ID ? (
-                                                            <p className="text-primary-text dark:text-primary-text-light text-sm font-semibold">
-                                                                Pick up at 104 Bedford Hill, London, SW12 9HR
-                                                            </p>
-                                                        ) : (
+                                                        <p className="text-primary-text dark:text-primary-text-light text-sm">
+                                                            Posting {dates.shipping}
+                                                        </p>
+                                                        {/* An option without the flag is treated as an
+                                                            estimate: the field is optional so an older
+                                                            API degrades to honest wording rather than
+                                                            to a promise we cannot keep. */}
+                                                        {option.guaranteed ? (
                                                             <>
-                                                                <p className="text-primary-text dark:text-primary-text-light text-sm">
-                                                                    Ships: {dates.shipping}
+                                                                <p className="text-primary-text dark:text-primary-text-light text-sm font-medium">
+                                                                    Arrives {dates.delivery}
                                                                 </p>
-                                                                <p className="text-primary-text dark:text-primary-text-light text-sm">
-                                                                    Estimated Delivery: {dates.delivery}
-                                                                </p>
+                                                                <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-xs font-medium text-green-800 dark:text-green-300">
+                                                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                    Guaranteed by Royal Mail
+                                                                </span>
                                                             </>
+                                                        ) : (
+                                                            <p className="text-primary-text dark:text-primary-text-light text-sm">
+                                                                Estimated {dates.delivery}
+                                                            </p>
+                                                        )}
+                                                        {verdict && (
+                                                            <p className={`text-sm font-medium mt-1 ${VERDICT_CLASSES[verdict.tone]}`}>
+                                                                {verdict.label}
+                                                            </p>
                                                         )}
                                                     </>
                                                 )}
@@ -338,6 +537,30 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     </label>
                                 );
                             })}
+
+                            {showPostLaterNudge && suggestedDispatch && (
+                                <div className="rounded-md border border-gray-200 dark:border-gray-700 p-3 flex flex-wrap items-center justify-between gap-2">
+                                    <p className="text-sm text-primary-text dark:text-primary-text-light">
+                                        Posting now means it could arrive well before{' '}
+                                        {neededBy && format(neededBy, 'EEE d MMM')}. Chocolate is best fresh.
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={() => setDispatchDate(suggestedDispatch)}
+                                        className="text-sm font-medium text-primary dark:text-primary-2 underline whitespace-nowrap"
+                                    >
+                                        Post on {format(suggestedDispatch, 'EEE d MMM')} instead
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Said once, under the list, rather than repeated on
+                                every option — the distinction matters, the noise
+                                doesn't. */}
+                            <p className="text-xs text-primary-text/70 dark:text-primary-text-light/70">
+                                We guarantee the day we post. Delivery dates are Royal Mail estimates —
+                                only Special Delivery guarantees the day it arrives.
+                            </p>
                         </div>
                     )}
 
@@ -365,10 +588,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                             )}
                         </div>
                     )}
-
-                    {/* <p className="text-sm text-primary-text dark:text-primary-text-light mb-2">
-                        Due to the current high temperatures in the UK, we have temporarily disabled the Royal Mail - Tracked 48® service.
-                    </p> */}
                 </>
         </div>
     );

@@ -5,7 +5,9 @@ import { Discount } from '@/types/discounts';
 
 export interface CartUpdate {
     gift_message?: string;
-    shipping_date?: string;
+    /** null clears a previously saved posting date — the serializer
+     *  accepts it (allow_null), and a pickup order must not keep one. */
+    shipping_date?: string | null;
     discount_code?: string;
     remove_discount?: boolean;
 }
