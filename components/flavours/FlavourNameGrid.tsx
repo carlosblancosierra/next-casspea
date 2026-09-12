@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Flavour } from '@/types/flavours';
-import FlavourCard from '@/components/landing/main/FlavourCard';
 
 export type FlavourGridVariant = 'caption' | 'tile' | 'overlay';
 
@@ -19,15 +18,18 @@ interface FlavourNameGridProps {
 }
 
 // 3 columns on mobile -> 4 -> 5 -> 6, matching the home grid's density on
-// larger screens while staying readable with names on phones.
-const GRID = 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-x-3 gap-y-6 sm:gap-x-4 max-w-6xl mx-auto';
+// larger screens while staying readable with names on phones. Tight row gap so
+// names can run to 3 lines without the rows drifting far apart.
+const GRID = 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-x-3 gap-y-4 sm:gap-x-4 max-w-6xl mx-auto';
 
 // Images are packshots of different native sizes; sizes hint keeps next/image
 // from over-fetching for the ~3-per-row mobile layout.
 const IMG_SIZES = '(min-width:1024px) 16vw, (min-width:768px) 20vw, (min-width:640px) 25vw, 33vw';
 
+// Up to 3 lines, then ellipsis, so long names ("64% Colombian Dark Chocolate
+// Ganache") aren't cut mid-word.
 const NAME_BASE =
-    'text-center font-semibold leading-tight line-clamp-2 text-xs sm:text-sm text-primary-text dark:text-primary-text-light';
+    'text-center font-semibold leading-tight line-clamp-3 text-xs sm:text-sm text-primary-text dark:text-primary-text-light';
 
 function FlavourImage({ flavour, className = '' }: { flavour: Flavour; className?: string }) {
     return (
@@ -63,7 +65,7 @@ export default function FlavourNameGrid({
                                         <div className="relative aspect-square">
                                             <FlavourImage flavour={flavour} />
                                         </div>
-                                        <h3 className={`${NAME_BASE} mt-2 min-h-[2.4rem]`}>{flavour.name}</h3>
+                                        <h3 className={`${NAME_BASE} mt-1.5`}>{flavour.name}</h3>
                                     </div>
                                 );
                             case 'overlay':
@@ -84,7 +86,7 @@ export default function FlavourNameGrid({
                                         <div className="relative aspect-square rounded-lg overflow-hidden group-hover:opacity-90 transition-opacity">
                                             <FlavourImage flavour={flavour} />
                                         </div>
-                                        <h3 className={`${NAME_BASE} mt-2 min-h-[2.4rem]`}>{flavour.name}</h3>
+                                        <h3 className={`${NAME_BASE} mt-1.5`}>{flavour.name}</h3>
                                     </div>
                                 );
                         }
@@ -110,17 +112,43 @@ export default function FlavourNameGrid({
                     onClick={() => setSelected(null)}
                 >
                     <div
-                        className="relative bg-main-bg dark:bg-main-bg-dark p-6 rounded-lg max-w-md w-full"
+                        className="relative bg-main-bg dark:bg-main-bg-dark rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6"
                         onClick={e => e.stopPropagation()}
                     >
                         <button
-                            className="absolute top-2 right-2 text-2xl leading-none text-primary-text dark:text-primary-text-light"
+                            className="absolute top-3 right-3 z-10 text-3xl leading-none text-primary-text dark:text-primary-text-light hover:opacity-70"
                             onClick={() => setSelected(null)}
                             aria-label="Close"
                         >
                             &times;
                         </button>
-                        <FlavourCard flavour={selected} />
+
+                        {/* Big image — the point of opening the modal */}
+                        <div className="relative w-full h-64 sm:h-72">
+                            <Image
+                                src={selected.image || selected.thumbnail || '/flavours/default.png'}
+                                alt={selected.name}
+                                fill
+                                sizes="(min-width:640px) 28rem, 90vw"
+                                className="object-contain"
+                            />
+                        </div>
+
+                        <h3 className="mt-4 text-xl font-bold text-center text-primary-text dark:text-primary-text-light">
+                            {selected.name}
+                        </h3>
+
+                        {selected.description && (
+                            <p className="mt-2 text-sm text-center text-primary-text/80 dark:text-primary-text-light/80">
+                                {selected.description}
+                            </p>
+                        )}
+
+                        {selected.allergens && selected.allergens.length > 0 && (
+                            <p className="mt-4 text-[11px] uppercase tracking-wide text-center text-primary-text/60 dark:text-primary-text-light/60">
+                                {selected.allergens.map(a => a.name).join(' · ')}
+                            </p>
+                        )}
                     </div>
                 </div>
             )}
