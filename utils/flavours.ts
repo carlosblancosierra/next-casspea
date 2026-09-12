@@ -5,10 +5,22 @@ import { Flavour } from '@/types/flavours';
  * home flavour grid so both share one cache window and one code path.
  * Returns [] on any error so callers can render an empty state.
  */
-export async function getFlavours(): Promise<Flavour[]> {
+/**
+ * @param opts.revalidate  Seconds to cache the response for, or `false` to
+ *   always fetch fresh (`cache: 'no-store'`). Defaults to 300s. The flavours
+ *   page passes `false` so admin changes show immediately; the home grid uses
+ *   the default cache since it's high-traffic and changes rarely.
+ */
+export async function getFlavours(
+    opts: { revalidate?: number | false } = {},
+): Promise<Flavour[]> {
     const url = `${process.env.NEXT_PUBLIC_HOST}/api/flavours/`;
+    const { revalidate = 300 } = opts;
     try {
-        const res = await fetch(url, { next: { revalidate: 300 } });
+        const res = await fetch(
+            url,
+            revalidate === false ? { cache: 'no-store' } : { next: { revalidate } },
+        );
         if (!res.ok) {
             console.error(`[getFlavours] ${res.status} ${res.statusText} from ${url}`);
             return [];

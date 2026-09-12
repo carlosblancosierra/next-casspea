@@ -11,9 +11,12 @@ export const metadata: Metadata = {
         'Explore every CassPea flavour — handcrafted bonbons made in London, from Milk Chocolate Ganache and Salted Caramel to Dubai Style and 64% Colombian Dark Chocolate Ganache. Tap any flavour for its description and allergens.',
 };
 
-// Revalidated by getFlavours() (revalidate: 300); render on the server for SEO.
+// Render on the server per request so admin changes to the flavours show
+// immediately (no stale ISR snapshot), while keeping SSR for SEO.
+export const dynamic = 'force-dynamic';
+
 export default async function FlavoursPage() {
-    const flavours = await getFlavours();
+    const flavours = await getFlavours({ revalidate: false });
 
     return (
         <main className="dark:bg-main-bg-dark min-h-screen py-8">
