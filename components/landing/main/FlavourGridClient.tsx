@@ -4,14 +4,20 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Flavour } from '@/types/flavours';
 import FlavourCard from './FlavourCard';
+import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 
 export default function FlavourGridClient({ flavours }: { flavours: Flavour[] }) {
+    // SSR paints the grid instantly (SEO / first paint); the client then keeps
+    // it current so admin changes show without waiting for a rebuild — the same
+    // live source the box builders use. Falls back to the SSR data before it loads.
+    const { data } = useGetFlavoursQuery();
+    const list = data ?? flavours;
     const [selected, setSelected] = useState<Flavour | null>(null);
 
     return (
         <section className="py-12 px-4">
             <div className="grid grid-cols-4 md:grid-cols-6 gap-10 max-w-6xl mx-auto">
-                {flavours.map(flavour => (
+                {list.map(flavour => (
                     <div key={flavour.id} onClick={() => setSelected(flavour)} className="cursor-pointer">
                         <Image
                             src={flavour.image || flavour.thumbnail || '/flavours/default.png'}
