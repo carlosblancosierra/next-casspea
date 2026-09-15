@@ -25,7 +25,17 @@ export default function RequireAuth({ children }: Props) {
 	}
 
 	if (!isAuthenticated) {
-		redirect('/auth/login');
+		// Remember where they were headed so the staff order links in emails
+		// (/orders?order=CP25-XXXX) still land on the order after signing in.
+		const target =
+			typeof window !== 'undefined'
+				? window.location.pathname + window.location.search
+				: '';
+		redirect(
+			target && target !== '/'
+				? `/auth/login?next=${encodeURIComponent(target)}`
+				: '/auth/login'
+		);
 	}
 
 	return <>{children}</>;
