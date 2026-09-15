@@ -13,6 +13,8 @@ export interface Flavour {
     slug: string;
     description: string;
     mini_description: string;
+    /** Long-form copy for the flavours page. Falls back to `description`. */
+    story?: string;
     category?: FlavourCategory;
     allergens?: Allergen[];
     active?: boolean;

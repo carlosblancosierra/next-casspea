@@ -1,20 +1,13 @@
-import { Flavour } from '@/types/flavours';
-import FlavourGridClient from './FlavourGridClient';
-
-async function fetchFlavours(): Promise<Flavour[]> {
-    try {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_HOST}/api/flavours/`,
-            { next: { revalidate: 300 } }
-        );
-        if (!res.ok) return [];
-        return res.json();
-    } catch {
-        return [];
-    }
-}
+import FlavourNameGrid from '@/components/flavours/FlavourNameGrid';
+import { getFlavours } from '@/utils/flavours';
 
 export default async function FlavourGridServer() {
-    const flavours = await fetchFlavours();
-    return <FlavourGridClient flavours={flavours} />;
+    const flavours = await getFlavours();
+    // Same grid the /flavours page uses, so the two stay in sync. It keeps
+    // itself current on the client, which is what the old FlavourGridClient did.
+    return (
+        <section className="py-8 px-4">
+            <FlavourNameGrid flavours={flavours} showDescription />
+        </section>
+    );
 }

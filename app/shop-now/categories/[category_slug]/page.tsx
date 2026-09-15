@@ -1,24 +1,38 @@
-'use client';
-
-import React, { useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import ProductCard from '@/components/store/ProductCard';
-import Spinner from '@/components/common/Spinner';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useGetCategoryQuery } from '@/redux/features/products/productApiSlice';
-import { skipToken } from '@reduxjs/toolkit/query';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import PackBuilder from '@/components/packs/PackBuilder';
+import CategoryProductsGrid from '@/components/store/CategoryProductsGrid';
+import { getCategory } from '@/utils/products';
 import { Product } from '@/types/products';
-export default function CategoryDetailPage() {
-  const { category_slug } = useParams() as { category_slug: string };
-  // The packs route renders the builder instead of a category, but the hook
-  // still has to run on every render — skipToken keeps it from fetching a
-  // category that doesn't exist.
-  const isPacksRoute = category_slug === 'packs';
-  const { data: category, isLoading: categoryLoading, error: categoryError } =
-    useGetCategoryQuery(isPacksRoute ? skipToken : category_slug);
 
-  if (isPacksRoute) {
+// Render on the server per request so product/category changes show immediately.
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(
+  { params }: { params: { category_slug: string } },
+): Promise<Metadata> {
+  const slug = params.category_slug;
+  if (slug === 'packs') {
+    return {
+      title: 'Build Your Own Pack | CassPea',
+      description: 'Pick your own chocolates and build a personalised CassPea pack.',
+    };
+  }
+  const category = await getCategory(slug, { revalidate: false });
+  if (!category) return { title: 'Shop | CassPea' };
+  return {
+    title: `${category.name} | CassPea`,
+    description: category.description || `Shop our ${category.name} — handmade chocolates by CassPea.`,
+  };
+}
+
+export default async function CategoryDetailPage(
+  { params }: { params: { category_slug: string } },
+) {
+  const slug = params.category_slug;
+
+  // The packs route renders the builder instead of a category.
+  if (slug === 'packs') {
     return (
       <div className="container mx-auto min-h-[80vh] py-2">
         <PackBuilder />
@@ -26,29 +40,23 @@ export default function CategoryDetailPage() {
     );
   }
 
-  if (categoryLoading || !category) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Spinner md />
-      </div>
-    );
-  }
+  const category = await getCategory(slug, { revalidate: false });
+  if (!category) notFound();
 
-  // If slug is 'all', show all products; otherwise, filter by category slug
-  const products = category.products;
-  const filteredProducts = category_slug === 'all' 
-    ? products 
-    : products?.filter((product: Product) => product?.category?.slug === category_slug);
+  const products = category.products ?? [];
+  // 'all' shows everything; a real category shows only its own products.
+  const filteredProducts =
+    slug === 'all' ? products : products.filter((p: Product) => p?.category?.slug === slug);
 
   return (
     <div className="container mx-auto min-h-[80vh] py-2 mb-[300px]">
       <div className="md:text-center mb-8">
         <h1 className="text-3xl font-bold text-primary-text dark:text-white text-center">
-          { category.name }
+          {category.name}
         </h1>
       </div>
 
-      {category_slug === 'signature-boxes' && (
+      {slug === 'signature-boxes' && (
         <section className="mb-8 text-center">
           <h2 className="font-bold mt-2">
             Ordering delicious hand made chocolates from CassPea is simple and fun!
@@ -63,31 +71,12 @@ export default function CategoryDetailPage() {
         </section>
       )}
 
-      {categoryError && <div className="text-red-500 text-center">Error loading products</div>}
-      {filteredProducts?.length === 0 ? (
-        <div className="text-center text-primary-text dark:text-primary-text">No products found for this category.</div>
-      ) : (
-        <div className="grid gap-x-2 gap-y-2 mt-2 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
-          <AnimatePresence>
-            {filteredProducts?.map((product: Product) => (
-              <motion.div
-                key={product.name}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                layout
-                variants={{
-                  hidden: { opacity: 0, scale: 0.8 },
-                  visible: { opacity: 1, scale: 1 },
-                }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                className="w-full"
-              >
-                <ProductCard product={product} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
+      {filteredProducts.length === 0 ? (
+        <div className="text-center text-primary-text dark:text-primary-text">
+          No products found for this category.
         </div>
+      ) : (
+        <CategoryProductsGrid products={filteredProducts} />
       )}
     </div>
   );

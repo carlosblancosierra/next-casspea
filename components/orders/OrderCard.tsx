@@ -201,7 +201,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                       </div>
                     )}
                     {item.selected_custom_option_key && item.product?.custom_options && (
-                      <div className="text-sm text-primary-text mt-1">
+                      <div className="text-sm text-primary-text dark:text-primary-text-light mt-1">
                         {(() => {
                           const opt = item.product.custom_options.find((o) => o.key === item.selected_custom_option_key);
                           return opt ? opt.label : item.selected_custom_option_key;
