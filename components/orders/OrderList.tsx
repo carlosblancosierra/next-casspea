@@ -5,15 +5,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { addDays, format } from 'date-fns';
 import { useGetOrdersQuery, OrdersQueryParams } from '@/redux/features/orders/ordersApiSlice';
 import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
-import { useCreateRoyalMailOrderMutation } from '@/redux/features/royalmail/royalmailApiSlice';
 import { Order } from '@/types/orders';
 import DaySection from './DaySection';
-import { toast } from 'react-toastify';
-
-function getCookie(name: string) {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? decodeURIComponent(match[2]) : null;
-}
+import { useOrderActions } from './useOrderActions';
 
 export default function OrderList() {
   const today = useMemo(() => new Date(), []);
@@ -26,7 +20,7 @@ export default function OrderList() {
 
   const { data: orders, isLoading, isFetching, error } = useGetOrdersQuery(filters);
   const { data: products } = useGetProductsQuery();
-  const [createRoyalMailOrder] = useCreateRoyalMailOrderMutation();
+  const { handleCreate, handleDownload } = useOrderActions();
   const isBusy = isLoading || isFetching;
 
   const grouped: Record<string, Order[]> = useMemo(() => {
@@ -36,42 +30,6 @@ export default function OrderList() {
       return acc;
     }, {} as Record<string, Order[]>) || {};
   }, [orders]);
-
-  const handleCreate = useCallback(async (order_id: string) => {
-    try {
-      await createRoyalMailOrder({ order_id }).unwrap();
-      toast.success('Envío creado');
-    } catch {
-      toast.error('Error al crear envío');
-    }
-  }, [createRoyalMailOrder]);
-
-  const handleDownload = useCallback(async (order_id: string) => {
-    try {
-      const token = localStorage.getItem('access');
-      const csrf  = getCookie('csrftoken') || '';
-      const res   = await fetch(
-        `${process.env.NEXT_PUBLIC_HOST}/api/royalmail/orders/${order_id}/label/`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'X-CSRFToken': csrf,
-          },
-        }
-      );
-      if (!res.ok) throw new Error();
-      const blob = await res.blob();
-      const cd   = res.headers.get('Content-Disposition') || '';
-      const fn   = cd.match(/filename="(.+)"/)?.[1] || `label_${order_id}.pdf`;
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href = url; a.download = fn; document.body.append(a); a.click();
-      a.remove(); URL.revokeObjectURL(url);
-      toast.success('Descarga iniciada');
-    } catch {
-      toast.error('Error al descargar etiqueta');
-    }
-  }, []);
 
   const handleSearch = useCallback(() => {
     setFilters({
@@ -94,7 +52,7 @@ export default function OrderList() {
           startDate={startDate}
           endDate={endDate}
           dateFormat="yyyy-MM-dd"
-          className="text-primary-text bg-main-bg dark:bg-main-bg-dark border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+          className="text-primary-text dark:text-primary-text-light bg-main-bg dark:bg-main-bg-dark border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
         />
         <DatePicker
           selected={endDate}
@@ -104,7 +62,7 @@ export default function OrderList() {
           endDate={endDate}
           minDate={startDate}
           dateFormat="yyyy-MM-dd"
-          className="text-primary-text bg-main-bg dark:bg-main-bg-dark border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+          className="text-primary-text dark:text-primary-text-light bg-main-bg dark:bg-main-bg-dark border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
         />
         <button
           className="px-4 py-2 bg-blue-600 text-white rounded"
@@ -126,7 +84,7 @@ export default function OrderList() {
       ) : error ? (
         <p className="text-center text-red-600">Error cargando pedidos</p>
       ) : !orders?.length ? (
-        <p className="text-center text-primary-text">No hay pedidos en este rango</p>
+        <p className="text-center text-primary-text dark:text-primary-text-light">No hay pedidos en este rango</p>
       ) : (
         <div className="space-y-4">
           {Object.entries(grouped)

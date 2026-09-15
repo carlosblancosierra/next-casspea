@@ -205,9 +205,6 @@ const HeroSection = () => (
           flavours.
         </p>
         <ButtonGroup />
-        <div className="hidden lg:block mt-6">
-          <ReviewCarousel />
-        </div>
       </div>
     </div>
   </section>
@@ -230,6 +227,12 @@ export default function HomePage() {
       <HomeSummerBanner />
 
       <HeroSection />
+
+      {/* Reviews get a full-width row on desktop; the mobile carousel stays
+          inside the hero, where it reads better on a phone. */}
+      <div className="hidden lg:block mt-8">
+        <ReviewCarousel />
+      </div>
 
       <HomeSummerBoxes />
 

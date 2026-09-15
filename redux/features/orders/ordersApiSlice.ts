@@ -1,5 +1,5 @@
 import { apiSlice } from '@/redux/services/apiSlice';
-import { Order } from '@/types/orders';
+import { Order, OrderSummary, Paginated } from '@/types/orders';
 
 export interface OrdersQueryParams {
     status?: string;
@@ -9,6 +9,15 @@ export interface OrdersQueryParams {
     max_total?: number;
     search?: string;
     ordering?: string;
+}
+
+export interface OrdersSummaryParams {
+    start_date?: string;
+    end_date?: string;
+    status?: string;
+    search?: string;
+    page?: number;
+    page_size?: number;
 }
 
 export interface DailyUnitsSold {
@@ -29,6 +38,21 @@ const ordersApiSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ['Orders'],
         }),
+        // Light paginated rows for the orders table. The drawer pulls the full
+        // order from getOrder on demand, so the table never carries the graph.
+        getOrdersSummary: builder.query<Paginated<OrderSummary>, OrdersSummaryParams | void>({
+            query: (params?: OrdersSummaryParams) => ({
+                url: '/orders/summary/',
+                params: params || undefined,
+            }),
+            providesTags: ['Orders'],
+            keepUnusedDataFor: 300,
+        }),
+        getOrder: builder.query<Order, string>({
+            query: (orderId: string) => ({ url: `/orders/${orderId}/` }),
+            providesTags: ['Orders'],
+            keepUnusedDataFor: 300,
+        }),
         sendTrackingCodeMail: builder.mutation<{ success: boolean }, { order_id: string }>({
             query: ({ order_id }) => ({
                 url: '/orders/send-tracking-code-mail/',
@@ -46,6 +70,8 @@ const ordersApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetOrdersQuery,
+    useGetOrdersSummaryQuery,
+    useGetOrderQuery,
     useSendTrackingCodeMailMutation,
     useGetDailyUnitsSoldQuery,
 } = ordersApiSlice;

@@ -42,3 +42,27 @@ export interface Order {
     checkout_session: OrderCheckoutSession;
     past_orders?: string[];
 }
+
+/** One row of GET /api/orders/summary/ — deliberately shallow. */
+export interface OrderSummary {
+    order_id: string;
+    created: string;
+    status: string;
+    payment_status: string;
+    customer_name: string;
+    email: string;
+    total_with_shipping: string | number;
+    shipping_date?: string | null;
+    shipping_option_name?: string | null;
+    tracking_number?: string | null;
+    shipping_order_id?: string | null;
+    item_count: number;
+}
+
+/** DRF PageNumberPagination envelope. */
+export interface Paginated<T> {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: T[];
+}
