@@ -33,11 +33,11 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 	// variant only affects the builder, so it waits inside that section instead
 	// of holding back the whole (server-rendered) product page.
 	if (!products.length && isLoading) {
-		return <div className="text-primary-text">Loading products...</div>;
+		return <div className="text-primary-text dark:text-primary-text-light">Loading products...</div>;
 	}
 
 	if (!products.length && error) {
-		return <div className="text-primary-text">Error loading products.</div>;
+		return <div className="text-primary-text dark:text-primary-text-light">Error loading products.</div>;
 	}
 
 	const product = products.find((p) => p.slug === slug);
@@ -102,7 +102,7 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 					<Suspense fallback="Loading...">
 						{isSignatureBox ? (
 							variantLoading ? (
-								<div className="text-primary-text">Loading...</div>
+								<div className="text-primary-text dark:text-primary-text-light">Loading...</div>
 							) : variant === 'quick' ? (
 								<QuickBoxBuilder
 									product={product}

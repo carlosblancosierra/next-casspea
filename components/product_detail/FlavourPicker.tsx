@@ -159,7 +159,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                 className={`mt-4 cursor-pointer group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium focus:outline-none text-primary-text dark:text-primary-text-light
                 ${remainingChocolates > 0
                         ? 'bg-primary-2 dark:bg-primary text-primary-text-light border-gray-300 dark:border-primary hover:bg-primary dark:hover:bg-primary'
-                        : 'bg-main-bg dark:bg-main-bg-dark text-primary-text cursor-not-allowed border-gray-300 dark:border-gray-600'
+                        : 'bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light cursor-not-allowed border-gray-300 dark:border-gray-600'
                     }`}
             >
                 {remainingChocolates > 0 ? 'Add Flavour' : 'All Flavours Selected'}

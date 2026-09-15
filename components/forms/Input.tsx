@@ -1,5 +1,6 @@
 import { ChangeEvent } from 'react';
 import Link from 'next/link';
+import UiInput from '@/components/ui/Input';
 
 interface Props {
 	labelId: string;
@@ -14,6 +15,8 @@ interface Props {
 	required?: boolean;
 }
 
+// Thin adapter kept so Form/LoginForm's existing config-driven API is unchanged;
+// all styling (including the dark-mode pairs) lives in components/ui/Input.
 export default function Input({
 	labelId,
 	type,
@@ -24,36 +27,23 @@ export default function Input({
 	required = false,
 }: Props) {
 	return (
-		<div>
-			<div className='flex justify-between align-center'>
-				<label
-					htmlFor={labelId}
-					className='block text-sm font-medium leading-6 text-primary-text'
-				>
-					{children}
-				</label>
-				{link && (
-					<div className='text-sm'>
-						<Link
-							className='font-semibold text-primary hover:text-primary'
-							href={link.linkUrl}
-						>
-							{link.linkText}
-						</Link>
-					</div>
-				)}
-			</div>
-			<div className='mt-2'>
-				<input
-					id={labelId}
-					className='block w-full rounded-md border-0 py-1.5 text-primary-text bg-main-bg dark:bg-main-bg-dark shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-primary text-base sm:leading-6'
-					name={labelId}
-					type={type}
-					onChange={onChange}
-					value={value}
-					required={required}
-				/>
-			</div>
-		</div>
+		<UiInput
+			id={labelId}
+			label={children}
+			type={type}
+			onChange={onChange}
+			value={value}
+			required={required}
+			labelAction={
+				link ? (
+					<Link
+						className='font-semibold text-primary hover:text-primary-dark'
+						href={link.linkUrl}
+					>
+						{link.linkText}
+					</Link>
+				) : undefined
+			}
+		/>
 	);
 }
