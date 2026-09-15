@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Flavour } from '@/types/flavours';
+import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 
 export type FlavourGridVariant = 'caption' | 'tile' | 'overlay';
 
@@ -15,6 +16,11 @@ interface FlavourNameGridProps {
      * (description + allergens). Default: true.
      */
     openOnClick?: boolean;
+    /**
+     * Show a short description under the name on desktop. Hidden below `md`,
+     * where three columns leave no room for it.
+     */
+    showDescription?: boolean;
 }
 
 // 3 columns on mobile -> 4 -> 5 -> 6, matching the home grid's density on
@@ -30,6 +36,9 @@ const IMG_SIZES = '(min-width:1024px) 16vw, (min-width:768px) 20vw, (min-width:6
 // Ganache") aren't cut mid-word.
 const NAME_BASE =
     'text-center font-semibold leading-tight line-clamp-3 text-xs sm:text-sm text-primary-text dark:text-primary-text-light';
+
+const DESC =
+    'hidden md:block mt-1 text-center text-[11px] leading-snug line-clamp-2 text-primary-text/70 dark:text-primary-text-light/70';
 
 function FlavourImage({ flavour, className = '' }: { flavour: Flavour; className?: string }) {
     return (
@@ -48,7 +57,13 @@ export default function FlavourNameGrid({
     flavours,
     variant = 'caption',
     openOnClick = true,
+    showDescription = false,
 }: FlavourNameGridProps) {
+    // The server passes a snapshot; the client query keeps it live so admin
+    // changes show without waiting for a rebuild. Same pattern the box
+    // builders use, and what the home grid relied on before it used this.
+    const { data } = useGetFlavoursQuery();
+    const list = data ?? flavours;
     const [selected, setSelected] = useState<Flavour | null>(null);
 
     const handleClick = (f: Flavour) => openOnClick && setSelected(f);
@@ -56,7 +71,7 @@ export default function FlavourNameGrid({
     return (
         <>
             <div className={GRID}>
-                {flavours.map(flavour => {
+                {list.map(flavour => {
                     const cell = (() => {
                         switch (variant) {
                             case 'tile':
@@ -66,6 +81,11 @@ export default function FlavourNameGrid({
                                             <FlavourImage flavour={flavour} />
                                         </div>
                                         <h3 className={`${NAME_BASE} mt-1.5`}>{flavour.name}</h3>
+                                        {showDescription && (flavour.mini_description || flavour.description) && (
+                                            <p className={DESC}>
+                                                {flavour.mini_description || flavour.description}
+                                            </p>
+                                        )}
                                     </div>
                                 );
                             case 'overlay':
@@ -87,6 +107,11 @@ export default function FlavourNameGrid({
                                             <FlavourImage flavour={flavour} />
                                         </div>
                                         <h3 className={`${NAME_BASE} mt-1.5`}>{flavour.name}</h3>
+                                        {showDescription && (flavour.mini_description || flavour.description) && (
+                                            <p className={DESC}>
+                                                {flavour.mini_description || flavour.description}
+                                            </p>
+                                        )}
                                     </div>
                                 );
                         }

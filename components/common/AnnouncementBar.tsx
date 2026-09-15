@@ -2,7 +2,6 @@
 
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -46,26 +45,6 @@ export default function AnnouncementBar() {
     return null;
   }
 
-  const renderTrustpilotRating = () => (
-    <div className="flex items-center gap-x-2 justify-center">
-      <Image
-        src="/home/stars-4.5.svg"
-        alt="Trustpilot Rating 4.7"
-        width={100}
-        height={100}
-        className="inline-block"
-      />
-      <a
-        href="https://uk.trustpilot.com/review/www.casspea.co.uk"
-        className="text-sm font-medium inline-block text-primary-text-light hover:underline"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        4.7 on Trustpilot (74 reviews)
-      </a>
-    </div>
-  );
-  
   const renderContactInfo = () => (
     <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
       Tel: <a
@@ -89,10 +68,6 @@ export default function AnnouncementBar() {
     >
       <div className="flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-x-6 max-w-screen-2xl mx-auto text-primary-text-light">
         <div className="flex flex-col md:flex-row flex-1 justify-center items-center gap-y-2 md:gap-x-8 w-full">
-          <div className="text-sm leading-6 w-full md:w-auto text-center">
-            {renderTrustpilotRating()}
-          </div>
-          
           {renderContactInfo()}
           
           <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">

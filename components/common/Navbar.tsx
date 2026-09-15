@@ -4,6 +4,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import Image from 'next/image';
+import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 
 // Change this constant to switch logo paths
 const LOGO_PATH = '/logos/red.png';
@@ -28,7 +29,10 @@ function classNames(...classes: string[]) {
 }
 
 export default function Nav() {
-  // const cart = useSelector(selectCart);
+  // The cart has no total_items field, so sum the line quantities. Every cart
+  // mutation invalidates the 'Cart' tag, so this badge updates on its own.
+  const { data: cart } = useGetCartQuery();
+  const totalItems = cart?.items?.reduce((n, item) => n + item.quantity, 0) ?? 0;
 
   return (
     <Disclosure as="nav" className="bg-main-bg dark:bg-main-bg-dark border-b border-gray-200 dark:border-gray-700">
@@ -103,10 +107,17 @@ export default function Nav() {
                     aria-hidden="true"
                     className="h-6 w-6 text-primary-text group-hover:text-primary-text dark:text-primary-text-light dark:group-hover:text-white"
                   />
-                  {/* <span className="ml-2 text-xs font-medium text-primary-text group-hover:text-primary-text dark:text-primary-text-light dark:group-hover:text-white">
-                    {totalItems} (£{totalValue.toFixed(2)})
-                  </span> */}
-                  <span className="sr-only">items in cart, view bag</span>
+                  {totalItems > 0 && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute -top-0.5 -right-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary px-1 text-[11px] font-semibold leading-none text-primary-button-text"
+                    >
+                      {totalItems > 99 ? '99+' : totalItems}
+                    </span>
+                  )}
+                  <span className="sr-only">
+                    {totalItems === 1 ? '1 item in cart' : `${totalItems} items in cart`}, view bag
+                  </span>
                 </Link>
 
               </div>
