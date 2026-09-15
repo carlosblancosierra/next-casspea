@@ -4,6 +4,9 @@ import CheckoutConfirm from '@/components/checkout/CheckoutConfirm';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
 import { makeCart } from '@/test-utils/makeCart';
+import { toast } from 'react-toastify';
+
+jest.mock('react-toastify', () => ({ toast: { error: jest.fn(), success: jest.fn() } }));
 
 jest.mock('next/navigation', () => ({
     useRouter: () => ({ push: jest.fn(), replace: jest.fn() }),
@@ -66,6 +69,16 @@ const companies = [
                 estimated_days_min: 1,
                 estimated_days_max: 2,
             },
+            {
+                id: 34,
+                name: 'Store pickup',
+                delivery_speed: 'PICKUP',
+                price: '0.00',
+                original_price: '0.00',
+                discount_amount: '0.00',
+                estimated_days_min: 0,
+                estimated_days_max: 0,
+            },
         ],
     },
 ];
@@ -96,6 +109,9 @@ describe('CheckoutConfirm total', () => {
     it('adds the chosen delivery price to the cart total, matching the backend', async () => {
         render(<CheckoutConfirm />);
 
+        // Options only appear once "when do you need it?" is answered.
+        await userEvent.click(screen.getByRole('radio', { name: 'As soon as possible' }));
+
         const option = screen.getAllByRole('radio')
             .find(r => (r as HTMLInputElement).value === '3') as HTMLInputElement;
         await userEvent.click(option);
@@ -104,6 +120,28 @@ describe('CheckoutConfirm total', () => {
         // 29.98 + 5.99 = 35.97
         expect(await screen.findByText('£35.97')).toBeInTheDocument();
         expect(screen.queryByText(/choose a delivery option to continue/i)).not.toBeInTheDocument();
+    });
+
+    it('switching back to shipping really clears the pick, not just the radios', async () => {
+        render(<CheckoutConfirm />);
+
+        await userEvent.click(screen.getByRole('radio', { name: 'As soon as possible' }));
+        const option = screen.getAllByRole('radio')
+            .find(r => (r as HTMLInputElement).value === '3') as HTMLInputElement;
+        await userEvent.click(option);
+
+        await userEvent.click(screen.getByRole('radio', { name: 'Collect in store' }));
+        await userEvent.click(screen.getByRole('radio', { name: 'Ship to me' }));
+
+        // The callback had no way to say "nothing", so the parent kept the
+        // pickup id. Nothing was ticked on screen, this hint stayed hidden,
+        // and Continue answered "Please select a pickup date and time slot" —
+        // to someone who had just chosen shipping.
+        expect(screen.getByText(/choose a delivery option to continue/i)).toBeInTheDocument();
+
+        await userEvent.click(screen.getByRole('button', { name: /continue to secure payment/i }));
+        expect(toast.error).toHaveBeenCalledWith('Please select a shipping method');
+        expect(createStripeSession).not.toHaveBeenCalled();
     });
 
     it('clicking with nothing chosen does not start a payment', async () => {

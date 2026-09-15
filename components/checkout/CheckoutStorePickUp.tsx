@@ -10,17 +10,15 @@ const SLOT_END = 16;   // 16:00
 const SAME_DAY_CUTOFF_HOUR = 12;
 
 function getTimeSlots() {
+  // Whole hours, not half-hour windows. Collection is a person walking into a
+  // shop, not a delivery slot — the extra precision doubled the number of
+  // chips to scan and asked for a decision nobody has an opinion about.
   const slots: Slot[] = [];
   for (let h = SLOT_START; h < SLOT_END; h++) {
     slots.push({
       start: `${String(h).padStart(2, '0')}:00`,
-      end: `${String(h).padStart(2, '0')}:30`,
-      value: `${String(h).padStart(2, '0')}:00-${String(h).padStart(2, '0')}:30`,
-    });
-    slots.push({
-      start: `${String(h).padStart(2, '0')}:30`,
-      end: `${String(h+1).padStart(2, '0')}:00`,
-      value: `${String(h).padStart(2, '0')}:30-${String(h+1).padStart(2, '0')}:00`,
+      end: `${String(h + 1).padStart(2, '0')}:00`,
+      value: `${String(h).padStart(2, '0')}:00-${String(h + 1).padStart(2, '0')}:00`,
     });
   }
   return slots;
@@ -95,12 +93,12 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
                 onClick={() => { setSelectedDate(day); setSelectedSlot(null); }}
                 className={`flex-shrink-0 snap-start w-24 px-3 py-2 rounded-lg border text-center transition-colors ${
                   isSelected
-                    ? 'bg-primary border-primary text-primary-text-light'
+                    ? 'bg-primary-dark border-primary-dark text-white'
                     : 'bg-main-bg dark:bg-main-bg-dark border-gray-200 dark:border-gray-700 text-primary-text dark:text-primary-text-light hover:border-primary dark:hover:border-primary-2'
                 }`}
               >
                 <span className="block text-sm font-medium">{dayLabel(day)}</span>
-                <span className={`block text-xs ${isSelected ? 'text-primary-text-light/80' : 'text-primary-text/70 dark:text-primary-text-light/70'}`}>
+                <span className={`block text-xs ${isSelected ? 'text-white/80' : 'text-primary-text/70 dark:text-primary-text-light/70'}`}>
                   {format(day, 'd MMM', { locale: enGB })}
                 </span>
               </button>
@@ -108,7 +106,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
           })}
         </div>
         <p className="text-xs text-primary-text/70 dark:text-primary-text-light/70">
-          Collection from 104 Bedford Hill, London, SW12 9HR. Weekdays only.
+          Weekdays only.
         </p>
       </div>
 
@@ -120,13 +118,6 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
               {format(selectedDate, 'EEEE d MMMM', { locale: enGB })}
             </span>
           </h3>
-
-          {isSameDayPickup && (
-            <p className="text-sm text-primary-text/70 dark:text-primary-text-light/70">
-              Collecting today? We need until the end of the day to make your order up,
-              so the earlier slots are closed — the last one is yours.
-            </p>
-          )}
 
           {/* The same scrolling strip as the days above, so both halves of the
               question look like the same question. Only the start time is
@@ -153,7 +144,7 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
                     blocked
                       ? 'border-gray-200 dark:border-gray-700 text-primary-text/40 dark:text-primary-text-light/40 line-through cursor-not-allowed'
                       : isSelected
-                      ? 'bg-primary text-primary-text-light border-primary'
+                      ? 'bg-primary-dark text-white border-primary-dark'
                       : 'bg-main-bg dark:bg-main-bg-dark border-gray-200 dark:border-gray-700 text-primary-text dark:text-primary-text-light hover:border-primary dark:hover:border-primary-2'
                   }`}
                 >

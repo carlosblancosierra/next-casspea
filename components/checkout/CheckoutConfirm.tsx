@@ -172,8 +172,8 @@ const CheckoutConfirm = () => {
                     <CheckoutShippingOptions
                         shippingCompanies={shippingCompanies}
                         selectedOptionId={selectedShippingOption}
-                        onShippingOptionChange={async (optionId: number) => {
-                            setSelectedShippingOption(optionId);
+                        onShippingOptionChange={async (optionId: number | null) => {
+                            setSelectedShippingOption(optionId ?? undefined);
                         }}
                         onChangeStorePickup={setStorePickup}
                         onDispatchDateChange={setDispatchDate}

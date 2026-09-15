@@ -90,6 +90,9 @@ const paragraph = (re: RegExp) =>
 const paragraphs = (re: RegExp) =>
     screen.queryAllByText((_, el) => el?.tagName === 'P' && re.test(el.textContent ?? ''));
 
+const answerAsap = async (user: ReturnType<typeof setupUser>) =>
+    user.click(screen.getByRole('radio', { name: 'As soon as possible' }));
+
 const renderOptions = (props: Partial<React.ComponentProps<typeof CheckoutShippingOptions>> = {}) =>
     render(
         <CheckoutShippingOptions
@@ -119,9 +122,10 @@ describe('CheckoutShippingOptions', () => {
     it('reports the option the customer actually picks', async () => {
         const onShippingOptionChange = jest.fn().mockResolvedValue(undefined);
 
+        const user = setupUser();
         renderOptions({ onShippingOptionChange });
+        await answerAsap(user);
 
-        // Shipping is the default mode, so options are on screen already.
         const radios = await screen.findAllByRole('radio');
         const trackedTwentyFour = radios.find(
             r => (r as HTMLInputElement).value === '3'
@@ -150,11 +154,13 @@ describe('CheckoutShippingOptions', () => {
     it('switching delivery mode clears the pick so a stale option cannot be paid for', async () => {
         const onShippingOptionChange = jest.fn().mockResolvedValue(undefined);
 
+        const user = setupUser();
         renderOptions({ onShippingOptionChange });
+        await answerAsap(user);
 
         const radios = await screen.findAllByRole('radio');
         const option = radios.find(r => (r as HTMLInputElement).value === '3') as HTMLInputElement;
-        await userEvent.click(option);
+        await user.click(option);
         expect(option.checked).toBe(true);
 
         await userEvent.click(screen.getByRole('radio', { name: 'Collect in store' }));
@@ -175,8 +181,24 @@ describe('CheckoutShippingOptions', () => {
             jest.useRealTimers();
         });
 
-        it('defaults to posting as soon as possible, with no date form in the way', () => {
+        it('asks when you need it before showing any option', () => {
             renderOptions();
+
+            // Every posting day and arrival date below is derived from this
+            // answer, so showing the options first means showing numbers that
+            // are about to move under the customer.
+            expect(screen.getByRole('radio', { name: 'As soon as possible' })).toBeInTheDocument();
+            expect(screen.queryByText(/We'll post your order on/)).not.toBeInTheDocument();
+            const options = screen.queryAllByRole('radio')
+                .filter(r => (r as HTMLInputElement).name === 'shipping');
+            expect(options).toHaveLength(0);
+        });
+
+        it('shows the options, and no date form, once you say as soon as possible', async () => {
+            const user = setupUser();
+            renderOptions();
+
+            await answerAsap(user);
 
             expect(screen.getByText(/We'll post your order on/)).toBeInTheDocument();
             expect(screen.getByText('Wed 9 Sep')).toBeInTheDocument();
@@ -186,6 +208,7 @@ describe('CheckoutShippingOptions', () => {
         it('measures every estimate from the day the customer chose, not from today', async () => {
             const user = setupUser();
             renderOptions();
+            await answerAsap(user);
 
             // Tracked 48 is 2-3 working days from Wednesday the 9th.
             expect(paragraph(/Arrives between Fri 11 Sep and Mon 14 Sep/)).toBeInTheDocument();
@@ -203,6 +226,7 @@ describe('CheckoutShippingOptions', () => {
         it('can go back to posting as soon as possible', async () => {
             const user = setupUser();
             renderOptions();
+            await answerAsap(user);
 
             await user.click(screen.getByRole('button', { name: /choose a different day/i }));
             await pickDate(user, 'Post my order on', /September 21st/);
@@ -216,6 +240,7 @@ describe('CheckoutShippingOptions', () => {
             const user = setupUser();
             const onDispatchDateChange = jest.fn();
             renderOptions({ onDispatchDateChange });
+            await answerAsap(user);
 
             await user.click(screen.getByRole('button', { name: /choose a different day/i }));
             await pickDate(user, 'Post my order on', /September 21st/);
@@ -238,8 +263,10 @@ describe('CheckoutShippingOptions', () => {
             jest.useRealTimers();
         });
 
-        it('only calls a service guaranteed when the carrier actually guarantees it', () => {
+        it('only calls a service guaranteed when the carrier actually guarantees it', async () => {
+            const user = setupUser();
             renderOptions();
+            await answerAsap(user);
 
             expect(paragraph(/^Arrives Thu 10 Sep$/)).toBeInTheDocument();
             expect(screen.getByText('Guaranteed by Royal Mail')).toBeInTheDocument();
@@ -251,13 +278,15 @@ describe('CheckoutShippingOptions', () => {
             expect(screen.getByText(/Special Delivery is the exception/)).toBeInTheDocument();
         });
 
-        it('treats an option with no guaranteed flag as an estimate', () => {
+        it('treats an option with no guaranteed flag as an estimate', async () => {
+            const user = setupUser();
             const noFlag = [{
                 ...companies[0],
                 shipping_options: [{ ...companies[0].shipping_options[0], guaranteed: undefined }],
             }] as unknown as ShippingCompany[];
 
             renderOptions({ shippingCompanies: noFlag });
+            await answerAsap(user);
 
             // The field is optional so an older API degrades to honest wording
             // rather than silently promising a date.

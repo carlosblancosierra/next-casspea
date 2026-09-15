@@ -19,7 +19,12 @@ interface Slot {
 interface CheckoutShippingOptionsProps {
     shippingCompanies: ShippingCompany[] | undefined;
     selectedOptionId?: number;
-    onShippingOptionChange: (optionId: number) => Promise<void>;
+    /**
+     * null means "nothing is selected any more". Without it the parent kept
+     * the previous id after a mode switch: the customer saw "Ship to me" with
+     * no option ticked, and Continue sent the store-collection option anyway.
+     */
+    onShippingOptionChange: (optionId: number | null) => Promise<void>;
     onChangeStorePickup?: (val: { date: Date; slot: Slot } | null) => void;
     /** yyyy-mm-dd to hold the order back, or null to post as soon as possible. */
     onDispatchDateChange?: (date: string | null) => void;
@@ -49,7 +54,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     // so it works backwards: their date becomes the LAST day of each service's
     // range, and the posting day is derived from it.
     const [neededBy, setNeededBy] = useState<Date | null>(null);
-    const [timing, setTiming] = useState<'asap' | 'by_date'>('asap');
+    const [timing, setTiming] = useState<'asap' | 'by_date' | null>(null);
     const [showDispatchPicker, setShowDispatchPicker] = useState(false);
 
     // Expose storePickup to parent if onChangeStorePickup is provided
@@ -208,6 +213,11 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         };
     };
 
+    // Nothing below is worth showing until this is answered: every posting day
+    // and every arrival date on the options is derived from it, so showing them
+    // first means showing numbers that are about to move under the customer.
+    const timingAnswered = timing === 'asap' || (timing === 'by_date' && Boolean(neededBy));
+
     const selectableOptions = allShippingOptions.filter(option => !option.disabled);
     const byDate = timing === 'by_date' ? neededBy : null;
     const nothingArrivesInTime = Boolean(byDate)
@@ -270,7 +280,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     const isHolidayPeriod = new Date() < HOLIDAY_SHIP_DATE;
 
     return (
-        <div className="main-bg p-6 rounded-lg shadow dark:bg-main-bg-dark">
+        <div className="main-bg p-4 sm:p-6 rounded-lg shadow dark:bg-main-bg-dark">
             {isHolidayPeriod && (
                 <div className="mb-4 rounded-md border border-amber-200 dark:border-amber-700 p-3 bg-amber-50 dark:bg-amber-900/20 flex items-start gap-2">
                     <svg className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -336,11 +346,12 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                     onShippingOptionChange(pickup.id);
                                 } else {
                                     setLocalSelectedOption(null);
+                                    onShippingOptionChange(null);
                                 }
                             }}
                             className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-colors ${
                                 isActive
-                                    ? 'bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light shadow-sm'
+                                    ? 'bg-primary-dark text-white shadow-sm'
                                     : 'text-primary-text/70 dark:text-primary-text-light/70 hover:text-primary-text dark:hover:text-primary-text-light'
                             }`}
                         >
@@ -354,7 +365,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     <p className="text-sm text-primary-text dark:text-primary-text-light mb-4">
                         {deliveryType === 'shipping'
                             ? 'Choose your preferred shipping method below.'
-                            : 'Pick up your order from our Bedford Hill store. Choose a convenient time slot.'
+                            : 'Choose a day and time to collect your order.'
                         }
                     </p>
 
@@ -363,7 +374,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                         are for a fixed day, and the customer knows the day —
                         not how long Royal Mail takes. */}
                     {deliveryType === 'shipping' && (
-                        <div className="mb-5 space-y-3 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                        <div className="mb-5 space-y-3">
                             <p className="text-sm font-medium text-primary-text dark:text-primary-text-light">
                                 When do you need it?
                             </p>
@@ -393,10 +404,16 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                             setDispatchDate(null);
                                             setShowDispatchPicker(false);
                                             if (value === 'asap') setNeededBy(null);
+                                            // In by-date mode the posting day
+                                            // is fixed BY picking a service, so
+                                            // a choice made under the other
+                                            // answer is stale by definition.
+                                            setLocalSelectedOption(null);
+                                            onShippingOptionChange(null);
                                         }}
                                         className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
                                             timing === value
-                                                ? 'bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light shadow-sm'
+                                                ? 'bg-primary-dark text-white shadow-sm'
                                                 : 'text-primary-text/70 dark:text-primary-text-light/70 hover:text-primary-text dark:hover:text-primary-text-light'
                                         }`}
                                     >
@@ -405,7 +422,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                 ))}
                             </div>
 
-                            {timing === 'asap' ? (
+                            {timing === null ? null : timing === 'asap' ? (
                                 <div className="flex flex-wrap items-center justify-between gap-2">
                                     <p className="text-sm text-primary-text dark:text-primary-text-light">
                                         {dispatchDate
@@ -489,7 +506,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                         </div>
                     )}
 
-                    {deliveryType === 'shipping' && allShippingOptions.length > 0 && (
+                    {deliveryType === 'shipping' && allShippingOptions.length > 0 && timingAnswered && (
                         <div className="space-y-4">
                             {allShippingOptions.map((option) => {
                                 const isOptionDisabled = option.disabled;

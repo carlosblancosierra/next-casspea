@@ -50,7 +50,12 @@ export default function ShippingDatePicker({
                 filterDate={filterDate}
                 dateFormat="EEE d MMM yyyy"
                 placeholderText={placeholderText}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm
+                /* text-base, not text-sm: iOS Safari zooms into any focused
+                   input under 16px and never zooms back out, which is what
+                   made picking a date on an iPhone feel broken. The fix is the
+                   font size — never `maximum-scale=1` on the viewport, which
+                   would take pinch-zoom away from everyone who needs it. */
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-base
                     text-primary-text dark:text-primary-text-light bg-main-bg dark:bg-main-bg-dark
                     focus:outline-none focus:ring-2 focus:ring-primary-2
                     transition-colors duration-200"

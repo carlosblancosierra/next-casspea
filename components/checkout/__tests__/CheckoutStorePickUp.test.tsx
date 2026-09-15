@@ -35,8 +35,7 @@ describe('CheckoutStorePickUp', () => {
 
             // Filtering them out left today showing one lone slot with no
             // explanation, which reads as a bug rather than a rule.
-            expect(screen.getByText(/the earlier slots are closed/i)).toBeInTheDocument();
-            expect(screen.getByRole('button', { name: '15:30' })).toBeEnabled();
+            expect(screen.getByRole('button', { name: '15:00' })).toBeEnabled();
             expect(screen.getByRole('button', { name: '10:00' })).toBeDisabled();
         });
 
@@ -57,11 +56,11 @@ describe('CheckoutStorePickUp', () => {
             render(<CheckoutStorePickUp onChange={onChange} />);
 
             await user.click(screen.getByRole('button', { name: /Tomorrow/ }));
-            await user.click(screen.getByRole('button', { name: '10:30' }));
+            await user.click(screen.getByRole('button', { name: '11:00' }));
 
             expect(onChange).toHaveBeenLastCalledWith(
                 expect.objectContaining({
-                    slot: expect.objectContaining({ start: '10:30', end: '11:00' }),
+                    slot: expect.objectContaining({ start: '11:00', end: '12:00' }),
                 })
             );
         });
@@ -72,7 +71,7 @@ describe('CheckoutStorePickUp', () => {
             render(<CheckoutStorePickUp onChange={onChange} />);
 
             await user.click(screen.getByRole('button', { name: /Tomorrow/ }));
-            await user.click(screen.getByRole('button', { name: '10:30' }));
+            await user.click(screen.getByRole('button', { name: '11:00' }));
             expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ slot: expect.anything() }));
 
             await user.click(screen.getByRole('button', { name: /Today/ }));
@@ -104,9 +103,8 @@ describe('CheckoutStorePickUp', () => {
 
             await user.click(screen.getByRole('button', { name: /Tomorrow/ }));
 
-            expect(screen.queryByText(/the earlier slots are closed/i)).not.toBeInTheDocument();
-            expect(screen.getByRole('button', { name: '10:00' })).toBeInTheDocument();
-            expect(screen.getByRole('button', { name: '15:30' })).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: '10:00' })).toBeEnabled();
+            expect(screen.getByRole('button', { name: '15:00' })).toBeInTheDocument();
         });
     });
 });
