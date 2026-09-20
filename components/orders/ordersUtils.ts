@@ -62,17 +62,22 @@ export const getDayTotals = (orders: Order[], availableProducts?: Product[]) => 
     );
     orders.forEach(order => {
         order.checkout_session?.cart?.items?.forEach(item => {
-            const boxCustomization = item.box_customization;
+            // A box has box_customization, an indulgence pack has
+            // pack_customization, and never both. Keying this off the box one
+            // alone meant every pack contributed nothing to the flavour and
+            // surprise-box counts — so a batch made from these totals came out
+            // short by exactly the packs in it.
+            const customization = item.box_customization ?? item.pack_customization;
             const quantity = item.quantity || 1;
             const productName = item.product?.name || 'Unknown Product';
             const chocolatesPerBox = item.product?.units_per_box || 0;
             const totalChocolates = chocolatesPerBox * quantity;
             // Product counting
             products[productName] = (products[productName] || 0) + quantity;
-            if (boxCustomization?.selection_type === 'RANDOM') {
+            if (customization?.selection_type === 'RANDOM') {
                 // Handle random boxes with allergens
-                if (boxCustomization.allergens && boxCustomization.allergens.length > 0) {
-                    const allergenNames = boxCustomization.allergens
+                if (customization.allergens && customization.allergens.length > 0) {
+                    const allergenNames = customization.allergens
                         .map(allergen => allergen.name)
                         .sort()
                         .join(' and ');
@@ -82,7 +87,7 @@ export const getDayTotals = (orders: Order[], availableProducts?: Product[]) => 
                     // No allergens
                     randomBoxes['Random'] = (randomBoxes['Random'] || 0) + totalChocolates;
                 }
-            } else if (boxCustomization?.selection_type === 'PICK_AND_MIX') {
+            } else if (customization?.selection_type === 'PICK_AND_MIX') {
                 // Flavor counting for pick & mix boxes
                 const flavorSelections = [
                     ...(item.box_customization?.flavor_selections || []),

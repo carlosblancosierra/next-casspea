@@ -6,14 +6,16 @@ import { Product } from '@/types/products';
 interface DaySummaryProps {
     dateOrders: Order[];
     products: Product[];
+    /** The production-totals panel reuses this for an arbitrary selection. */
+    title?: string;
 }
 
-const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders, products }) => {
+const DaySummary: React.FC<DaySummaryProps> = ({ dateOrders, products, title = 'Day Summary' }) => {
     const { products: totals, flavors, randomBoxes } = getDayTotals(dateOrders, products);
     return (
         <div className="bg-main-bg dark:bg-main-bg-dark rounded-lg shadow-sm mt-4">
             <div className="px-4 py-5 sm:px-6">
-                <h3 className="text-lg font-medium text-primary-text dark:text-primary-text-light">Day Summary</h3>
+                <h3 className="text-lg font-medium text-primary-text dark:text-primary-text-light">{title}</h3>
             </div>
             <div className="border-t border-gray-200 dark:border-gray-700">
                 <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">

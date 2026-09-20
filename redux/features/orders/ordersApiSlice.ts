@@ -2,6 +2,8 @@ import { apiSlice } from '@/redux/services/apiSlice';
 import { Order, OrderSummary, Paginated } from '@/types/orders';
 
 export interface OrdersQueryParams {
+    /** Comma-separated order ids. Overrides the date range on the server. */
+    ids?: string;
     status?: string;
     start_date?: string;
     end_date?: string;

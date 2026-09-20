@@ -46,9 +46,21 @@ export function TH({ children, className = '' }: { children?: React.ReactNode; c
     return <th scope="col" className={`whitespace-nowrap px-3 py-2 font-medium ${className}`}>{children}</th>;
 }
 
-export function TD({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+export function TD({
+    children,
+    className = '',
+    onClick,
+}: {
+    children?: React.ReactNode;
+    className?: string;
+    /** For a cell whose own control must not trigger the row's click. */
+    onClick?: React.MouseEventHandler<HTMLTableCellElement>;
+}) {
     return (
-        <td className={`px-3 py-2 text-primary-text dark:text-primary-text-light ${className}`}>
+        <td
+            onClick={onClick}
+            className={`px-3 py-2 text-primary-text dark:text-primary-text-light ${className}`}
+        >
             {children}
         </td>
     );
