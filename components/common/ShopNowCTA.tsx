@@ -34,7 +34,12 @@ export default function ShopNowCTA({
 }: ShopNowCTAProps) {
     return (
         <div className={`flex flex-col items-start gap-2 ${className}`}>
-            {showRating && <TrustpilotRating className="!justify-start" />}
+            {/* Scrolls to the reviews on this page rather than leaving for
+                Trustpilot: handing someone to another site from the hero,
+                before they have seen a product, is a strange thing for a shop
+                to do. The "See all reviews" button under the reviews is the
+                one link that leaves. */}
+            {showRating && <TrustpilotRating href="#reviews" className="!justify-start" />}
             <Link
                 href={href}
                 className="inline-flex items-center justify-center px-8 py-4 text-xl font-medium text-primary-button-text rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light"

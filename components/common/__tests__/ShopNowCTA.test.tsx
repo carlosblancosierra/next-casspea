@@ -2,6 +2,17 @@ import { render, screen } from '@testing-library/react';
 import ShopNowCTA, { SHOP_CTA_HREF, SHOP_CTA_LABEL } from '@/components/common/ShopNowCTA';
 
 describe('ShopNowCTA', () => {
+    it('sends the rating to the reviews on this page, not to Trustpilot', () => {
+        render(<ShopNowCTA />);
+
+        // Handing someone to another site from the hero, before they have seen
+        // a product, is a strange thing for a shop to do. The only link that
+        // leaves is "See all reviews", under the reviews themselves.
+        const rating = screen.getByRole('link', { name: /Trustpilot/ });
+        expect(rating).toHaveAttribute('href', '#reviews');
+        expect(rating).not.toHaveAttribute('target');
+    });
+
     it('carries the Trustpilot rating above the button', () => {
         render(<ShopNowCTA />);
 

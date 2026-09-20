@@ -144,9 +144,6 @@ const HeroSection = () => (
           ]}
           className="block lg:hidden"
         />
-        <div className="lg:hidden mb-6">
-          <ReviewCarousel />
-        </div>
         <p className="lg:hidden font-light text-md mt-4 text-primary-text dark:text-primary-text-light">
           Share the love with CassPea Chocolates—perfect for personal indulgence,
           birthdays, corporate events, and special celebrations. With over 20
@@ -195,11 +192,14 @@ export default function HomePage() {
 
       <HeroSection />
 
-      {/* Reviews get a full-width row on desktop; the mobile carousel stays
-          inside the hero, where it reads better on a phone. */}
-      <div className="hidden lg:block mt-8">
+      {/* One reviews section at every width, because the hero's Trustpilot
+          rating scrolls here and an anchor needs a single visible target. It
+          used to be two carousels — one inside the hero for phones, one
+          full-width for desktop — which also meant the rating and the "See
+          all" link were rendered twice. */}
+      <section id="reviews" className="scroll-mt-24 mt-8">
         <ReviewCarousel />
-      </div>
+      </section>
 
       <HomeSummerBoxes />
 

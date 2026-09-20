@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { FaStar } from 'react-icons/fa';
+import TrustpilotRating, { TRUSTPILOT_URL } from './TrustpilotRating';
 
 const reviews = [
   {
@@ -76,6 +77,27 @@ export default function ReviewCarousel() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
+      {/* The rating, and the one link on the page that leaves the site. The
+          hero's rating scrolls here instead of to Trustpilot: handing someone
+          to another site before they have seen a product is a strange thing
+          for a shop to do. Once they have read the reviews, going to read more
+          of them is a reasonable thing to want. */}
+      <div className="mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <TrustpilotRating href={TRUSTPILOT_URL} />
+        <a
+          href={TRUSTPILOT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 rounded-full border border-primary px-3 py-1 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-button-text dark:border-primary-2 dark:text-primary-2"
+        >
+          See all reviews
+          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          <span className="sr-only">(opens Trustpilot in a new tab)</span>
+        </a>
+      </div>
+
       {/* Horizontally-scrolling row of separate review cards */}
       <div
         ref={scrollRef}
