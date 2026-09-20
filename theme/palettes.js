@@ -12,9 +12,14 @@
  * Plain CommonJS with no TypeScript, because tailwind.config.js has to
  * require() it at build time.
  *
- * On contrast: `primary` is used as a button fill under white text, so each
- * option's `primary` clears 4.5:1 against #fff. `primary-light` does not and
- * is only ever used for focus rings and hover tints, never behind text.
+ * On contrast: `primary` is a button fill under white text, and so is every
+ * stop of both gradients — gradient-autumn is on every money button (pay, add
+ * to cart, continue to checkout) and gradient-primary is behind the units-sold
+ * counter, all with white text on them. So all of those clear 4.5:1 against
+ * #fff, and /admin/palette measures it rather than trusting this comment.
+ *
+ * `primary-light` does NOT clear it and is only ever a focus ring or a hover
+ * tint — never a surface with text on it.
  */
 
 const palettes = {
@@ -42,8 +47,8 @@ const palettes = {
             'secondary-text-dark': '#FBF8F3',
         },
         gradients: {
-            'gradient-primary': 'linear-gradient(to right, #2F5741, #6E8F7A)',
-            'gradient-autumn': 'linear-gradient(to right, #B4571F, #D49A1E)',
+            'gradient-primary': 'linear-gradient(to right, #1F3D2B, #2F5741)',
+            'gradient-autumn': 'linear-gradient(to right, #8C3F13, #B4571F)',
         },
     },
 
@@ -70,8 +75,8 @@ const palettes = {
             'secondary-text-dark': '#FDF9F4',
         },
         gradients: {
-            'gradient-primary': 'linear-gradient(to right, #B4571F, #D49A1E)',
-            'gradient-autumn': 'linear-gradient(to right, #8C3F13, #B4571F)',
+            'gradient-primary': 'linear-gradient(to right, #8C3F13, #B4571F)',
+            'gradient-autumn': 'linear-gradient(to right, #1F3D2B, #2F5741)',
         },
     },
 
@@ -98,8 +103,8 @@ const palettes = {
             'secondary-text-dark': '#FBF6F3',
         },
         gradients: {
-            'gradient-primary': 'linear-gradient(to right, #8C5A55, #B98F84)',
-            'gradient-autumn': 'linear-gradient(to right, #6B403C, #B4571F)',
+            'gradient-primary': 'linear-gradient(to right, #6B403C, #8C5A55)',
+            'gradient-autumn': 'linear-gradient(to right, #8C3F13, #B4571F)',
         },
     },
 };

@@ -6,8 +6,12 @@ import Link from 'next/link'
 import Image from 'next/image';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 
-// Change this constant to switch logo paths
-const LOGO_PATH = '/logos/red.png';
+// Two files, because the navbar already had a light/dark pair of <Image>
+// elements and both pointed at the same one — the red got away with it by
+// being mid-tone. Black on the dark surface would be invisible, which is the
+// same fault the hamburger had.
+const LOGO_LIGHT = '/logos/black.png';
+const LOGO_DARK = '/logos/white.png';
 
 const navigation = [
   { name: 'Store', href: '/shop-now', current: false },
@@ -58,7 +62,7 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src={LOGO_PATH}
+                      src={LOGO_LIGHT}
                       width={0}
                       height={0}
                       sizes="100vw"
@@ -69,7 +73,7 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src={LOGO_PATH}
+                      src={LOGO_DARK}
                       width={0}
                       height={0}
                       sizes="100vw"

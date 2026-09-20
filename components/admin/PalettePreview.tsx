@@ -156,6 +156,15 @@ export default function PalettePreview({ palettes, active }: PalettePreviewProps
                 {entries.map(([key, palette]) => {
                     const onPrimary = contrast(palette.colors.primary, palette.colors['primary-button-text']);
                     const bodyText = contrast(palette.colors['main-bg'], palette.colors['primary-text']);
+                    // Both gradients carry white text in real use — every money
+                    // button is gradient-autumn, the units-sold counter is
+                    // gradient-primary — so every stop has to hold it, not just
+                    // the dark end you notice first.
+                    const worstStop = Math.min(
+                        ...Object.values(palette.gradients)
+                            .flatMap(value => value.match(/#[0-9A-Fa-f]{6}/g) ?? [])
+                            .map(stop => contrast(stop, palette.colors['primary-button-text']))
+                    );
 
                     return (
                         <section
@@ -188,6 +197,7 @@ export default function PalettePreview({ palettes, active }: PalettePreviewProps
                             <div className="mb-3 flex flex-wrap gap-2">
                                 <ContrastBadge ratio={onPrimary} label="Button text" />
                                 <ContrastBadge ratio={bodyText} label="Body text" />
+                                <ContrastBadge ratio={worstStop} label="Gradient worst stop" />
                             </div>
 
                             <div className="mb-4 grid grid-cols-2 gap-2">

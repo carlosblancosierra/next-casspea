@@ -51,6 +51,19 @@ describe('PalettePreview', () => {
         expect(screen.getByText('live')).toBeInTheDocument();
     });
 
+    it('measures every gradient stop, not just the dark end', () => {
+        render(<PalettePreview palettes={palettes} active="forest" />);
+
+        // gradient-autumn is on every money button and gradient-primary is
+        // behind the units-sold counter, both with white text. A gradient that
+        // starts legible and ends unreadable looks fine in a swatch and is
+        // broken on the pay button — which is how the first draft of these
+        // palettes shipped a 2.5:1 stop.
+        const badges = screen.getAllByText(/Gradient worst stop/);
+        expect(badges).toHaveLength(2);
+        expect(badges.some(b => b.textContent?.includes('✗'))).toBe(true);
+    });
+
     it('fails a palette whose button text cannot be read', () => {
         render(<PalettePreview palettes={palettes} active="forest" />);
 
