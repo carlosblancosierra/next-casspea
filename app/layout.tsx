@@ -132,12 +132,10 @@ export default function RootLayout({
             <div className="flex flex-col min-h-screen relative z-1">
               <AnnouncementBar />
               <Navbar />
-              <main className="flex-grow pt-2 pb-16 md:pb-0 mx-4">
+              <main className="flex-grow pt-2 mx-4">
                 {children}
               </main>
-              <div className="hidden md:block">
-                <Footer />
-              </div>
+              <Footer />
               {CURRENT_EFFECT !== 'none' && <CurrentEffect />}
             </div>
           </LayoutWrapper>

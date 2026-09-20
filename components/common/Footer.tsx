@@ -16,7 +16,9 @@ const CONTACT = {
 export default function Footer() {
 	return (
 		<footer className='bg-gray-100 dark:bg-main-bg-dark'>
-			<div className='px-2 py-4'>
+			{/* The WhatsApp button floats at bottom-6 right-6, so at the very
+			    bottom of a page it would otherwise sit on the footer text. */}
+			<div className='px-2 pt-4 pb-24 md:pb-4'>
 				<div className='flex flex-col items-center justify-center gap-1'>
 					<p className='text-primary-text text-sm dark:text-primary-text-light'>
 						<a
