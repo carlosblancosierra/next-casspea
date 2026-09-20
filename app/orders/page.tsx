@@ -76,6 +76,9 @@ export default function OrdersPage() {
                     <Link href="/admin/summer-break" className="text-blue-500">
                         Manage Summer Break Boxes
                     </Link>
+                    <Link href="/admin/sms-contacts" className="text-blue-500">
+                        SMS Contacts
+                    </Link>
                 </div>
             </div>
         </RequireAuth>

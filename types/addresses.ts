@@ -31,6 +31,23 @@ export interface AddressPostcodeStat {
     count: number;
 }
 
+// Matches SmsContactsView. One entry per distinct UK mobile, so it is people
+// we could text rather than address rows (checkout writes up to two rows per
+// attempt and nothing deduplicates them). Phone is E.164, which is also what
+// Mailchimp wants for SMS.
+export interface SmsContact {
+    phone: string;
+    first_name: string;
+    last_name: string;
+    first_seen: string;
+}
+
+export interface SmsContactsResponse {
+    total: number;
+    new_last_30_days: number;
+    contacts: SmsContact[];
+}
+
 export interface AddressRequest {
     shipping_address: {
         full_name: string;
