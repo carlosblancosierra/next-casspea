@@ -1,11 +1,11 @@
 'use client';
 
-import { LayerTypeColor, TemplateLayer, UserChosenLayer } from '@/types/personalized';
+import { LayerTypeColor, TemplateLayerSlot, UserChosenLayer } from '@/types/personalized';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 interface ColorSelectionModalProps {
-    layer: TemplateLayer;
+    layer: TemplateLayerSlot;
     selectedColors: Record<number, string>;
     onSelect: (order: number, colorSlug: string) => void;
     onClose: () => void;

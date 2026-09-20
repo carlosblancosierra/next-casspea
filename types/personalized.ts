@@ -34,7 +34,8 @@ export interface ChocolateTemplateDetail extends ChocolateTemplateBase {
 // User design related types
 export interface ChocolateLayer {
   layer_type: LayerType;
-  color: LayerColor;
+  // Colors always come from LayerType.colors, which carry the image paths.
+  color: LayerTypeColor;
   top_image: string;
   side_image: string;
 }
@@ -44,26 +45,3 @@ export interface UserChosenLayer {
   order: number;
 }
 
-export interface UserChocolateDesign {
-  id: number;
-  user: number | null;
-  template: ChocolateTemplateDetail;
-  chosen_layers: UserChosenLayer[];
-  active: boolean;
-  featured: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-// API Response types
-export interface TemplateListResponse {
-  templates: ChocolateTemplateBase[];
-}
-
-export interface TemplateDetailResponse {
-  template: ChocolateTemplateDetail;
-}
-
-// Example usage for API calls:
-export type GetTemplateListParams = void;
-export type GetTemplateDetailParams = { slug: string };

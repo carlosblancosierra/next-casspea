@@ -2,30 +2,10 @@ import { useState, useEffect } from 'react';
 import { addBusinessDays, format } from 'date-fns';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
+import type { ShippingCompany, ShippingOption } from '@/types/shipping';
 
-export interface ShippingOption {
-    id: number;
-    name: string;
-    delivery_speed: string;
-    price: string; // Now returns discounted price as string
-    original_price?: string;
-    discounted_price?: string;
-    discount_amount?: string;
-    estimated_days_min: number;
-    estimated_days_max: number;
-    description: string;
-    disabled: boolean;
-    disabled_reason: string;
-}
-
-export interface ShippingCompany {
-    id: number;
-    name: string;
-    code: string;
-    website: string;
-    track_url: string;
-    shipping_options: ShippingOption[];
-}
+// Re-exported for existing imports of these types from this module.
+export type { ShippingCompany, ShippingOption };
 
 interface Slot {
     start: string;
@@ -75,17 +55,6 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         }))
     ) || [];
 
-    // Auto-select option when delivery type changes
-    useEffect(() => {
-        if (deliveryType && allShippingOptions.length > 0 && !localSelectedOption) {
-            const firstEnabled = allShippingOptions.find(opt => !opt.disabled);
-            if (firstEnabled) {
-                setLocalSelectedOption(firstEnabled.id.toString());
-                onShippingOptionChange(firstEnabled.id);
-            }
-        }
-    }, [deliveryType, allShippingOptions, localSelectedOption, onShippingOptionChange]);
-
     // Filter by delivery type
     if (deliveryType === 'pickup') {
         allShippingOptions = allShippingOptions.filter(option => option.id === 34); // Store pickup option
@@ -115,16 +84,10 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         return a.disabled ? 1 : -1;
     });
 
-    // Set default option if none selected, and never select a disabled option (only when no delivery type is selected)
-    useEffect(() => {
-        if (allShippingOptions.length && !localSelectedOption && !deliveryType) {
-            const firstEnabled = allShippingOptions.find(opt => !opt.disabled);
-            if (firstEnabled) {
-                setLocalSelectedOption(firstEnabled.id.toString());
-                onShippingOptionChange(firstEnabled.id);
-            }
-        }
-    }, [allShippingOptions, localSelectedOption, deliveryType]);
+    // No option is auto-selected. Selecting one for the customer meant they
+    // could reach payment — and be charged for a shipping method — without
+    // ever choosing it, because the parent's "did you pick shipping?" guard
+    // saw a value it had set itself. The customer picks, or nothing is picked.
 
     const handleShippingChange = async (optionId: string) => {
         if (isUpdating) return;
@@ -166,7 +129,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     };
 
     // Helper function to render shipping price with discount
-    const renderShippingPrice = (option: any) => {
+    const renderShippingPrice = (option: ShippingOption) => {
         const discountedPrice = parseFloat(option.price);
         const originalPrice = parseFloat(option.original_price || option.price);
         const discountAmount = parseFloat(option.discount_amount || '0');

@@ -25,6 +25,12 @@ export interface Address {
     last_name?: string;
 }
 
+// Matches AddressStatsView: [{"postcode": "SW1A 1AA", "count": 3}, ...]
+export interface AddressPostcodeStat {
+    postcode: string;
+    count: number;
+}
+
 export interface AddressRequest {
     shipping_address: {
         full_name: string;

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useSendRequestMutation } from '@/redux/features/personalized/personalizedApiSlice';
 import CustomChocolate from './CustomChocolate';
 import ColorSelectionModal from './ColorSelectionModal';
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation, PanInfo } from "framer-motion";
 
 interface OrderDetails {
     quantity: number;
@@ -14,7 +14,7 @@ interface OrderDetails {
 
 interface PersonalizedFormProps {
     template: ChocolateTemplateDetail;
-    onLayersChange: (layers: UserChosenLayer[]) => void;
+    onLayersChange?: (layers: UserChosenLayer[]) => void;
     orderDetails: OrderDetails;
 }
 
@@ -89,7 +89,7 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
             })
             .filter((layer): layer is UserChosenLayer => layer !== null);
 
-        onLayersChange(newLayers);
+        onLayersChange?.(newLayers);
     }, [selectedColors, template.layers, onLayersChange]);
 
     const handleColorSelect = (order: number, colorSlug: string) => {
@@ -117,7 +117,6 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                 quantity: orderDetails.quantity,
             }
 
-            console.log(payload);
             await sendRequest(payload).unwrap();
         } catch (error) {
             console.error('Failed to send request:', error);
@@ -152,7 +151,7 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
         { name: 'Top View', view: 'top' as const }
     ];
 
-    const handleDragEnd = (event: any, info: any) => {
+    const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         const swipeThreshold = 50;
         if (Math.abs(info.offset.x) > swipeThreshold) {
             if (info.offset.x > 0 && currentIndex > 0) {

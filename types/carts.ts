@@ -55,9 +55,11 @@ export interface CartItemRequest {
         selection_type: 'PICK_AND_MIX' | 'RANDOM';
         allergens?: number[];
         flavor_selections?: CartItemBoxFlavorSelectionRequest[] | null;
-        hot_chocolate?: number;
-        chocolate_bark?: number;
-        gift_card?: number;
+        // The API accepts explicit nulls for unchosen extras (PackBuilder
+        // sends them), so these are number | null rather than just number.
+        hot_chocolate?: number | null;
+        chocolate_bark?: number | null;
+        gift_card?: number | null;
     };
 }
 

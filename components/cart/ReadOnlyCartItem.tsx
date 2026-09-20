@@ -1,5 +1,6 @@
 import React from 'react';
 import { CartItem as CartItemType } from '@/types/carts';
+import { formatCurrency } from '@/utils/currency';
 
 interface ReadOnlyCartItemProps {
     entry: CartItemType;
@@ -7,13 +8,13 @@ interface ReadOnlyCartItemProps {
 
 const ReadOnlyCartItem: React.FC<ReadOnlyCartItemProps> = ({ entry }) => {
     const renderFlavorSelections = () => {
-        if (entry.box_customization?.selection_type === 'PICK_AND_MIX' &&
-            entry.box_customization.flavor_selections?.length > 0) {
+        const selections = entry.box_customization?.flavor_selections ?? [];
+        if (entry.box_customization?.selection_type === 'PICK_AND_MIX' && selections.length > 0) {
             return (
                 <div className="mt-2 space-y-1 text-xs text-primary-text dark:text-primary-text-light">
-                    {entry.box_customization.flavor_selections.map((selection) => (
-                        <div key={selection.flavor.id}>
-                            {selection.quantity}x {selection.flavor.name}
+                    {selections.map((selection, index) => (
+                        <div key={selection.flavor?.id ?? index}>
+                            {selection.quantity}x {selection.flavor?.name}
                         </div>
                     ))}
                 </div>
@@ -44,8 +45,10 @@ const ReadOnlyCartItem: React.FC<ReadOnlyCartItemProps> = ({ entry }) => {
                     {entry.quantity} x {entry.product.name}
                 </p>
 
+                {/* base_price/discounted_price from the API are already the
+                    line total (unit price x quantity) — don't multiply again */}
                 <p className="text-base font-bold text-primary-text dark:text-primary-text-light">
-                    £{(parseFloat(entry.discounted_price || entry.base_price) * entry.quantity).toFixed(2)}
+                    {formatCurrency(entry.discounted_price || entry.base_price)}
                 </p>
 
                 <p className="flex flex-wrap items-center gap-2">

@@ -16,16 +16,6 @@ export const formatDate = (dateString?: string): { date: string, time: string } 
     }
 };
 
-export const formatCurrency = (amount?: string): string => {
-    if (!amount) return '£0.00';
-    try {
-        return `£${parseFloat(amount).toFixed(2)}`;
-    } catch (error) {
-        console.error('Currency formatting error:', error);
-        return '£0.00';
-    }
-};
-
 export const getAllergenName = (id: number): string => {
     const allergenMap: Record<number, string> = {
         1: 'Gluten',
@@ -63,8 +53,13 @@ export const getDayTotals = (orders: Order[], availableProducts?: Product[]) => 
     const products: Record<string, number> = {};
     const flavors: Record<string, number> = {};
     const randomBoxes: Record<string, number> = {};
-    // Calculate day total by summing total_with_shipping from each order
-    const dayTotal = orders.reduce((total, order) => total + order.checkout_session.total_with_shipping, 0);
+    // Calculate day total by summing total_with_shipping from each order.
+    // Number() handles both the JSON-number the API sends today and a
+    // decimal string, and never concatenates.
+    const dayTotal = orders.reduce(
+        (total, order) => total + (Number(order.checkout_session?.total_with_shipping) || 0),
+        0,
+    );
     orders.forEach(order => {
         order.checkout_session?.cart?.items?.forEach(item => {
             const boxCustomization = item.box_customization;
@@ -94,7 +89,7 @@ export const getDayTotals = (orders: Order[], availableProducts?: Product[]) => 
                     ...(item.pack_customization?.flavor_selections || [])
                 ];
                 flavorSelections.forEach(flavor => {
-                    const flavorName = (flavor.flavor_name as string | undefined) || (flavor.flavor && (flavor.flavor.name as string | undefined));
+                    const flavorName = flavor.flavor_name || flavor.flavor?.name;
                     if (flavorName && flavor.quantity) {
                         flavors[flavorName] = (flavors[flavorName] || 0) + (flavor.quantity * quantity);
                     }

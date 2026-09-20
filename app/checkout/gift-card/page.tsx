@@ -27,7 +27,7 @@ const GiftCardPage = () => {
     }, [cart]);
 
     useEffect(() => {
-        if (cart && cart.items && cart.items.some(item => !!(item as any).pack_customization)) {
+        if (cart && cart.items && cart.items.some(item => !!item.pack_customization)) {
             router.push('/checkout/address');
         }
     }, [cart, router]);

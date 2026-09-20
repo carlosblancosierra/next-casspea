@@ -18,7 +18,7 @@ const HomeGallery = dynamic(() => import('@/components/home/HomeGallery'));
 
 
 // Reusable section component that wraps content in Suspense with a title
-export const Section = ({
+const Section = ({
   title,
   children,
   extraClass = '',
@@ -214,8 +214,9 @@ const HeroSection = () => (
 );
 
 export const metadata: Metadata = {
-  title: 'CassPea Hand Crafted Chocolates',
-  description: '',
+  title: 'CassPea Hand Crafted Chocolates | Luxury Chocolate Gifts, London',
+  description:
+    'Luxury chocolate gifts handcrafted in London. Choose from over 20 exquisite flavours in our signature gift boxes — perfect for birthdays, corporate events and special celebrations.',
 };
 
 // Loading placeholder component
