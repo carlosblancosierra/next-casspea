@@ -1,3 +1,8 @@
+// The brand colours live in theme/palettes.js so they can be swapped in one
+// word and previewed at /admin/palette. Everything below the spread is either
+// a one-off swatch nobody changes or a structural setting.
+const { active } = require('./theme/palettes');
+
 module.exports = {
 	content: [
 		'./pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -21,25 +26,13 @@ module.exports = {
 				'my-brown': '#5b392e',
 				'my-grey': '#2B2C2E',
 				'my-red': '#F14C42',
-				'primary': '#40a6b4',
-				'primary-2': '#40a6b4',
-				'primary-dark': '#2b7480',
-				'primary-light': '#7bc7d1',
-				'primary-text-dark': '#000',
-				'main-bg': '#fff',
-				'main-bg-dark': '#0a0c10',
-				'secondary-bg': '#480607',
-				'primary-button-text': '#FFF',
-				'primary-text': '#000',
-				'primary-text-light': '#fff',
-				'secondary-text': '#000',
-				'secondary-text-dark': '#fff',
+				// From theme/palettes.js — change ACTIVE there, not here.
+				...active.colors,
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
 				'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-				'gradient-primary': 'linear-gradient(to right, #eace04, #ff1ab1)',
-				'gradient-autumn': 'linear-gradient(to right, #800020, #800020)',
+				...active.gradients,
 			},
 		},
 	},

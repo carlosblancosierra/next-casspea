@@ -77,6 +77,9 @@ export default function OrdersPage() {
                     <Link href="/addresses/stats" className="text-blue-500">
                         View Order Postcodes
                     </Link>
+                    <Link href="/admin/palette" className="text-blue-500">
+                        Palette options
+                    </Link>
                 </div>
             </div>
         </RequireAuth>
