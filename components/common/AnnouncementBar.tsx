@@ -14,11 +14,6 @@ type AnnouncementLink = {
   text: string;
 };
 
-const CONTACT_INFO = {
-  phone: { number: "07859 790386", href: "tel:07859790386" },
-  email: { address: "info@casspea.co.uk", href: "mailto:info@casspea.co.uk" }
-};
-
 export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
@@ -45,22 +40,6 @@ export default function AnnouncementBar() {
     return null;
   }
 
-  const renderContactInfo = () => (
-    <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
-      Tel: <a
-        href={CONTACT_INFO.phone.href}
-        className="underline hover:no-underline transition underline-offset-2 text-primary-text-light"
-      >
-        {CONTACT_INFO.phone.number}
-      </a> / email: <a
-        href={CONTACT_INFO.email.href}
-        className="underline hover:no-underline transition underline-offset-2 text-primary-text-light"
-      >
-        {CONTACT_INFO.email.address}
-      </a>
-    </p>
-  );
-  
   return (
     <div 
       className="relative isolate overflow-hidden px-6 py-2.5 sm:px-3.5" 
@@ -68,10 +47,8 @@ export default function AnnouncementBar() {
     >
       <div className="flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-x-6 max-w-screen-2xl mx-auto text-primary-text-light">
         <div className="flex flex-col md:flex-row flex-1 justify-center items-center gap-y-2 md:gap-x-8 w-full">
-          {renderContactInfo()}
-          
           <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
-            £5 off shipping over £55
+            Free delivery on orders over £56
           </p>
           
           <Link
