@@ -8,6 +8,10 @@ interface Props {
   price?: number
   isDisabled?: boolean
   soldOutLabel?: string
+  /** Marks the chosen card. Fill plus a ring, not a tick: at two cards per row
+   *  on a phone a tick eats width the name needs, and a ring alone is too
+   *  quiet against the card's own border. */
+  selected?: boolean
 }
 
 export default function SelectableProductCard({
@@ -15,7 +19,8 @@ export default function SelectableProductCard({
   onSelect,
   price,
   isDisabled = false,
-  soldOutLabel = 'Sold out'
+  soldOutLabel = 'Sold out',
+  selected = false
 }: Props) {
   // Use product.image or default image
   const displayImage = product.image || '/images/default-product.png'
@@ -23,7 +28,21 @@ export default function SelectableProductCard({
   return (
     <div
       onClick={isDisabled ? undefined : onSelect}
-      className={`block group relative shadow-lg rounded-lg p-2 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-main-bg-dark transition-opacity ${
+      role="button"
+      tabIndex={isDisabled ? -1 : 0}
+      aria-pressed={selected}
+      onKeyDown={(e) => {
+        if (isDisabled) return
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onSelect()
+        }
+      }}
+      className={`block group relative shadow-lg rounded-lg p-2 border bg-main-bg dark:bg-main-bg-dark transition-all ${
+        selected
+          ? 'border-primary ring-2 ring-primary bg-primary/5'
+          : 'border-gray-200 dark:border-gray-700'
+      } ${
         isDisabled ? 'opacity-60 cursor-not-allowed hover:opacity-60' : 'hover:opacity-90 cursor-pointer'
       }`}
     >

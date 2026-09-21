@@ -6,7 +6,9 @@ interface Category {
   name: string;
   slug: string;
   description?: string;
-  image?: string;
+  // DRF sends null for an empty ImageField, not undefined. The `||` below
+  // already covers both; the type just had to admit it.
+  image?: string | null;
 }
 
 interface CategoryCardProps {

@@ -15,12 +15,16 @@ const CONTACT = {
 
 export default function Footer() {
 	return (
-		<footer className='bg-gray-100 dark:bg-main-bg-dark'>
+		// Same token as the announcement bar (bg-primary + text-primary-text-light),
+		// so the top and bottom of every page stay the same colour whatever the
+		// palette is set to. It used to be bg-gray-100, which only matched the
+		// old teal by accident and stopped matching when the palette changed.
+		<footer className='bg-primary text-primary-text-light'>
 			{/* The WhatsApp button floats at bottom-6 right-6, so at the very
 			    bottom of a page it would otherwise sit on the footer text. */}
 			<div className='px-2 pt-4 pb-24 md:pb-4'>
 				<div className='flex flex-col items-center justify-center gap-1'>
-					<p className='text-primary-text text-sm dark:text-primary-text-light'>
+					<p className='text-sm text-primary-text-light'>
 						<a
 							href={CONTACT.phone.href}
 							className='underline hover:no-underline underline-offset-2'
@@ -35,10 +39,10 @@ export default function Footer() {
 							{CONTACT.email.address}
 						</a>
 					</p>
-					<p className='text-primary-text text-xs dark:text-primary-text-light'>
+					<p className='text-xs text-primary-text-light'>
 						&copy; 2026 CassPea LTD. All rights reserved.
 					</p>
-					<p className='text-primary-text text-xs dark:text-primary-text-light'>
+					<p className='text-xs text-primary-text-light'>
 						<Link href="/orders">Log In</Link>
 					</p>
 				</div>

@@ -34,19 +34,27 @@ export default function HomeProductsGrid({
                     : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
             }`}>
                 <AnimatePresence>
-                    {list.map((product) => (
-                        <motion.div
-                            key={product.name}
-                            initial="hidden"
-                            animate="visible"
-                            exit="hidden"
-                            layout
-                            variants={variants}
-                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                        >
-                            <ProductCard product={product} />
-                        </motion.div>
-                    ))}
+                    {list.map((product) => {
+                        // A featured product takes both columns on phones. That
+                        // is also what closes the gap an odd number of products
+                        // leaves in a two-column grid — five boxes used to end
+                        // with one card and an empty slot beside it.
+                        const isWide = !!product.featured && !!product.wide_image;
+                        return (
+                            <motion.div
+                                key={product.name}
+                                initial="hidden"
+                                animate="visible"
+                                exit="hidden"
+                                layout
+                                variants={variants}
+                                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                                className={isWide ? 'col-span-2 sm:col-span-1' : undefined}
+                            >
+                                <ProductCard product={product} wide={isWide} />
+                            </motion.div>
+                        );
+                    })}
                 </AnimatePresence>
             </div>
         </section>

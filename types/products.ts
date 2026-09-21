@@ -2,6 +2,10 @@ export interface ProductCategory {
     id: number;
     name: string;
     slug: string;
+    /** Category artwork. The indulgence step falls back to it when a product
+     *  has no indulgence image of its own. */
+    image?: string | null;
+    image_webp?: string | null;
     description?: string;
     order?: number;
     active?: boolean;
@@ -19,6 +23,9 @@ export interface ProductGalleryImage {
     alt_text?: string;
     order?: number;
 }
+
+/** The presets the backend allows. Every one clears 4.5:1 against white text. */
+export type BadgeColor = 'slate' | 'green' | 'amber' | 'rose' | 'violet';
 
 export interface ProductCustomOption {
     key: string;
@@ -72,6 +79,20 @@ export interface Product {
     can_pick_allergens?: boolean;
     disable_flavour_selection?: boolean;
     block_discount_codes?: boolean;
+
+    /** Merchandising label, e.g. "Best seller". Shown only when badge_active. */
+    badge_text?: string;
+    badge_color?: BadgeColor;
+    badge_active?: boolean;
+
+    /** Full-width on phones. Needs wide_image, or it renders as a normal card. */
+    featured?: boolean;
+    wide_image?: string | null;
+    wide_image_webp?: string | null;
+
+    /** Shown once a box is upgraded to an indulgence pack. */
+    indulgence_image?: string | null;
+    indulgence_image_webp?: string | null;
 
     custom_options?: ProductCustomOption[];
 
