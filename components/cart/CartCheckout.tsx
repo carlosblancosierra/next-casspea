@@ -48,6 +48,17 @@ export default function CartCheckout() {
         }
     }, [cart]);
 
+    // A code that is already on the cart has to arrive with the box ticked.
+    // Without this the checkbox came back unchecked on every reload, which hid
+    // DiscountForm — and with it the applied code and the only way to remove
+    // it. Its own effect rather than a branch in the one above, so neither of
+    // these two panels can end up controlling the other's state.
+    useEffect(() => {
+        if (cart?.discount) {
+            setAddDiscount(true);
+        }
+    }, [cart]);
+
     if (!cart || cart.items.length === 0) {
         return null;
     }

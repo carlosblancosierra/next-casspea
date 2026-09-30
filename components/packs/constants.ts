@@ -12,6 +12,22 @@ export const ID_MAP: Record<number, number> = {
   48: 173,
 };
 
+/**
+ * ID_MAP the other way round: pack SKU -> how many chocolates its box holds.
+ *
+ * The store lists indulgence packs as their own products, but a pack has to be
+ * *built* — flavours, bark, hot chocolate — and that only happens on the box
+ * page. So a pack slug sends the visitor to its box with the pack flag set,
+ * and this is what turns one into the other. Derived rather than written out
+ * twice, so the two can never drift.
+ */
+export const PACK_ID_TO_UNITS: Record<number, number> = Object.fromEntries(
+  Object.entries(ID_MAP).map(([units, packId]) => [packId, Number(units)]),
+);
+
+/** Marks a box page as building a pack: /shop-now/box-of-24?pack=1 */
+export const PACK_QUERY_PARAM = 'pack';
+
 export const LOVE_SLEEVE_PRODUCT_ID = 434
 export const LOVE_SLEEVE_PRICE = 4.99
 

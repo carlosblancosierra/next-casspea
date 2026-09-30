@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import PackBuilder from '@/components/packs/PackBuilder';
+import { notFound, redirect } from 'next/navigation';
 import CategoryProductsGrid from '@/components/store/CategoryProductsGrid';
 import { getCategory } from '@/utils/products';
 import { Product } from '@/types/products';
@@ -31,13 +30,13 @@ export default async function CategoryDetailPage(
 ) {
   const slug = params.category_slug;
 
-  // The packs route renders the builder instead of a category.
+  // The packs route used to render a nine-step builder of its own, separate
+  // from the one on the box pages and doing the same job. One flow now: pick a
+  // box, and make it a pack from there. PackBuilder and its steps are left in
+  // the tree for a release rather than deleted with this change, so reverting
+  // is a one-line job.
   if (slug === 'packs') {
-    return (
-      <div className="container mx-auto min-h-[80vh] py-2">
-        <PackBuilder />
-      </div>
-    );
+    redirect('/shop-now/categories/signature-boxes');
   }
 
   const category = await getCategory(slug, { revalidate: false });
@@ -47,6 +46,17 @@ export default async function CategoryDetailPage(
   // 'all' shows everything; a real category shows only its own products.
   const filteredProducts =
     slug === 'all' ? products : products.filter((p: Product) => p?.category?.slug === slug);
+
+  // A category holding one product is a grid with one card in it: a page whose
+  // only purpose is to be clicked through. Go straight to the product.
+  //
+  // 'all' is the whole catalogue, so it is never a shortcut even when the shop
+  // is down to one item. Temporary, not permanent: a category with one product
+  // today may have three next week, and a 308 would sit in browser caches long
+  // after that stopped being true.
+  if (slug !== 'all' && filteredProducts.length === 1 && filteredProducts[0]?.slug) {
+    redirect(`/shop-now/${filteredProducts[0].slug}`);
+  }
 
   return (
     <div className="container mx-auto min-h-[80vh] py-2 mb-[300px]">
