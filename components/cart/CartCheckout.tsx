@@ -63,9 +63,11 @@ export default function CartCheckout() {
         return null;
     }
 
-    // Summer Break clearance boxes are already discounted — no discount code
-    // can be applied when one is in the cart.
-    const hasSummerBreakBox = cart.items.some(item => item.product?.block_discount_codes);
+    // block_discount_codes means "this product's price is already discounted, so
+    // a code cannot stack on it". It is a generic flag — the Summer Break
+    // clearance boxes were only the first thing to carry it — so nothing here
+    // names a campaign.
+    const hasAlreadyDiscountedItem = cart.items.some(item => item.product?.block_discount_codes);
 
     const handleValidEmail = async (newEmail: string) => {
         setEmail(newEmail);
@@ -202,8 +204,9 @@ export default function CartCheckout() {
                         )}
                     </div> */}
 
-                    {/* Discount Option — always available. A Summer Break box just keeps
-                        its own 25% off; a code still applies to the other items. */}
+                    {/* Always available. An already-discounted item keeps its own
+                        price and a code still applies to everything else, which
+                        is worth saying — otherwise the discount looks broken. */}
                     <div className="mt-4">
                         <label className="flex items-center space-x-2">
                             <input
@@ -217,9 +220,10 @@ export default function CartCheckout() {
                                 Add Discount Code
                             </span>
                         </label>
-                        {hasSummerBreakBox && (
+                        {hasAlreadyDiscountedItem && (
                             <p className="mt-1 ml-6 text-xs text-primary-text dark:text-primary-text-light">
-                                Your Summer Break box stays at <b>25% off</b>; a code applies to your other items.
+                                One of your items is <b>already discounted</b>, so a code won&apos;t
+                                apply to it. It will apply to everything else.
                             </p>
                         )}
                         {addDiscount && (

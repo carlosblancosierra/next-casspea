@@ -58,6 +58,33 @@ describe('CartCheckout discount panel', () => {
         expect(screen.getByTestId('discount-form')).toBeInTheDocument();
     });
 
+    it('says an already-discounted item keeps its price, without naming a campaign', () => {
+        // The copy used to read "Your Summer Break box stays at 25% off". That
+        // sale is over; block_discount_codes is a generic flag and any product
+        // can carry it.
+        mockCart.mockReturnValue({
+            data: {
+                ...baseCart,
+                items: [{ id: 1, quantity: 1, product: { id: 1, name: 'Clearance box', block_discount_codes: true } }],
+            },
+            isLoading: false,
+        });
+
+        render(<CartCheckout />);
+
+        expect(screen.getByText(/already discounted/i)).toBeInTheDocument();
+        expect(screen.queryByText(/Summer Break/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/25% off/i)).not.toBeInTheDocument();
+    });
+
+    it('says nothing when every item can take a code', () => {
+        mockCart.mockReturnValue({ data: baseCart, isLoading: false });
+
+        render(<CartCheckout />);
+
+        expect(screen.queryByText(/already discounted/i)).not.toBeInTheDocument();
+    });
+
     it('stays closed when there is no code', () => {
         mockCart.mockReturnValue({ data: baseCart, isLoading: false });
 
