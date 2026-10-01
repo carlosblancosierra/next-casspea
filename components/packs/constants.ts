@@ -28,6 +28,53 @@ export const PACK_ID_TO_UNITS: Record<number, number> = Object.fromEntries(
 /** Marks a box page as building a pack: /shop-now/box-of-24?pack=1 */
 export const PACK_QUERY_PARAM = 'pack';
 
+/** The category the product page treats as a buildable box. */
+const SIGNATURE_BOX_CATEGORY_SLUG = 'signature-boxes';
+const SIGNATURE_BOX_CATEGORY_ID = 1;
+
+type PackLookupProduct = {
+  id: number;
+  slug?: string;
+  units_per_box?: number;
+  active?: boolean;
+  category?: { id?: number; slug?: string } | null;
+};
+
+/**
+ * Where an indulgence-pack product should send the visitor: its box's builder,
+ * already in pack mode. null for anything that is not a pack, or a pack whose
+ * box cannot be found — no box to build it in is not a reason to 404 a page.
+ *
+ * A pack is a box plus a bark, a hot chocolate and a gift card, and the only
+ * place to choose those is the box's builder; pack products on their own page
+ * render the plain add-to-cart form with no flavour selection at all.
+ *
+ * A candidate box must not itself be a pack. Pack SKUs can carry
+ * units_per_box too, and a pack that matched itself would redirect to its own
+ * page, which redirects again — forever. Box-ness uses the same test the
+ * product page does (category id 1 or the signature-boxes slug), so "the box"
+ * means exactly what renders the builder.
+ */
+export function packRedirectTarget(
+  product: PackLookupProduct,
+  products: PackLookupProduct[],
+): string | null {
+  const units = PACK_ID_TO_UNITS[product.id];
+  if (!units) return null;
+
+  const box = products.find(
+    (candidate) =>
+      !PACK_ID_TO_UNITS[candidate.id]
+      && candidate.units_per_box === units
+      && candidate.active !== false
+      && (candidate.category?.id === SIGNATURE_BOX_CATEGORY_ID
+        || candidate.category?.slug === SIGNATURE_BOX_CATEGORY_SLUG),
+  );
+  if (!box?.slug) return null;
+
+  return `/shop-now/${box.slug}?${PACK_QUERY_PARAM}=1`;
+}
+
 export const LOVE_SLEEVE_PRODUCT_ID = 434
 export const LOVE_SLEEVE_PRICE = 4.99
 

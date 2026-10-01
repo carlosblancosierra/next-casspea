@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import CategoryProductsGrid from '@/components/store/CategoryProductsGrid';
-import { getCategory } from '@/utils/products';
+import { getCategory, getProducts } from '@/utils/products';
 import { Product } from '@/types/products';
+import { PACK_ID_TO_UNITS } from '@/components/packs/constants';
 
 // Render on the server per request so product/category changes show immediately.
 export const dynamic = 'force-dynamic';
@@ -13,8 +14,9 @@ export async function generateMetadata(
   const slug = params.category_slug;
   if (slug === 'packs') {
     return {
-      title: 'Build Your Own Pack | CassPea',
-      description: 'Pick your own chocolates and build a personalised CassPea pack.',
+      title: 'Indulgence Packs | CassPea',
+      description:
+        'A signature box of handmade chocolates with a chocolate bark, a luxury hot chocolate and a gift card.',
     };
   }
   const category = await getCategory(slug, { revalidate: false });
@@ -30,13 +32,43 @@ export default async function CategoryDetailPage(
 ) {
   const slug = params.category_slug;
 
-  // The packs route used to render a nine-step builder of its own, separate
-  // from the one on the box pages and doing the same job. One flow now: pick a
-  // box, and make it a pack from there. PackBuilder and its steps are left in
-  // the tree for a release rather than deleted with this change, so reverting
-  // is a one-line job.
+  // The Indulgence Packs category. It used to render a nine-step builder of its
+  // own; then it redirected to signature boxes, which removed the one page that
+  // listed the packs at all — choosing "Indulgence Packs" in the shop showed
+  // boxes. Now it lists the four packs, and each one opens its box's builder
+  // already in pack mode: the pack's own page redirects to /shop-now/<box>?pack=1.
+  //
+  // Found by ID_MAP rather than by category membership. ID_MAP is already the
+  // single source for which SKU is the pack of which box, and a category that
+  // used to render a builder instead of a list may never have had products
+  // assigned to it.
   if (slug === 'packs') {
-    redirect('/shop-now/categories/signature-boxes');
+    const products = await getProducts({ revalidate: false });
+    const packs = products
+      .filter((p: Product) => PACK_ID_TO_UNITS[p.id] && p.active !== false)
+      .sort((a: Product, b: Product) => PACK_ID_TO_UNITS[a.id] - PACK_ID_TO_UNITS[b.id]);
+
+    return (
+      <div className="container mx-auto min-h-[80vh] py-2 mb-[300px]">
+        <div className="md:text-center mb-8">
+          <h1 className="text-3xl font-bold text-primary-text dark:text-white text-center">
+            Indulgence Packs
+          </h1>
+          <p className="mt-2 text-center text-sm text-primary-text dark:text-primary-text-light">
+            A signature box with a chocolate bark, a luxury hot chocolate and a gift card.
+            Pick a size, then choose what goes in it.
+          </p>
+        </div>
+
+        {packs.length === 0 ? (
+          <div className="text-center text-primary-text dark:text-primary-text-light">
+            No indulgence packs available right now.
+          </div>
+        ) : (
+          <CategoryProductsGrid products={packs} />
+        )}
+      </div>
+    );
   }
 
   const category = await getCategory(slug, { revalidate: false });
