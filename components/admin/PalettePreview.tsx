@@ -3,14 +3,14 @@
 import { useState } from 'react';
 
 /**
- * All three palettes side by side, with real controls rather than swatches
- * alone — a colour that looks fine as a square can still be unreadable as a
- * button, which is the only way anyone actually meets it.
+ * Every palette side by side, with real controls rather than swatches alone — a
+ * colour that looks fine as a square can still be unreadable as a button, which
+ * is the only way anyone actually meets it.
  *
  * Everything here is inline-styled from the palette data rather than Tailwind
- * classes, because Tailwind compiles one palette at build time and this page
- * has to show all three at once. The hex values are the same ones Tailwind
- * gets, so the colours are exact even though the components are stand-ins.
+ * classes, because Tailwind compiles one palette at build time and this page has
+ * to show them all at once. The hex values are the same ones Tailwind gets, so
+ * the colours are exact even though the components are stand-ins.
  */
 
 type Palette = {
@@ -109,6 +109,24 @@ function Sample({ palette, dark }: { palette: Palette; dark: boolean }) {
                 Continue to secure payment
             </button>
 
+            {/* The accent, paired with its own text colour. Christmas gold is
+                the case that makes this necessary: 2.24:1 under white, 7.78:1
+                under the dark ink, so an accent that borrowed
+                primary-button-text would be unreadable.
+
+                Guarded rather than assumed: a palette without the pair should
+                show no accent, not take this page down with it. */}
+            {c.accent && c['accent-text'] && (
+                <div className="mt-3 flex justify-center">
+                    <span
+                        className="rounded-full px-3.5 py-1 text-sm font-medium"
+                        style={{ backgroundColor: c.accent, color: c['accent-text'] }}
+                    >
+                        Subscribe for 10% off &rarr;
+                    </span>
+                </div>
+            )}
+
             {/* The selected/unselected pair, which is where contrast bites. */}
             <div className="mt-3 flex gap-1 rounded-lg p-1" style={{ backgroundColor: dark ? '#ffffff14' : '#00000010' }}>
                 <span
@@ -152,10 +170,16 @@ export default function PalettePreview({ palettes, active }: PalettePreviewProps
                 </label>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
                 {entries.map(([key, palette]) => {
                     const onPrimary = contrast(palette.colors.primary, palette.colors['primary-button-text']);
                     const bodyText = contrast(palette.colors['main-bg'], palette.colors['primary-text']);
+                    // The accent ships its own text colour, so this measures the
+                    // pair rather than assuming white. null when a palette has
+                    // no accent at all.
+                    const accentPair = palette.colors.accent && palette.colors['accent-text']
+                        ? contrast(palette.colors.accent, palette.colors['accent-text'])
+                        : null;
                     // Both gradients carry white text in real use — every money
                     // button is gradient-autumn, the units-sold counter is
                     // gradient-primary — so every stop has to hold it, not just
@@ -197,6 +221,9 @@ export default function PalettePreview({ palettes, active }: PalettePreviewProps
                             <div className="mb-3 flex flex-wrap gap-2">
                                 <ContrastBadge ratio={onPrimary} label="Button text" />
                                 <ContrastBadge ratio={bodyText} label="Body text" />
+                                {accentPair !== null && (
+                                    <ContrastBadge ratio={accentPair} label="Accent text" />
+                                )}
                                 <ContrastBadge ratio={worstStop} label="Gradient worst stop" />
                             </div>
 

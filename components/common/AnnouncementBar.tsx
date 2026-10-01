@@ -47,9 +47,13 @@ export default function AnnouncementBar() {
             Free delivery on orders over £56
           </p>
           
+          {/* The accent, on the one surface where it reads as a highlight
+              rather than as a second brand colour. It carries `accent-text`
+              rather than white: the Christmas gold is 2.24:1 under white and
+              7.78:1 under the dark ink, so the pair travels together. */}
           <Link
             href="/subscribe"
-            className="w-full md:w-auto text-center rounded-full bg-main-bg px-3.5 py-1 text-sm font-medium text-primary shadow-sm hover:bg-main-bg/90 transition"
+            className="w-full md:w-auto text-center rounded-full bg-accent px-3.5 py-1 text-sm font-medium text-accent-text shadow-sm hover:opacity-90 transition-opacity"
           >
             Subscribe for 10% off <span aria-hidden="true">&rarr;</span>
           </Link>
