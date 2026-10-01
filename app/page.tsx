@@ -198,7 +198,9 @@ export default function HomePage() {
           full-width for desktop — which also meant the rating and the "See
           all" link were rendered twice. */}
       <section id="reviews" className="scroll-mt-24 mt-8">
-        <ReviewCarousel />
+        <Section title="Our Clients Say">
+          <ReviewCarousel />
+        </Section>
       </section>
 
       <HomeSummerBoxes />
