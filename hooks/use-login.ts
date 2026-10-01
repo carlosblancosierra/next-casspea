@@ -5,6 +5,18 @@ import { useLoginMutation } from '@/redux/features/auth/authApiSlice';
 import { setAuth } from '@/redux/features/auth/authSlice';
 import { toast } from 'react-toastify';
 
+/**
+ * Where to go after signing in. Honours ?next= so an emailed order link
+ * survives the login redirect, but only for same-origin relative paths so the
+ * parameter cannot be used as an open redirect.
+ */
+function nextDestination(): string {
+	if (typeof window === 'undefined') return '/orders';
+	const next = new URLSearchParams(window.location.search).get('next');
+	if (next && next.startsWith('/') && !next.startsWith('//')) return next;
+	return '/orders';
+}
+
 export default function useLogin() {
 	const router = useRouter();
 	const dispatch = useAppDispatch();
@@ -33,7 +45,7 @@ export default function useLogin() {
 				dispatch(setAuth());
 				console.log('After dispatch - Auth state should be updated');
 				toast.success('Logged in');
-				router.push('/orders');
+				router.push(nextDestination());
 			})
 			.catch((error) => {
 				console.error('Login error:', error);

@@ -5,7 +5,7 @@ interface CheckoutDetailsProps {
     session: CheckoutSession | undefined;
 }
 
-const AddressDisplay = ({ address, title }: { address: Address | undefined, title: string }) => {
+const AddressDisplay = ({ address, title }: { address: Address | null | undefined, title: string }) => {
     if (!address) return null;
 
     return (
@@ -25,8 +25,6 @@ const AddressDisplay = ({ address, title }: { address: Address | undefined, titl
 
 const CheckoutDetails: React.FC<CheckoutDetailsProps> = ({ session }) => {
     if (!session) return null;
-
-    console.log(session);
 
     const areAddressesSame = session.shipping_address && session.billing_address &&
         session.shipping_address.street_address === session.billing_address.street_address &&

@@ -32,8 +32,26 @@ const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'CassPea Premium Chocolates',
-  description: 'Handcrafted premium chocolates and confectionery',
+  metadataBase: new URL('https://www.casspea.co.uk'),
+  title: {
+    default: 'CassPea Premium Chocolates',
+    template: '%s | CassPea',
+  },
+  description:
+    'Luxury chocolate gifts handcrafted in London. Over 20 exquisite flavours in signature gift boxes, personalised chocolates, barks and hot chocolate. UK delivery.',
+  openGraph: {
+    type: 'website',
+    siteName: 'CassPea',
+    locale: 'en_GB',
+    url: 'https://www.casspea.co.uk',
+    title: 'CassPea Premium Chocolates',
+    description:
+      'Luxury chocolate gifts handcrafted in London. Signature gift boxes, personalised chocolates and more.',
+    images: [{ url: '/home/2026/01/1.jpg', width: 1200, height: 1200, alt: 'CassPea handcrafted chocolates' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
 };
 
 
@@ -100,6 +118,11 @@ export default function RootLayout({
           `}
         </Script>
 
+        {/* Cookiebot must load synchronously: data-blockingmode="auto"
+            blocks tracking scripts before they fire, which is the point
+            of the consent gate. next/script would defer it and let
+            trackers run pre-consent. */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="7ef907d7-ea0d-4a43-beec-ca187e2ea5cd" data-blockingmode="auto" type="text/javascript"></script>
         <Provider>
           <Setup />
@@ -109,12 +132,10 @@ export default function RootLayout({
             <div className="flex flex-col min-h-screen relative z-1">
               <AnnouncementBar />
               <Navbar />
-              <main className="flex-grow pt-2 pb-16 md:pb-0 mx-4">
+              <main className="flex-grow pt-2 mx-4">
                 {children}
               </main>
-              <div className="hidden md:block">
-                <Footer />
-              </div>
+              <Footer />
               {CURRENT_EFFECT !== 'none' && <CurrentEffect />}
             </div>
           </LayoutWrapper>

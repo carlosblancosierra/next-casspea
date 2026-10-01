@@ -4,9 +4,14 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import Image from 'next/image';
+import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 
-// Change this constant to switch logo paths
-const LOGO_PATH = '/logos/red.png';
+// Two files, because the navbar already had a light/dark pair of <Image>
+// elements and both pointed at the same one — the red got away with it by
+// being mid-tone. Black on the dark surface would be invisible, which is the
+// same fault the hamburger had.
+const LOGO_LIGHT = '/logos/black.png';
+const LOGO_DARK = '/logos/white.png';
 
 const navigation = [
   { name: 'Store', href: '/shop-now', current: false },
@@ -28,7 +33,10 @@ function classNames(...classes: string[]) {
 }
 
 export default function Nav() {
-  // const cart = useSelector(selectCart);
+  // The cart has no total_items field, so sum the line quantities. Every cart
+  // mutation invalidates the 'Cart' tag, so this badge updates on its own.
+  const { data: cart } = useGetCartQuery();
+  const totalItems = cart?.items?.reduce((n, item) => n + item.quantity, 0) ?? 0;
 
   return (
     <Disclosure as="nav" className="bg-main-bg dark:bg-main-bg-dark border-b border-gray-200 dark:border-gray-700">
@@ -38,7 +46,7 @@ export default function Nav() {
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button */}
-                <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-primary-text hover:bg-gray-100 hover:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-2">
+                <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-primary-text dark:text-primary-text-light hover:bg-gray-100 hover:text-primary-text dark:hover:bg-gray-700 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-2">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -54,7 +62,7 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src={LOGO_PATH}
+                      src={LOGO_LIGHT}
                       width={0}
                       height={0}
                       sizes="100vw"
@@ -65,7 +73,7 @@ export default function Nav() {
                   <Link href="/">
                     <Image
                       alt="CassPea Chocolates"
-                      src={LOGO_PATH}
+                      src={LOGO_DARK}
                       width={0}
                       height={0}
                       sizes="100vw"
@@ -103,10 +111,17 @@ export default function Nav() {
                     aria-hidden="true"
                     className="h-6 w-6 text-primary-text group-hover:text-primary-text dark:text-primary-text-light dark:group-hover:text-white"
                   />
-                  {/* <span className="ml-2 text-xs font-medium text-primary-text group-hover:text-primary-text dark:text-primary-text-light dark:group-hover:text-white">
-                    {totalItems} (£{totalValue.toFixed(2)})
-                  </span> */}
-                  <span className="sr-only">items in cart, view bag</span>
+                  {totalItems > 0 && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute -top-0.5 -right-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary px-1 text-[11px] font-semibold leading-none text-primary-button-text"
+                    >
+                      {totalItems > 99 ? '99+' : totalItems}
+                    </span>
+                  )}
+                  <span className="sr-only">
+                    {totalItems === 1 ? '1 item in cart' : `${totalItems} items in cart`}, view bag
+                  </span>
                 </Link>
 
               </div>

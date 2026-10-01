@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { CartItem as CartItemType } from '@/types/carts';
+import { formatCurrency } from '@/utils/currency';
 import FlavourSelectionGrid from './FlavourSelectionGrid';
 import { useChangeCartItemQuantityMutation, useRemoveCartItemMutation } from '@/redux/features/carts/cartApiSlice';
 import { useGetProductQuery, useGetProductsQuery } from '@/redux/features/products/productApiSlice';
@@ -87,7 +88,13 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
             </p>
           )}
 
-          <p className="text-base font-bold text-primary-text dark:text-primary-text-light">£{entry.product.current_price}</p>
+          {/* base_price/discounted_price from the API are already the line total
+              (unit price x quantity) — don't multiply again. Using the
+              product's catalogue price here ignored any cart discount and
+              disagreed with the checkout confirm page. */}
+          <p className="text-base font-bold text-primary-text dark:text-primary-text-light">
+            {formatCurrency(entry.discounted_price || entry.base_price)}
+          </p>
 
           {/* Controles de cantidad y borrado */}
           <div className="flex items-center space-x-2">

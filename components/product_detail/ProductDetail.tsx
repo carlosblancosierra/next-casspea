@@ -1,3 +1,5 @@
+'use client';
+
 import React, { Suspense } from 'react';
 import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 import { notFound } from 'next/navigation';
@@ -6,24 +8,36 @@ import ImageGallery from '@/components/product_detail/ImageGallery';
 import ProductBreadcrumb from '@/components/product_detail/ProductBreadcrumb';
 import ProductAccordion from './ProductAccordion';
 import ProductFormBoxes from './ProductFormBoxes';
+import QuickBoxBuilder from './QuickBoxBuilder';
 import ProductFormGeneral from './ProductFormGeneral';
 import FlavourGrid from '../flavours/FlavourCarousel';
 import Reviews from '../common/Reviews';
 import ProductCard from '../store/ProductCard';
 import { Product } from '@/types/products';
+import { useExperiment } from '@/hooks/useExperiment';
+import { BOX_BUILDER_EXPERIMENT, BUILDER_ADD_TO_CART } from '@/types/experiments';
 
-const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
+const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> = ({ slug, initialProducts }) => {
 	// Explicitly provide the type for the query result
 	const { data, isLoading, error } = useGetProductsQuery();
-	// Default to an empty array if data is undefined
-	const products: Product[] = data ?? [];
+	// The split point for the box-builder A/B test. Asked for on every product
+	// page so the assignment resolves alongside the product query rather than
+	// after it — a builder that appears and is then swapped is both a bad
+	// experience and a dirty impression.
+	const { variant, isLoading: variantLoading, track } = useExperiment(BOX_BUILDER_EXPERIMENT);
+	// Prefer the SSR-provided products for the first render (SEO / no spinner),
+	// then let the client query keep them current.
+	const products: Product[] = data ?? initialProducts ?? [];
 
-	if (isLoading) {
-		return <div className="text-primary-text">Loading products...</div>;
+	// Only block the whole page while we genuinely have nothing to show. The A/B
+	// variant only affects the builder, so it waits inside that section instead
+	// of holding back the whole (server-rendered) product page.
+	if (!products.length && isLoading) {
+		return <div className="text-primary-text dark:text-primary-text-light">Loading products...</div>;
 	}
 
-	if (error) {
-		return <div className="text-primary-text">Error loading products.</div>;
+	if (!products.length && error) {
+		return <div className="text-primary-text dark:text-primary-text-light">Error loading products.</div>;
 	}
 
 	const product = products.find((p) => p.slug === slug);
@@ -87,7 +101,19 @@ const ProductTemplate: React.FC<{ slug: string }> = ({ slug }) => {
 				<div className="flex flex-col top-48 py-0 w-full gap-y-12">
 					<Suspense fallback="Loading...">
 						{isSignatureBox ? (
-							<ProductFormBoxes product={product} />
+							variantLoading ? (
+								<div className="text-primary-text dark:text-primary-text-light">Loading...</div>
+							) : variant === 'quick' ? (
+								<QuickBoxBuilder
+									product={product}
+									onAddedToCart={() => track(BUILDER_ADD_TO_CART)}
+								/>
+							) : (
+								<ProductFormBoxes
+									product={product}
+									onAddedToCart={() => track(BUILDER_ADD_TO_CART)}
+								/>
+							)
 						) : (
 							<ProductFormGeneral product={product} />
 						)}

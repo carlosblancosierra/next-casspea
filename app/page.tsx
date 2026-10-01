@@ -7,8 +7,10 @@ import ImageGallery from '@/components/product_detail/ImageGallery';
 import PersonalisedHome from '@/components/personalized/PersonalisedHome';
 import CategoryProducts from '@/components/home/CategoryProducts';
 import UnitSoldCounter from '@/components/common/UnitSoldCounter';
+import ShopNowCTA from '@/components/common/ShopNowCTA';
 import ReviewCarousel from '@/components/common/ReviewCarousel';
 import HomeProductsServer from '@/components/home/HomeProductsServer';
+import AdventSection from '@/components/home/AdventSection';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
 import { HomeSummerBanner, HomeSummerBoxes, HomeSignatureGate } from '@/components/home/HomeSummer';
 import dynamic from 'next/dynamic';
@@ -18,7 +20,7 @@ const HomeGallery = dynamic(() => import('@/components/home/HomeGallery'));
 
 
 // Reusable section component that wraps content in Suspense with a title
-export const Section = ({
+const Section = ({
   title,
   children,
   extraClass = '',
@@ -51,25 +53,8 @@ export const Section = ({
 
 // Button group for hero section
 const ButtonGroup = () => (
-  <div className="hidden lg:flex gap-2">
-    <Link
-      href="/shop-now/"
-      className="inline-flex items-center justify-center px-8 py-4 mr-3 text-xl font-medium text-primary-button-text rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light"
-    >
-      Shop Now
-      <svg
-        className="w-5 h-5 ml-2 -mr-1"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fillRule="evenodd"
-          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-          clipRule="evenodd"
-        />
-      </svg>
-    </Link>
+  <div className="hidden lg:flex">
+    <ShopNowCTA />
   </div>
 );
 
@@ -145,24 +130,7 @@ const HeroSection = () => (
           <h2 className="text-2xl mb-4 dark:text-white text-primary-text">
             Celebrate Every Occasion with Our Signature Gift Boxes
           </h2>
-          <Link
-            href="/shop-now/"
-            className="inline-flex items-center justify-center px-8 py-4 mb-4 text-xl font-medium text-primary-button-text rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light"
-          >
-            Shop Indulgence Now!
-            <svg
-              className="w-5 h-5 ml-2 -mr-1"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </Link>
+          <ShopNowCTA className="mb-4" />
         </div>
         <ImageGallery
           images={[
@@ -177,9 +145,6 @@ const HeroSection = () => (
           ]}
           className="block lg:hidden"
         />
-        <div className="lg:hidden mb-6">
-          <ReviewCarousel />
-        </div>
         <p className="lg:hidden font-light text-md mt-4 text-primary-text dark:text-primary-text-light">
           Share the love with CassPea Chocolates—perfect for personal indulgence,
           birthdays, corporate events, and special celebrations. With over 20
@@ -205,17 +170,15 @@ const HeroSection = () => (
           flavours.
         </p>
         <ButtonGroup />
-        <div className="hidden lg:block mt-6">
-          <ReviewCarousel />
-        </div>
       </div>
     </div>
   </section>
 );
 
 export const metadata: Metadata = {
-  title: 'CassPea Hand Crafted Chocolates',
-  description: '',
+  title: 'CassPea Hand Crafted Chocolates | Luxury Chocolate Gifts, London',
+  description:
+    'Luxury chocolate gifts handcrafted in London. Choose from over 20 exquisite flavours in our signature gift boxes — perfect for birthdays, corporate events and special celebrations.',
 };
 
 // Loading placeholder component
@@ -230,7 +193,24 @@ export default function HomePage() {
 
       <HeroSection />
 
+      {/* One reviews section at every width, because the hero's Trustpilot
+          rating scrolls here and an anchor needs a single visible target. It
+          used to be two carousels — one inside the hero for phones, one
+          full-width for desktop — which also meant the rating and the "See
+          all" link were rendered twice. */}
+      <section id="reviews" className="scroll-mt-24 mt-8">
+        <Section title="Our Clients Say">
+          <ReviewCarousel />
+        </Section>
+      </section>
+
       <HomeSummerBoxes />
+
+      {/* Above the boxes: it is seasonal and time-limited, and the boxes are
+          here all year. */}
+      <section className="mt-8 px-2">
+        <AdventSection />
+      </section>
 
       <HomeSignatureGate>
         <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">

@@ -16,16 +16,6 @@ export const formatDate = (dateString?: string): { date: string, time: string } 
     }
 };
 
-export const formatCurrency = (amount?: string): string => {
-    if (!amount) return '£0.00';
-    try {
-        return `£${parseFloat(amount).toFixed(2)}`;
-    } catch (error) {
-        console.error('Currency formatting error:', error);
-        return '£0.00';
-    }
-};
-
 export const getAllergenName = (id: number): string => {
     const allergenMap: Record<number, string> = {
         1: 'Gluten',
@@ -63,21 +53,31 @@ export const getDayTotals = (orders: Order[], availableProducts?: Product[]) => 
     const products: Record<string, number> = {};
     const flavors: Record<string, number> = {};
     const randomBoxes: Record<string, number> = {};
-    // Calculate day total by summing total_with_shipping from each order
-    const dayTotal = orders.reduce((total, order) => total + order.checkout_session.total_with_shipping, 0);
+    // Calculate day total by summing total_with_shipping from each order.
+    // Number() handles both the JSON-number the API sends today and a
+    // decimal string, and never concatenates.
+    const dayTotal = orders.reduce(
+        (total, order) => total + (Number(order.checkout_session?.total_with_shipping) || 0),
+        0,
+    );
     orders.forEach(order => {
         order.checkout_session?.cart?.items?.forEach(item => {
-            const boxCustomization = item.box_customization;
+            // A box has box_customization, an indulgence pack has
+            // pack_customization, and never both. Keying this off the box one
+            // alone meant every pack contributed nothing to the flavour and
+            // surprise-box counts — so a batch made from these totals came out
+            // short by exactly the packs in it.
+            const customization = item.box_customization ?? item.pack_customization;
             const quantity = item.quantity || 1;
             const productName = item.product?.name || 'Unknown Product';
             const chocolatesPerBox = item.product?.units_per_box || 0;
             const totalChocolates = chocolatesPerBox * quantity;
             // Product counting
             products[productName] = (products[productName] || 0) + quantity;
-            if (boxCustomization?.selection_type === 'RANDOM') {
+            if (customization?.selection_type === 'RANDOM') {
                 // Handle random boxes with allergens
-                if (boxCustomization.allergens && boxCustomization.allergens.length > 0) {
-                    const allergenNames = boxCustomization.allergens
+                if (customization.allergens && customization.allergens.length > 0) {
+                    const allergenNames = customization.allergens
                         .map(allergen => allergen.name)
                         .sort()
                         .join(' and ');
@@ -87,14 +87,14 @@ export const getDayTotals = (orders: Order[], availableProducts?: Product[]) => 
                     // No allergens
                     randomBoxes['Random'] = (randomBoxes['Random'] || 0) + totalChocolates;
                 }
-            } else if (boxCustomization?.selection_type === 'PICK_AND_MIX') {
+            } else if (customization?.selection_type === 'PICK_AND_MIX') {
                 // Flavor counting for pick & mix boxes
                 const flavorSelections = [
                     ...(item.box_customization?.flavor_selections || []),
                     ...(item.pack_customization?.flavor_selections || [])
                 ];
                 flavorSelections.forEach(flavor => {
-                    const flavorName = (flavor.flavor_name as string | undefined) || (flavor.flavor && (flavor.flavor.name as string | undefined));
+                    const flavorName = flavor.flavor_name || flavor.flavor?.name;
                     if (flavorName && flavor.quantity) {
                         flavors[flavorName] = (flavors[flavorName] || 0) + (flavor.quantity * quantity);
                     }

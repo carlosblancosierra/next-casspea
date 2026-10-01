@@ -31,21 +31,21 @@ const subscribeApiSlice = apiSlice.injectEndpoints({
                 body: data,
             }),
             transformResponse: (response: SubscribeResponse) => response,
-            transformErrorResponse: (response: { status: number; data: any }) => {
+            transformErrorResponse: (response: { status: number; data?: { error?: string } }) => {
                 return {
                     message: 'Subscription failed',
                     error: response.data?.error || 'An unexpected error occurred'
                 };
             },
         }),
-        subscribeGenericLead: builder.mutation<SubscribeResponse, Partial<GenericLeadSubscribeRequest> & { [key: string]: any }>({
+        subscribeGenericLead: builder.mutation<SubscribeResponse, GenericLeadSubscribeRequest>({
             query: (data) => ({
                 url: '/leads/generic-lead/',
                 method: 'POST',
                 body: data,
             }),
             transformResponse: (response: SubscribeResponse) => response,
-            transformErrorResponse: (response: { status: number; data: any }) => {
+            transformErrorResponse: (response: { status: number; data?: { error?: string } }) => {
                 return {
                     message: 'Subscription failed',
                     error: response.data?.error || 'An unexpected error occurred'

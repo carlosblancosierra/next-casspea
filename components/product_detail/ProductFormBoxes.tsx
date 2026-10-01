@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
-import { Product as ProductType, Product } from '@/types/products';
+import { Product } from '@/types/products';
 import FlavourPicker from './FlavourPicker';
 import ProgressBar from '@/components/common/ProgressBar';
 import { Flavour as FlavourType } from '@/types/flavours';
 import { CartItemBoxFlavorSelection, CartItemRequest } from '@/types/carts';
-import { useAppDispatch } from '@/redux/hooks';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 
@@ -16,16 +15,22 @@ import BoxSelection from './BoxSelection';
 import AllergenSelection from './AllergenSelection';
 import AddToCartButton from './AddToCartButton';
 // Pack-related imports
-import SelectableProductCard from '@/components/store/SelectableProductCard';
 import SelectableGiftCard from '@/components/store/SelectableGiftCard';
+import SelectableProductCard from '@/components/store/SelectableProductCard';
 import GiftMessage from '@/components/cart/GiftMessage';
-import { ID_MAP, LOVE_SLEEVE_PRODUCT_ID, LOVE_SLEEVE_PRICE } from '@/components/packs/constants';
+import { ID_MAP, LOVE_SLEEVE_PRODUCT_ID, LOVE_SLEEVE_PRICE, PACK_QUERY_PARAM } from '@/components/packs/constants';
 
 interface ProductInfoProps {
-    product: ProductType;
+    product: Product;
+    /**
+     * Fired once the item is actually in the cart. The A/B test needs the
+     * control arm's funnel measured the same way as the challenger's, or the
+     * two add-to-cart rates are not comparable.
+     */
+    onAddedToCart?: () => void;
 }
 
-const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
+const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }) => {
     const maxChocolates = product.units_per_box || 0;
     const isNinetySixBox = maxChocolates === 96;
     // Summer Break clearance boxes are "Surprise Me" only: no flavour picking,
@@ -34,7 +39,9 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [currentStep, setCurrentStep] = useState<number>(1);
 
     // Step 1: Selection type — preselected to "Surprise Me" for clearance boxes.
-    const [selection, setSelection] = useState<string | null>(surpriseOnly ? 'RANDOM' : null);
+    const [selection, setSelection] = useState<'PICK_AND_MIX' | 'RANDOM' | null>(
+        surpriseOnly ? 'RANDOM' : null
+    );
 
     // Step 2: Allergens
     const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
@@ -47,7 +54,12 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     // Final options
     const [quantity, setQuantity] = useState<number>(1);
     // Pack-related state
-    const [isPack, setIsPack] = useState<boolean>(false);
+    // A pack slug in the store redirects here with ?pack=1, so someone who
+    // chose "indulgence pack" in the shop starts in pack mode rather than
+    // being asked again half way through.
+    const searchParams = useSearchParams();
+    const startsAsPack = searchParams?.get(PACK_QUERY_PARAM) === '1';
+    const [isPack, setIsPack] = useState<boolean>(startsAsPack);
     const [showUpgradePopup, setShowUpgradePopup] = useState<boolean>(false);
     const [chocolateBark, setChocolateBark] = useState<Product | null>(null);
     const [hotChocolate, setHotChocolate] = useState<Product | null>(null);
@@ -56,8 +68,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const [giftMessage, setGiftMessage] = useState<string>('');
     const [showGiftMessagePopup, setShowGiftMessagePopup] = useState<boolean>(false);
 
-    const dispatch = useAppDispatch();
     const router = useRouter();
+    // Steps 4-6 are long product lists, so advancing left the customer part
+    // way down the page — the next step's heading was above the fold.
+    const formRef = useRef<HTMLFormElement>(null);
     const [addToCart, { isLoading }] = useAddCartItemMutation();
     const [updateCart] = useUpdateCartMutation();
     const { data: allProducts } = useGetProductsQuery();
@@ -68,6 +82,16 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const indulgencePackProductId = ID_MAP[product.units_per_box || 0];
     const indulgencePackProduct = allProducts?.find(p => p.id === indulgencePackProductId);
     const isIndulgencePackSoldOut = Boolean(indulgencePackProduct?.sold_out);
+
+    // What a pack actually looks like, shown once the box becomes one. Nearest
+    // first: this box's own artwork, then the mapped pack SKU's, then the
+    // category image as the shop-wide fallback. Nothing renders if none is set
+    // — a placeholder box would be worse than no picture.
+    const indulgenceImage =
+        product.indulgence_image ||
+        indulgencePackProduct?.indulgence_image ||
+        indulgencePackProduct?.category?.image ||
+        null;
 
     // The box product itself being sold out blocks the whole flow — no building a
     // box that can't be bought (the backend also rejects sold-out items on add).
@@ -136,7 +160,12 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     const getTotalSteps = () => isPack ? 7 : 3;
     const isPackStep = (step: number) => isPack && step > 3;
 
+    const scrollToFormTop = () => {
+        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
     const handleNextStep = () => {
+        scrollToFormTop();
         if (currentStep === 1 && canProceedToStep2()) {
             setCurrentStep(2);
         } else if (currentStep === 2 && canProceedToStep3()) {
@@ -153,6 +182,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     };
 
     const handlePrevStep = () => {
+        scrollToFormTop();
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
         }
@@ -165,7 +195,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             <div className="flex items-center justify-center mb-8">
                 {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
                     <React.Fragment key={step}>
-                        <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
+                        {/* shrink-0: at 7 steps the row wants 472px, so on a
+                            phone flex was shrinking the width and not the
+                            height and the circles came out as ovals. */}
+                        <div className={`shrink-0 flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
                             step <= currentStep
                                 ? 'bg-primary border-primary text-primary-text-light'
                                 : 'border-gray-300 text-primary-text dark:text-primary-text-light bg-main-bg dark:bg-main-bg-dark'
@@ -173,7 +206,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             {step}
                         </div>
                         {step < totalSteps && (
-                            <div className={`flex-1 h-0.5 mx-4 transition-colors ${
+                            <div className={`flex-1 h-0.5 mx-2 sm:mx-4 transition-colors ${
                                 step < currentStep ? 'bg-primary' : 'bg-main-bg'
                             }`} />
                         )}
@@ -201,7 +234,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         }
     };
 
-    const handleFlavourChange = (index: number, field: string, value: string | number) => {
+    const handleFlavourChange = (index: number, field: 'quantity', value: number) => {
         const newFlavours = [...flavours];
         newFlavours[index] = { ...newFlavours[index], [field]: value };
         setFlavours(newFlavours);
@@ -247,6 +280,37 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         return !canAddToCart();
     };
 
+    /**
+     * What the button at the end of step 3 does.
+     *
+     * Three cases, and they used to be spelled out twice — once in the
+     * Pick & Mix branch and once in Surprise Me, with the two copies disagreeing
+     * about `surpriseOnly`.
+     *
+     * - already a pack (arrived from the store with ?pack=1, or accepted the
+     *   upsell): go on to the pack steps. Offering the upsell here would ask a
+     *   question they have already answered.
+     * - no upsell to offer (96-box, pack sold out, clearance box): add to cart.
+     * - otherwise: offer the upgrade.
+     */
+    const finishStepThree = () => {
+        if (isPack) {
+            handleNextStep();
+            return;
+        }
+        if (isNinetySixBox || isIndulgencePackSoldOut || surpriseOnly) {
+            handleAddToCart();
+            return;
+        }
+        setShowUpgradePopup(true);
+    };
+
+    // In pack mode step 3 leads to the hot chocolate and bark steps, so gating
+    // it on canAddToCart() — which requires both of those — would leave the
+    // button permanently disabled with no way to reach them.
+    const isStepThreeCtaDisabled = () => (isPack ? !canProceedToNextStep() : !canAddToCart());
+    const stepThreeCtaLabel = isPack ? 'Next' : 'Add to Cart';
+
     const getProgressText = () => {
         if (remainingChocolates === 0) {
             return `You have selected all ${maxChocolates} chocolates.`;
@@ -255,8 +319,41 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         }
     };
 
+    const buildFlavourSelections = (selectionType: 'PICK_AND_MIX' | 'RANDOM') =>
+        selectionType === 'PICK_AND_MIX'
+            ? flavours.filter(f => f.flavor?.id).map(f => ({
+                flavor: f.flavor!.id,
+                quantity: f.quantity
+            }))
+            : [];
+
+    // Pack customization - use pack product ID from ID_MAP
+    const buildPackRequest = (selectionType: 'PICK_AND_MIX' | 'RANDOM'): CartItemRequest => ({
+        product: ID_MAP[product.units_per_box || 0] || product.id,
+        quantity: quantity,
+        pack_customization: {
+            selection_type: selectionType,
+            flavor_selections: buildFlavourSelections(selectionType),
+            chocolate_bark: chocolateBark?.id ?? undefined,
+            hot_chocolate: hotChocolate?.id ?? undefined,
+            gift_card: giftCard?.id ?? undefined
+        }
+    });
+
+    const buildBoxRequest = (selectionType: 'PICK_AND_MIX' | 'RANDOM'): CartItemRequest => ({
+        product: product.id,
+        quantity: quantity,
+        box_customization: {
+            selection_type: selectionType,
+            allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
+            flavor_selections: buildFlavourSelections(selectionType)
+        }
+    });
+
     const handleAddToCart = async () => {
         // Never let a sold-out box (or indulgence pack) be added to the cart.
+        // These run before the gift-message popup below so a sold-out box can
+        // never open it.
         if (isSoldOut) {
             toast.error('This box is sold out.');
             return;
@@ -265,6 +362,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             toast.error('This indulgence pack is sold out.');
             return;
         }
+        if (!selection) return;
         const shouldTreatAsPack = isPack && !isIndulgencePackSoldOut;
         // Check if gift card is selected but no gift message is provided
         if (shouldTreatAsPack && giftCard && giftMessage.trim() === '') {
@@ -273,40 +371,9 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
         }
 
         try {
-            let cartItemRequest: CartItemRequest;
-
-            if (shouldTreatAsPack) {
-                // Pack customization - use pack product ID from ID_MAP
-                const packProductId = ID_MAP[product.units_per_box || 0] || product.id;
-                cartItemRequest = {
-                    product: packProductId,
-                    quantity: quantity,
-                    pack_customization: {
-                        selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
-                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
-                            flavor: f.flavor!.id,
-                            quantity: f.quantity
-                        })) : [],
-                        chocolate_bark: chocolateBark?.id ?? undefined,
-                        hot_chocolate: hotChocolate?.id ?? undefined,
-                        gift_card: giftCard?.id ?? undefined
-                    }
-                };
-            } else {
-                // Regular box customization
-                cartItemRequest = {
-                    product: product.id,
-                    quantity: quantity,
-                    box_customization: {
-                        selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
-                        allergens: allergenOption === 'SPECIFY' ? selectedAllergens : [],
-                        flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
-                            flavor: f.flavor!.id,
-                            quantity: f.quantity
-                        })) : []
-                    }
-                };
-            }
+            const cartItemRequest = shouldTreatAsPack
+                ? buildPackRequest(selection)
+                : buildBoxRequest(selection);
 
             // Handle gift message for packs
             if (shouldTreatAsPack && giftMessage.trim() !== '') {
@@ -317,6 +384,8 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
             if (shouldTreatAsPack && loveSleeve) {
                 await addToCart({ product: LOVE_SLEEVE_PRODUCT_ID, quantity: 1 }).unwrap();
             }
+            // Only after the cart call succeeded: a failed add is not a step.
+            onAddedToCart?.();
             toast.success(shouldTreatAsPack ? 'Pack added to cart successfully!' : 'Box added to cart successfully!');
             router.push('/cart');
         } catch (error) {
@@ -348,7 +417,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
     }
 
     return (
-        <form onSubmit={(e) => {
+        <form ref={formRef} onSubmit={(e) => {
             e.preventDefault();
         }}>
             <div className="space-y-6 pb-6 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
@@ -371,7 +440,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                         <BoxSelection
                             options={surpriseOnly ? prebulids.filter(o => o.value === 'RANDOM') : prebulids}
                             selected={selection}
-                            onChange={setSelection}
+                            onChange={(value) => setSelection(value === 'RANDOM' ? 'RANDOM' : 'PICK_AND_MIX')}
                         />
                         {selection === 'RANDOM' && (
                             <p className="text-sm text-primary-text dark:text-primary-text-light mt-2">
@@ -478,33 +547,33 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                                 ))}
                                             </select>
                                         </div>
-
-
-                                        <div className="mt-6 flex justify-between">
-                                            <button
-                                                type="button"
-                                                onClick={handlePrevStep}
-                                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                            >
-                                                Back
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    if (isNinetySixBox || isIndulgencePackSoldOut || surpriseOnly) {
-                                                        handleAddToCart();
-                                                    } else {
-                                                        setShowUpgradePopup(true);
-                                                    }
-                                                }}
-                                                disabled={!canAddToCart()}
-                                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                            >
-                                                Add to Cart
-                                            </button>
-                                        </div>
                                     </div>
                                 )}
+
+                                {/* Back is outside the "box is full" gate: while
+                                    you are still picking flavours there was no
+                                    way back to the allergen step at all. Add to
+                                    Cart stays gated, because a half-full box is
+                                    not something to add. */}
+                                <div className="mt-6 flex justify-between">
+                                    <button
+                                        type="button"
+                                        onClick={handlePrevStep}
+                                        className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    >
+                                        Back
+                                    </button>
+                                    {remainingChocolates === 0 && (
+                                        <button
+                                            type="button"
+                                            onClick={finishStepThree}
+                                            disabled={isStepThreeCtaDisabled()}
+                                            className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        >
+                                            {stepThreeCtaLabel}
+                                        </button>
+                                    )}
+                                </div>
                             </>
                         ) : (
                             // RANDOM selection - show summary and options
@@ -546,17 +615,11 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            if (isNinetySixBox || isIndulgencePackSoldOut) {
-                                                handleAddToCart();
-                                            } else {
-                                                setShowUpgradePopup(true);
-                                            }
-                                        }}
-                                        disabled={!canAddToCart()}
+                                        onClick={finishStepThree}
+                                        disabled={isStepThreeCtaDisabled()}
                                         className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                     >
-                                        Add to Cart
+                                        {stepThreeCtaLabel}
                                     </button>
                                 </div>
                             </div>
@@ -569,26 +632,31 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                     <div className="transition-opacity">
                         <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 4: Choose your Hot Chocolate</h3>
 
-                        <div className="mb-4">
-                            <label htmlFor="hot-chocolate-select" className="block text-sm font-medium text-primary-text dark:text-primary-text-light mb-2">
-                                Select Hot Chocolate
-                            </label>
-                            <select
-                                id="hot-chocolate-select"
-                                value={hotChocolate?.id || ''}
-                                onChange={(e) => {
-                                    const selectedProduct = allProducts?.find(p => p.id === parseInt(e.target.value));
-                                    setHotChocolate(selectedProduct || null);
-                                }}
-                                className="block w-full rounded-md border-gray-300 dark:border-gray-600
-                                    bg-main-bg dark:bg-transparent text-primary-text dark:text-primary-text-light shadow-sm focus:border-primary-2
-                                    focus:ring-primary-2 px-3 py-2"
-                            >
-                                <option value="">Choose a hot chocolate...</option>
-                                {allProducts?.filter(p => p.category?.slug === 'hot-chocolate').map(p => (
-                                    <option key={p.id} value={p.id}>{p.name}</option>
-                                ))}
-                            </select>
+                        {indulgenceImage && (
+                            <div className="mb-6 relative w-full aspect-[2/1] sm:aspect-[3/1] overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                                <Image
+                                    src={indulgenceImage}
+                                    alt="What an indulgence pack includes"
+                                    fill
+                                    sizes="(min-width:768px) 40vw, 100vw"
+                                    className="object-cover"
+                                />
+                            </div>
+                        )}
+
+                        {/* Pictures rather than a dropdown: you are choosing
+                            between chocolates, and a name in a select says
+                            nothing about what arrives. Two up on a phone. */}
+                        <div className="mb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                            {allProducts?.filter(p => p.category?.slug === 'hot-chocolate').map(p => (
+                                <SelectableProductCard
+                                    key={p.id}
+                                    product={p}
+                                    price={0}
+                                    selected={hotChocolate?.id === p.id}
+                                    onSelect={() => setHotChocolate(p)}
+                                />
+                            ))}
                         </div>
 
                         <div className="mt-6 flex justify-between">
@@ -616,26 +684,16 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                     <div className="transition-opacity">
                         <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 5: Choose your Chocolate Bark</h3>
 
-                        <div className="mb-4">
-                            <label htmlFor="chocolate-bark-select" className="block text-sm font-medium text-primary-text dark:text-primary-text-light mb-2">
-                                Select Chocolate Bark
-                            </label>
-                            <select
-                                id="chocolate-bark-select"
-                                value={chocolateBark?.id || ''}
-                                onChange={(e) => {
-                                    const selectedProduct = allProducts?.find(p => p.id === parseInt(e.target.value));
-                                    setChocolateBark(selectedProduct || null);
-                                }}
-                                className="block w-full rounded-md border-gray-300 dark:border-gray-600
-                                    bg-main-bg dark:bg-transparent text-primary-text dark:text-primary-text-light shadow-sm focus:border-primary-2
-                                    focus:ring-primary-2 px-3 py-2"
-                            >
-                                <option value="">Choose a chocolate bark...</option>
-                                {allProducts?.filter(p => p.category?.slug === 'chocolate-barks').map(p => (
-                                    <option key={p.id} value={p.id}>{p.name}</option>
-                                ))}
-                            </select>
+                        <div className="mb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                            {allProducts?.filter(p => p.category?.slug === 'chocolate-barks').map(p => (
+                                <SelectableProductCard
+                                    key={p.id}
+                                    product={p}
+                                    price={0}
+                                    selected={chocolateBark?.id === p.id}
+                                    onSelect={() => setChocolateBark(p)}
+                                />
+                            ))}
                         </div>
 
                         <div className="mt-6 flex justify-between">
@@ -663,7 +721,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                     <div className="transition-opacity">
                         <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 6: Choose your Gift Card (optional)</h3>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
                             {allProducts?.filter(p => p.category?.slug === 'gift-cards').map(p => (
                                 <SelectableGiftCard
                                     key={p.id}
@@ -755,7 +813,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 No thanks
                             </button>
                         </div>
-                        <div className="mt-6 flex justify-between">
+                        <div className="mt-6 flex items-center justify-between gap-4">
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
@@ -763,24 +821,24 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                             >
                                 Back
                             </button>
+                            {/* The pack's only Add to Cart. It used to live in
+                                a floating bar outside the card; this is the
+                                same handler, inside the form where the rest of
+                                the decisions are. */}
+                            <div className="flex-1">
+                                <AddToCartButton
+                                    onClick={handleAddToCart}
+                                    isLoading={isLoading}
+                                    isDisabled={isAddToCartDisabled()}
+                                    selection={selection}
+                                    remainingChocolates={remainingChocolates}
+                                />
+                            </div>
                         </div>
                     </div>
                     );
                 })()}
             </div>
-
-            {/* Add to Cart Button - Only show on final step when ready */}
-            {((!isPack && currentStep === 3) || (isPack && currentStep === 7)) && canAddToCart() && (
-                <div className="sticky md:static bottom-[55px] md:bottom-auto bg-main-bg dark:bg-main-bg-dark pt-4 pb-6 px-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
-                    <AddToCartButton
-                        onClick={handleAddToCart}
-                        isLoading={isLoading}
-                        isDisabled={isAddToCartDisabled()}
-                        selection={selection}
-                        remainingChocolates={remainingChocolates}
-                    />
-                </div>
-            )}
 
             {/* Upgrade Popup */}
             {showUpgradePopup && !isIndulgencePackSoldOut && (
@@ -798,25 +856,29 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 <li>• Luxury hot chocolate</li>
                                 <li>• Personalized gift card</li>
                             </ul>
-                            <div className="flex gap-3">
-                                <button
-                                    onClick={() => {
-                                        setShowUpgradePopup(false);
-                                        handleAddToCart();
-                                    }}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:main-bg dark:hover:bg-main-bg-dark transition-colors"
-                                >
-                                    Continue to cart
-                                </button>
+                            {/* Stacked, not side by side: the upgrade is the
+                                offer being made, so it gets the full width and
+                                "Continue to cart" goes underneath as the quiet
+                                way past it. */}
+                            <div className="flex flex-col gap-2">
                                 <button
                                     onClick={() => {
                                         setShowUpgradePopup(false);
                                         setIsPack(true);
                                         setCurrentStep(4);
                                     }}
-                                    className="flex-1 px-4 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 transition-colors"
+                                    className="w-full px-4 py-3 bg-primary text-primary-text-light font-medium rounded-md hover:bg-primary/90 transition-colors"
                                 >
                                     Make an indulgence pack
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowUpgradePopup(false);
+                                        handleAddToCart();
+                                    }}
+                                    className="w-full px-4 py-1.5 text-sm text-primary-text/70 dark:text-primary-text-light/70 rounded-md hover:text-primary-text dark:hover:text-primary-text-light hover:underline transition-colors"
+                                >
+                                    Continue to cart
                                 </button>
                             </div>
                         </div>
@@ -848,25 +910,10 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product }) => {
                                 <button
                                     onClick={async () => {
                                         setShowGiftMessagePopup(false);
+                                        if (!selection) return;
                                         // Proceed with adding to cart without gift message
                                         try {
-                                            const packProductId = ID_MAP[product.units_per_box || 0] || product.id;
-                                            const cartItemRequest: CartItemRequest = {
-                                                product: packProductId,
-                                                quantity: quantity,
-                                                pack_customization: {
-                                                    selection_type: selection as 'PICK_AND_MIX' | 'RANDOM',
-                                                    flavor_selections: selection === 'PICK_AND_MIX' ? flavours.filter(f => f.flavor?.id).map(f => ({
-                                                        flavor: f.flavor!.id,
-                                                        quantity: f.quantity
-                                                    })) : [],
-                                                    chocolate_bark: chocolateBark?.id ?? undefined,
-                                                    hot_chocolate: hotChocolate?.id ?? undefined,
-                                                    gift_card: giftCard?.id ?? undefined
-                                                }
-                                            };
-
-                                            await addToCart(cartItemRequest).unwrap();
+                                            await addToCart(buildPackRequest(selection)).unwrap();
                                             if (loveSleeve) {
                                                 await addToCart({ product: LOVE_SLEEVE_PRODUCT_ID, quantity: 1 }).unwrap();
                                             }

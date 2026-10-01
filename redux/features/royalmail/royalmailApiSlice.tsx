@@ -10,7 +10,9 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
         success: boolean;
         tracking_number: string;
         order_identifier: string;
-        label: any;
+        // Never consumed on the frontend; label PDFs come from the
+        // separate download endpoint below.
+        label: unknown;
       },
       { order_id: string }
     >({
@@ -24,7 +26,7 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
         try {
           await queryFulfilled;
           toast.success('Royal Mail order created successfully');
-        } catch (error: any) {
+        } catch {
           toast.error('Failed to create Royal Mail order');
         }
       },
@@ -45,25 +47,26 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
 
           // For attachment downloads, the type might be 'text/html' initially
           // We'll check the Content-Disposition header instead
-          const contentType = response.headers['content-type'];
-          const contentDisposition = response.headers['content-disposition'];
-          
-          if (!contentDisposition?.includes('attachment') || !contentType?.includes('pdf')) {
+          const contentType = String(response.headers['content-type'] ?? '');
+          const contentDisposition = String(response.headers['content-disposition'] ?? '');
+
+          if (!contentDisposition.includes('attachment') || !contentType.includes('pdf')) {
             throw new Error('Invalid response format - Expected PDF attachment');
           }
 
           return { data: response.data };
-        } catch (error: any) {
+        } catch (error) {
           // Handle specific error cases
-          const errorMessage = error.response?.status === 404
+          const status = axios.isAxiosError(error) ? error.response?.status : undefined;
+          const errorMessage = status === 404
             ? `Label not found for order ${order_id}`
             : 'Failed to download shipping label';
 
           toast.error(errorMessage);
-          
+
           return {
             error: {
-              status: error.response?.status || 500,
+              status: status || 500,
               data: errorMessage
             }
           };

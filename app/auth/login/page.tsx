@@ -1,12 +1,11 @@
-import Link from 'next/link';
 import { LoginForm } from '@/components/forms';
 import { SocialButtons } from '@/components/common';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-	title: 'Full Auth | Login',
-	description: 'Full Auth login page',
+	title: 'Sign in | CassPea',
+	description: 'Sign in to your CassPea account.',
 };
 
 export default function Page() {
@@ -22,7 +21,7 @@ export default function Page() {
 					priority
 					alt='CassPea Chocolates Logo'
 				/>
-				<h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-primary-text'>
+				<h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-primary-text dark:text-primary-text-light'>
 					Sign in to your account
 				</h2>
 			</div>
@@ -30,16 +29,6 @@ export default function Page() {
 			<div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
 				<LoginForm />
 				{/* <SocialButtons /> */}
-
-				<p className='mt-10 text-center text-sm text-primary-text'>
-					Don&apos;t have an account?{' '}
-					<Link
-						href='/auth/register'
-						className='font-semibold leading-6 text-primary hover:text-primary'
-					>
-						Register here
-					</Link>
-				</p>
 			</div>
 		</div>
 	);

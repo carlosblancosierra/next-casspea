@@ -22,8 +22,13 @@ export default function FlavourStoryRow({ flavour, index }: Props) {
             className="scroll-mt-24 border-b border-black/10 dark:border-white/10 last:border-0"
         >
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-10 md:grid-cols-2 md:gap-12 md:py-14">
+                {/* Half width at both sizes. It was capped at 20rem on phones
+                    and uncapped on desktop, so it filled its whole column and
+                    a flavour photo took most of the screen before any of the
+                    copy it is illustrating. 50% of the column halves both in
+                    one class. */}
                 <div
-                    className={`relative mx-auto aspect-square w-full max-w-xs md:max-w-none ${
+                    className={`relative mx-auto aspect-square w-full max-w-[50%] ${
                         imageOnRight ? 'md:order-2' : ''
                     }`}
                 >
@@ -31,7 +36,9 @@ export default function FlavourStoryRow({ flavour, index }: Props) {
                         src={flavour.image || flavour.thumbnail || '/flavours/default.png'}
                         alt={flavour.name}
                         fill
-                        sizes="(min-width:768px) 40vw, 80vw"
+                        // Halved to match, so the browser stops fetching a file
+                        // twice the size it renders at.
+                        sizes="(min-width:768px) 20vw, 40vw"
                         className="object-contain"
                     />
                 </div>

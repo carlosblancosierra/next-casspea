@@ -1,80 +1,57 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { addDays, format, isWeekend, startOfDay } from 'date-fns';
+import { addDays, format, isSameDay } from 'date-fns';
 import { enGB } from 'date-fns/locale';
+import { getLondonNow, getNextShippingDays } from '@/utils/shippingDays';
 
-// Helper to get London time (GMT/BST)
-function getLondonNow() {
-  const now = new Date();
-  // Convert to London time (Europe/London)
-  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-  // London is either UTC+0 or UTC+1 depending on DST
-  // This is a simple approximation; for production use a timezone lib
-  const offset = (new Date().getTimezoneOffset() === 0 ? 0 : 1); // crude DST check
-  return new Date(utc + 3600000 * offset);
-}
+type Slot = { start: string; end: string; value: string };
 
 const SLOT_START = 10; // 10:00
 const SLOT_END = 16;   // 16:00
+const SAME_DAY_CUTOFF_HOUR = 12;
 
-function getTimeSlots(forToday = false) {
-  const slots = [];
+function getTimeSlots() {
+  // Whole hours, not half-hour windows. Collection is a person walking into a
+  // shop, not a delivery slot — the extra precision doubled the number of
+  // chips to scan and asked for a decision nobody has an opinion about.
+  const slots: Slot[] = [];
   for (let h = SLOT_START; h < SLOT_END; h++) {
     slots.push({
       start: `${String(h).padStart(2, '0')}:00`,
-      end: `${String(h).padStart(2, '0')}:30`,
-      value: `${String(h).padStart(2, '0')}:00-${String(h).padStart(2, '0')}:30`,
+      end: `${String(h + 1).padStart(2, '0')}:00`,
+      value: `${String(h).padStart(2, '0')}:00-${String(h + 1).padStart(2, '0')}:00`,
     });
-    slots.push({
-      start: `${String(h).padStart(2, '0')}:30`,
-      end: `${String(h+1).padStart(2, '0')}:00`,
-      value: `${String(h).padStart(2, '0')}:30-${String(h+1).padStart(2, '0')}:00`,
-    });
-  }
-  if (forToday) {
-    // Only show last slot for today before noon
-    return [slots[slots.length - 1]];
   }
   return slots;
 }
-
-function getNextWeekdays(startDate: Date, count = 14) {
-  // Returns up to 'count' weekdays from startDate
-  const days: Date[] = [];
-  let d = startOfDay(startDate);
-  while (days.length < count) {
-    if (!isWeekend(d)) days.push(new Date(d));
-    d = addDays(d, 1);
-  }
-  return days;
-}
-
-type Slot = { start: string; end: string; value: string };
 
 type CheckoutStorePickUpProps = {
   onChange?: (val: { date: Date; slot: Slot } | null) => void;
 };
 
 const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) => {
-  const now = getLondonNow();
-  const isBeforeNoon = now.getHours() < 12;
+  const { date: londonToday, hour: londonHour } = useMemo(() => getLondonNow(), []);
+  const isBeforeCutoff = londonHour < SAME_DAY_CUTOFF_HOUR;
 
-  // If before noon, today is allowed, else only from tomorrow
-  const minDate = isBeforeNoon ? now : addDays(now, 1);
-  const availableDays = useMemo(() => getNextWeekdays(minDate, 14), [minDate]);
+  // Same-day collection only while there is still time to make the order up.
+  const minDate = isBeforeCutoff ? londonToday : addDays(londonToday, 1);
+  const availableDays = useMemo(() => getNextShippingDays(minDate, 14), [minDate]);
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
 
-  // Only show last slot if today is picked and before noon
-  const slots = useMemo(() => {
-    if (!selectedDate) return [];
-    const picked = format(selectedDate, 'yyyy-MM-dd');
-    const today = format(now, 'yyyy-MM-dd');
-    if (picked === today && isBeforeNoon) {
-      return getTimeSlots(true);
-    }
-    return getTimeSlots(false);
-  }, [selectedDate, now, isBeforeNoon]);
+  const isToday = selectedDate ? isSameDay(selectedDate, londonToday) : false;
+  const isSameDayPickup = isToday && isBeforeCutoff;
+
+  const slots = useMemo(() => (selectedDate ? getTimeSlots() : []), [selectedDate]);
+
+  /**
+   * Same-day orders still have to be made up, so only the closing slot is
+   * collectable. The earlier ones used to be filtered out of the list, which
+   * left today showing a single slot with no clue why — it read as broken.
+   * They are shown and disabled instead, with the reason next to them.
+   */
+  const isSlotBlocked = (slot: Slot) =>
+    isSameDayPickup && slot.value !== slots[slots.length - 1]?.value;
 
   // Notify parent when selection changes (null if incomplete)
   useEffect(() => {
@@ -89,70 +66,94 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
     }
   }, [selectedDate, selectedSlot, slots, onChange]);
 
-  // Calendar UI: collapsible date selection
+  const dayLabel = (day: Date) => {
+    if (isSameDay(day, londonToday)) return 'Today';
+    if (isSameDay(day, addDays(londonToday, 1))) return 'Tomorrow';
+    return format(day, 'EEE', { locale: enGB });
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light">
-          {selectedDate ? 'Selected Pickup Date' : 'Select Pickup Date'}
+        <h3 className="text-base font-semibold text-primary-text dark:text-primary-text-light">
+          Pick a day
         </h3>
 
-        {selectedDate ? (
-          // Show selected date with option to change
-          <div className="flex items-center justify-between p-3 bg-main-bg dark:bg-main-bg-dark rounded border">
-            <span className="text-primary-text dark:text-primary-text-light font-medium">
-              {format(selectedDate, 'EEEE, dd MMMM yyyy', { locale: enGB })}
+        {/* A scrolling strip rather than a wall of dates, and it never
+            collapses — changing your mind is one tap, not a "Change date"
+            round trip. */}
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
+          {availableDays.map(day => {
+            const isSelected = selectedDate ? isSameDay(day, selectedDate) : false;
+            return (
+              <button
+                key={day.toISOString()}
+                type="button"
+                aria-pressed={isSelected}
+                onClick={() => { setSelectedDate(day); setSelectedSlot(null); }}
+                className={`flex-shrink-0 snap-start w-24 px-3 py-2 rounded-lg border text-center transition-colors ${
+                  isSelected
+                    ? 'bg-primary-dark border-primary-dark text-white'
+                    : 'bg-main-bg dark:bg-main-bg-dark border-gray-200 dark:border-gray-700 text-primary-text dark:text-primary-text-light hover:border-primary dark:hover:border-primary-2'
+                }`}
+              >
+                <span className="block text-sm font-medium">{dayLabel(day)}</span>
+                <span className={`block text-xs ${isSelected ? 'text-white/80' : 'text-primary-text/70 dark:text-primary-text-light/70'}`}>
+                  {format(day, 'd MMM', { locale: enGB })}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-xs text-primary-text/70 dark:text-primary-text-light/70">
+          Weekdays only.
+        </p>
+      </div>
+
+      {selectedDate && (
+        <div className="space-y-2">
+          <h3 className="text-base font-semibold text-primary-text dark:text-primary-text-light">
+            Pick a time
+            <span className="ml-2 font-normal text-sm text-primary-text/70 dark:text-primary-text-light/70">
+              {format(selectedDate, 'EEEE d MMMM', { locale: enGB })}
             </span>
-            <button
-              type="button"
-              onClick={() => { setSelectedDate(null); setSelectedSlot(null); }}
-              className="text-primary text-sm hover:text-primary/80 underline"
-            >
-              Change Date
-            </button>
-          </div>
-        ) : (
-          // Show date selection grid
-          <div className="grid grid-cols-3 gap-2">
-            {availableDays.map(day => {
-              const dayStr = format(day, 'EEE dd MMM', { locale: enGB });
+          </h3>
+
+          {/* The same scrolling strip as the days above, so both halves of the
+              question look like the same question. Only the start time is
+              shown — "10:00–10:30" is more precision than the choice needs,
+              and it doubles the width of every chip. The slot still carries
+              its end time, because that is what the order records.
+
+              Blocked slots stay on screen: hiding them left today showing one
+              lone slot with no explanation, which read as a bug rather than a
+              rule. */}
+          <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
+            {slots.map(slot => {
+              const blocked = isSlotBlocked(slot);
+              const isSelected = selectedSlot === slot.value;
               return (
                 <button
-                  key={dayStr}
+                  key={slot.value}
                   type="button"
-                  className="px-2 py-3 rounded border bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light hover:bg-primary/10 hover:border-primary transition-colors"
-                  onClick={() => { setSelectedDate(day); setSelectedSlot(null); }}
+                  disabled={blocked}
+                  title={blocked ? 'Too soon for today — we need time to make your order up' : undefined}
+                  aria-pressed={isSelected}
+                  onClick={() => { setSelectedSlot(slot.value); }}
+                  className={`flex-shrink-0 snap-start px-3 py-3 rounded-lg border text-sm whitespace-nowrap transition-colors ${
+                    blocked
+                      ? 'border-gray-200 dark:border-gray-700 text-primary-text/40 dark:text-primary-text-light/40 line-through cursor-not-allowed'
+                      : isSelected
+                      ? 'bg-primary-dark text-white border-primary-dark'
+                      : 'bg-main-bg dark:bg-main-bg-dark border-gray-200 dark:border-gray-700 text-primary-text dark:text-primary-text-light hover:border-primary dark:hover:border-primary-2'
+                  }`}
                 >
-                  {dayStr}
+                  {slot.start}
                 </button>
               );
             })}
           </div>
-        )}
-      </div>
-
-      {selectedDate && (
-        <>
-          <div className="space-y-2">
-            <h4 className="text-md font-semibold text-primary-text dark:text-primary-text-light">Select Time Slot</h4>
-            <div className="grid grid-cols-2 gap-2">
-              {slots.map(slot => (
-                <button
-                  key={slot.value}
-                  type="button"
-                  className={`px-2 py-3 rounded border transition-colors ${
-                    selectedSlot === slot.value
-                      ? 'bg-primary text-primary-text-light border-primary'
-                      : 'bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light hover:bg-primary/10 hover:border-primary'
-                  }`}
-                  onClick={() => { setSelectedSlot(slot.value); }}
-                >
-                  {slot.start} - {slot.end}
-                </button>
-              ))}
-            </div>
-          </div>
-        </>
+        </div>
       )}
     </div>
   );

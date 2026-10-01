@@ -17,5 +17,5 @@ async function fetchProducts(): Promise<Product[]> {
 export default async function HomeProductsServer() {
     const products = await fetchProducts();
     const boxes = products.filter(p => p.category?.slug === 'signature-boxes');
-    return <HomeProductsGrid products={boxes} />;
+    return <HomeProductsGrid products={boxes} categorySlug="signature-boxes" />;
 }

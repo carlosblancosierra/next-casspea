@@ -5,7 +5,9 @@ import { Discount } from '@/types/discounts';
 
 export interface CartUpdate {
     gift_message?: string;
-    shipping_date?: string;
+    /** null clears a previously saved posting date — the serializer
+     *  accepts it (allow_null), and a pickup order must not keep one. */
+    shipping_date?: string | null;
     discount_code?: string;
     remove_discount?: boolean;
 }
@@ -55,9 +57,11 @@ export interface CartItemRequest {
         selection_type: 'PICK_AND_MIX' | 'RANDOM';
         allergens?: number[];
         flavor_selections?: CartItemBoxFlavorSelectionRequest[] | null;
-        hot_chocolate?: number;
-        chocolate_bark?: number;
-        gift_card?: number;
+        // The API accepts explicit nulls for unchosen extras (PackBuilder
+        // sends them), so these are number | null rather than just number.
+        hot_chocolate?: number | null;
+        chocolate_bark?: number | null;
+        gift_card?: number | null;
     };
 }
 

@@ -14,15 +14,19 @@ import { toast } from 'react-toastify';
 import { useGetShippingOptionsQuery } from '@/redux/features/shipping/shippingApiSlice';
 import Spinner from '@/components/common/Spinner';
 import CartItem from '@/components/cart/CartItem';
-import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
+import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
+import { formatCurrency } from '@/utils/currency';
+import { STORE_PICKUP_OPTION_ID } from './constants';
 
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const { isClosed: storeClosed, reopenLabel } = useStoreStatus();
     const [selectedShippingOption, setSelectedShippingOption] = useState<number | undefined>(undefined);
     const [storePickup, setStorePickup] = useState<{ date: Date; slot: { start: string; end: string; value: string } } | null>(null);
+    // yyyy-mm-dd to hold the order back, or null to post as soon as we can.
+    const [dispatchDate, setDispatchDate] = useState<string | null>(null);
 
     const router = useRouter();
 
@@ -38,6 +42,19 @@ const CheckoutConfirm = () => {
 
     const [createStripeSession] = useCreateStripeCheckoutSessionMutation();
     const [updateShippingOption] = useUpdateShippingOptionMutation();
+    const [updateCart] = useUpdateCartMutation();
+
+    // Leaving for Stripe is a full navigation, so coming back through the
+    // browser's back/forward cache restores this component with isProcessing
+    // still true and the button stuck on "Processing...". pageshow fires on
+    // that restore (persisted === true), which is the only signal we get.
+    useEffect(() => {
+        const handlePageShow = (event: PageTransitionEvent) => {
+            if (event.persisted) setIsProcessing(false);
+        };
+        window.addEventListener('pageshow', handlePageShow);
+        return () => window.removeEventListener('pageshow', handlePageShow);
+    }, []);
 
 
     const handleProceedToPayment = async () => {
@@ -52,7 +69,7 @@ const CheckoutConfirm = () => {
         }
 
         // Validate store pickup selection
-        if (selectedShippingOption === 34 && !storePickup) {
+        if (selectedShippingOption === STORE_PICKUP_OPTION_ID && !storePickup) {
             toast.error('Please select a pickup date and time slot');
             return;
         }
@@ -61,12 +78,20 @@ const CheckoutConfirm = () => {
             setIsProcessing(true);
 
             // Prepare payload
-            const payload: any = {
+            const payload: { shipping_option_id: number, pickup_date?: string, pickup_time?: string } = {
                 shipping_option_id: selectedShippingOption
             };
-            if (selectedShippingOption === 34 && storePickup) {
+            if (selectedShippingOption === STORE_PICKUP_OPTION_ID && storePickup) {
                 payload.pickup_date = storePickup.date.toISOString().slice(0, 10); // YYYY-MM-DD
                 payload.pickup_time = storePickup.slot.start + ' - ' + storePickup.slot.end;
+            }
+
+            // Saved here rather than on every change: updateCart invalidates
+            // ShippingOptions, so persisting as the customer picks dates would
+            // refetch the whole options list underneath them. Sent even when
+            // null so switching to collection clears a date saved earlier.
+            if ((cart?.shipping_date ?? null) !== dispatchDate) {
+                await updateCart({ shipping_date: dispatchDate }).unwrap();
             }
 
             await updateShippingOption({
@@ -114,6 +139,17 @@ const CheckoutConfirm = () => {
 
     const isHolidayPeriod = new Date() < new Date('2026-05-26T00:00:00+01:00');
 
+    // Mirrors CheckoutSession.total_with_shipping on the backend:
+    // cart.discounted_total + the shipping option's (already discounted) price.
+    // The session is not refetched between picking an option and continuing, so
+    // its own total is stale — this is the only way to show a live figure.
+    const selectedOption = shippingCompanies
+        ?.flatMap(company => company.shipping_options)
+        .find(option => option.id === selectedShippingOption);
+    const totalWithShipping = cart && selectedOption
+        ? parseFloat(cart.discounted_total) + parseFloat(selectedOption.price)
+        : undefined;
+
     return (
         <div className=" dark:bg-main-bg-dark min-h-screen">
             <div className="max-w-7xl mx-auto px-0">
@@ -136,10 +172,11 @@ const CheckoutConfirm = () => {
                     <CheckoutShippingOptions
                         shippingCompanies={shippingCompanies}
                         selectedOptionId={selectedShippingOption}
-                        onShippingOptionChange={async (optionId: number) => {
-                            setSelectedShippingOption(optionId);
+                        onShippingOptionChange={async (optionId: number | null) => {
+                            setSelectedShippingOption(optionId ?? undefined);
                         }}
                         onChangeStorePickup={setStorePickup}
+                        onDispatchDateChange={setDispatchDate}
                     />
                     {storeClosed && (
                         <div className="rounded-md border border-amber-200 dark:border-amber-700 p-4 bg-amber-50 dark:bg-amber-900/20 flex items-start gap-3">
@@ -151,16 +188,45 @@ const CheckoutConfirm = () => {
                             </p>
                         </div>
                     )}
-                    <button
-                        onClick={handleProceedToPayment}
-                        disabled={isProcessing}
-                        className="w-full bg-gradient-autumn text-primary-text-light dark:text-primary-text-light py-3 px-4 rounded-md
-                            hover:bg-primary focus:outline-none focus:ring-2
-                            focus:ring-primary-2 focus:ring-offset-2
-                            disabled:opacity-60 disabled:cursor-wait transition-colors duration-200"
-                    >
-                        {isProcessing ? 'Processing...' : 'Proceed to Payment'}
-                    </button>
+                    {/* Shipping is chosen on this page and changes what gets
+                        charged, so it is the one figure worth showing here. The
+                        itemised cart is not repeated — Stripe shows that next. */}
+                    {totalWithShipping !== undefined && (
+                        <dl className="flex items-center justify-between gap-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <dt className="text-base font-bold text-primary-text dark:text-primary-text-light">
+                                Total incl. delivery
+                            </dt>
+                            <dd className="text-base font-bold text-primary-text dark:text-primary-text-light">
+                                {formatCurrency(totalWithShipping)}
+                            </dd>
+                        </dl>
+                    )}
+
+                    {/* Not pinned. A sticky bar covers content on small screens
+                        and pushes people to pay before they have read the
+                        delivery choice it sits on top of. */}
+                    <div className="pt-2">
+                        <button
+                            onClick={handleProceedToPayment}
+                            /* Only disabled while a payment is in flight — that is
+                               double-submit protection, not validation. A button
+                               disabled for missing input explains nothing, is
+                               skipped by screen readers, and leaves the customer
+                               guessing; clicking it says what is missing instead. */
+                            disabled={isProcessing}
+                            className="w-full bg-gradient-autumn text-primary-text-light dark:text-primary-text-light py-3 px-4 rounded-md
+                                hover:bg-primary focus:outline-none focus:ring-2
+                                focus:ring-primary-2 focus:ring-offset-2
+                                disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-200"
+                        >
+                            {isProcessing ? 'Processing...' : 'Continue to secure payment'}
+                        </button>
+                        {!selectedShippingOption && !isProcessing && (
+                            <p className="mt-2 text-sm text-center text-primary-text dark:text-primary-text-light">
+                                Choose a delivery option to continue.
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

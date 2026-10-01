@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation, PanInfo } from "framer-motion";
 import Image from "next/image";
 
 interface ImageGalleryProps {
@@ -23,7 +23,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, className }) => {
         }
     };
 
-    const handleDragEnd = (event: any, info: any) => {
+    const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         const swipeThreshold = 50;
         if (Math.abs(info.offset.x) > swipeThreshold) {
             if (info.offset.x > 0 && currentIndex > 0) {

@@ -37,7 +37,7 @@ export default function SummaryStep({
         <div
           key={i}
           onClick={() => onEdit(it.edit)}
-          className="flex items-center space-x-4 p-2 border rounded hover:bg-gray-100 cursor-pointer"
+          className="flex items-center space-x-4 p-2 border border-gray-200 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
         >
           {it.image && <img src={it.image} alt={it.name} className="w-16 h-16 object-cover rounded" />}
           <span className="font-medium">{it.label}: {it.name}</span>
