@@ -196,19 +196,34 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         const earliest = addBusinessDays(posting, option.estimated_days_min);
         const latest = addBusinessDays(posting, option.estimated_days_max);
 
+        // A single day is the carrier's promise, not our shorthand. min === max
+        // is how that promise is stored, but `guaranteed` is taken as
+        // authoritative on top of it: a row carrying both a guarantee and a
+        // range would otherwise render "Arrives between Thu and Fri" directly
+        // above "Royal Mail guarantees Fri" — a promise and a hedge in the same
+        // breath. Migration shipping/0007 produced exactly that data by
+        // widening rows before 0009 set the flag, so this is worth not
+        // trusting. The backend refuses the combination now; this keeps the
+        // wording honest if it is ever served anyway.
+        const singleDay = Boolean(option.guaranteed)
+            || option.estimated_days_min === option.estimated_days_max;
+
+        // The guaranteed day is the latest one the carrier commits to, which is
+        // also the date the caption under the option quotes.
+        const arrival = singleDay ? latest : earliest;
+
         return {
             posting,
             earliest,
             latest,
             arrivesInTime,
             postingLabel: format(posting, 'EEE d MMM'),
-            // A single day is the carrier's promise, not our shorthand: only
-            // the guaranteed service is stored with min === max.
-            singleDay: option.estimated_days_min === option.estimated_days_max,
+            singleDay,
+            arrivalLabel: format(arrival, 'EEE d MMM'),
             earliestLabel: format(earliest, 'EEE d MMM'),
             latestLabel: format(latest, 'EEE d MMM'),
-            rangeLabel: option.estimated_days_min === option.estimated_days_max
-                ? format(earliest, 'EEE d MMM')
+            rangeLabel: singleDay
+                ? format(arrival, 'EEE d MMM')
                 : `${format(earliest, 'EEE d MMM')} \u2013 ${format(latest, 'EEE d MMM')}`,
         };
     };
@@ -555,7 +570,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                                             an older API degrades honestly. */}
                                                         <p className={`text-primary-text dark:text-primary-text-light text-sm ${option.guaranteed ? 'font-medium' : ''}`}>
                                                             {plan.singleDay
-                                                                ? <>Arrives <strong>{plan.earliestLabel}</strong></>
+                                                                ? <>Arrives <strong>{plan.arrivalLabel}</strong></>
                                                                 : <>Arrives between <strong>{plan.earliestLabel}</strong> and <strong>{plan.latestLabel}</strong></>}
                                                         </p>
 
@@ -577,7 +592,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                                             it is Royal Mail's, not ours. */}
                                                         {option.guaranteed ? (
                                                             <p className="mt-1 text-xs text-primary-text/70 dark:text-primary-text-light/70">
-                                                                Royal Mail guarantees {plan.latestLabel} and compensates if it
+                                                                Royal Mail guarantees {plan.arrivalLabel} and compensates if it
                                                                 is late. What we guarantee is that it leaves us on {plan.postingLabel}.
                                                             </p>
                                                         ) : byDate && plan.arrivesInTime && (
@@ -591,7 +606,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                                             <p className="mt-1 text-sm font-medium text-red-600 dark:text-red-400">
                                                                 {option.guaranteed
                                                                     ? <>Can&apos;t make {format(byDate, 'EEE d MMM')} — posting on {plan.postingLabel},
-                                                                        the guaranteed date is {plan.latestLabel}.</>
+                                                                        the guaranteed date is {plan.arrivalLabel}.</>
                                                                     : <>Not expected to make {format(byDate, 'EEE d MMM')} — even
                                                                         posting on {plan.postingLabel} it is estimated {plan.rangeLabel}.</>}
                                                             </p>

@@ -10,6 +10,7 @@ import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import ShopNowCTA from '@/components/common/ShopNowCTA';
 import ReviewCarousel from '@/components/common/ReviewCarousel';
 import HomeProductsServer from '@/components/home/HomeProductsServer';
+import AdventSection from '@/components/home/AdventSection';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
 import { HomeSummerBanner, HomeSummerBoxes, HomeSignatureGate } from '@/components/home/HomeSummer';
 import dynamic from 'next/dynamic';
@@ -204,6 +205,12 @@ export default function HomePage() {
       </section>
 
       <HomeSummerBoxes />
+
+      {/* Above the boxes: it is seasonal and time-limited, and the boxes are
+          here all year. */}
+      <section className="mt-8 px-2">
+        <AdventSection />
+      </section>
 
       <HomeSignatureGate>
         <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">

@@ -6,6 +6,9 @@ import type { Product } from '@/types/products';
 
 jest.mock('next/navigation', () => ({
     useRouter: () => ({ push: jest.fn() }),
+    // The wizard reads ?pack=1 to start in pack mode. These tests are the
+    // ordinary box flow, so there is no param.
+    useSearchParams: () => ({ get: () => null }),
 }));
 
 jest.mock('@/redux/features/products/productApiSlice', () => ({

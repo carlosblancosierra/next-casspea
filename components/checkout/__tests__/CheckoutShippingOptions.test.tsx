@@ -278,6 +278,33 @@ describe('CheckoutShippingOptions', () => {
             expect(screen.getByText(/Special Delivery is the exception/)).toBeInTheDocument();
         });
 
+        it('never shows a range for a guaranteed service, even if the data holds one', async () => {
+            const user = setupUser();
+            // Exactly what shipping migration 0007 left in the database: it
+            // widened every row where guaranteed=False, and 0009 — which sets
+            // the flag — ran two migrations later, so Special Delivery was
+            // widened too and then flagged.
+            const widened = [{
+                ...companies[0],
+                shipping_options: companies[0].shipping_options.map(option =>
+                    option.id === 5 ? { ...option, estimated_days_max: 2 } : option
+                ),
+            }] as unknown as ShippingCompany[];
+
+            renderOptions({ shippingCompanies: widened });
+            await answerAsap(user);
+
+            // "Arrives between Thu and Fri" directly above "Royal Mail
+            // guarantees Fri" promises and hedges in the same breath. The data
+            // is fixed by migration 0010; the wording must not depend on that.
+            const guaranteed = screen.getAllByRole('radio')
+                .find(r => (r as HTMLInputElement).value === '5')!
+                .closest('label')!;
+            expect(guaranteed.textContent).not.toMatch(/between/);
+            expect(guaranteed.textContent).toMatch(/Arrives Fri 11 Sep/);
+            expect(guaranteed.textContent).toMatch(/Royal Mail guarantees Fri 11 Sep/);
+        });
+
         it('treats an option with no guaranteed flag as an estimate', async () => {
             const user = setupUser();
             const noFlag = [{

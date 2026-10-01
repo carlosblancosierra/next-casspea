@@ -6,7 +6,7 @@ import FlavourPicker from './FlavourPicker';
 import ProgressBar from '@/components/common/ProgressBar';
 import { Flavour as FlavourType } from '@/types/flavours';
 import { CartItemBoxFlavorSelection, CartItemRequest } from '@/types/carts';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 
@@ -18,7 +18,7 @@ import AddToCartButton from './AddToCartButton';
 import SelectableGiftCard from '@/components/store/SelectableGiftCard';
 import SelectableProductCard from '@/components/store/SelectableProductCard';
 import GiftMessage from '@/components/cart/GiftMessage';
-import { ID_MAP, LOVE_SLEEVE_PRODUCT_ID, LOVE_SLEEVE_PRICE } from '@/components/packs/constants';
+import { ID_MAP, LOVE_SLEEVE_PRODUCT_ID, LOVE_SLEEVE_PRICE, PACK_QUERY_PARAM } from '@/components/packs/constants';
 
 interface ProductInfoProps {
     product: Product;
@@ -54,7 +54,12 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
     // Final options
     const [quantity, setQuantity] = useState<number>(1);
     // Pack-related state
-    const [isPack, setIsPack] = useState<boolean>(false);
+    // A pack slug in the store redirects here with ?pack=1, so someone who
+    // chose "indulgence pack" in the shop starts in pack mode rather than
+    // being asked again half way through.
+    const searchParams = useSearchParams();
+    const startsAsPack = searchParams?.get(PACK_QUERY_PARAM) === '1';
+    const [isPack, setIsPack] = useState<boolean>(startsAsPack);
     const [showUpgradePopup, setShowUpgradePopup] = useState<boolean>(false);
     const [chocolateBark, setChocolateBark] = useState<Product | null>(null);
     const [hotChocolate, setHotChocolate] = useState<Product | null>(null);
@@ -274,6 +279,37 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
     const isAddToCartDisabled = () => {
         return !canAddToCart();
     };
+
+    /**
+     * What the button at the end of step 3 does.
+     *
+     * Three cases, and they used to be spelled out twice — once in the
+     * Pick & Mix branch and once in Surprise Me, with the two copies disagreeing
+     * about `surpriseOnly`.
+     *
+     * - already a pack (arrived from the store with ?pack=1, or accepted the
+     *   upsell): go on to the pack steps. Offering the upsell here would ask a
+     *   question they have already answered.
+     * - no upsell to offer (96-box, pack sold out, clearance box): add to cart.
+     * - otherwise: offer the upgrade.
+     */
+    const finishStepThree = () => {
+        if (isPack) {
+            handleNextStep();
+            return;
+        }
+        if (isNinetySixBox || isIndulgencePackSoldOut || surpriseOnly) {
+            handleAddToCart();
+            return;
+        }
+        setShowUpgradePopup(true);
+    };
+
+    // In pack mode step 3 leads to the hot chocolate and bark steps, so gating
+    // it on canAddToCart() — which requires both of those — would leave the
+    // button permanently disabled with no way to reach them.
+    const isStepThreeCtaDisabled = () => (isPack ? !canProceedToNextStep() : !canAddToCart());
+    const stepThreeCtaLabel = isPack ? 'Next' : 'Add to Cart';
 
     const getProgressText = () => {
         if (remainingChocolates === 0) {
@@ -530,17 +566,11 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                     {remainingChocolates === 0 && (
                                         <button
                                             type="button"
-                                            onClick={() => {
-                                                if (isNinetySixBox || isIndulgencePackSoldOut || surpriseOnly) {
-                                                    handleAddToCart();
-                                                } else {
-                                                    setShowUpgradePopup(true);
-                                                }
-                                            }}
-                                            disabled={!canAddToCart()}
+                                            onClick={finishStepThree}
+                                            disabled={isStepThreeCtaDisabled()}
                                             className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                         >
-                                            Add to Cart
+                                            {stepThreeCtaLabel}
                                         </button>
                                     )}
                                 </div>
@@ -585,17 +615,11 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            if (isNinetySixBox || isIndulgencePackSoldOut) {
-                                                handleAddToCart();
-                                            } else {
-                                                setShowUpgradePopup(true);
-                                            }
-                                        }}
-                                        disabled={!canAddToCart()}
+                                        onClick={finishStepThree}
+                                        disabled={isStepThreeCtaDisabled()}
                                         className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                     >
-                                        Add to Cart
+                                        {stepThreeCtaLabel}
                                     </button>
                                 </div>
                             </div>
