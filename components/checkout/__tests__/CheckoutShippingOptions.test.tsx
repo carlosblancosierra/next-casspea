@@ -458,3 +458,118 @@ describe('CheckoutShippingOptions', () => {
         });
     });
 });
+
+describe('a product posted on a fixed day', () => {
+    const calendar = {
+        id: 1,
+        quantity: 1,
+        product: { id: 500, name: 'Advent Calendar', fixed_dispatch_date: '2026-11-24' } as any,
+        base_price: '49.99',
+        discounted_price: '49.99',
+        savings: '0.00',
+    } as any;
+
+    beforeEach(() => {
+        jest.useFakeTimers().setSystemTime(new Date('2026-10-01T08:00:00Z'));
+    });
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
+    it('does not offer collection, and says why', () => {
+        mockUseGetCartQuery.mockReturnValue({
+            data: makeCart({ items: [calendar] }),
+            isLoading: false,
+            error: undefined,
+        });
+
+        renderOptions();
+
+        expect(screen.queryByRole('radio', { name: 'Collect in store' })).not.toBeInTheDocument();
+        expect(paragraph(/Advent Calendar is posted on Tue 24 Nov/)).toBeInTheDocument();
+        expect(paragraph(/collection isn.t available/)).toBeInTheDocument();
+    });
+
+    it('does not ask when to post it', () => {
+        mockUseGetCartQuery.mockReturnValue({
+            data: makeCart({ items: [calendar] }),
+            isLoading: false,
+            error: undefined,
+        });
+
+        renderOptions();
+
+        expect(screen.queryByText('When do you need it?')).not.toBeInTheDocument();
+        expect(screen.queryByRole('radio', { name: 'For a particular day' })).not.toBeInTheDocument();
+    });
+
+    it('still lets them choose a service, with arrival dates from the fixed day', () => {
+        // The service is still a real choice; only the posting day is decided.
+        mockUseGetCartQuery.mockReturnValue({
+            data: makeCart({ items: [calendar] }),
+            isLoading: false,
+            error: undefined,
+        });
+
+        renderOptions();
+
+        // Posted Tue 24 Nov: Special Delivery (1 day) arrives Wed 25 Nov.
+        expect(paragraph(/^Arrives Wed 25 Nov$/)).toBeInTheDocument();
+        expect(paragraphs(/Posting Tue 24 Nov/).length).toBeGreaterThan(0);
+    });
+
+    it('reports the fixed day, so it is what gets saved on the cart', () => {
+        mockUseGetCartQuery.mockReturnValue({
+            data: makeCart({ items: [calendar] }),
+            isLoading: false,
+            error: undefined,
+        });
+        const onDispatchDateChange = jest.fn();
+
+        renderOptions({ onDispatchDateChange });
+
+        expect(onDispatchDateChange).toHaveBeenLastCalledWith('2026-11-24');
+    });
+
+    it('says when other items are travelling with it', () => {
+        mockUseGetCartQuery.mockReturnValue({
+            data: makeCart({ items: [calendar, ...makeCart().items] }),
+            isLoading: false,
+            error: undefined,
+        });
+
+        renderOptions();
+
+        expect(paragraph(/Everything in your order is posted together/)).toBeInTheDocument();
+    });
+
+    it('clears a collection chosen earlier', () => {
+        mockUseGetCartQuery.mockReturnValue({
+            data: makeCart({ items: [calendar] }),
+            isLoading: false,
+            error: undefined,
+        });
+        const onShippingOptionChange = jest.fn().mockResolvedValue(undefined);
+
+        renderOptions({ onShippingOptionChange, selectedOptionId: 34 });
+
+        expect(onShippingOptionChange).toHaveBeenCalledWith(null);
+    });
+
+    it('behaves exactly as before once the date has gone by', () => {
+        // The regression that matters most: a stale setting must not take the
+        // choice away from anyone.
+        mockUseGetCartQuery.mockReturnValue({
+            data: makeCart({
+                items: [{ ...calendar, product: { ...calendar.product, fixed_dispatch_date: '2025-11-24' } }],
+            }),
+            isLoading: false,
+            error: undefined,
+        });
+
+        renderOptions();
+
+        expect(screen.getByRole('radio', { name: 'Collect in store' })).toBeInTheDocument();
+        expect(screen.getByText('When do you need it?')).toBeInTheDocument();
+    });
+});

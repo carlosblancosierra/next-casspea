@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { addBusinessDays, addDays, format, isAfter, startOfDay } from 'date-fns';
+import { addBusinessDays, addDays, format, isAfter, parseISO, startOfDay } from 'date-fns';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
 import ShippingDatePicker from './ShippingDatePicker';
 import type { ShippingCompany, ShippingOption } from '@/types/shipping';
 import { STORE_PICKUP_OPTION_ID } from './constants';
-import { getEarliestDispatch, isShippingDay, HOLIDAY_SHIP_DATE } from '@/utils/shippingDays';
+import { getEarliestDispatch, getFixedDispatch, isShippingDay, HOLIDAY_SHIP_DATE } from '@/utils/shippingDays';
 
 // Re-exported for existing imports of these types from this module.
 export type { ShippingCompany, ShippingOption };
@@ -57,6 +57,27 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     const [timing, setTiming] = useState<'asap' | 'by_date' | null>(null);
     const [showDispatchPicker, setShowDispatchPicker] = useState(false);
 
+    // A product that leaves on one named day — the advent calendars, posted as
+    // a batch so they land before 1 December — settles both questions this
+    // step asks. Collection is not an option and the posting day is decided.
+    // The backend enforces the same rule; this stops us asking.
+    const fixedDispatch = getFixedDispatch(cart?.items ?? []);
+    const fixedDispatchKey = fixedDispatch ? format(fixedDispatch.date, 'yyyy-MM-dd') : null;
+
+    // Pin the existing state rather than adding a parallel path: with the day
+    // in dispatchDate, the arrival ranges, onDispatchDateChange and the
+    // shipping_date CheckoutConfirm saves all follow without being told.
+    // Keyed on the date string, not the Date object, which is new every render.
+    useEffect(() => {
+        if (!fixedDispatchKey) return;
+        setDeliveryType('shipping');
+        setStorePickup(null);
+        setTiming('asap');
+        setNeededBy(null);
+        setShowDispatchPicker(false);
+        setDispatchDate(parseISO(fixedDispatchKey));
+    }, [fixedDispatchKey]);
+
     // Expose storePickup to parent if onChangeStorePickup is provided
     useEffect(() => {
         if (onChangeStorePickup) {
@@ -70,6 +91,17 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
             setLocalSelectedOption(selectedOptionId.toString());
         }
     }, [selectedOptionId]);
+
+    // A collection chosen earlier — restored from the session, or picked before
+    // the calendar went in the basket — is not a valid answer any more. Clear it
+    // through the parent so Continue cannot send it; the API would refuse it
+    // anyway, but with a message rather than with the radio simply unticked.
+    useEffect(() => {
+        if (fixedDispatchKey && localSelectedOption === STORE_PICKUP_OPTION_ID.toString()) {
+            setLocalSelectedOption(null);
+            onShippingOptionChange(null);
+        }
+    }, [fixedDispatchKey, localSelectedOption, onShippingOptionChange]);
 
     useEffect(() => {
         if (!onDispatchDateChange) return;
@@ -145,7 +177,9 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     // Previously this always measured from today, so a customer who asked us to
     // hold the order until the 20th was still shown "ships tomorrow" and an
     // arrival estimate to match. The date they picked is the one that counts.
-    const effectiveDispatch = dispatchDate ?? earliestDispatch;
+    // A fixed posting day outranks both: it is read straight from the cart so
+    // the ranges are right on the first render, not one effect later.
+    const effectiveDispatch = fixedDispatch?.date ?? dispatchDate ?? earliestDispatch;
 
     /**
      * The latest day we can post and still expect arrival by `by`.
@@ -310,9 +344,28 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                 Delivery
             </h2>
 
+            {/* A fixed posting day replaces the Ship / Collect choice with a
+                sentence. A control that silently vanished would be a mystery;
+                this says what happened and why. */}
+            {fixedDispatch && (
+                <div className="mb-4 rounded-md border border-primary/30 bg-primary/5 p-3 dark:border-primary-2/40 dark:bg-primary-2/10">
+                    <p className="text-sm text-primary-text dark:text-primary-text-light">
+                        Your <strong>{fixedDispatch.productName}</strong> is posted on{' '}
+                        <strong>{format(fixedDispatch.date, 'EEE d MMM')}</strong>, so this order is
+                        shipped — collection isn&apos;t available for it.
+                    </p>
+                    {fixedDispatch.mixed && (
+                        <p className="mt-1 text-sm text-primary-text dark:text-primary-text-light">
+                            Everything in your order is posted together on that day.
+                        </p>
+                    )}
+                </div>
+            )}
+
             {/* Segmented control, the pattern most checkouts use for this: it
                 stays visible so switching is one tap and there is no dead end,
                 and the options below are reachable without an extra screen. */}
+            {!fixedDispatch && (
             <div
                 role="radiogroup"
                 aria-label="How would you like to receive your order?"
@@ -375,6 +428,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     );
                 })}
             </div>
+            )}
 
             <>
                     <p className="text-sm text-primary-text dark:text-primary-text-light mb-4">
@@ -387,8 +441,11 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                     {/* The question this whole step turns on, asked outright
                         instead of hidden behind a link. Most of these orders
                         are for a fixed day, and the customer knows the day —
-                        not how long Royal Mail takes. */}
-                    {deliveryType === 'shipping' && (
+                        not how long Royal Mail takes.
+
+                        Not asked at all when the posting day is fixed: there is
+                        nothing for the answer to change. */}
+                    {deliveryType === 'shipping' && !fixedDispatch && (
                         <div className="mb-5 space-y-3">
                             <p className="text-sm font-medium text-primary-text dark:text-primary-text-light">
                                 When do you need it?
