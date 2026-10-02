@@ -72,6 +72,12 @@ export interface Product {
     preorder_price?: string;
     is_preorder_active?: boolean;
 
+    /** This product is posted on this exact day (yyyy-MM-dd) — an advent
+     *  calendar batch, for instance. A cart holding it cannot be collected in
+     *  store or choose its own posting date. Optional so an API without the
+     *  field behaves exactly as before. */
+    fixed_dispatch_date?: string | null;
+
     pickup_only?: boolean;
     pickup_from_date?: string;
     alert_message?: string;
