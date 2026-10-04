@@ -6,8 +6,11 @@ import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice';
 import type { Product } from '@/types/products';
 
+const searchParams = { get: jest.fn((_key: string): string | null => null) };
+
 jest.mock('next/navigation', () => ({
     useRouter: () => ({ push: jest.fn() }),
+    useSearchParams: () => searchParams,
 }));
 
 jest.mock('@/redux/features/products/productApiSlice', () => ({
@@ -58,6 +61,7 @@ const flavours = [
 describe('QuickBoxBuilder', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        searchParams.get.mockReturnValue(null);
         (useAddCartItemMutation as jest.Mock).mockReturnValue([addToCart, { isLoading: false }]);
         mockProducts.mockReturnValue({ data: [boxOfNine], isLoading: false });
         mockFlavours.mockReturnValue({ data: flavours, isLoading: false });
@@ -142,5 +146,33 @@ describe('QuickBoxBuilder', () => {
 
         expect(screen.getByText(/currently sold out/i)).toBeInTheDocument();
         expect(screen.queryByRole('button', { name: /^add to cart$/i })).not.toBeInTheDocument();
+    });
+
+    describe('the indulgence pack offer', () => {
+        const category = (slug: string) => ({ id: 0, name: slug, slug });
+        const pack9 = { id: 170, name: 'Pack of 9', slug: 'pack-9', units_per_box: 9, current_price: '32.50' };
+        const bark = { id: 30, name: 'Bark', slug: 'bark', current_price: '9.50', category: category('chocolate-barks') };
+        const hot = { id: 40, name: 'Hot chocolate', slug: 'hot', current_price: '8.00', category: category('hot-chocolate') };
+        const card = { id: 50, name: 'Card', slug: 'card', current_price: '3.50', category: category('gift-cards') };
+
+        beforeEach(() => {
+            mockProducts.mockReturnValue({ data: [boxOfNine, pack9, bark, hot, card], isLoading: false });
+        });
+
+        it('prices the pack against its parts', () => {
+            render(<QuickBoxBuilder product={boxOfNine} />);
+
+            // £14.99 box + £9.50 + £8.00 + £3.50 = £35.99 against the £32.50 pack.
+            expect(screen.getByText(/worth £35\.99/)).toBeInTheDocument();
+            expect(screen.getByText('Save £3.49')).toBeInTheDocument();
+            expect(screen.getByText(/for £17\.51 more/)).toBeInTheDocument();
+        });
+
+        it('opens with the pack chosen when the link asks for it', () => {
+            searchParams.get.mockImplementation((key: string) => (key === 'pack' ? '1' : null));
+            render(<QuickBoxBuilder product={boxOfNine} />);
+
+            expect(screen.getByRole('button', { name: /Indulgence pack/ })).toHaveAttribute('aria-pressed', 'true');
+        });
     });
 });

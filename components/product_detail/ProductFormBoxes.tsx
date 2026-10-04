@@ -849,7 +849,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                 Make your signature box more indulgent.
                             </h3>
                             <p className="text-sm text-primary-text dark:text-primary-text-light mb-4">
-                                For £{getPackPrice()} pounds more add:
+                                For just £{getPackPrice()} more, add:
                             </p>
                             <ul className="text-sm text-primary-text dark:text-primary-text-light mb-6 space-y-1">
                                 <li>• Gourmet chocolate bark</li>

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { FiCheck, FiRefreshCw, FiShoppingCart } from 'react-icons/fi';
 
@@ -12,7 +12,8 @@ import Spinner from '@/components/common/Spinner';
 import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 import { useAddCartItemMutation, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
-import { ID_MAP, PRICE_MAP, ALLERGENS } from '@/components/packs/constants';
+import { ID_MAP, PRICE_MAP, ALLERGENS, PACK_QUERY_PARAM } from '@/components/packs/constants';
+import { cheapestIn, packValue } from '@/components/packs/value';
 import { formatCurrency } from '@/utils/currency';
 import { Flavour as FlavourType } from '@/types/flavours';
 import { Product } from '@/types/products';
@@ -126,6 +127,11 @@ interface QuickBoxBuilderProps {
 
 const QuickBoxBuilder: React.FC<QuickBoxBuilderProps> = ({ product, onAddedToCart }) => {
     const router = useRouter();
+    // /shop-now/<box>?pack=1 — where the home page's pack offer and the pack
+    // products' redirect land — opens with the pack already chosen, as the
+    // control builder does.
+    const searchParams = useSearchParams();
+    const startsAsPack = searchParams?.get(PACK_QUERY_PARAM) === '1';
     const { data: products, isLoading: productsLoading } = useGetProductsQuery();
     const { data: flavoursData, isLoading: flavoursLoading } = useGetFlavoursQuery();
     const [addToCart, { isLoading: adding }] = useAddCartItemMutation();
@@ -137,7 +143,7 @@ const QuickBoxBuilder: React.FC<QuickBoxBuilderProps> = ({ product, onAddedToCar
     // Summer Break clearance boxes are Surprise Me only — no flavour picking.
     const surpriseOnly = !!product.disable_flavour_selection;
 
-    const [indulgent, setIndulgent] = useState<boolean>(false);
+    const [indulgent, setIndulgent] = useState<boolean>(startsAsPack);
     const [flavours, setFlavours] = useState<CartItemBoxFlavorSelection[]>([]);
     const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
     const [allergenOption, setAllergenOption] = useState<'NONE' | 'SPECIFY' | null>(null);
@@ -248,6 +254,15 @@ const QuickBoxBuilder: React.FC<QuickBoxBuilderProps> = ({ product, onAddedToCar
     const packId = ID_MAP[size];
     const indulgencePack = (products ?? []).find(p => p.id === packId);
     const packAvailable = Boolean(packId) && !indulgencePack?.sold_out;
+
+    // The pack priced against its parts. The gift card is in the pack price
+    // whether or not one is picked, so until one is, the cheapest stands in.
+    const packWorth = packValue(product, [
+        chocolateBark,
+        hotChocolate,
+        giftCard ?? cheapestIn(products ?? [], 'gift-cards'),
+    ]);
+    const packExtraCost = packPrice ? Math.max(0, packPrice - plainPrice) : 0;
 
     // The allergen question is answered before the box can be added — the same
     // gate the control applies at its step 2.
@@ -407,10 +422,23 @@ const QuickBoxBuilder: React.FC<QuickBoxBuilderProps> = ({ product, onAddedToCar
                                 : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
                         }`}
                     >
-                        <p className="font-bold text-primary-text dark:text-primary-text-light">Indulgence pack</p>
+                        <p className="flex flex-wrap items-center gap-2 font-bold text-primary-text dark:text-primary-text-light">
+                            Indulgence pack
+                            {packAvailable && packWorth && packWorth.saving > 0 && (
+                                <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] font-bold text-accent-text">
+                                    Save {formatCurrency(packWorth.saving)}
+                                </span>
+                            )}
+                        </p>
                         <p className="text-xs text-primary-text/70 dark:text-primary-text-light/70 mt-1">
                             {packAvailable
-                                ? <>Plus chocolate bark &amp; hot chocolate — {formatCurrency(packPrice)}</>
+                                ? <>
+                                    Add chocolate bark, hot chocolate &amp; a gift card for {formatCurrency(packExtraCost)} more
+                                    {' '}— {formatCurrency(packPrice)}
+                                    {packWorth && packWorth.saving > 0 && (
+                                        <> (worth {formatCurrency(packWorth.separatePrice)})</>
+                                    )}
+                                </>
                                 : 'Sold out at this size'}
                         </p>
                     </button>
