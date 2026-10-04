@@ -164,9 +164,47 @@ const palettes = {
             'gradient-autumn': 'linear-gradient(to right, #002B57, #0A4E96)',
         },
     },
+    /**
+     * The box itself: the turquoise and chocolate brown of the packaging,
+     * sampled from the product photography (public/home/2026/01/4.jpg —
+     * turquoise #00B9D2, brown #4A2C27). The site used to wear navy or forest
+     * green while the box people received was turquoise; this makes the page
+     * and the parcel the same brand.
+     *
+     * The packaging turquoise is 2.37:1 under white, so it cannot be a button
+     * fill. It is the accent instead, carrying the brown as its text (7.08:1).
+     * Buttons and links use a deep teal from the same hue (6.21:1 under
+     * white), and every money button is chocolate brown — the darkest, most
+     * expensive-looking surface on the page, where the decision is made.
+     */
+    packaging: {
+        name: 'Packaging',
+        description: 'Turquoise and chocolate brown, as on the box. Teal buttons, brown money buttons.',
+        colors: {
+            primary: '#006B79',
+            'primary-2': '#006B79',
+            'primary-dark': '#00586A',
+            'primary-light': '#5FC9D9',
+            'primary-button-text': '#FFFFFF',
+            accent: '#00B9D2',
+            'accent-text': '#2B1915',
+            'main-bg': '#FDFBF8',
+            'main-bg-dark': '#1A1110',
+            'secondary-bg': '#4A2C27',
+            'primary-text': '#1A1A1A',
+            'primary-text-light': '#FDFBF8',
+            'primary-text-dark': '#1A1A1A',
+            'secondary-text': '#1A1A1A',
+            'secondary-text-dark': '#FDFBF8',
+        },
+        gradients: {
+            'gradient-primary': 'linear-gradient(to right, #00586A, #006B79)',
+            'gradient-autumn': 'linear-gradient(to right, #3A211D, #5C3A32)',
+        },
+    },
 };
 
 /** Change this one word to change the site. */
-const ACTIVE = 'christmas';
+const ACTIVE = 'packaging';
 
 module.exports = { palettes, ACTIVE, active: palettes[ACTIVE] };

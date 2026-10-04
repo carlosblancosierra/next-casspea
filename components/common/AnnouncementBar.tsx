@@ -15,7 +15,6 @@ type AnnouncementLink = {
 
 export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
-  const [copiedCode, setCopiedCode] = useState(false);
   const pathname = usePathname();
   
   // Early return if on excluded paths
@@ -23,16 +22,6 @@ export default function AnnouncementBar() {
 
   const handleClose = () => {
     setIsVisible(false);
-  };
-
-  const handleCopyCode = async () => {
-    try {
-      await navigator.clipboard.writeText('SUBSCRIBER15');
-      setCopiedCode(true);
-      setTimeout(() => setCopiedCode(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy code: ', err);
-    }
   };
 
   if (!isVisible) {

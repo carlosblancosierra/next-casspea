@@ -29,7 +29,9 @@ const CurrentEffect = dynamic(EFFECTS_CONFIG[CURRENT_EFFECT], { ssr: false });
 
 
 const inter = Inter({ subsets: ['latin'] });
-const playfair = Playfair_Display({ subsets: ['latin'] });
+// Exposed as a CSS variable so Tailwind's `font-playfair` uses this
+// self-hosted copy, not only the Google Fonts stylesheet below.
+const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.casspea.co.uk'),
@@ -61,7 +63,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={playfair.variable} suppressHydrationWarning>
       <head>
         <Script id="gtm-head" strategy="beforeInteractive">
           {`

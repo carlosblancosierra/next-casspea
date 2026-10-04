@@ -77,3 +77,18 @@ describe('christmas', () => {
         expect(contrast(c.accent, c.primary)).toBeGreaterThanOrEqual(4.5);
     });
 });
+
+describe('packaging', () => {
+    const c = palettes.packaging.colors;
+
+    it('uses the turquoise and brown sampled from the box', () => {
+        expect(c.accent).toBe('#00B9D2');
+        expect(c['secondary-bg']).toBe('#4A2C27');
+    });
+
+    it('never puts white text on the packaging turquoise', () => {
+        // Why the turquoise is the accent and a deeper teal is the button.
+        expect(contrast(c.accent, '#FFFFFF')).toBeLessThan(4.5);
+        expect(c['accent-text']).not.toBe('#FFFFFF');
+    });
+});
