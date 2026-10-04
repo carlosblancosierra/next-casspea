@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { getProduct } from '@/utils/products';
 
 /**
  * Restored from the dead-code sweep that removed it (it had been left
@@ -9,15 +10,24 @@ import Link from 'next/link';
  *
  * The link resolves a product by slug, so it needs an active `advent-calendar`
  * product to land anywhere.
+ *
+ * The picture comes from that product too, so it can be changed in the admin:
+ * its wide image (this slot is landscape), else its main image, else the 2025
+ * photo shipped in public/.
  */
-const ADVENT_HREF = '/shop-now/advent-calendar';
+const ADVENT_SLUG = 'advent-calendar';
+const ADVENT_HREF = `/shop-now/${ADVENT_SLUG}`;
+const FALLBACK_IMAGE = '/advent-calendar/2025/2.jpg';
 
-export default function AdventSection() {
+export default async function AdventSection() {
+  const product = await getProduct(ADVENT_SLUG);
+  const imageSrc = product?.wide_image || product?.image || FALLBACK_IMAGE;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch rounded-xl overflow-hidden bg-[#977545]">
       <Link href={ADVENT_HREF} className="relative min-h-[220px] md:min-h-[320px] block group">
         <Image
-          src="/advent-calendar/2025/2.jpg"
+          src={imageSrc}
           alt="Advent Calendar"
           width={800}
           height={0}
