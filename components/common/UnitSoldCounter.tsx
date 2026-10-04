@@ -6,9 +6,11 @@ import { useGetDailyUnitsSoldQuery } from '@/redux/features/orders/ordersApiSlic
 interface UnitSoldCounterProps {
   className?: string;
   bg?: string;
+  /** 'bar' is the full-width gradient band; 'inline' is one line of text for a hero proof row. */
+  variant?: 'bar' | 'inline';
 }
 
-const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '' }) => {
+const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '', variant = 'bar' }) => {
   const { data: dailyUnitsSold, isLoading, error } = useGetDailyUnitsSoldQuery();
   const [displayedCount, setDisplayedCount] = useState(0);
   
@@ -57,6 +59,17 @@ const UnitSoldCounter: React.FC<UnitSoldCounterProps> = ({ className = '' }) => 
 
   // In development, we'll always show the counter even if there's an API error
   if (error && !isLocal) return null;
+
+  if (variant === 'inline') {
+    // Nothing until there is a number: "0 chocolates sold" would be the
+    // opposite of proof.
+    if (!displayedCount) return null;
+    return (
+      <p className={`text-sm text-primary-text dark:text-primary-text-light ${className}`}>
+        <span className="font-bold tabular-nums">{displayedCount.toLocaleString()}</span> chocolates sold since 2023
+      </p>
+    );
+  }
 
   return (
     <div className="px-4 py-2 flex flex-col items-center w-full bg-gradient-primary">

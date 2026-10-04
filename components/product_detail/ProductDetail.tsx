@@ -16,6 +16,7 @@ import ProductCard from '../store/ProductCard';
 import { Product } from '@/types/products';
 import { useExperiment } from '@/hooks/useExperiment';
 import { BOX_BUILDER_EXPERIMENT, BUILDER_ADD_TO_CART } from '@/types/experiments';
+import TrustStrip from '@/components/marketing/TrustStrip';
 
 const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> = ({ slug, initialProducts }) => {
 	// Explicitly provide the type for the query result
@@ -63,42 +64,40 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 	const SLUG_CHOCOLATE_BARKS = 'chocolate-barks';
 	const SLUG_HOT_CHOCOLATE = 'hot-chocolate';
 
-	// const otherBoxes = products.filter((p) => 
-	// 	p.category?.slug === SLUG_SIGNATURE_BOXES ||
-	// 	p.category?.slug === SLUG_CHOCOLATE_BARKS
-	// );
+	const available = (p: Product) => p.active !== false && !p.sold_out && p.id !== product.id;
 
-	const boxes = products.filter((p) =>
-		p.category?.slug === SLUG_SIGNATURE_BOXES
-	);
+	// Other sizes of the same thing, smallest first: the natural "or go bigger".
+	const otherBoxes = products
+		.filter((p) => p.category?.slug === SLUG_SIGNATURE_BOXES && available(p))
+		.sort((a, b) => (a.units_per_box ?? 0) - (b.units_per_box ?? 0));
 
-	const otherBoxes = boxes.filter((p) => p.id !== product.id);
+	// One row of add-ons rather than a grid per category: bark and hot
+	// chocolate are both "something to go with it".
+	const extras = products
+		.filter((p) => (p.category?.slug === SLUG_CHOCOLATE_BARKS || p.category?.slug === SLUG_HOT_CHOCOLATE) && available(p))
+		.slice(0, 4);
 
-	const hotChocolate = products.filter((p) =>
-		p.category?.slug === SLUG_HOT_CHOCOLATE
-	);
+	// Next-day and tracked-delivery lines are wrong for a product that is
+	// collected, or that is posted on one fixed day (the Advent calendar).
+	const shipsNormally = !product.pickup_only && !product.fixed_dispatch_date;
 
-	const chocolateBarks = products.filter((p) =>
-		p.category?.slug === SLUG_CHOCOLATE_BARKS
-	);
+	const sectionTitle = 'font-playfair text-center text-2xl md:text-3xl font-bold mb-5 text-primary-text dark:text-primary-text-light';
 
 	return (
 		<div className="max-w-[95vw] mx-auto">
 			<ProductBreadcrumb product={product} />
-			<div className="grid grid-cols-1 md:grid-cols-[30%,1fr,30%] gap-2 md:gap-4 py-2 relative">
-				<div className="">
-					<ProductInfo product={product} />
-
-					<div className="hidden md:block">
-						<ProductAccordion isSignatureBox={isSignatureBox} product={product} />
-					</div>
-				</div>
-
-				<div className="block w-full relative">
+			{/* Two columns: the pictures, and everything needed to decide and buy
+			    in one column beside them. It used to be three — name and price
+			    on the left, the builder on the right — so the eye crossed the
+			    photos between reading the price and choosing the box. */}
+			<div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr),minmax(0,1fr)] gap-4 md:gap-10 py-2">
+				<div className="md:sticky md:top-24 self-start w-full">
 					<ImageGallery images={images} />
 				</div>
 
-				<div className="flex flex-col top-48 py-0 w-full gap-y-12">
+				<div className="flex flex-col gap-y-6 w-full">
+					<ProductInfo product={product} showPerPiece={isSignatureBox} />
+
 					<Suspense fallback="Loading...">
 						{isSignatureBox ? (
 							variantLoading ? (
@@ -118,58 +117,47 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 							<ProductFormGeneral product={product} />
 						)}
 					</Suspense>
-				</div>
 
-				<div className="block md:hidden mt-10">
-					<ProductAccordion isSignatureBox={isSignatureBox} product={product} />
+					<TrustStrip layout="grid" shipping={shipsNormally} className="rounded-xl bg-white/70 dark:bg-white/5 p-4" />
+
+					<div>
+						<ProductAccordion isSignatureBox={isSignatureBox} product={product} />
+					</div>
 				</div>
 			</div>
 
-			<div className="my-16">
-				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Our Flavours</h2>
-				<FlavourGrid />
-			</div>
-
-			<div className="mt-10">
-				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Reviews</h2>
+			{/* Straight after the buy box: proof first, then the flavours. */}
+			<section id="reviews" className="scroll-mt-24 mt-16">
+				<h2 className={sectionTitle}>What our customers say</h2>
 				<Reviews />
-			</div>
+			</section>
 
-			{/* Other Boxes */}
-			<div className="mt-5">
-				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Need More Boxes?</h2>
-				<div className="flex justify-center">
-					<div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+			<section className="my-16">
+				<h2 className={sectionTitle}>Our Flavours</h2>
+				<FlavourGrid />
+			</section>
+
+			{isSignatureBox && otherBoxes.length > 0 && (
+				<section className="mt-5">
+					<h2 className={sectionTitle}>Other sizes</h2>
+					<div className="grid grid-cols-2 gap-x-2 gap-y-5 lg:grid-cols-4">
 						{otherBoxes.map((prod: Product) => (
-							<ProductCard key={prod.name} product={prod} />
+							<ProductCard key={prod.id} product={prod} />
 						))}
 					</div>
-				</div>
-			</div>
+				</section>
+			)}
 
-			{/* Chocolate Barks */}
-			<div className="mt-5">
-				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Introducing our Chocolate Barks</h2>
-				<div className="flex justify-center">
-					<div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
-						{chocolateBarks.map((prod: Product) => (
-							<ProductCard key={prod.name} product={prod} />
+			{extras.length > 0 && (
+				<section className="mt-12 mb-10">
+					<h2 className={sectionTitle}>Something to go with it</h2>
+					<div className="grid grid-cols-2 gap-x-2 gap-y-5 lg:grid-cols-4">
+						{extras.map((prod: Product) => (
+							<ProductCard key={prod.id} product={prod} />
 						))}
 					</div>
-				</div>
-			</div>
-
-			{/* Hot Chocolate */}
-			<div className="mt-5">
-				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Try Our Hot Chocolate</h2>
-				<div className="flex justify-center">
-					<div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
-						{hotChocolate.map((prod: Product) => (
-							<ProductCard key={prod.name} product={prod} />
-						))}
-					</div>
-				</div>
-			</div>
+				</section>
+			)}
 		</div>
 	);
 };

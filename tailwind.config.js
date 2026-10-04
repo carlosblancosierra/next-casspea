@@ -13,7 +13,7 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				'playfair': ['Playfair Display', 'serif'],
+				'playfair': ['var(--font-playfair)', 'Playfair Display', 'serif'],
 			},
 			colors: {
 				'my-pink': '#ff1ab1',

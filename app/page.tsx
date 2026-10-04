@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { Suspense } from 'react';
@@ -13,6 +12,10 @@ import HomeProductsServer from '@/components/home/HomeProductsServer';
 import AdventSection from '@/components/home/AdventSection';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
 import { HomeSummerBanner, HomeSummerBoxes, HomeSignatureGate } from '@/components/home/HomeSummer';
+import PackOffer from '@/components/home/PackOffer';
+import CorporateGifting from '@/components/home/CorporateGifting';
+import TrustStrip from '@/components/marketing/TrustStrip';
+import HowItWorks from '@/components/marketing/HowItWorks';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
@@ -34,7 +37,7 @@ const Section = ({
   <Suspense fallback={<LoadingSection />}>
     <div className={extraClass}>
       {title && (
-        <h2 className={`text-center text-2xl font-bold mb-3 text-primary-text dark:text-primary-text-light ${playfair.className}`}>
+        <h2 className={`text-center text-2xl md:text-3xl font-bold mb-3 text-primary-text dark:text-primary-text-light ${playfair.className}`}>
           {title}
         </h2>
       )}
@@ -51,125 +54,75 @@ const Section = ({
   </Suspense>
 );
 
-// Button group for hero section
-const ButtonGroup = () => (
-  <div className="hidden lg:flex">
-    <ShopNowCTA />
-  </div>
-);
-
 // Initialize font
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
-// Hero section component (grid now splits at md instead of lg)
+// Where the hero's button goes: the box sizes further down this page. A
+// visitor who wants a box should be one scroll from choosing one, not sent to
+// a page of categories first.
+const HERO_CTA = { label: 'Choose your box', href: '#boxes' };
+
+// The box photo leads: it shows the bonbons *and* the packaging, which is
+// what someone buying a gift is actually buying.
+const HERO_IMAGES = [
+  '/home/2026/01/4.jpg',
+  '/home/2026/01/1.jpg',
+  '/home/2026/01/2.jpg',
+  '/home/2026/01/3.jpg',
+  '/home/2026/01/5.jpg',
+  '/home/2026/01/6.jpg',
+  '/home/2026/01/7.jpg',
+  '/home/2026/01/8.jpg',
+];
+
+// One h1 holding both lines: the outcome is what is read, and the keyword
+// line stays in the heading for search.
+const HeroHeading = ({ className = '' }: { className?: string }) => (
+  <h1 className={`${playfair.className} text-primary-text dark:text-white ${className}`}>
+    <span className="block font-sans text-xs md:text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-accent mb-3">
+      Luxury chocolate gifts, handcrafted in London
+    </span>
+    <span className="block text-4xl md:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.05]">
+      The gift they&apos;ll photograph before they eat it.
+    </span>
+  </h1>
+);
+
+const HeroSubhead = ({ className = '' }: { className?: string }) => (
+  <p className={`text-base md:text-lg text-primary-text/80 dark:text-primary-text-light/80 ${className}`}>
+    Hand-painted bonbons in over 20 flavours, in a box worth keeping. We fill it with our
+    bestsellers. All you choose is the size.
+  </p>
+);
+
 const HeroSection = () => (
   <section className="dark:bg-main-bg-dark">
-    <div className="grid grid-cols-1 lg:grid-cols-12 mx-auto lg:gap-8 xl:gap-0 lg:pb-8 relative">
-      <div className="col-span-1 lg:col-span-6">
-        {/* <div className="hidden md:grid md:grid-cols-2 md:gap-4">
-          <div className="aspect-square">
-            <Image
-              src="/home/2026/01/1.jpg"
-              width={0}
-              height={0}
-              sizes="50vw"
-              priority
-              className="w-full h-full object-cover rounded-lg"
-              alt="CassPea Chocolates 1"
-            />
-          </div>
-          <div className="aspect-square">
-            <Image
-              src="/home/2026/01/5.jpg"
-              width={0}
-              height={0}
-              sizes="50vw"
-              priority
-              className="w-full h-full object-cover rounded-lg"
-              alt="CassPea Chocolates 2"
-            />
-          </div>
-          <div className="aspect-square">
-            <Image
-              src="/home/2026/01/4.jpg"
-              width={0}
-              height={0}
-              sizes="50vw"
-              priority
-              className="w-full h-full object-cover rounded-lg"
-              alt="CassPea Chocolates 3"
-            />
-          </div>
-          <div className="aspect-square">
-            <Image
-              src="/home/2026/01/2.jpg"
-              width={0}
-              height={0}
-              sizes="50vw"
-              priority
-              className="w-full h-full object-cover rounded-lg"
-              alt="CassPea Chocolates 4"
-            />
-          </div>
-        </div> */}
-        <div className="hidden lg:block aspect-square">
-          <Image
-            src="/home/2026/01/1.jpg"
-            width={0}
-            height={0}
-            sizes="100vw"
-            priority
-            className="w-full h-full object-cover rounded-lg"
-            alt="CassPea Chocolates"
-          />
-        </div>
-        <div className="lg:hidden">
-          <h1 className={`${playfair.className} mb-2 text-4xl md:text-[5rem] text-primary-text font-bold tracking-tight leading-none dark:text-white`}>
-            Luxury Chocolate Gifts, Handcrafted in London
-          </h1>
-          <h2 className="text-2xl mb-4 dark:text-white text-primary-text">
-            Celebrate Every Occasion with Our Signature Gift Boxes
-          </h2>
-          <ShopNowCTA className="mb-4" />
-        </div>
-        <ImageGallery
-          images={[
-            '/home/2026/01/1.jpg',
-            '/home/2026/01/2.jpg',
-            '/home/2026/01/3.jpg',
-            '/home/2026/01/4.jpg',
-            '/home/2026/01/5.jpg',
-            '/home/2026/01/6.jpg',
-            '/home/2026/01/7.jpg',
-            '/home/2026/01/8.jpg',
-          ]}
-          className="block lg:hidden"
+    {/* Phones: promise, button, then the pictures. */}
+    <div className="lg:hidden px-2">
+      <HeroHeading className="mb-3" />
+      <HeroSubhead className="mb-4" />
+      <ShopNowCTA label={HERO_CTA.label} href={HERO_CTA.href} />
+      <UnitSoldCounter variant="inline" className="mt-2 mb-4" />
+      <ImageGallery images={HERO_IMAGES} className="block" />
+    </div>
+
+    {/* Desktop: the box beside the promise. */}
+    <div className="hidden lg:grid grid-cols-12 gap-10 items-center pb-8">
+      <div className="col-span-6 aspect-square relative">
+        <Image
+          src={HERO_IMAGES[0]}
+          fill
+          sizes="50vw"
+          priority
+          className="object-cover rounded-2xl"
+          alt="An open CassPea box of hand-painted bonbons"
         />
-        <p className="lg:hidden font-light text-md mt-4 text-primary-text dark:text-primary-text-light">
-          Share the love with CassPea Chocolates—perfect for personal indulgence,
-          birthdays, corporate events, and special celebrations. With over 20
-          exquisite flavours, each handcrafted to perfection by our skilled
-          chocolatiers, every bite is a work of art and a journey through inspired
-          flavours.
-        </p>
       </div>
-      <div className="lg:col-span-6 lg:pl-8">
-        <h1
-          className={`${playfair.className} mb-2 text-5xl text-primary-text font-bold tracking-tight leading-none lg:text-8xl dark:text-white hidden lg:block`}
-        >
-          Luxury Chocolate Gifts, Handcrafted in London
-        </h1>
-        <h2 className="text-2xl mb-2 dark:text-white text-primary-text hidden lg:block">
-          Celebrate Every Occasion with Our Signature Gift Boxes
-        </h2>
-        <p className="hidden lg:block lg:mb-6 font-light text-sm text-primary-text xl:mb-8 lg:text-base dark:text-primary-text-light">
-          Share the love with CassPea Chocolates—perfect for personal indulgence,
-          birthdays, corporate events, and special celebrations. With over 20
-          exquisite flavours, each handcrafted to perfection by our skilled
-          chocolatiers, every bite is a work of art and a journey through inspired
-          flavours.
-        </p>
-        <ButtonGroup />
+      <div className="col-span-6 pr-4">
+        <HeroHeading className="mb-6" />
+        <HeroSubhead className="mb-8 max-w-xl" />
+        <ShopNowCTA label={HERO_CTA.label} href={HERO_CTA.href} />
+        <UnitSoldCounter variant="inline" className="mt-3" />
       </div>
     </div>
   </section>
@@ -193,49 +146,75 @@ export default function HomePage() {
 
       <HeroSection />
 
-      {/* One reviews section at every width, because the hero's Trustpilot
-          rating scrolls here and an anchor needs a single visible target. It
-          used to be two carousels — one inside the hero for phones, one
-          full-width for desktop — which also meant the rating and the "See
-          all" link were rendered twice. */}
-      <section id="reviews" className="scroll-mt-24 mt-8">
-        <Section title="Our Clients Say">
+      <section className="mt-8 border-y border-black/10 dark:border-white/10 py-5 px-2">
+        <TrustStrip />
+      </section>
+
+      {/* The hero button lands here. The anchor sits outside the summer gate
+          so it has a target whichever set of boxes is showing. */}
+      <section id="boxes" className="scroll-mt-24 mt-10">
+        <HomeSummerBoxes />
+        <HomeSignatureGate>
+          <Section title="Choose your box">
+            <p className="text-center text-sm text-primary-text/70 dark:text-primary-text-light/70 -mt-1 mb-3">
+              Every box arrives filled with our bestsellers. Swap any flavour you like.
+            </p>
+            <HomeProductsServer />
+          </Section>
+        </HomeSignatureGate>
+      </section>
+
+      <section className="mt-12 px-2">
+        <Suspense fallback={<LoadingSection />}>
+          <PackOffer />
+        </Suspense>
+      </section>
+
+      {/* The hero's Trustpilot rating scrolls here, so there is exactly one
+          reviews section on the page. */}
+      <section id="reviews" className="scroll-mt-24 mt-12">
+        <Section title="What our customers say">
           <ReviewCarousel />
         </Section>
       </section>
 
-      <HomeSummerBoxes />
-
-      {/* Above the boxes: it is seasonal and time-limited, and the boxes are
-          here all year. */}
-      <section className="mt-8 px-2">
+      {/* Seasonal and time-limited, so still high — just after the core offer
+          rather than in front of it. */}
+      <section className="mt-12 px-2">
         <AdventSection />
       </section>
 
-      <HomeSignatureGate>
-        <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
-          <HomeProductsServer />
+      <section className="mt-12 px-2">
+        <h2 className={`text-center text-2xl md:text-3xl font-bold mb-5 text-primary-text dark:text-primary-text-light ${playfair.className}`}>
+          How it works
+        </h2>
+        <HowItWorks />
+      </section>
+
+      <section id="flavours" className="scroll-mt-24">
+        <Section title="Our Flavours" extraClass="mt-12">
+          <FlavourGridServer />
         </Section>
-      </HomeSignatureGate>
+      </section>
 
-      <Section title="Our Flavours" extraClass="mt-10">
-        <FlavourGridServer />
-      </Section>
-
-      <Section title="Personalised Chocolates" extraClass="mt-10">
+      <Section title="Personalised Chocolates" extraClass="mt-12">
         <PersonalisedHome />
       </Section>
 
-      <Section title="Gallery" extraClass="mt-10">
-        <HomeGallery />
-      </Section>
+      <section className="mt-10 px-2">
+        <CorporateGifting />
+      </section>
 
-      <Section title="Chocolate Barks" extraClass="mt-5">
+      <Section title="Chocolate Barks" extraClass="mt-12">
         <CategoryProducts categorySlug="chocolate-barks" />
       </Section>
 
-      <Section title="Hot Chocolate" extraClass="mt-5">
+      <Section title="Hot Chocolate" extraClass="mt-8">
         <CategoryProducts categorySlug="hot-chocolate" />
+      </Section>
+
+      <Section title="Gallery" extraClass="mt-12">
+        <HomeGallery />
       </Section>
     </main>
   );
