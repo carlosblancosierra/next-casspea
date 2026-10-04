@@ -4,6 +4,7 @@ import CategoryProductsGrid from '@/components/store/CategoryProductsGrid';
 import { getCategory, getProducts } from '@/utils/products';
 import { Product } from '@/types/products';
 import { PACK_ID_TO_UNITS } from '@/components/packs/constants';
+import HowItWorks from '@/components/marketing/HowItWorks';
 
 // Render on the server per request so product/category changes show immediately.
 export const dynamic = 'force-dynamic';
@@ -51,7 +52,7 @@ export default async function CategoryDetailPage(
     return (
       <div className="container mx-auto min-h-[80vh] py-2 mb-[300px]">
         <div className="md:text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-text dark:text-white text-center">
+          <h1 className="font-playfair text-3xl md:text-4xl font-bold text-primary-text dark:text-white text-center">
             Indulgence Packs
           </h1>
           <p className="mt-2 text-center text-sm text-primary-text dark:text-primary-text-light">
@@ -93,25 +94,12 @@ export default async function CategoryDetailPage(
   return (
     <div className="container mx-auto min-h-[80vh] py-2 mb-[300px]">
       <div className="md:text-center mb-8">
-        <h1 className="text-3xl font-bold text-primary-text dark:text-white text-center">
+        <h1 className="font-playfair text-3xl md:text-4xl font-bold text-primary-text dark:text-white text-center">
           {category.name}
         </h1>
       </div>
 
-      {slug === 'signature-boxes' && (
-        <section className="mb-8 text-center">
-          <h2 className="font-bold mt-2">
-            Ordering delicious hand made chocolates from CassPea is simple and fun!
-          </h2>
-          <ol className="mt-4 space-y-1 list-decimal list-inside">
-            <li className="font-bold text-pink-500 dark:text-pink-500">For Signature Boxes, select your box size</li>
-            <li className="font-bold text-green-500 dark:text-green-500">Choose a Surprise Box or Pick and Mix your own from our succulent flavours</li>
-            <li className="font-bold text-red-500 dark:text-red-500">Choose your delivery - free on orders over £56</li>
-            <li className="font-bold text-orange-500 dark:text-orange-400">Pay securely online</li>
-            <li className="font-bold text-purple-500 dark:text-purple-500">Receive your chocolates and enjoy!</li>
-          </ol>
-        </section>
-      )}
+      {slug === 'signature-boxes' && <HowItWorks className="mb-8" />}
 
       {filteredProducts.length === 0 ? (
         <div className="text-center text-primary-text dark:text-primary-text">

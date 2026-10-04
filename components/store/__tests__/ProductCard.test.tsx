@@ -64,3 +64,17 @@ describe('ProductCard featured layout', () => {
         expect(screen.getAllByAltText('Signature Box of 24')).toHaveLength(1);
     });
 });
+
+describe('ProductCard price per bonbon', () => {
+    const base = { id: 9, name: 'Box of 24', slug: 'box-of-24', current_price: '60.00', units_per_box: 24 };
+
+    it('shows the price per bonbon on a signature box', () => {
+        render(<ProductCard product={{ ...base, category: { id: 1, name: 'Signature', slug: 'signature-boxes' } }} />);
+        expect(screen.getByText('£2.50 per bonbon')).toBeInTheDocument();
+    });
+
+    it('does not show it on anything else', () => {
+        render(<ProductCard product={{ ...base, category: { id: 3, name: 'Barks', slug: 'chocolate-barks' } }} />);
+        expect(screen.queryByText(/per bonbon/)).not.toBeInTheDocument();
+    });
+});
