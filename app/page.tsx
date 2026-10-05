@@ -10,7 +10,8 @@ import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import ShopNowCTA from '@/components/common/ShopNowCTA';
 import ReviewCarousel from '@/components/common/ReviewCarousel';
 import HomeProductsServer from '@/components/home/HomeProductsServer';
-import AdventSection from '@/components/home/AdventSection';
+import AdventSection, { ADVENT_SLUG } from '@/components/home/AdventSection';
+import { getProduct } from '@/utils/products';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
 import { HomeSummerBanner, HomeSummerBoxes, HomeSignatureGate } from '@/components/home/HomeSummer';
 import dynamic from 'next/dynamic';
@@ -61,8 +62,21 @@ const ButtonGroup = () => (
 // Initialize font
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
+// The advent calendar's third picture, counted the way its product page shows
+// them (main image, then gallery), so it can be changed in the admin. Null when
+// the product or that picture is missing.
+async function getAdventCarouselImage(): Promise<string | null> {
+  const advent = await getProduct(ADVENT_SLUG);
+  if (!advent) return null;
+  const images = [advent.image, ...(advent.gallery_images ?? []).map(image => image.image)];
+  return images[2] || null;
+}
+
 // Hero section component (grid now splits at md instead of lg)
-const HeroSection = () => (
+const HeroSection = async () => {
+  const adventImage = await getAdventCarouselImage();
+
+  return (
   <section className="dark:bg-main-bg-dark">
     <div className="grid grid-cols-1 lg:grid-cols-12 mx-auto lg:gap-8 xl:gap-0 lg:pb-8 relative">
       <div className="col-span-1 lg:col-span-6">
@@ -135,7 +149,7 @@ const HeroSection = () => (
         <ImageGallery
           images={[
             '/home/2026/01/1.jpg',
-            '/home/2026/01/2.jpg',
+            adventImage || '/home/2026/01/2.jpg',
             '/home/2026/01/3.jpg',
             '/home/2026/01/4.jpg',
             '/home/2026/01/5.jpg',
@@ -173,7 +187,8 @@ const HeroSection = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export const metadata: Metadata = {
   title: 'CassPea Hand Crafted Chocolates | Luxury Chocolate Gifts, London',
