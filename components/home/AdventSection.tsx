@@ -15,7 +15,7 @@ import { getProduct } from '@/utils/products';
  * its wide image (this slot is landscape), else its main image, else the 2025
  * photo shipped in public/.
  */
-const ADVENT_SLUG = 'advent-calendar';
+export const ADVENT_SLUG = 'advent-calendar';
 const ADVENT_HREF = `/shop-now/${ADVENT_SLUG}`;
 const FALLBACK_IMAGE = '/advent-calendar/2025/2.jpg';
 
