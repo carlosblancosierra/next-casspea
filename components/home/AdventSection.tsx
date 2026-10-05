@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getProduct } from '@/utils/products';
+import { getProducts } from '@/utils/products';
 
 /**
  * Restored from the dead-code sweep that removed it (it had been left
@@ -13,14 +13,16 @@ import { getProduct } from '@/utils/products';
  *
  * The picture comes from that product too, so it can be changed in the admin:
  * its wide image (this slot is landscape), else its main image, else the 2025
- * photo shipped in public/.
+ * photo shipped in public/. Read from the product list, like the product
+ * cards: that is the payload known to carry wide_image.
  */
 const ADVENT_SLUG = 'advent-calendar';
 const ADVENT_HREF = `/shop-now/${ADVENT_SLUG}`;
 const FALLBACK_IMAGE = '/advent-calendar/2025/2.jpg';
 
 export default async function AdventSection() {
-  const product = await getProduct(ADVENT_SLUG);
+  const products = await getProducts();
+  const product = products.find(p => p.slug === ADVENT_SLUG);
   const imageSrc = product?.wide_image || product?.image || FALLBACK_IMAGE;
 
   return (
