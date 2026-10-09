@@ -3,20 +3,31 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useParams } from 'next/navigation'
 import CheckoutSuccessUnitsSold from '@/components/checkout/CheckoutSuccessUnitsSold';
+import { track, consumePendingPurchase, CURRENCY } from '@/utils/analytics';
 
 const ConfirmPage: React.FC = () => {
-    const params = useParams<{ session_id: string }>()
-    const sessionId = params?.session_id;
-    
     useEffect(() => {
-        if (typeof window !== 'undefined' && (window as any).gtag && typeof (window as any).gtag === 'function') {
-
-            (window as any).gtag('event', 'purchase', {
-                transaction_id: sessionId,
-            });
+        // Stripe appends ?session_id=… to the success URL. Read straight from
+        // the URL: useSearchParams would force a Suspense boundary on the page.
+        const sessionId = new URLSearchParams(window.location.search).get('session_id');
+        // One report per order, even if the page is reloaded or reopened.
+        const reportedKey = `casspea_purchase_reported_${sessionId}`;
+        try {
+            if (sessionId && window.localStorage.getItem(reportedKey)) return;
+            if (sessionId) window.localStorage.setItem(reportedKey, '1');
+        } catch {
+            // Storage blocked: report anyway rather than lose the sale.
         }
+
+        const pending = consumePendingPurchase();
+        track('purchase', {
+            transaction_id: sessionId ?? undefined,
+            currency: pending?.currency ?? CURRENCY,
+            value: pending?.value,
+            items: pending?.items,
+            coupon: pending?.coupon,
+        });
     }, []);
 
     return (
