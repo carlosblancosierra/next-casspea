@@ -21,6 +21,10 @@ declare namespace NodeJS {
         readonly NEXT_PUBLIC_ENV?: string;
         /** Google Ads conversion id used by the purchase event. */
         readonly NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID?: string;
+        /** PostHog project API key. Unset = no PostHog (local dev, previews). */
+        readonly NEXT_PUBLIC_POSTHOG_KEY?: string;
+        /** PostHog ingestion host; defaults to the EU cloud. */
+        readonly NEXT_PUBLIC_POSTHOG_HOST?: string;
 
         readonly NEXT_PUBLIC_GOOGLE_MAPS_API_KEY?: string;
         /** Injected by next.config.js from NEXT_PUBLIC_GOOGLE_MAPS_API_KEY. */
