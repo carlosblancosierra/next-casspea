@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { navigation } from "./navigation";
 
 /**
  * Phone and email live here, not in the announcement bar.
@@ -24,6 +25,23 @@ export default function Footer() {
 			    bottom of a page it would otherwise sit on the footer text. */}
 			<div className='px-2 pt-4 pb-24 md:pb-4'>
 				<div className='flex flex-col items-center justify-center gap-1'>
+					{/* Same links as the navbar, from the same list. */}
+					<nav aria-label='Footer' className='mb-2'>
+						<ul className='flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm'>
+							{navigation.map((item) => (
+								<li key={item.name}>
+									<Link
+										href={item.href}
+										target={item.external ? "_blank" : undefined}
+										rel={item.external ? "noopener noreferrer" : undefined}
+										className='hover:underline underline-offset-2'
+									>
+										{item.name}
+									</Link>
+								</li>
+							))}
+						</ul>
+					</nav>
 					<p className='text-sm text-primary-text-light'>
 						<a
 							href={CONTACT.phone.href}

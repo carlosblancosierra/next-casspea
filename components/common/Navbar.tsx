@@ -5,6 +5,7 @@ import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outli
 import Link from 'next/link'
 import Image from 'next/image';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
+import { navigation } from './navigation';
 
 // Two files, because the navbar already had a light/dark pair of <Image>
 // elements and both pointed at the same one — the red got away with it by
@@ -13,15 +14,6 @@ import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 const LOGO_LIGHT = '/logos/black.png';
 const LOGO_DARK = '/logos/white.png';
 
-const navigation = [
-  { name: 'Store', href: '/shop-now', current: false },
-  { name: 'Flavours', href: '/flavours', current: false },
-  { name: 'Personalised', href: '/personalised', current: false },
-  // { name: 'Thermomix Giveaway', href: '/landing/thermomix', current: false },
-  { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false, external: true },
-  { name: 'Help', href: '/help', current: false },
-  { name: 'About Us', href: '/about-us', current: false },
-]
 
 const mobileNav = [
   ...navigation,

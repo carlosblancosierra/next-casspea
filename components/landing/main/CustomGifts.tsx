@@ -25,7 +25,7 @@ export default function CustomGifts({ config }: CustomGiftsProps) {
             Perfect for weddings, birthdays, corporate gifting and events. Choose your colours, flavours, and packaging.
           </p>
           <Link
-            href={`/help`}
+            href={`/contact`}
             className={`px-6 py-3 rounded-lg text-white font-semibold transition-colors ${config.hero.ctaBgClass}`}
           >
             Request a Custom Order

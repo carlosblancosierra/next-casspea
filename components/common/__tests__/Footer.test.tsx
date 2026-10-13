@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import Footer from '@/components/common/Footer';
+import { navigation } from '@/components/common/navigation';
 
 describe('Footer', () => {
     it('carries the phone number and email as tappable links', () => {
@@ -18,5 +19,17 @@ describe('Footer', () => {
         render(<Footer />);
 
         expect(screen.getByRole('link', { name: /log in/i })).toHaveAttribute('href', '/orders');
+    });
+
+    it('repeats the navbar links', () => {
+        render(<Footer />);
+
+        const footerNav = screen.getByRole('navigation', { name: 'Footer' });
+        for (const item of navigation) {
+            expect(within(footerNav).getByRole('link', { name: item.name }))
+                .toHaveAttribute('href', item.href);
+        }
+        expect(within(footerNav).getByRole('link', { name: 'FAQs' })).toHaveAttribute('href', '/faqs');
+        expect(within(footerNav).getByRole('link', { name: 'Contact' })).toHaveAttribute('href', '/contact');
     });
 });
