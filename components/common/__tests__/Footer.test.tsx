@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import Footer from '@/components/common/Footer';
+import { NAVIGATION } from '@/components/common/siteLinks';
 
 describe('Footer', () => {
     it('carries the phone number and email as tappable links', () => {
@@ -18,5 +19,23 @@ describe('Footer', () => {
         render(<Footer />);
 
         expect(screen.getByRole('link', { name: /log in/i })).toHaveAttribute('href', '/orders');
+    });
+});
+
+describe('Footer navigation', () => {
+    it('links every page in the navbar, so nobody has to scroll back up', () => {
+        render(<Footer />);
+
+        for (const item of NAVIGATION) {
+            // The navbar says "Track"; the footer spells it out.
+            const name = item.name === 'Track' ? 'Track your order' : item.name;
+            expect(screen.getByRole('link', { name })).toHaveAttribute('href', item.href);
+        }
+    });
+
+    it('opens external links in a new tab', () => {
+        render(<Footer />);
+
+        expect(screen.getByRole('link', { name: 'Instagram' })).toHaveAttribute('target', '_blank');
     });
 });

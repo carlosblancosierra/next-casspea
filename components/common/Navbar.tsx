@@ -5,6 +5,7 @@ import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outli
 import Link from 'next/link'
 import Image from 'next/image';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
+import { NAVIGATION, type SiteLink } from './siteLinks';
 
 // Two files, because the navbar already had a light/dark pair of <Image>
 // elements and both pointed at the same one — the red got away with it by
@@ -13,19 +14,9 @@ import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 const LOGO_LIGHT = '/logos/black.png';
 const LOGO_DARK = '/logos/white.png';
 
-const navigation = [
-  { name: 'Store', href: '/shop-now', current: false },
-  { name: 'Flavours', href: '/flavours', current: false },
-  { name: 'Personalised', href: '/personalised', current: false },
-  // { name: 'Thermomix Giveaway', href: '/landing/thermomix', current: false },
-  { name: 'Track', href: 'https://www.royalmail.com/track-your-item', current: false, external: true },
-  { name: 'Help', href: '/help', current: false },
-  { name: 'About Us', href: '/about-us', current: false },
-]
-
-const mobileNav = [
-  ...navigation,
-  { name: 'Log in', href: '/orders', current: false },
+const mobileNav: SiteLink[] = [
+  ...NAVIGATION,
+  { name: 'Log in', href: '/orders' },
 ]
 
 function classNames(...classes: string[]) {
@@ -84,16 +75,14 @@ export default function Nav() {
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
+                    {NAVIGATION.map((item) => (
                       <Link
                         key={item.name}
                         href={item.href}
                         target={item.external ? '_blank' : undefined}
                         rel={item.external ? 'noopener noreferrer' : undefined}
                         className={classNames(
-                          item.current
-                            ? 'bg-gray-900 text-white'
-                            : 'text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text-light dark:hover:bg-gray-700 dark:hover:text-white',
+                          'text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text-light dark:hover:bg-gray-700 dark:hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
                         )}
                       >
@@ -139,7 +128,7 @@ export default function Nav() {
                 >
                   <DisclosureButton
                     className={classNames(
-                      item.current ? 'bg-gray-900 text-white' : 'text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text-light dark:hover:bg-gray-700 dark:hover:text-white',
+                      'text-primary-text hover:bg-gray-100 hover:text-primary-text dark:text-primary-text-light dark:hover:bg-gray-700 dark:hover:text-white',
                       'block w-full rounded-md px-3 py-2 text-base font-medium text-left'
                     )}
                   >
