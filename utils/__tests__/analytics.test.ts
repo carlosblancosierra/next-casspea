@@ -22,8 +22,11 @@ describe('trackAdsPurchase', () => {
 	});
 
 	it('sends the purchase conversion with value, order id and the email for enhanced conversions', () => {
-		process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID = 'AW-11208730912';
 		jest.isolateModules(() => {
+			jest.doMock('@/utils/googleTags', () => ({
+				...jest.requireActual('@/utils/googleTags'),
+				GOOGLE_ADS_ID: 'AW-11208730912',
+			}));
 			// eslint-disable-next-line @typescript-eslint/no-var-requires
 			const { trackAdsPurchase } = require('@/utils/analytics');
 			w.gtag = jest.fn();
@@ -36,6 +39,5 @@ describe('trackAdsPurchase', () => {
 				transaction_id: 'cs_1',
 			});
 		});
-		delete process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID;
 	});
 });
