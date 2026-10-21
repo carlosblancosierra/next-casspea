@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import CheckoutSuccessUnitsSold from '@/components/checkout/CheckoutSuccessUnitsSold';
-import { track, consumePendingPurchase, CURRENCY } from '@/utils/analytics';
+import { track, trackAdsPurchase, consumePendingPurchase, CURRENCY } from '@/utils/analytics';
 
 const ConfirmPage: React.FC = () => {
     useEffect(() => {
@@ -28,6 +28,7 @@ const ConfirmPage: React.FC = () => {
             items: pending?.items,
             coupon: pending?.coupon,
         });
+        trackAdsPurchase(sessionId ?? undefined, pending);
     }, []);
 
     return (

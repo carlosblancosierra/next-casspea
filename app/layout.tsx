@@ -7,6 +7,8 @@ import { Setup, AnalyticsProvider } from '@/components/utils';
 import AnnouncementBar from '@/components/common/AnnouncementBar';
 import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
+import { GOOGLE_TAG_ID, GOOGLE_ADS_ID } from '@/utils/googleTags';
+import { META_PIXEL_ID } from '@/utils/metaPixel';
 import dynamic from 'next/dynamic';
 
 const SummerBreakPopup = dynamic(() => import('@/components/common/SummerBreakPopup'), { ssr: false });
@@ -27,8 +29,6 @@ const CURRENT_EFFECT: EffectType = 'none';
 const CurrentEffect = dynamic(EFFECTS_CONFIG[CURRENT_EFFECT], { ssr: false });
 
 
-
-const GOOGLE_ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID;
 
 const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ subsets: ['latin'] });
@@ -65,15 +65,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script id="gtm-head" strategy="beforeInteractive">
-          {`
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-TWQTXVNR');
-          `}
-        </Script>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet"></link>
@@ -82,10 +73,6 @@ export default function RootLayout({
         className={`${inter.className} min-h-screen bg-main-bg dark:bg-main-bg-dark dark:text-white flex flex-col relative`}
         suppressHydrationWarning
       >
-        <noscript>
-          <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWQTXVNR"
-            height="0" width="0" style={{ display: 'none', visibility: 'hidden' }}></iframe>
-        </noscript>
         {/* Only when the Ads id is set: without it this rendered
             gtag('config', 'undefined'), a junk tag on every page. */}
         {GOOGLE_ADS_ID && (
@@ -99,8 +86,11 @@ export default function RootLayout({
           </Script>
         )}
 
+        {/* The old agency's GTM container (GTM-TWQTXVNR) used to load this
+            Google tag and the Meta pixel. Nobody here can edit it, so both
+            are loaded directly instead; see utils/googleTags.ts. */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-FBD3HVXC41"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`}
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -108,7 +98,20 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-FBD3HVXC41');
+            gtag('config', '${GOOGLE_TAG_ID}');
+          `}
+        </Script>
+
+        <Script id="meta-pixel" strategy="afterInteractive">
+          {`
+            !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+            n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+            document,'script','https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '${META_PIXEL_ID}');
+            fbq('track', 'PageView');
+            window.__casspeaMetaPixelReady = true;
           `}
         </Script>
 
