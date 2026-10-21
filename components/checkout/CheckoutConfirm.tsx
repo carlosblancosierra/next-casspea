@@ -19,6 +19,7 @@ import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
 import { formatCurrency } from '@/utils/currency';
 import { STORE_PICKUP_OPTION_ID } from './constants';
+import { track, rememberPendingPurchase, toAnalyticsItem, toAmount, CURRENCY } from '@/utils/analytics';
 
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -102,6 +103,11 @@ const CheckoutConfirm = () => {
             // Then create the Stripe session
             const response = await createStripeSession().unwrap();
             if (response?.url) {
+                const items = cart?.items.map(toAnalyticsItem) ?? [];
+                const value = toAmount(totalWithShipping);
+                const coupon = cart?.discount?.code || undefined;
+                track('begin_checkout', { currency: CURRENCY, value, items, coupon, shipping_option_id: selectedShippingOption });
+                rememberPendingPurchase({ currency: CURRENCY, value, items, coupon });
                 await new Promise(resolve => setTimeout(resolve, 500));
                 window.location.href = response.url;
             }

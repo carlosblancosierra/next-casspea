@@ -3,7 +3,7 @@ import { Inter, Playfair_Display } from 'next/font/google';
 import type { Metadata } from 'next';
 import Provider from '@/redux/provider';
 import { Footer, Navbar } from '@/components/common';
-import { Setup } from '@/components/utils';
+import { Setup, AnalyticsProvider } from '@/components/utils';
 import AnnouncementBar from '@/components/common/AnnouncementBar';
 import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
@@ -27,6 +27,8 @@ const CURRENT_EFFECT: EffectType = 'none';
 const CurrentEffect = dynamic(EFFECTS_CONFIG[CURRENT_EFFECT], { ssr: false });
 
 
+
+const GOOGLE_ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID;
 
 const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ subsets: ['latin'] });
@@ -84,26 +86,18 @@ export default function RootLayout({
           <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWQTXVNR"
             height="0" width="0" style={{ display: 'none', visibility: 'hidden' }}></iframe>
         </noscript>
-        <Script id="mouseflow" strategy="afterInteractive">
-          {`
-            window._mfq = window._mfq || [];
-            (function() {
-              var mf = document.createElement("script");
-              mf.type = "text/javascript"; mf.defer = true;
-              mf.src = "//cdn.mouseflow.com/projects/67089cbf-94d0-4a51-93a7-c17259e44fc6.js";
-              document.getElementsByTagName("head")[0].appendChild(mf);
-            })();
-          `}
-        </Script>
-
-        <Script id="google-ads" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID}');
-          `}
-        </Script>
+        {/* Only when the Ads id is set: without it this rendered
+            gtag('config', 'undefined'), a junk tag on every page. */}
+        {GOOGLE_ADS_ID && (
+          <Script id="google-ads" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GOOGLE_ADS_ID}');
+            `}
+          </Script>
+        )}
 
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-FBD3HVXC41"
@@ -126,6 +120,7 @@ export default function RootLayout({
         <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="7ef907d7-ea0d-4a43-beec-ca187e2ea5cd" data-blockingmode="auto" type="text/javascript"></script>
         <Provider>
           <Setup />
+          <AnalyticsProvider />
           {/* <GiveawayPopup /> */}
           <SummerBreakPopup />
           <LayoutWrapper>

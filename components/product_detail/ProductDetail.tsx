@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 import { notFound } from 'next/navigation';
 import ProductInfo from '@/components/product_detail/ProductInfo';
@@ -16,6 +16,7 @@ import ProductCard from '../store/ProductCard';
 import { Product } from '@/types/products';
 import { useExperiment } from '@/hooks/useExperiment';
 import { BOX_BUILDER_EXPERIMENT, BUILDER_ADD_TO_CART } from '@/types/experiments';
+import { track as trackEvent, toAmount, CURRENCY } from '@/utils/analytics';
 
 const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> = ({ slug, initialProducts }) => {
 	// Explicitly provide the type for the query result
@@ -28,6 +29,19 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 	// Prefer the SSR-provided products for the first render (SEO / no spinner),
 	// then let the client query keep them current.
 	const products: Product[] = data ?? initialProducts ?? [];
+
+	const viewed = products.find((p) => p.slug === slug);
+	useEffect(() => {
+		if (!viewed) return;
+		const price = toAmount(viewed.current_price ?? viewed.base_price);
+		trackEvent('view_item', {
+			currency: CURRENCY,
+			value: price,
+			items: [{ item_id: String(viewed.id), item_name: viewed.name, item_category: viewed.category?.name, price }],
+		});
+		// Once per product page, not on every products refetch.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [viewed?.id]);
 
 	// Only block the whole page while we genuinely have nothing to show. The A/B
 	// variant only affects the builder, so it waits inside that section instead
