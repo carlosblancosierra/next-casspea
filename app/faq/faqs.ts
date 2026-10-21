@@ -1,6 +1,5 @@
-import Link from 'next/link';
-
-const faqs = [
+// Moved verbatim from the old /help page.
+export const FAQS: { question: string; answer: string }[] = [
     {
         question: "They are too pretty to eat.",
         answer: "Not really a question, but we get this a lot. We promise that they taste better than they look. Imagine that 😊"
@@ -62,72 +61,3 @@ const faqs = [
         answer: "We are very careful when we handle allergens, especially nuts, wheat, milk, or soy. We cannot guarantee that there is no cross-contamination, so if you have any allergies to these products, we recommend you take that into account. For more information, please click here to see our allergen table"
     }
 ];
-
-const HelpPage = () => {
-    return (
-        <div className=" dark:bg-main-bg-dark min-h-screen">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Contact Section */}
-                <section className="main-bg dark:bg-main-bg-dark rounded-lg shadow-sm p-6 mb-8">
-                    <h2 className="text-2xl font-bold text-primary-text dark:text-white mb-4">Contact Us</h2>
-                    <div className="space-y-2 text-primary-text dark:text-primary-text-light">
-                        <p>
-                            <span className="font-medium">Tel:</span>{' '}
-                            <a href="tel:07859790386" className="hover:text-primary dark:hover:text-primary-2">
-                                07859 790386
-                            </a>
-                        </p>
-                        <p>
-                            <span className="font-medium">Email:</span>{' '}
-                            <a href="mailto:info@casspea.co.uk" className="hover:text-primary dark:hover:text-primary-2">
-                                info@casspea.co.uk
-                            </a>
-                        </p>
-                        <p>
-                            <span className="font-medium">Address / Store Pickup:</span> 104 Bedford Hill, London, SW12 9HR
-                        </p>
-                    </div>
-                </section>
-
-                {/* Quick Info Section */}
-                <section className="main-bg dark:bg-main-bg-dark rounded-lg shadow-sm p-6 mb-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="text-center p-4  dark:bg-main-bg-dark rounded-lg">
-                            <h3 className="font-bold text-primary dark:text-primary-2">FREE DELIVERY</h3>
-                            <p className="text-primary-text dark:text-primary-text-light">On all orders over £56</p>
-                        </div>
-                        <div className="text-center p-4 dark:bg-main-bg-dark rounded-lg">
-                            <h3 className="font-bold text-primary dark:text-primary-2">10% OFF</h3>
-                            <p className="text-primary-text dark:text-primary-text-light">Subscribe to our newsletter</p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* FAQs Section */}
-                <section className="main-bg dark:bg-main-bg-dark rounded-lg shadow-sm p-6">
-                    <h2 className="text-2xl font-bold text-primary-text dark:text-white mb-6">Frequently Asked Questions</h2>
-                    <div className="space-y-6">
-                        {faqs.map((faq, index) => (
-                            <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0">
-                                <h3 className="text-lg font-medium text-primary-text dark:text-white mb-2">
-                                    {faq.question}
-                                </h3>
-                                <p className="text-primary-text dark:text-primary-text-light">
-                                    {faq.answer}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                {/* Company Info Footer */}
-                <footer className="mt-8 text-sm text-primary-text dark:text-primary-text-light">
-                    <p>Company Name: CassPea Ltd</p>
-                    <p>Company Number: 14307063</p>
-                </footer>
-            </div>
-        </div>
-    );
-};
-
-export default HelpPage;
