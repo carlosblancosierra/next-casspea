@@ -1,5 +1,6 @@
 import posthog from 'posthog-js';
 import { trackMeta } from './metaPixel';
+import { GOOGLE_ADS_ID, GOOGLE_ADS_PURCHASE_LABEL } from './googleTags';
 
 /**
  * One place every tracked event goes through.
@@ -99,6 +100,8 @@ export interface PendingPurchase {
     currency: string;
     items: AnalyticsItem[];
     coupon?: string;
+    /** For Google Ads enhanced conversions only; Google hashes it. Never sent to analytics. */
+    email?: string;
 }
 
 /**
@@ -123,5 +126,25 @@ export function consumePendingPurchase(): PendingPurchase | null {
         return JSON.parse(raw) as PendingPurchase;
     } catch {
         return null;
+    }
+}
+
+/**
+ * The "Google Ads Purchase" conversion, with the order's value and id so Ads
+ * can report revenue and drop duplicates. The checkout email, when there is
+ * one, feeds enhanced conversions.
+ */
+export function trackAdsPurchase(transactionId: string | undefined, purchase: PendingPurchase | null): void {
+    if (typeof window === 'undefined' || !GOOGLE_ADS_ID) return;
+    try {
+        if (purchase?.email) gtag('set', 'user_data', { email: purchase.email });
+        gtag('event', 'conversion', {
+            send_to: `${GOOGLE_ADS_ID}/${GOOGLE_ADS_PURCHASE_LABEL}`,
+            value: purchase?.value,
+            currency: purchase?.currency ?? CURRENCY,
+            transaction_id: transactionId,
+        });
+    } catch {
+        // A lost event must never fail a customer action.
     }
 }

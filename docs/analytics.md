@@ -7,8 +7,8 @@ Objetivo: saber qué hace la gente en la web (vistas, clicks, embudo de compra) 
 | Herramienta | Para qué | Dónde |
 |---|---|---|
 | **PostHog** (EU) | Vistas, clicks automáticos, embudos, grabaciones de sesión, errores JS y de API | `components/utils/AnalyticsProvider.tsx` |
-| **GA4 + Google Ads** | Campañas y conversiones (se queda como estaba) | `app/layout.tsx` |
-| **Píxel de Meta** (`854317092525657`) | Instagram Ads: `ViewContent`, `AddToCart`, `InitiateCheckout`, `Purchase`, `Lead` | `utils/metaPixel.ts` (el píxel lo carga GTM; el código solo envía los eventos) |
+| **Etiqueta de Google `G-5VDK8X7CHR`** (GA4 + Google Ads `AW-11208730912`) | Visitas, ecommerce y la conversión "Google Ads Purchase" (`trackAdsPurchase`, con importe e ID de pedido) | `app/layout.tsx`, `utils/googleTags.ts` |
+| **Píxel de Meta** (`854317092525657`) | Instagram Ads: `ViewContent`, `AddToCart`, `InitiateCheckout`, `Purchase`, `Lead` | `utils/metaPixel.ts` (el píxel se carga en `app/layout.tsx`) |
 | **Cookiebot** | Consentimiento: manda sobre todo lo demás | `app/layout.tsx` |
 | ~~Mouseflow~~ | Eliminado: no se usaba y PostHog cubre las grabaciones | — |
 
@@ -77,8 +77,11 @@ Sin la key (en local o en previews), PostHog no se carga y la web funciona igual
 - `posthog.identify()` tras el login, para unir la actividad de un mismo cliente entre dispositivos. Necesita que el backend devuelva el id del usuario.
 - Mover el A/B test del box builder (`useExperiment`) a feature flags de PostHog, o enviar la variante como propiedad de los eventos.
 - `purchase` desde el servidor (webhook de Stripe → PostHog), para no perder compras de quien cierra la pestaña antes de volver a la web.
-- Revisar si GA4 está duplicado: se carga directo con `gtag` y también puede estar dentro del contenedor GTM.
 
 ## Coste
 
 Límites aproximados del plan gratis de PostHog, por mes: 1M eventos, 5.000 grabaciones y 100.000 excepciones. Por encima se paga por uso, y se puede poner un límite de gasto en *Billing* para no pagar nunca sin querer.
+
+## Historial: el GTM de la agencia
+
+Hasta noviembre de 2026 la web cargaba `GTM-TWQTXVNR`, un contenedor de la agencia anterior al que nadie de CassPea tiene acceso. Contenía la etiqueta de Google `G-5VDK8X7CHR`, la conversión de Ads sin importe, el píxel de Meta (con un Purchase en una URL que ya no existía) y etiquetas de Kenshoo/Skai. Se sustituyó por carga directa desde el código. También se eliminó el GA4 `G-FBD3HVXC41`, que duplicaba visitas en la misma propiedad.

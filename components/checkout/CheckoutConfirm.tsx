@@ -107,7 +107,7 @@ const CheckoutConfirm = () => {
                 const value = toAmount(totalWithShipping);
                 const coupon = cart?.discount?.code || undefined;
                 track('begin_checkout', { currency: CURRENCY, value, items, coupon, shipping_option_id: selectedShippingOption });
-                rememberPendingPurchase({ currency: CURRENCY, value, items, coupon });
+                rememberPendingPurchase({ currency: CURRENCY, value, items, coupon, email: session?.email || undefined });
                 await new Promise(resolve => setTimeout(resolve, 500));
                 window.location.href = response.url;
             }

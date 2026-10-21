@@ -13,3 +13,29 @@ describe('analytics helpers', () => {
 		expect(consumePendingPurchase()).toBeNull();
 	});
 });
+
+describe('trackAdsPurchase', () => {
+	const w = window as Window & { gtag?: jest.Mock };
+	afterEach(() => {
+		delete w.gtag;
+		jest.resetModules();
+	});
+
+	it('sends the purchase conversion with value, order id and the email for enhanced conversions', () => {
+		process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID = 'AW-11208730912';
+		jest.isolateModules(() => {
+			// eslint-disable-next-line @typescript-eslint/no-var-requires
+			const { trackAdsPurchase } = require('@/utils/analytics');
+			w.gtag = jest.fn();
+			trackAdsPurchase('cs_1', { currency: 'GBP', value: 30, items: [], email: 'a@b.co' });
+			expect(w.gtag).toHaveBeenNthCalledWith(1, 'set', 'user_data', { email: 'a@b.co' });
+			expect(w.gtag).toHaveBeenNthCalledWith(2, 'event', 'conversion', {
+				send_to: 'AW-11208730912/eqyOCMKevcYaEKDS3uAp',
+				value: 30,
+				currency: 'GBP',
+				transaction_id: 'cs_1',
+			});
+		});
+		delete process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID;
+	});
+});
