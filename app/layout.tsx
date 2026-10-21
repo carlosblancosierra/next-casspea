@@ -28,6 +28,8 @@ const CurrentEffect = dynamic(EFFECTS_CONFIG[CURRENT_EFFECT], { ssr: false });
 
 
 
+const GOOGLE_ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID;
+
 const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
@@ -121,14 +123,18 @@ export default function RootLayout({
           <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWQTXVNR"
             height="0" width="0" style={{ display: 'none', visibility: 'hidden' }}></iframe>
         </noscript>
-        <Script id="google-ads" strategy="afterInteractive" data-cookieconsent="ignore">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID}');
-          `}
-        </Script>
+        {/* Only when the Ads id is set: without it this rendered
+            gtag('config', 'undefined'), a junk tag on every page. */}
+        {GOOGLE_ADS_ID && (
+          <Script id="google-ads" strategy="afterInteractive" data-cookieconsent="ignore">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GOOGLE_ADS_ID}');
+            `}
+          </Script>
+        )}
 
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-FBD3HVXC41"
