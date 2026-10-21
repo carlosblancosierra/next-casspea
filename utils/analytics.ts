@@ -1,10 +1,12 @@
 import posthog from 'posthog-js';
+import { trackMeta } from './metaPixel';
 
 /**
  * One place every tracked event goes through.
  *
- * Each event is sent to PostHog (product analytics, replays, errors) and, for
- * the GA4 ecommerce events Google Ads bids on, to gtag as well. Tracking must
+ * Each event is sent to PostHog (product analytics, replays, errors), the GA4
+ * ecommerce events Google Ads bids on to gtag as well, and the shopping ones
+ * to the Meta pixel for Instagram ads. Tracking must
  * never break the shop: every call is a no-op on the server, without a
  * PostHog key, or if a vendor script was blocked.
  *
@@ -51,6 +53,7 @@ export function track(event: string, properties: Properties = {}): void {
     try {
         if (isAnalyticsEnabled()) posthog.capture(event, properties);
         if (GA4_EVENTS.has(event)) gtag('event', event, properties);
+        trackMeta(event, properties);
     } catch {
         // A lost event must never fail a customer action.
     }
