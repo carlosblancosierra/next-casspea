@@ -100,7 +100,7 @@ describe('ProductFormBoxes in pack mode', () => {
         // getTotalSteps() already returns 7 for a pack, so this is really
         // checking that isPack is on from the first render rather than only
         // after the upsell.
-        expect(container.querySelectorAll('.rounded-full.w-10')).toHaveLength(7);
+        expect(container.querySelectorAll('[data-step-marker]')).toHaveLength(7);
     });
 
     it('still offers Add to Cart on an ordinary box page', async () => {
@@ -119,7 +119,7 @@ describe('ProductFormBoxes in pack mode', () => {
         searchParams.get.mockReturnValue(null);
         const { container } = renderPack();
 
-        expect(container.querySelectorAll('.rounded-full.w-10')).toHaveLength(3);
+        expect(container.querySelectorAll('[data-step-marker]')).toHaveLength(3);
     });
 
     function renderPack() {

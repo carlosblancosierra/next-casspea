@@ -192,13 +192,13 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
     const StepIndicator = () => {
         const totalSteps = getTotalSteps();
         return (
-            <div className="flex items-center justify-center mb-8">
+            <div className="flex w-full items-center justify-between mb-8">
                 {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
                     <React.Fragment key={step}>
-                        {/* shrink-0: at 7 steps the row wants 472px, so on a
-                            phone flex was shrinking the width and not the
-                            height and the circles came out as ovals. */}
-                        <div className={`shrink-0 flex items-center justify-center w-10 h-10 rounded-full border-2 text-sm font-semibold transition-colors ${
+                        {/* shrink-0 keeps them round; they are small and the
+                            connectors shrink so 7 steps fit the narrow builder
+                            column instead of spilling out of the card. */}
+                        <div data-step-marker className={`shrink-0 flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 text-sm font-semibold transition-colors ${
                             step <= currentStep
                                 ? 'bg-primary border-primary text-primary-text-light'
                                 : 'border-gray-300 text-primary-text dark:text-primary-text-light bg-main-bg dark:bg-main-bg-dark'
@@ -206,7 +206,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                             {step}
                         </div>
                         {step < totalSteps && (
-                            <div className={`flex-1 h-0.5 mx-2 sm:mx-4 transition-colors ${
+                            <div className={`flex-1 min-w-[4px] h-0.5 mx-1 transition-colors ${
                                 step < currentStep ? 'bg-primary' : 'bg-main-bg'
                             }`} />
                         )}
@@ -647,7 +647,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                         {/* Pictures rather than a dropdown: you are choosing
                             between chocolates, and a name in a select says
                             nothing about what arrives. Two up on a phone. */}
-                        <div className="mb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div className="mb-4 grid grid-cols-2 gap-3">
                             {allProducts?.filter(p => p.category?.slug === 'hot-chocolate').map(p => (
                                 <SelectableProductCard
                                     key={p.id}
@@ -684,7 +684,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                     <div className="transition-opacity">
                         <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-light mb-4">Step 5: Choose your Chocolate Bark</h3>
 
-                        <div className="mb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div className="mb-4 grid grid-cols-2 gap-3">
                             {allProducts?.filter(p => p.category?.slug === 'chocolate-barks').map(p => (
                                 <SelectableProductCard
                                     key={p.id}
@@ -795,7 +795,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                 onClick={() => setLoveSleeve(true)}
                                 className={`flex-1 px-6 py-4 rounded-lg border-2 font-medium transition-colors ${
                                     loveSleeve === true
-                                        ? 'border-primary bg-primary/10 text-primary'
+                                        ? 'border-primary bg-primary text-primary-text-light'
                                         : 'border-gray-300 dark:border-gray-600 hover:border-primary/50 text-primary-text dark:text-primary-text-light'
                                 }`}
                             >
@@ -806,7 +806,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                 onClick={() => setLoveSleeve(false)}
                                 className={`flex-1 px-6 py-4 rounded-lg border-2 font-medium transition-colors ${
                                     loveSleeve === false
-                                        ? 'border-primary bg-primary/10 text-primary'
+                                        ? 'border-primary bg-primary text-primary-text-light'
                                         : 'border-gray-300 dark:border-gray-600 hover:border-primary/50 text-primary-text dark:text-primary-text-light'
                                 }`}
                             >

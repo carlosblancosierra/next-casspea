@@ -51,14 +51,15 @@ export default function SelectableProductCard({
           {soldOutLabel}
         </div>
       )}
-      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-main-bg-dark lg:aspect-none group-hover:opacity-75 lg:h-80">
+      {/* Square at every width. It used to switch to a fixed 320px height on
+          lg, which in the narrow builder column made tall, skinny strips. */}
+      <div className="relative aspect-square w-full overflow-hidden rounded-md bg-gray-200 dark:bg-main-bg-dark group-hover:opacity-75">
         <Image
           alt={product.name}
           src={displayImage}
-          width={0}
-          height={0}
-          sizes="100vw"
-          className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+          fill
+          sizes="(min-width: 768px) 15vw, 50vw"
+          className="object-cover object-center"
         />
       </div>
       {price === 0 ? (
