@@ -12,17 +12,18 @@ import dynamic from 'next/dynamic';
 const SummerBreakPopup = dynamic(() => import('@/components/common/SummerBreakPopup'), { ssr: false });
 
 // Available effects - add new effects here
-type EffectType = 'snow' | 'heart' | 'autumn' | 'none';
+type EffectType = 'snow' | 'christmas' | 'heart' | 'autumn' | 'none';
 
 const EFFECTS_CONFIG: Record<EffectType, () => Promise<{ default: React.ComponentType }>> = {
   snow: () => import('@/components/common/SnowEffect'),
+  christmas: () => import('@/components/common/ChristmasEffect'),
   heart: () => import('@/components/common/HeartEffect'),
   autumn: () => import('@/components/common/AutumEffect'),
   none: () => Promise.resolve({ default: () => null })
 };
 
-// Change this constant to switch effects - can be 'snow', 'heart', 'autumn', or 'none'
-const CURRENT_EFFECT: EffectType = 'none';
+// Change this constant to switch effects - can be 'snow', 'christmas', 'heart', 'autumn', or 'none'
+const CURRENT_EFFECT: EffectType = 'christmas';
 
 const CurrentEffect = dynamic(EFFECTS_CONFIG[CURRENT_EFFECT], { ssr: false });
 

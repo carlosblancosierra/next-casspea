@@ -4,6 +4,7 @@ import React from 'react';
 import { Product as ProductType } from '@/types/products';
 import { useProductDiscountedPrice } from '@/utils/useProductDiscountedPrice';
 import PreorderCountdown from './PreorderCountdown';
+import ChristmasDeliveryCountdown from '@/components/common/ChristmasDeliveryCountdown';
 
 interface ProductInfoProps {
     product: ProductType;
@@ -19,6 +20,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                     {product.preorder && product.preorder_finish_date && (
                         <PreorderCountdown preorderFinishDate={product.preorder_finish_date} />
                     )}
+                    {product.slug === 'advent-calendar' && <ChristmasDeliveryCountdown />}
                     <h2 className="text-2xl md:text-3xl font-extrabold font-playfair text-primary-text dark:text-primary-text-light">
                         {product.seo_title}
                     </h2>

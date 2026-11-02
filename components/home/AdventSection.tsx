@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getProduct } from '@/utils/products';
+import ChristmasDeliveryCountdown from '@/components/common/ChristmasDeliveryCountdown';
 
 /**
  * Restored from the dead-code sweep that removed it (it had been left
@@ -46,6 +47,8 @@ export default async function AdventSection() {
         <p className="text-sm md:text-base text-primary-button-text">
           A 24-day countdown to Christmas with 24 delicious treats.
         </p>
+
+        <ChristmasDeliveryCountdown />
 
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <Link
