@@ -22,7 +22,7 @@ export default function ClientFlavourRow({ flavour, quantity, step, unitPrice, o
         'p-2 bg-gray-200 dark:bg-main-bg-dark rounded hover:bg-gray-300 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors';
 
     return (
-        <div className="flex items-center gap-4 p-4">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-3 p-4">
             <div className="relative h-16 w-16 shrink-0">
                 <Image
                     src={flavour.thumbnail || flavour.image || '/flavours/default.png'}
@@ -47,7 +47,8 @@ export default function ClientFlavourRow({ flavour, quantity, step, unitPrice, o
                 </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            {/* Own row on phones, so the name and description get the full width. */}
+            <div className="flex w-full items-center justify-end gap-2 sm:w-auto">
                 <button
                     type="button"
                     aria-label={`Remove ${step} ${flavour.name}`}

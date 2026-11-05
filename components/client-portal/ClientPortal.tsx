@@ -48,9 +48,12 @@ export default function ClientPortal({ client }: { client: ClientPageConfig }) {
     return (
         <div className="py-8">
             {/* Client hero */}
+            {/* The surface follows the active palette (theme/palettes.js); the
+                client's own colour is only an accent, so it never fights the
+                site theme or breaks white-text contrast. */}
             <section
-                className="mb-10 overflow-hidden rounded-xl text-primary-text-light shadow-lg"
-                style={{ background: `linear-gradient(120deg, #002B57 0%, ${client.brandColor} 100%)` }}
+                className="mb-10 overflow-hidden rounded-xl border-l-8 bg-gradient-primary text-primary-text-light shadow-lg"
+                style={{ borderLeftColor: client.brandColor }}
             >
                 <div className="flex flex-col gap-6 p-6 md:flex-row md:items-center md:p-10">
                     <div className="flex items-center gap-4">
@@ -86,12 +89,12 @@ export default function ClientPortal({ client }: { client: ClientPageConfig }) {
 
             <div className="grid gap-8 lg:grid-cols-3">
                 {/* Flavours */}
-                <section className="lg:col-span-2">
-                    <div className="mb-1 flex items-end justify-between gap-3">
+                <section className="min-w-0 lg:col-span-2">
+                    <div className="mb-1 flex flex-wrap items-end justify-between gap-3">
                         <h2 className={`${playfair.className} text-2xl font-bold text-primary-text dark:text-primary-text-light`}>
                             Individual chocolates
                         </h2>
-                        <span className="rounded-full bg-amber-700 px-2 py-0.5 text-xs font-bold text-white shadow">
+                        <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-bold text-accent-text shadow">
                             Packs of {step}
                         </span>
                     </div>

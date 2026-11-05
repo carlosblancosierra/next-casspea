@@ -7,7 +7,7 @@ export interface ClientPageConfig {
     name: string;
     /** Path under /public or an absolute URL. Empty shows the initials. */
     logo?: string;
-    /** Brand colour used in the hero gradient. */
+    /** Client brand colour, used as an accent (hero edge and initials). */
     brandColor: string;
     welcomeMessage: string;
     highlights: string[];
