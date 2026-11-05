@@ -20,13 +20,15 @@ export interface ClientPageConfig {
 }
 
 export const CLIENT_PAGES: Record<string, ClientPageConfig> = {
-    demo: {
-        slug: 'demo',
-        name: 'Northwind Studio',
-        brandColor: '#0F766E',
+    mclaren: {
+        slug: 'mclaren',
+        name: 'McLaren',
+        // Drop the logo in public/clients/mclaren.png and set
+        // logo: '/clients/mclaren.png'. Until then the initial is shown.
+        brandColor: '#FF8000',
         welcomeMessage:
-            "Hi team! We've picked these chocolates for your end-of-year gifts. Choose how many of each you'd like and add them to your cart.",
-        highlights: ['Dispatch from 1 December', 'Client prices applied', 'Sold in packs of 10'],
+            "Welcome! Choose your favourite flavours and how many of each you'd like, then add them to your cart.",
+        highlights: [],
         flavourCount: 4,
         quantityStep: 10,
         unitPrice: 1.8,
