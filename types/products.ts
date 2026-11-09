@@ -101,6 +101,8 @@ export interface Product {
     indulgence_image_webp?: string | null;
 
     custom_options?: ProductCustomOption[];
+    /** Cart quantities must be a multiple of this (e.g. 10 for individual chocolates). */
+    quantity_step?: number;
 
     gallery_images?: ProductGalleryImage[];
 

@@ -1,144 +1,129 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import Image from 'next/image';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Playfair_Display } from 'next/font/google';
-import { ShoppingBagIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
-import Spinner from '@/components/common/Spinner';
+import { toast } from 'react-toastify';
+import { ShoppingBagIcon } from '@heroicons/react/24/outline';
+import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice';
+import { ClientPageItem, UnlockedClientPage } from '@/types/clients';
 import { formatCurrency } from '@/utils/currency';
 import ClientFlavourRow, { snapToStep } from './ClientFlavourRow';
-import { ClientPageConfig } from './clientPages';
+import ClientLogos from './ClientLogos';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
-const initials = (name: string) =>
-    name
-        .split(/\s+/)
-        .map(word => word[0])
-        .join('')
-        .slice(0, 2)
-        .toUpperCase();
+const stepOf = (item: ClientPageItem) => Math.max(1, item.product.quantity_step ?? 1);
+const priceOf = (item: ClientPageItem) => Number(item.product.current_price ?? item.product.base_price ?? 0);
+// Product names are "McLaren - Individual Chocolate - <flavour>": show just the flavour.
+const nameOf = (item: ClientPageItem) => item.flavour?.name ?? item.product.name.split(' - ').pop() ?? item.product.name;
 
-export default function ClientPortal({ client }: { client: ClientPageConfig }) {
-    const { data: flavours, isLoading, error } = useGetFlavoursQuery();
-    const offered = useMemo(
-        () => (flavours ?? []).slice(0, client.flavourCount),
-        [flavours, client.flavourCount],
-    );
+export default function ClientPortal({ page }: { page: UnlockedClientPage }) {
+    const router = useRouter();
+    const [addCartItem] = useAddCartItemMutation();
     const [quantities, setQuantities] = useState<Record<number, number>>({});
-    const [added, setAdded] = useState(false);
+    const [adding, setAdding] = useState(false);
 
-    const step = client.quantityStep;
+    const items = page.items.filter(item => !item.product.sold_out);
     // Snap here too, so a half-typed value never counts towards the total.
-    const selected = offered
-        .map(flavour => ({ flavour, quantity: snapToStep(quantities[flavour.id] ?? 0, step) }))
-        .filter(item => item.quantity > 0);
-    const totalPieces = selected.reduce((sum, item) => sum + item.quantity, 0);
-    const subtotal = totalPieces * client.unitPrice;
+    const selected = items
+        .map(item => ({ item, quantity: snapToStep(quantities[item.product.id] ?? 0, stepOf(item)) }))
+        .filter(line => line.quantity > 0);
+    const totalPieces = selected.reduce((sum, line) => sum + line.quantity, 0);
+    const subtotal = selected.reduce((sum, line) => sum + line.quantity * priceOf(line.item), 0);
+    const steps = Array.from(new Set(items.map(stepOf)));
+    const commonStep = steps.length === 1 ? steps[0] : null;
 
-    const setQuantity = (id: number, quantity: number) => {
-        setAdded(false);
-        setQuantities(prev => ({ ...prev, [id]: quantity }));
+    const handleAddToCart = async () => {
+        setAdding(true);
+        try {
+            // One request per flavour, in order, so a failure says which one.
+            for (const { item, quantity } of selected) {
+                await addCartItem({ product: item.product.id, quantity }).unwrap();
+            }
+            toast.success('Added to your cart!');
+            router.push('/cart');
+        } catch (error) {
+            console.error('Client page add to cart error:', error);
+            toast.error('Something went wrong adding to your cart. Please try again.');
+        } finally {
+            setAdding(false);
+        }
     };
-
-    // Mock only: the cart is not wired up yet.
-    const handleAddToCart = () => setAdded(true);
 
     return (
         <div className="py-8">
-            {/* Client hero */}
             {/* The surface follows the active palette (theme/palettes.js); the
                 client's own colour is only an accent, so it never fights the
                 site theme or breaks white-text contrast. */}
             <section
                 className="mb-10 overflow-hidden rounded-xl border-l-8 bg-gradient-primary text-primary-text-light shadow-lg"
-                style={{ borderLeftColor: client.brandColor }}
+                style={{ borderLeftColor: page.brand_color || undefined }}
             >
                 <div className="flex flex-col gap-6 p-6 md:flex-row md:items-center md:p-10">
-                    <div className="flex items-center gap-4">
-                        <div
-                            className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white text-2xl font-bold"
-                            style={{ color: client.brandColor }}
-                        >
-                            {client.logo ? (
-                                <Image src={client.logo} alt={client.name} fill sizes="80px" className="object-contain p-2" />
-                            ) : (
-                                initials(client.name)
-                            )}
-                        </div>
-                        <span className="text-2xl font-light opacity-70">×</span>
-                        <div className="rounded-lg bg-white px-3 py-2">
-                            <Image src="/logos/black.png" alt="CassPea" width={112} height={32} className="h-auto w-28" />
-                        </div>
-                    </div>
+                    <ClientLogos name={page.name} logo={page.logo} brandColor={page.brand_color} />
                     <div className="md:ml-6">
                         <p className="text-xs uppercase tracking-widest opacity-80">Private collection</p>
-                        <h1 className={`${playfair.className} text-3xl font-bold md:text-4xl`}>{client.name}</h1>
-                        <p className="mt-2 max-w-xl text-sm opacity-90 md:text-base">{client.welcomeMessage}</p>
+                        <h1 className={`${playfair.className} text-3xl font-bold md:text-4xl`}>{page.name}</h1>
+                        {page.welcome_message && (
+                            <p className="mt-2 max-w-xl text-sm opacity-90 md:text-base">{page.welcome_message}</p>
+                        )}
                     </div>
                 </div>
-                {client.highlights.length > 0 && (
-                    <div className="flex flex-wrap gap-x-6 gap-y-1 bg-black/20 px-6 py-2 text-xs md:px-10">
-                        {client.highlights.map(text => (
-                            <span key={text}>{text}</span>
-                        ))}
-                    </div>
-                )}
             </section>
 
             <div className="grid gap-8 lg:grid-cols-3">
-                {/* Flavours */}
                 <section className="min-w-0 lg:col-span-2">
                     <div className="mb-1 flex flex-wrap items-end justify-between gap-3">
                         <h2 className={`${playfair.className} text-2xl font-bold text-primary-text dark:text-primary-text-light`}>
                             Individual chocolates
                         </h2>
-                        <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-bold text-accent-text shadow">
-                            Packs of {step}
-                        </span>
+                        {commonStep && commonStep > 1 && (
+                            <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-bold text-accent-text shadow">
+                                Packs of {commonStep}
+                            </span>
+                        )}
                     </div>
                     <p className="mb-4 text-sm text-primary-text/70 dark:text-primary-text-light/70">
-                        Choose how many of each flavour you&apos;d like, in multiples of {step}.
+                        {commonStep && commonStep > 1
+                            ? `Choose how many of each flavour you'd like, in multiples of ${commonStep}.`
+                            : "Choose how many of each flavour you'd like."}
                     </p>
 
-                    {isLoading ? (
-                        <div className="flex justify-center py-16">
-                            <Spinner md />
-                        </div>
-                    ) : error || offered.length === 0 ? (
+                    {items.length === 0 ? (
                         <p className="rounded-lg border border-gray-200 p-6 text-center text-primary-text/60 dark:border-gray-700 dark:text-primary-text-light/60">
-                            Flavours are unavailable right now. Please check back soon.
+                            There&apos;s nothing available right now. Please check back soon.
                         </p>
                     ) : (
                         <div className="divide-y divide-gray-200 rounded-lg border border-gray-200 bg-main-bg shadow-md dark:divide-gray-700 dark:border-gray-700 dark:bg-main-bg-dark">
-                            {offered.map(flavour => (
+                            {items.map(item => (
                                 <ClientFlavourRow
-                                    key={flavour.id}
-                                    flavour={flavour}
-                                    quantity={quantities[flavour.id] ?? 0}
-                                    step={step}
-                                    unitPrice={client.unitPrice}
-                                    onChange={q => setQuantity(flavour.id, q)}
+                                    key={item.id}
+                                    name={nameOf(item)}
+                                    description={item.flavour?.mini_description}
+                                    image={item.flavour?.image ?? item.product.thumbnail ?? item.product.image}
+                                    quantity={quantities[item.product.id] ?? 0}
+                                    step={stepOf(item)}
+                                    unitPrice={priceOf(item)}
+                                    onChange={q => setQuantities(prev => ({ ...prev, [item.product.id]: q }))}
                                 />
                             ))}
                         </div>
                     )}
                 </section>
 
-                {/* Summary */}
                 <aside className="h-fit rounded-lg border border-gray-200 bg-main-bg p-5 shadow-lg dark:border-gray-700 dark:bg-main-bg-dark lg:sticky lg:top-24">
                     <h3 className="mb-3 text-lg font-semibold text-primary-text dark:text-primary-text-light">Your selection</h3>
                     {selected.length === 0 ? (
                         <p className="mb-4 text-sm text-primary-text/50 dark:text-primary-text-light/50">Nothing selected yet.</p>
                     ) : (
                         <ul className="mb-4 space-y-2 text-sm text-primary-text dark:text-primary-text-light">
-                            {selected.map(({ flavour, quantity }) => (
-                                <li key={flavour.id} className="flex justify-between gap-2">
+                            {selected.map(({ item, quantity }) => (
+                                <li key={item.id} className="flex justify-between gap-2">
                                     <span>
-                                        {quantity} × {flavour.name}
+                                        {quantity} × {nameOf(item)}
                                     </span>
-                                    <span>{formatCurrency(quantity * client.unitPrice)}</span>
+                                    <span>{formatCurrency(quantity * priceOf(item))}</span>
                                 </li>
                             ))}
                         </ul>
@@ -152,19 +137,13 @@ export default function ClientPortal({ client }: { client: ClientPageConfig }) {
                     </p>
                     <button
                         type="button"
-                        disabled={totalPieces === 0}
+                        disabled={totalPieces === 0 || adding}
                         onClick={handleAddToCart}
                         className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-autumn py-4 text-lg font-semibold text-primary-text-light shadow transition-opacity hover:opacity-95 disabled:opacity-60 dark:bg-primary-2"
                     >
                         <ShoppingBagIcon className="h-5 w-5" />
-                        Add to cart
+                        {adding ? 'Adding…' : 'Add to cart'}
                     </button>
-                    {added && (
-                        <p className="mt-2 flex items-center justify-center gap-1 text-sm text-green-700 dark:text-green-400">
-                            <CheckCircleIcon className="h-4 w-4" />
-                            Preview only: the cart isn&apos;t connected yet.
-                        </p>
-                    )}
                 </aside>
             </div>
         </div>
