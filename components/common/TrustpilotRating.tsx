@@ -2,6 +2,10 @@ import Image from 'next/image';
 
 export const TRUSTPILOT_URL = 'https://uk.trustpilot.com/review/www.casspea.co.uk';
 
+/** Update these from the Trustpilot page when the numbers change. */
+export const TRUSTPILOT_SCORE = '4.6';
+export const TRUSTPILOT_REVIEW_COUNT = 78;
+
 interface Props {
     className?: string;
     /**
@@ -30,7 +34,7 @@ export default function TrustpilotRating({
         <div className={`flex items-center gap-x-2 justify-center ${className}`}>
             <Image
                 src="/home/stars-4.5.svg"
-                alt="Trustpilot rating 4.7 out of 5"
+                alt={`Trustpilot rating ${TRUSTPILOT_SCORE} out of 5`}
                 width={100}
                 height={100}
                 className="inline-block"
@@ -40,7 +44,7 @@ export default function TrustpilotRating({
                 className={`text-sm font-medium inline-block hover:underline ${linkClassName}`}
                 {...(leavesTheSite ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             >
-                4.7 on Trustpilot (74 reviews)
+                {TRUSTPILOT_SCORE} on Trustpilot ({TRUSTPILOT_REVIEW_COUNT} reviews)
             </a>
         </div>
     );

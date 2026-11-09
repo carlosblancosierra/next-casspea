@@ -23,7 +23,7 @@ describe('ReviewCarousel', () => {
         render(<ReviewCarousel />);
 
         // Every quoted review is a five-star one; the 4.5 asset belongs on the
-        // 4.7 aggregate, which is what the rating above the cards shows.
+        // 4.6 aggregate, which is what the rating above the cards shows.
         expect(screen.getAllByAltText(/Rated 5 out of 5/).length).toBeGreaterThan(1);
     });
 

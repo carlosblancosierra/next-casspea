@@ -42,4 +42,22 @@ describe('ShopNowCTA', () => {
 
         expect(screen.queryByRole('link', { name: /Trustpilot/ })).not.toBeInTheDocument();
     });
+
+    it('shows an optional outline button after the main one', () => {
+        render(<ShopNowCTA label="Order the Advent calendar" href="/a" secondary={{ label: 'Shop Christmas gifts', href: '/b' }} />);
+
+        const primary = screen.getByRole('link', { name: /Order the Advent calendar/ });
+        const secondary = screen.getByRole('link', { name: 'Shop Christmas gifts' });
+        expect(primary).toHaveAttribute('href', '/a');
+        expect(secondary).toHaveAttribute('href', '/b');
+        expect(secondary.className).toContain('border-primary');
+        expect(secondary.className.split(' ')).not.toContain('bg-primary');
+        // eslint-disable-next-line no-bitwise
+        expect(primary.compareDocumentPosition(secondary) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
+    it('has no second button unless one is passed', () => {
+        render(<ShopNowCTA />);
+        expect(screen.getAllByRole('link')).toHaveLength(2); // rating + main button
+    });
 });

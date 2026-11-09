@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from '@/components/store/ProductCard';
 import { Product } from '@/types/products';
 import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
+import { orderRow } from './orderRow';
 
 const variants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -13,18 +14,17 @@ const variants = {
 export default function HomeProductsGrid({
     products,
     categorySlug,
+    leadSlugs = [],
 }: {
+    /** Already ordered by the server (see orderRow). */
     products: Product[];
     categorySlug?: string;
+    leadSlugs?: string[];
 }) {
     // SSR paints these instantly; the client refreshes so price/availability
     // changes show without waiting for a rebuild. Falls back to the SSR list.
     const { data } = useGetActiveProductsQuery();
-    const list = data
-        ? categorySlug
-            ? data.filter((p) => p.category?.slug === categorySlug)
-            : data
-        : products;
+    const list = data ? orderRow(data, categorySlug, leadSlugs) : products;
 
     return (
         <section className="dark:bg-main-bg-dark">

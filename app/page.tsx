@@ -12,6 +12,7 @@ import ReviewCarousel from '@/components/common/ReviewCarousel';
 import HomeProductsServer from '@/components/home/HomeProductsServer';
 import AdventSection, { ADVENT_SLUG } from '@/components/home/AdventSection';
 import { getProduct } from '@/utils/products';
+import { HOME_HERO } from '@/config/homeHero';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
 import { HomeSummerBanner, HomeSummerBoxes, HomeSignatureGate } from '@/components/home/HomeSummer';
 import dynamic from 'next/dynamic';
@@ -52,13 +53,6 @@ const Section = ({
   </Suspense>
 );
 
-// Button group for hero section
-const ButtonGroup = () => (
-  <div className="hidden lg:flex">
-    <ShopNowCTA />
-  </div>
-);
-
 // Initialize font
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
@@ -72,60 +66,37 @@ async function getAdventCarouselImage(): Promise<string | null> {
   return images[2] || null;
 }
 
-// Hero section component (grid now splits at md instead of lg)
+// Hero section. A server component, so the H1, the preview line and the
+// buttons are in the HTML the server sends. The copy comes from
+// config/homeHero.ts.
+//
+// The text is written once for every width: it used to be two copies (one for
+// phones, one for desktop), which put two H1s on the page. On phones it comes
+// first and the pictures follow; from lg the pictures move to the left.
 const HeroSection = async () => {
   const adventImage = await getAdventCarouselImage();
+  const hero = HOME_HERO;
 
   return (
   <section className="dark:bg-main-bg-dark">
     <div className="grid grid-cols-1 lg:grid-cols-12 mx-auto lg:gap-8 xl:gap-0 lg:pb-8 relative">
-      <div className="col-span-1 lg:col-span-6">
-        {/* <div className="hidden md:grid md:grid-cols-2 md:gap-4">
-          <div className="aspect-square">
-            <Image
-              src="/home/2026/01/1.jpg"
-              width={0}
-              height={0}
-              sizes="50vw"
-              priority
-              className="w-full h-full object-cover rounded-lg"
-              alt="CassPea Chocolates 1"
-            />
-          </div>
-          <div className="aspect-square">
-            <Image
-              src="/home/2026/01/5.jpg"
-              width={0}
-              height={0}
-              sizes="50vw"
-              priority
-              className="w-full h-full object-cover rounded-lg"
-              alt="CassPea Chocolates 2"
-            />
-          </div>
-          <div className="aspect-square">
-            <Image
-              src="/home/2026/01/4.jpg"
-              width={0}
-              height={0}
-              sizes="50vw"
-              priority
-              className="w-full h-full object-cover rounded-lg"
-              alt="CassPea Chocolates 3"
-            />
-          </div>
-          <div className="aspect-square">
-            <Image
-              src="/home/2026/01/2.jpg"
-              width={0}
-              height={0}
-              sizes="50vw"
-              priority
-              className="w-full h-full object-cover rounded-lg"
-              alt="CassPea Chocolates 4"
-            />
-          </div>
-        </div> */}
+      <div className="lg:col-span-6 lg:order-2 lg:pl-8 lg:self-center min-w-0">
+        <h1
+          className={`${playfair.className} mb-2 md:mb-3 text-[2rem] md:text-6xl xl:text-8xl text-primary-text font-bold tracking-tight leading-none dark:text-white break-words`}
+        >
+          {hero.heading}
+        </h1>
+        <p className="mb-3 lg:mb-6 text-base md:text-lg lg:text-xl xl:text-2xl text-primary-text dark:text-primary-text-light">
+          {hero.preview}
+        </p>
+        <ShopNowCTA
+          label={hero.primaryCta.label}
+          href={hero.primaryCta.href}
+          secondary={hero.secondaryCta}
+          className="mb-4"
+        />
+      </div>
+      <div className="lg:col-span-6 lg:order-1">
         <div className="hidden lg:block aspect-square">
           <Image
             src="/home/2026/01/1.jpg"
@@ -136,15 +107,6 @@ const HeroSection = async () => {
             className="w-full h-full object-cover rounded-lg"
             alt="CassPea Chocolates"
           />
-        </div>
-        <div className="lg:hidden">
-          <h1 className={`${playfair.className} mb-2 text-4xl md:text-[5rem] text-primary-text font-bold tracking-tight leading-none dark:text-white`}>
-            Luxury Chocolate Gifts, Handcrafted in London
-          </h1>
-          <h2 className="text-2xl mb-4 dark:text-white text-primary-text">
-            Celebrate Every Occasion with Our Signature Gift Boxes
-          </h2>
-          <ShopNowCTA className="mb-4" />
         </div>
         <ImageGallery
           images={[
@@ -159,34 +121,26 @@ const HeroSection = async () => {
           ]}
           className="block lg:hidden"
         />
-        <p className="lg:hidden font-light text-md mt-4 text-primary-text dark:text-primary-text-light">
-          Share the love with CassPea Chocolates—perfect for personal indulgence,
-          birthdays, corporate events, and special celebrations. With over 20
-          exquisite flavours, each handcrafted to perfection by our skilled
-          chocolatiers, every bite is a work of art and a journey through inspired
-          flavours.
-        </p>
-      </div>
-      <div className="lg:col-span-6 lg:pl-8">
-        <h1
-          className={`${playfair.className} mb-2 text-5xl text-primary-text font-bold tracking-tight leading-none lg:text-8xl dark:text-white hidden lg:block`}
-        >
-          Luxury Chocolate Gifts, Handcrafted in London
-        </h1>
-        <h2 className="text-2xl mb-2 dark:text-white text-primary-text hidden lg:block">
-          Celebrate Every Occasion with Our Signature Gift Boxes
-        </h2>
-        <p className="hidden lg:block lg:mb-6 font-light text-sm text-primary-text xl:mb-8 lg:text-base dark:text-primary-text-light">
-          Share the love with CassPea Chocolates—perfect for personal indulgence,
-          birthdays, corporate events, and special celebrations. With over 20
-          exquisite flavours, each handcrafted to perfection by our skilled
-          chocolatiers, every bite is a work of art and a journey through inspired
-          flavours.
-        </p>
-        <ButtonGroup />
       </div>
     </div>
   </section>
+  );
+};
+
+// The hero's everyday copy, kept under it while a campaign has the hero.
+const BelowHeroSection = () => {
+  const section = HOME_HERO.belowHero;
+  if (!section) return null;
+
+  return (
+    <section className="mt-8 px-2 text-center max-w-3xl mx-auto">
+      <h2 className={`${playfair.className} text-2xl md:text-3xl font-bold mb-3 text-primary-text dark:text-primary-text-light`}>
+        {section.heading}
+      </h2>
+      <p className="font-light text-md lg:text-base text-primary-text dark:text-primary-text-light">
+        {section.body}
+      </p>
+    </section>
   );
 };
 
@@ -207,6 +161,8 @@ export default function HomePage() {
       <HomeSummerBanner />
 
       <HeroSection />
+
+      <BelowHeroSection />
 
       {/* One reviews section at every width, because the hero's Trustpilot
           rating scrolls here and an anchor needs a single visible target. It
@@ -229,7 +185,7 @@ export default function HomePage() {
 
       <HomeSignatureGate>
         <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
-          <HomeProductsServer />
+          <HomeProductsServer leadSlugs={HOME_HERO.leadProductSlugs} />
         </Section>
       </HomeSignatureGate>
 

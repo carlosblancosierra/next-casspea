@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import HomeProductsGrid from '@/components/home/HomeProductsGrid';
+import { orderRow } from '@/components/home/orderRow';
 import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
 import type { Product } from '@/types/products';
 
@@ -67,5 +68,37 @@ describe('HomeProductsGrid', () => {
 
         expect(container.querySelector('.col-span-2')).not.toBeInTheDocument();
         expect(screen.getAllByAltText('Signature Box of 24')).toHaveLength(1);
+    });
+});
+
+describe('HomeProductsGrid lead products', () => {
+    const advent = make({
+        id: 9,
+        name: 'Advent Calendar',
+        slug: 'advent-calendar',
+        category: { slug: 'advent' } as Product['category'],
+    });
+    const box = make({ id: 2, name: 'Signature Box of 9', slug: 'box-of-9', category: { slug: 'signature-boxes' } as Product['category'] });
+    const other = make({ id: 3, name: 'Bark', slug: 'bark', category: { slug: 'chocolate-barks' } as Product['category'] });
+
+    it('puts the Advent calendar first, then the gift boxes', () => {
+        mockProducts.mockReturnValue({ data: [box, other, advent] });
+
+        render(<HomeProductsGrid products={[]} categorySlug="signature-boxes" leadSlugs={['advent-calendar']} />);
+
+        const names = screen.getAllByRole('img').map((img) => img.getAttribute('alt'));
+        expect(names.indexOf('Advent Calendar')).toBe(0);
+        expect(names).toContain('Signature Box of 9');
+        expect(names).not.toContain('Bark');
+    });
+
+    it('lists a lead product once even if it is also in the category', () => {
+        const advInBoxes = { ...advent, category: box.category } as Product;
+        expect(orderRow([box, advInBoxes], 'signature-boxes', ['advent-calendar']).map((p) => p.slug))
+            .toEqual(['advent-calendar', 'box-of-9']);
+    });
+
+    it('skips a lead slug that is not active', () => {
+        expect(orderRow([box], 'signature-boxes', ['advent-calendar']).map((p) => p.slug)).toEqual(['box-of-9']);
     });
 });
