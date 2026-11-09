@@ -2,11 +2,12 @@
 
 import Image from 'next/image';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
-import { Flavour } from '@/types/flavours';
 import { formatCurrency } from '@/utils/currency';
 
 interface Props {
-    flavour: Flavour;
+    name: string;
+    description?: string;
+    image?: string | null;
     quantity: number;
     step: number;
     unitPrice: number;
@@ -17,7 +18,7 @@ interface Props {
 export const snapToStep = (value: number, step: number): number =>
     Math.max(0, Math.round((Number.isFinite(value) ? value : 0) / step) * step);
 
-export default function ClientFlavourRow({ flavour, quantity, step, unitPrice, onChange }: Props) {
+export default function ClientFlavourRow({ name, description, image, quantity, step, unitPrice, onChange }: Props) {
     const buttonClass =
         'p-2 bg-gray-200 dark:bg-main-bg-dark rounded hover:bg-gray-300 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors';
 
@@ -25,8 +26,8 @@ export default function ClientFlavourRow({ flavour, quantity, step, unitPrice, o
         <div className="flex flex-wrap items-center gap-x-4 gap-y-3 p-4">
             <div className="relative h-16 w-16 shrink-0">
                 <Image
-                    src={flavour.thumbnail || flavour.image || '/flavours/default.png'}
-                    alt={flavour.name}
+                    src={image || '/flavours/default.png'}
+                    alt={name}
                     fill
                     sizes="64px"
                     className="object-contain"
@@ -35,11 +36,11 @@ export default function ClientFlavourRow({ flavour, quantity, step, unitPrice, o
 
             <div className="min-w-0 flex-1">
                 <h3 className="font-semibold text-primary-text dark:text-primary-text-light">
-                    {flavour.name}
+                    {name}
                 </h3>
-                {flavour.mini_description && (
+                {description && (
                     <p className="text-sm text-primary-text/70 dark:text-primary-text-light/70 line-clamp-2">
-                        {flavour.mini_description}
+                        {description}
                     </p>
                 )}
                 <p className="mt-1 text-xs text-primary-text/60 dark:text-primary-text-light/60">
@@ -51,7 +52,7 @@ export default function ClientFlavourRow({ flavour, quantity, step, unitPrice, o
             <div className="flex w-full items-center justify-end gap-2 sm:w-auto">
                 <button
                     type="button"
-                    aria-label={`Remove ${step} ${flavour.name}`}
+                    aria-label={`Remove ${step} ${name}`}
                     className={buttonClass}
                     disabled={quantity <= 0}
                     onClick={() => onChange(snapToStep(quantity - step, step))}
@@ -63,7 +64,7 @@ export default function ClientFlavourRow({ flavour, quantity, step, unitPrice, o
                     inputMode="numeric"
                     min={0}
                     step={step}
-                    aria-label={`${flavour.name} quantity`}
+                    aria-label={`${name} quantity`}
                     value={quantity}
                     onChange={e => onChange(Math.max(0, parseInt(e.target.value, 10) || 0))}
                     onBlur={e => onChange(snapToStep(parseInt(e.target.value, 10), step))}
@@ -71,7 +72,7 @@ export default function ClientFlavourRow({ flavour, quantity, step, unitPrice, o
                 />
                 <button
                     type="button"
-                    aria-label={`Add ${step} ${flavour.name}`}
+                    aria-label={`Add ${step} ${name}`}
                     className={buttonClass}
                     onClick={() => onChange(snapToStep(quantity + step, step))}
                 >
