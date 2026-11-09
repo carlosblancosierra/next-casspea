@@ -38,13 +38,13 @@ const EVERYDAY_INTRO =
     'chocolatiers, every bite is a work of art and a journey through inspired ' +
     'flavours.';
 
-/** November 2026: Advent calendar and MOVEMBER20, until 30 November. */
+/** November 2026: Advent calendar. */
 export const CHRISTMAS_HERO: HomeHeroConfig = {
     heading: 'Luxury Chocolate for Christmas, Handmade in London',
     preview:
         'Start with our Advent calendar, the only place to taste our three new ' +
-        'flavours before December. Plus 20% off everything with MOVEMBER20 until ' +
-        '30 November.',
+        'flavours before December. Order by 26 November at noon to start on ' +
+        '1 December.',
     primaryCta: { label: 'Order the Advent calendar', href: ADVENT_CALENDAR_HREF },
     secondaryCta: { label: 'Shop Christmas gifts', href: GIFT_BOXES_HREF },
     belowHero: {
