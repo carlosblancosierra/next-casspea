@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Flavour } from '@/types/flavours';
-import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
+import { useGetShowcaseFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
+import { comingSoonLabel, filterFlavours } from '@/utils/flavours';
 
 export type FlavourGridVariant = 'caption' | 'tile' | 'overlay';
 
@@ -21,7 +22,30 @@ interface FlavourNameGridProps {
      * where three columns leave no room for it.
      */
     showDescription?: boolean;
+    /** Only the flavours in this category (e.g. the Christmas section). */
+    categorySlug?: string;
+    /** Leave out the featured categories, which have a section of their own. */
+    excludeFeatured?: boolean;
+    /**
+     * Fewer than six flavours (a featured section) would sit at the left of a
+     * six-column grid: give them only as many columns as they fill, centred.
+     */
+    fitColumns?: boolean;
 }
+
+// Full static class names so Tailwind keeps them. Each cell stays the width it
+// has in the full grid (about 12rem on desktop).
+const FIT: Record<number, string> = {
+    1: 'grid grid-cols-1 max-w-[12rem]',
+    2: 'grid grid-cols-2 max-w-[24rem]',
+    3: 'grid grid-cols-3 max-w-[36rem]',
+    4: 'grid grid-cols-3 sm:grid-cols-4 max-w-[48rem]',
+    5: 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 max-w-[60rem]',
+};
+
+// Over the picture, so it costs no row and the names keep lining up.
+const BADGE =
+    'absolute left-1 top-1 z-10 rounded-full bg-red-600 px-2 py-0.5 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wide text-white shadow';
 
 // 3 columns on mobile -> 4 -> 5 -> 6, matching the home grid's density on
 // larger screens while staying readable with names on phones. Tight row gap so
@@ -72,19 +96,24 @@ export default function FlavourNameGrid({
     variant = 'caption',
     openOnClick = true,
     showDescription = false,
+    categorySlug,
+    excludeFeatured = false,
+    fitColumns = false,
 }: FlavourNameGridProps) {
     // The server passes a snapshot; the client query keeps it live so admin
     // changes show without waiting for a rebuild. Same pattern the box
     // builders use, and what the home grid relied on before it used this.
-    const { data } = useGetFlavoursQuery();
-    const list = data ?? flavours;
+    // The showcase list, so flavours not on sale yet show here (badged); the
+    // box builders read the other list, which leaves them out.
+    const { data } = useGetShowcaseFlavoursQuery();
+    const list = filterFlavours(data ?? flavours, { categorySlug, excludeFeatured });
     const [selected, setSelected] = useState<Flavour | null>(null);
 
     const handleClick = (f: Flavour) => openOnClick && setSelected(f);
 
     return (
         <>
-            <div className={GRID}>
+            <div className={fitColumns && FIT[list.length] ? `${FIT[list.length]} gap-x-3 gap-y-4 sm:gap-x-4 mx-auto` : GRID}>
                 {list.map(flavour => {
                     // Overlay puts the name on top of the image, so it is one
                     // box and has nothing to align; the other two are three
@@ -108,6 +137,7 @@ export default function FlavourNameGrid({
                         >
                             {isOverlay ? (
                                 <div className="relative aspect-square rounded-xl overflow-hidden bg-gradient-to-b from-primary-light/20 to-primary/10 dark:from-white/10 dark:to-white/0">
+                                    {flavour.coming_soon && <span className={BADGE}>Coming soon</span>}
                                     <FlavourImage flavour={flavour} className="p-2" />
                                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent px-1.5 pt-6 pb-1.5">
                                         <h3 className="text-center font-semibold leading-tight line-clamp-2 text-[11px] sm:text-xs text-white">
@@ -118,6 +148,7 @@ export default function FlavourNameGrid({
                             ) : (
                                 <>
                                     <div className="relative aspect-square rounded-lg overflow-hidden group-hover:opacity-90 transition-opacity">
+                                        {flavour.coming_soon && <span className={BADGE}>Coming soon</span>}
                                         <FlavourImage flavour={flavour} />
                                     </div>
                                     <h3 className={`${NAME_BASE} mt-1.5`}>{flavour.name}</h3>
@@ -165,6 +196,14 @@ export default function FlavourNameGrid({
                         <h3 className="mt-4 text-xl font-bold text-center text-primary-text dark:text-primary-text-light">
                             {selected.name}
                         </h3>
+
+                        {selected.coming_soon && (
+                            <p className="mt-2 text-center">
+                                <span className="inline-block rounded-full bg-red-600 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                                    {comingSoonLabel(selected)}
+                                </span>
+                            </p>
+                        )}
 
                         {selected.description && (
                             <p className="mt-2 text-sm text-center text-primary-text/80 dark:text-primary-text-light/80">
