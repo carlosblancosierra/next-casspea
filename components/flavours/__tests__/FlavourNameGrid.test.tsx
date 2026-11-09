@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import FlavourNameGrid from '@/components/flavours/FlavourNameGrid';
-import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
+import { useGetShowcaseFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 import type { Flavour } from '@/types/flavours';
 
 jest.mock('@/redux/features/flavour/flavourApiSlice', () => ({
-    useGetFlavoursQuery: jest.fn(),
+    useGetShowcaseFlavoursQuery: jest.fn(),
 }));
 
-const mockFlavours = useGetFlavoursQuery as jest.Mock;
+const mockFlavours = useGetShowcaseFlavoursQuery as jest.Mock;
 
 const flavours = [
     { id: 1, name: 'Salted Caramel', image: '/f/1.png', mini_description: 'Buttery' },
@@ -52,6 +52,33 @@ describe('FlavourNameGrid', () => {
         render(<FlavourNameGrid flavours={flavours} />);
 
         expect(screen.getByText('Salted Caramel')).toBeInTheDocument();
+        expect(screen.getByText('Gin')).toBeInTheDocument();
+    });
+
+    it('badges a flavour that is not on sale yet', () => {
+        mockFlavours.mockReturnValue({
+            data: [...flavours, { id: 4, name: 'Mulled Wine', coming_soon: true, available_from: '2026-12-01' }],
+        });
+        render(<FlavourNameGrid flavours={flavours} />);
+
+        const cell = screen.getByRole('button', { name: 'Mulled Wine' });
+        expect(cell).toHaveTextContent('Coming soon');
+        expect(screen.getByRole('button', { name: 'Gin' })).not.toHaveTextContent('Coming soon');
+    });
+
+    it('shows only one category, or leaves the featured ones out', () => {
+        const christmas = { slug: 'christmas', featured: true };
+        mockFlavours.mockReturnValue({
+            data: [...flavours, { id: 4, name: 'Mulled Wine', category: christmas }],
+        });
+
+        const { unmount } = render(<FlavourNameGrid flavours={flavours} categorySlug="christmas" />);
+        expect(screen.getByText('Mulled Wine')).toBeInTheDocument();
+        expect(screen.queryByText('Gin')).not.toBeInTheDocument();
+        unmount();
+
+        render(<FlavourNameGrid flavours={flavours} excludeFeatured />);
+        expect(screen.queryByText('Mulled Wine')).not.toBeInTheDocument();
         expect(screen.getByText('Gin')).toBeInTheDocument();
     });
 });

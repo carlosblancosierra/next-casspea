@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Playfair_Display } from 'next/font/google';
 import { Flavour } from '@/types/flavours';
+import { comingSoonLabel } from '@/utils/flavours';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
@@ -15,6 +16,7 @@ export default function FlavourStoryRow({ flavour, index }: Props) {
     const imageOnRight = index % 2 === 1;
     const body = flavour.story?.trim() || flavour.description;
     const allergens = flavour.allergens?.map(a => a.name).filter(Boolean) ?? [];
+    const badge = comingSoonLabel(flavour);
 
     return (
         <article
@@ -44,6 +46,11 @@ export default function FlavourStoryRow({ flavour, index }: Props) {
                 </div>
 
                 <div className={imageOnRight ? 'md:order-1' : ''}>
+                    {badge && (
+                        <span className="mb-2 inline-block rounded-full bg-red-600 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                            {badge}
+                        </span>
+                    )}
                     <h2
                         className={`${playfair.className} text-2xl font-bold text-primary-text dark:text-primary-text-light md:text-3xl`}
                     >

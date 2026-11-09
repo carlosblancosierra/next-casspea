@@ -14,6 +14,7 @@ import AdventSection, { ADVENT_SLUG } from '@/components/home/AdventSection';
 import { getProduct } from '@/utils/products';
 import { HOME_HERO } from '@/config/homeHero';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
+import FeaturedFlavourSections from '@/components/flavours/FeaturedFlavourSections';
 import { HomeSummerBanner, HomeSummerBoxes, HomeSignatureGate } from '@/components/home/HomeSummer';
 import dynamic from 'next/dynamic';
 import React from 'react';
@@ -182,6 +183,13 @@ export default function HomePage() {
       <section className="mt-8 px-2">
         <AdventSection />
       </section>
+
+      {/* The featured flavour category, e.g. the new Christmas flavours: under
+          the advent calendar, which they are in, and shown before they go on
+          sale. Nothing renders when no category is featured. */}
+      <Suspense fallback={<LoadingSection />}>
+        <FeaturedFlavourSections className="mt-10" />
+      </Suspense>
 
       <HomeSignatureGate>
         <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">

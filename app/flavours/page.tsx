@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { Playfair_Display } from 'next/font/google';
 import FlavourStoryRow from '@/components/flavours/FlavourStoryRow';
-import { getFlavours } from '@/utils/flavours';
+import Link from 'next/link';
+import { filterFlavours, getFeaturedSections, getFlavours } from '@/utils/flavours';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
@@ -15,7 +16,11 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function FlavoursPage() {
-    const flavours = await getFlavours({ revalidate: false });
+    // Coming-soon flavours included: this page shows them off, badged. The
+    // featured categories (e.g. Christmas) come first, in their own section.
+    const all = await getFlavours({ revalidate: false, includeComingSoon: true });
+    const featured = getFeaturedSections(all);
+    const flavours = filterFlavours(all, { excludeFeatured: true });
 
     return (
         <main className="dark:bg-main-bg-dark min-h-screen py-8">
@@ -31,12 +36,51 @@ export default async function FlavoursPage() {
                     </p>
                 </header>
 
-                {flavours.length === 0 ? (
+                {featured.map(({ category, title, flavours: sectionFlavours }) => (
+                    <section
+                        key={category.slug}
+                        id={`flavours-${category.slug}`}
+                        className="scroll-mt-24 mt-8 rounded-2xl bg-red-600/5 px-4 pt-8 dark:bg-white/5"
+                    >
+                        <header className="text-center">
+                            <h2
+                                className={`${playfair.className} text-2xl md:text-3xl font-bold text-primary-text dark:text-primary-text-light`}
+                            >
+                                {title}
+                            </h2>
+                            {category.featured_message && (
+                                <p className="mt-2 text-primary-text/70 dark:text-primary-text-light/70">
+                                    {category.featured_message}
+                                </p>
+                            )}
+                            {category.featured_cta_label && category.featured_cta_url && (
+                                <Link
+                                    href={category.featured_cta_url}
+                                    className="mt-4 inline-flex items-center justify-center rounded-lg bg-red-600 px-5 py-2.5 font-semibold text-white transition hover:bg-red-700"
+                                >
+                                    {category.featured_cta_label}
+                                </Link>
+                            )}
+                        </header>
+                        {sectionFlavours.map((flavour, index) => (
+                            <FlavourStoryRow key={flavour.id} flavour={flavour} index={index} />
+                        ))}
+                    </section>
+                ))}
+
+                {flavours.length === 0 && featured.length === 0 ? (
                     <p className="text-center text-primary-text/60 dark:text-primary-text-light/60 py-16">
                         Flavours are unavailable right now — please check back soon.
                     </p>
                 ) : (
                     <div>
+                        {featured.length > 0 && flavours.length > 0 && (
+                            <h2
+                                className={`${playfair.className} mt-12 text-center text-2xl md:text-3xl font-bold text-primary-text dark:text-primary-text-light`}
+                            >
+                                All Our Flavours
+                            </h2>
+                        )}
                         {flavours.map((flavour, index) => (
                             <FlavourStoryRow key={flavour.id} flavour={flavour} index={index} />
                         ))}
