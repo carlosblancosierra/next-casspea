@@ -6,7 +6,7 @@ import TrustpilotRating, { TRUSTPILOT_URL } from './TrustpilotRating';
 
 // Every quoted review here is a five-star one, so the cards carry Trustpilot's
 // own five-star mark. The 4.5 asset stays where it belongs: on the aggregate,
-// which is 4.7.
+// which is 4.6.
 const SEE_ALL_LINK =
     'inline-flex items-center gap-1 rounded-full border border-primary px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-button-text dark:border-primary-2 dark:text-primary-2';
 
