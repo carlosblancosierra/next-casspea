@@ -15,6 +15,10 @@ const playfair = Playfair_Display({ subsets: ['latin'] });
 
 const stepOf = (item: ClientPageItem) => Math.max(1, item.product.quantity_step ?? 1);
 const priceOf = (item: ClientPageItem) => Number(item.product.current_price ?? item.product.base_price ?? 0);
+// The product's own picture wins; the linked flavour's photo is only a
+// fallback for products without one.
+const imageOf = (item: ClientPageItem) =>
+    item.product.thumbnail || item.product.image || item.flavour?.image || null;
 // Product names are "McLaren - Individual Chocolate - <flavour>": show just the flavour.
 const nameOf = (item: ClientPageItem) => item.flavour?.name ?? item.product.name.split(' - ').pop() ?? item.product.name;
 
@@ -101,7 +105,7 @@ export default function ClientPortal({ page }: { page: UnlockedClientPage }) {
                                     key={item.id}
                                     name={nameOf(item)}
                                     description={item.flavour?.mini_description}
-                                    image={item.flavour?.image ?? item.product.thumbnail ?? item.product.image}
+                                    image={imageOf(item)}
                                     quantity={quantities[item.product.id] ?? 0}
                                     step={stepOf(item)}
                                     unitPrice={priceOf(item)}
