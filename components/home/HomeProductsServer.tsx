@@ -1,5 +1,6 @@
 import { Product } from '@/types/products';
 import HomeProductsGrid from './HomeProductsGrid';
+import { orderRow } from './orderRow';
 
 async function fetchProducts(): Promise<Product[]> {
     try {
@@ -14,8 +15,11 @@ async function fetchProducts(): Promise<Product[]> {
     }
 }
 
-export default async function HomeProductsServer() {
+const CATEGORY = 'signature-boxes';
+
+/** The signature boxes, after any products named in `leadSlugs` (e.g. the Advent calendar). */
+export default async function HomeProductsServer({ leadSlugs = [] }: { leadSlugs?: string[] }) {
     const products = await fetchProducts();
-    const boxes = products.filter(p => p.category?.slug === 'signature-boxes');
-    return <HomeProductsGrid products={boxes} categorySlug="signature-boxes" />;
+    const row = orderRow(products, CATEGORY, leadSlugs);
+    return <HomeProductsGrid products={row} categorySlug={CATEGORY} leadSlugs={leadSlugs} />;
 }
