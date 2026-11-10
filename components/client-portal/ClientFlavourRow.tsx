@@ -44,7 +44,7 @@ export default function ClientFlavourRow({ name, description, image, quantity, s
                     </p>
                 )}
                 <p className="mt-1 text-xs text-primary-text/60 dark:text-primary-text-light/60">
-                    {formatCurrency(unitPrice * step)} per {step}
+                    {step > 1 ? `${formatCurrency(unitPrice * step)} per ${step}` : `${formatCurrency(unitPrice)} each`}
                 </p>
             </div>
 

@@ -19,7 +19,10 @@ const priceOf = (item: ClientPageItem) => Number(item.product.current_price ?? i
 // fallback for products without one.
 const imageOf = (item: ClientPageItem) =>
     item.product.thumbnail || item.product.image || item.flavour?.image || null;
-// Product names are "McLaren - Individual Chocolate - <flavour>": show just the flavour.
+// A box holds several chocolates; anything else is sold as single pieces.
+const isBox = (item: ClientPageItem) => (item.product.units_per_box ?? 1) > 1;
+// Product names are "<Client> - <what it is>" (e.g. "McLaren - Individual
+// Chocolate - Vanilla Pecan", "Wild at Heart - Box of 9"): show the last part.
 const nameOf = (item: ClientPageItem) => item.flavour?.name ?? item.product.name.split(' - ').pop() ?? item.product.name;
 
 export default function ClientPortal({ page }: { page: UnlockedClientPage }) {
@@ -37,13 +40,25 @@ export default function ClientPortal({ page }: { page: UnlockedClientPage }) {
     const subtotal = selected.reduce((sum, line) => sum + line.quantity * priceOf(line.item), 0);
     const steps = Array.from(new Set(items.map(stepOf)));
     const commonStep = steps.length === 1 ? steps[0] : null;
+    const allBoxes = items.length > 0 && items.every(isBox);
+    const totalLabel = allBoxes
+        ? `${totalPieces} ${totalPieces === 1 ? 'box' : 'boxes'}`
+        : `${totalPieces} pcs`;
 
     const handleAddToCart = async () => {
         setAdding(true);
         try {
-            // One request per flavour, in order, so a failure says which one.
+            // One request per line, in order, so a failure says which one.
             for (const { item, quantity } of selected) {
-                await addCartItem({ product: item.product.id, quantity }).unwrap();
+                await addCartItem({
+                    product: item.product.id,
+                    quantity,
+                    // Boxes on a client page are "Surprise Me": we choose the
+                    // flavours, as with the Summer Break boxes.
+                    ...(isBox(item) && {
+                        box_customization: { selection_type: 'RANDOM', allergens: [], flavor_selections: [] },
+                    }),
+                }).unwrap();
             }
             toast.success('Added to your cart!');
             router.push('/cart');
@@ -80,7 +95,7 @@ export default function ClientPortal({ page }: { page: UnlockedClientPage }) {
                 <section className="min-w-0 lg:col-span-2">
                     <div className="mb-1 flex flex-wrap items-end justify-between gap-3">
                         <h2 className={`${playfair.className} text-2xl font-bold text-primary-text dark:text-primary-text-light`}>
-                            Individual chocolates
+                            {allBoxes ? 'Chocolate boxes' : 'Individual chocolates'}
                         </h2>
                         {commonStep && commonStep > 1 && (
                             <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-bold text-accent-text shadow">
@@ -89,9 +104,11 @@ export default function ClientPortal({ page }: { page: UnlockedClientPage }) {
                         )}
                     </div>
                     <p className="mb-4 text-sm text-primary-text/70 dark:text-primary-text-light/70">
-                        {commonStep && commonStep > 1
-                            ? `Choose how many of each flavour you'd like, in multiples of ${commonStep}.`
-                            : "Choose how many of each flavour you'd like."}
+                        {allBoxes
+                            ? "Choose how many of each box you'd like. Each box is filled with a selection of our flavours."
+                            : commonStep && commonStep > 1
+                              ? `Choose how many of each flavour you'd like, in multiples of ${commonStep}.`
+                              : "Choose how many of each flavour you'd like."}
                     </p>
 
                     {items.length === 0 ? (
@@ -104,7 +121,7 @@ export default function ClientPortal({ page }: { page: UnlockedClientPage }) {
                                 <ClientFlavourRow
                                     key={item.id}
                                     name={nameOf(item)}
-                                    description={item.flavour?.mini_description}
+                                    description={item.flavour?.mini_description || (isBox(item) ? undefined : item.product.description)}
                                     image={imageOf(item)}
                                     quantity={quantities[item.product.id] ?? 0}
                                     step={stepOf(item)}
@@ -133,7 +150,7 @@ export default function ClientPortal({ page }: { page: UnlockedClientPage }) {
                         </ul>
                     )}
                     <div className="flex justify-between border-t border-gray-200 pt-3 font-semibold text-primary-text dark:border-gray-700 dark:text-primary-text-light">
-                        <span>Subtotal ({totalPieces} pcs)</span>
+                        <span>Subtotal ({totalLabel})</span>
                         <span>{formatCurrency(subtotal)}</span>
                     </div>
                     <p className="mt-1 text-[11px] text-primary-text/60 dark:text-primary-text-light/60">
