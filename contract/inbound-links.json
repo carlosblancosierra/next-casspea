@@ -1,0 +1,49 @@
+[
+  {
+    "url": "/checkout/success?session_id={id}",
+    "source": "casspea-v2 checkout/stripe_views.py and checkout/stripe_utils.py: Stripe success_url"
+  },
+  {
+    "url": "/checkout/cancel?session_id={id}",
+    "source": "casspea-v2 checkout/stripe_views.py and checkout/stripe_utils.py: Stripe cancel_url"
+  },
+  {
+    "url": "/checkout/result?session_id={CHECKOUT_SESSION_ID}",
+    "source": "casspea-v2 checkout/stripe_utils.py: embedded Checkout return_url"
+  },
+  {
+    "url": "/cart",
+    "source": "casspea-v2 mails/templates/mails/order_not_paid.html: abandoned-cart email"
+  },
+  {
+    "url": "/orders?order={order_id}",
+    "source": "casspea-v2 mails/templates/mails/order_paid_staff.html: staff new-order email"
+  },
+  {
+    "url": "/logos/white.png",
+    "source": "casspea-v2 mails/templates/mails/order_paid_staff.html, through /_next/image?url=%2Flogos%2Fwhite.png"
+  },
+  {
+    "url": "/shop-now",
+    "source": "Navigation, ads and social bios"
+  },
+  {
+    "url": "/help",
+    "source": "Old links and search results; redirected to /faq in next.config.js"
+  },
+  {
+    "url": "/unsubscribe/",
+    "source": "casspea-v2 mails/templates/mails/base.html, order_paid.html, order_paid_staff.html and every leads/templates/leads/mails/*.html",
+    "knownIssue": "BUG-08: there is no /unsubscribe page and no unsubscribe API, so every marketing email carries a dead unsubscribe link"
+  },
+  {
+    "url": "/static/images/logo-gray.png",
+    "source": "casspea-v2 mails/templates/mails/order_paid.html and leads/templates/leads/mails/*.html",
+    "knownIssue": "BUG-09: public/static does not exist, so the order-confirmation and newsletter emails show a broken logo"
+  },
+  {
+    "url": "/checkout/error?session_id={id}",
+    "source": "casspea-v2 checkout/stripe_views.py: StripeSuccessView and StripeCancelView redirects",
+    "knownIssue": "BUG-14: there is no /checkout/error page (the views look unused: Stripe returns straight to /checkout/success and /checkout/cancel)"
+  }
+]
