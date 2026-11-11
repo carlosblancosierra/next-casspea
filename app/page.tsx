@@ -111,8 +111,9 @@ const HeroSection = async () => {
         </div>
         <ImageGallery
           images={[
-            '/home/2026/01/1.jpg',
+            // The Advent calendar leads the gallery during the campaign.
             adventImage || '/home/2026/01/2.jpg',
+            '/home/2026/01/1.jpg',
             '/home/2026/01/3.jpg',
             '/home/2026/01/4.jpg',
             '/home/2026/01/5.jpg',
