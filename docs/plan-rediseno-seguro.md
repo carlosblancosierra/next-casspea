@@ -175,7 +175,7 @@ En `casspea-v2`:
 - `erp/tests/test_frontend_contract.py`: cada llamada de la tienda llega a una vista que acepta su método, y las 15 respuestas mantienen su forma.
 - `erp/tests/test_known_issues.py`: BUG-01, 02, 03, 07, 10, 11, 12, 13 y 19.
 
-Estado final: la tienda tiene 43 suites y 239 tests en verde, 6 de ellos fallos esperados. La API tiene 237 tests en verde, 11 de ellos fallos esperados.
+Estado final, con los arreglos de la Fase 1 incluidos: la tienda tiene 47 suites y 255 tests en verde, y quedan 2 fallos esperados (BUG-09 y BUG-14). La API tiene 268 tests en verde, y quedan 3 fallos esperados (BUG-11, BUG-12 y BUG-19).
 
 ### Cómo funcionan los "fallos esperados"
 
@@ -203,26 +203,26 @@ Ya está comprobado que cada uno de estos tests falla por la razón correcta (la
 
 ### Fase 1. Arreglar P0 y P1 (próximas dos semanas, antes del pico de Navidad)
 
-Un PR por fallo, rama `feat/…`. El test ya existe: el arreglo está terminado cuando ese test pasa y se le quita la marca de fallo esperado. Los PR de arreglo se basan en los de esta red de seguridad (casspea-v2 #29 y next-casspea #58), que se fusionan primero.
+Todos los arreglos de esta fase van en dos PRs, uno por repositorio, con un commit por fallo: [casspea-v2 #29](https://github.com/carlosblancosierra/casspea-v2/pull/29) para la API y [next-casspea #58](https://github.com/carlosblancosierra/next-casspea/pull/58) para la tienda. Son los mismos PRs que traen la red de seguridad. Cada arreglo convierte su test de fallo esperado en un test normal.
 
-- [ ] BUG-01: quitar `rest_framework_simplejwt` de `requirements.txt`. PR abierto: [casspea-v2 #30](https://github.com/carlosblancosierra/casspea-v2/pull/30).
-- [ ] BUG-02: sesiones de checkout privadas. PR abierto: [casspea-v2 #31](https://github.com/carlosblancosierra/casspea-v2/pull/31).
-- [ ] BUG-03: solo `payment_status == "paid"` crea un pedido pagado. PR abierto: [casspea-v2 #32](https://github.com/carlosblancosierra/casspea-v2/pull/32). Al fusionarlo, suscribir el webhook de Stripe a `checkout.session.async_payment_succeeded` y `async_payment_failed`.
-- [ ] BUG-17: bucle de la recogida en tienda. PR abierto: [next-casspea #59](https://github.com/carlosblancosierra/next-casspea/pull/59).
-- [ ] BUG-15: `remotePatterns` limitado a los dominios propios. PR en borrador: [next-casspea #60](https://github.com/carlosblancosierra/next-casspea/pull/60). Antes de fusionarlo, comprobar en la preview que se ven las fotos de producto.
-- [ ] BUG-08: página y API de baja de emails. PRs abiertos: [casspea-v2 #33](https://github.com/carlosblancosierra/casspea-v2/pull/33) y [next-casspea #61](https://github.com/carlosblancosierra/next-casspea/pull/61), que se fusionan juntos (o primero el de la tienda).
-- [ ] BUG-04: `add_to_cart`. Es imprescindible para tener una base que comparar con el rediseño. PR abierto: [next-casspea #62](https://github.com/carlosblancosierra/next-casspea/pull/62).
-- [ ] BUG-06: fecha de recogida en verano. PR abierto: [next-casspea #63](https://github.com/carlosblancosierra/next-casspea/pull/63).
-- [ ] BUG-10: 500 en `GET /api/checkout/session/`. PR abierto: [casspea-v2 #34](https://github.com/carlosblancosierra/casspea-v2/pull/34).
-- [ ] BUG-07: `payment_intent.payment_failed`. PR abierto: [casspea-v2 #35](https://github.com/carlosblancosierra/casspea-v2/pull/35).
-- [ ] BUG-05: solicitudes de chocolate personalizado. PRs abiertos: [casspea-v2 #36](https://github.com/carlosblancosierra/casspea-v2/pull/36) y [next-casspea #64](https://github.com/carlosblancosierra/next-casspea/pull/64).
-- [ ] BUG-13: URLs de vuelta de Stripe configurables con `SITE_URL`, orígenes extra de CORS con `CORS_EXTRA_ORIGINS`, y la recogida reconocida por `delivery_speed` en vez del id 34. PRs abiertos: [casspea-v2 #37](https://github.com/carlosblancosierra/casspea-v2/pull/37) y [next-casspea #65](https://github.com/carlosblancosierra/next-casspea/pull/65), que va encima de #63.
-- [ ] BUG-18: revisar en Stripe los productos en preventa.
-- [ ] BUG-19: aplicar la regla de "Adviento no se recoge" en los endpoints reales (P2).
+- [ ] BUG-01: quitar `rest_framework_simplejwt` de `requirements.txt` (API).
+- [ ] BUG-02: sesiones de checkout privadas (API).
+- [ ] BUG-03: solo un pago hecho crea un pedido pagado (API). **Al fusionar:** suscribir el webhook de Stripe a `checkout.session.async_payment_succeeded` y `checkout.session.async_payment_failed`.
+- [ ] BUG-17: bucle de la recogida en tienda (tienda).
+- [ ] BUG-15: `remotePatterns` limitado a los dominios propios (tienda). **Antes de fusionar:** comprobar que se ven las fotos de producto con un build que apunte a la API de producción.
+- [ ] BUG-08: página y API de baja de emails (los dos).
+- [ ] BUG-04: `add_to_cart` (tienda). Es imprescindible para tener una base que comparar con el rediseño.
+- [ ] BUG-06: fecha de recogida en verano (tienda).
+- [ ] BUG-10: 500 en `GET /api/checkout/session/` (API).
+- [ ] BUG-07: `payment_intent.payment_failed` (API).
+- [ ] BUG-05: solicitudes de chocolate personalizado (los dos).
+- [ ] BUG-13: `SITE_URL` y `CORS_EXTRA_ORIGINS` configurables (API), y la recogida reconocida por `delivery_speed` en vez del id 34 (tienda).
+- [ ] BUG-18: revisar en Stripe los productos en preventa. Es una comprobación a mano.
+- [ ] BUG-19: aplicar la regla de "Adviento no se recoge" en los endpoints reales. Es P2 y sigue sin arreglar.
 
 ### Fase 2. Preparar el terreno sin cambiar nada visual (en paralelo a la congelación de Navidad)
 
-1. **Entorno de staging.** Una API aparte (otra app de Heroku), con Stripe en modo test, una base de datos con datos de prueba, `FRONTEND_URL` apuntando a la preview y CORS abierto a los dominios de preview de Amplify (BUG-13). Sin esto, cada PR del rediseño solo se puede probar en producción.
+1. **Entorno de staging.** Una API aparte (otra app de Heroku, por ejemplo `api-staging.casspea.co.uk`), con Stripe en modo test y una base de datos con datos de prueba, y una tienda de staging en `staging.casspea.co.uk`. Con BUG-13 arreglado basta con poner `SITE_URL` y `CORS_EXTRA_ORIGINS` en esa app. Las dos tienen que estar bajo `casspea.co.uk`: la cookie de sesión es `SameSite=Lax`, y una preview en `amplifyapp.com` perdería el carrito en cada petición. Sin esto, cada PR del rediseño solo se puede probar en producción.
 2. **Fijar las versiones del backend** con `pip-compile` o `uv pip compile` y un `requirements.lock`.
 3. **Subir Next 14 a 15.5.x en un PR propio**, desplegarlo y dejarlo correr una semana antes de tocar el diseño. En Next 15, el App Router exige React 19: revisar headlessui, framer-motion/motion, react-datepicker, react-tailwindcss-datepicker, @react-google-maps/api y react-snowfall. Mantener Tailwind 3; pasar a Tailwind 4 sería otro proyecto.
 4. **Sacar la lógica de los componentes grandes** a hooks y funciones con tests propios, sin cambiar el JSX: `useDeliveryChoice` y `useStorePickup` desde `CheckoutShippingOptions`, y `useBoxBuilder` desde `ProductFormBoxes` y `QuickBoxBuilder`. Después del rediseño, el JSX nuevo usa los mismos hooks.
