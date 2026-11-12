@@ -4,7 +4,7 @@ import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import CheckoutStorePickUp from './CheckoutStorePickUp';
 import ShippingDatePicker from './ShippingDatePicker';
 import type { ShippingCompany, ShippingOption } from '@/types/shipping';
-import { STORE_PICKUP_OPTION_ID } from './constants';
+import { isStorePickup } from './constants';
 import { getEarliestDispatch, getFixedDispatch, isShippingDay, HOLIDAY_SHIP_DATE } from '@/utils/shippingDays';
 
 // Re-exported for existing imports of these types from this module.
@@ -56,6 +56,9 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     const [neededBy, setNeededBy] = useState<Date | null>(null);
     const [timing, setTiming] = useState<'asap' | 'by_date' | null>(null);
     const [showDispatchPicker, setShowDispatchPicker] = useState(false);
+    const pickupOptionId = shippingCompanies
+        ?.flatMap(company => company.shipping_options)
+        .find(isStorePickup)?.id;
 
     // A product that leaves on one named day — the advent calendars, posted as
     // a batch so they land before 1 December — settles both questions this
@@ -97,11 +100,11 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     // through the parent so Continue cannot send it; the API would refuse it
     // anyway, but with a message rather than with the radio simply unticked.
     useEffect(() => {
-        if (fixedDispatchKey && localSelectedOption === STORE_PICKUP_OPTION_ID.toString()) {
+        if (fixedDispatchKey && pickupOptionId !== undefined && localSelectedOption === String(pickupOptionId)) {
             setLocalSelectedOption(null);
             onShippingOptionChange(null);
         }
-    }, [fixedDispatchKey, localSelectedOption, onShippingOptionChange]);
+    }, [fixedDispatchKey, localSelectedOption, onShippingOptionChange, pickupOptionId]);
 
     useEffect(() => {
         if (!onDispatchDateChange) return;
@@ -119,13 +122,13 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
     // Captured before the delivery-type filter below narrows the list, so the
     // "nothing to show" guard still means "the API returned no options at all".
     const hasAnyShippingOptions = allShippingOptions.length > 0;
-    const pickupOption = allShippingOptions.find(option => option.id === STORE_PICKUP_OPTION_ID);
+    const pickupOption = allShippingOptions.find(isStorePickup);
 
     // Filter by delivery type
     if (deliveryType === 'pickup') {
-        allShippingOptions = allShippingOptions.filter(option => option.id === STORE_PICKUP_OPTION_ID);
+        allShippingOptions = allShippingOptions.filter(isStorePickup);
     } else if (deliveryType === 'shipping') {
-        allShippingOptions = allShippingOptions.filter(option => option.id !== STORE_PICKUP_OPTION_ID);
+        allShippingOptions = allShippingOptions.filter(option => !isStorePickup(option));
     }
 
     // Filter out redundant free shipping options - show only the priciest one
