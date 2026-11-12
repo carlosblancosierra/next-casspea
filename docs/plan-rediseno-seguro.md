@@ -8,7 +8,7 @@ Todo lo que aparece como fallo está **comprobado con un test** que se puede eje
 
 - **La base es buena.** Hay 432 tests en verde (213 en la tienda, 219 en la API), el typecheck está limpio y el build funciona.
 - **Pero lo que hace el cliente casi no está probado.** La cobertura de la tienda es del 25 %. Las páginas del checkout, el pack builder, el portal de clientes y el refresco de sesión están al 0 %.
-- **He encontrado 17 fallos reales.** Seis son urgentes y no tienen que ver con el rediseño: un paquete de *dependency confusion* que se instala en producción, datos personales de clientes accesibles por URL, pedidos que se marcan como pagados sin cobro, un bucle infinito al elegir recogida en tienda, el enlace de baja de los emails roto y el optimizador de imágenes abierto a cualquier dominio.
+- **He encontrado 18 fallos reales.** Seis son urgentes y no tienen que ver con el rediseño: un paquete de *dependency confusion* que se instala en producción, datos personales de clientes accesibles por URL, pedidos que se marcan como pagados sin cobro, un bucle infinito al elegir recogida en tienda, el enlace de baja de los emails roto y el optimizador de imágenes abierto a cualquier dominio.
 - **No hay que empezar a rediseñar hasta tener cuatro cosas:** los fallos P0 arreglados, el evento `add_to_cart` funcionando (sin él no se puede saber si el diseño nuevo vende más o menos), un entorno de preview que funcione y los tests E2E de los recorridos de compra.
 - **Calendario:** estamos a dos semanas del pico de Navidad. Propongo arreglar los P0 y P1 esta semana y la siguiente, congelar el checkout del 20 de noviembre al 2 de enero, preparar el rediseño en ese tiempo y lanzarlo por partes desde enero.
 
@@ -121,6 +121,7 @@ El carrito cobra `preorder_price` cuando hay preventa, pero Stripe cobra el prec
 | BUG-12 | Una cantidad no numérica en `POST /api/carts/items/` da 500 en vez de 400 | `carts/views.py:153` y `:212` | `Bug12QuantityValidationTest` |
 | BUG-14 | `StripeSuccessView` y `StripeCancelView` redirigen a `/checkout/error`, que no existe. Parecen no usarse | `checkout/stripe_views.py:242-286` | `routes.test.ts`, enlace `/checkout/error` |
 | BUG-16 | Código muerto que un rediseño podría volver a usar: `downloadRoyalMailLabel` (axios con URL relativa y sin token) y `getProductsByCategory` (la API ignora `?category=`) | `redux/features/royalmail/royalmailApiSlice.tsx:36`, `redux/features/products/productApiSlice.tsx:19` | `apiCalls.test.ts`, lista `NOT_ON_BASE_QUERY` |
+| BUG-19 | La regla "un carrito con calendario de Adviento no se recoge en tienda" solo está en `CheckoutDetailsSerializer`, que ninguna vista usa. Los endpoints que llama la tienda aceptan la recogida, y el test existente (`FixedDispatchBlocksPickupTest`) pasa porque prueba el serializer suelto. La tienda oculta la opción, así que solo pasa con una petición hecha a mano | `checkout/views.py` (`create` y `update_shipping_option`), `checkout/serializers.py:119` | `Bug19FixedDispatchPickupTest` |
 
 ### Otros hallazgos que afectan al rediseño
 
@@ -172,9 +173,9 @@ En `casspea-v2`:
 
 - `contract/frontend-api-calls.json` (copia del de la tienda) y `contract/responses/*.json`.
 - `erp/tests/test_frontend_contract.py`: cada llamada de la tienda llega a una vista que acepta su método, y las 15 respuestas mantienen su forma.
-- `erp/tests/test_known_issues.py`: BUG-01, 02, 03, 07, 10, 11, 12 y 13.
+- `erp/tests/test_known_issues.py`: BUG-01, 02, 03, 07, 10, 11, 12, 13 y 19.
 
-Estado final: la tienda tiene 43 suites y 239 tests en verde, 6 de ellos fallos esperados. La API tiene 236 tests en verde, 10 de ellos fallos esperados.
+Estado final: la tienda tiene 43 suites y 239 tests en verde, 6 de ellos fallos esperados. La API tiene 237 tests en verde, 11 de ellos fallos esperados.
 
 ### Cómo funcionan los "fallos esperados"
 
@@ -198,24 +199,25 @@ Ya está comprobado que cada uno de estos tests falla por la razón correcta (la
 
 - [x] Línea base medida (sección 1).
 - [x] Contratos de rutas, enlaces, llamadas y respuestas, con sus tests.
-- [x] 17 fallos documentados, 15 de ellos con un test que los demuestra.
+- [x] 18 fallos documentados, 16 de ellos con un test que los demuestra.
 
 ### Fase 1. Arreglar P0 y P1 (próximas dos semanas, antes del pico de Navidad)
 
-Un PR por fallo, rama `feat/…`. El test ya existe: el arreglo está terminado cuando ese test pasa y se le quita la marca de fallo esperado.
+Un PR por fallo, rama `feat/…`. El test ya existe: el arreglo está terminado cuando ese test pasa y se le quita la marca de fallo esperado. Los PR de arreglo se basan en los de esta red de seguridad (casspea-v2 #29 y next-casspea #58), que se fusionan primero.
 
-- [ ] BUG-01: quitar `rest_framework_simplejwt` de `requirements.txt`.
-- [ ] BUG-02: sesiones de checkout privadas.
-- [ ] BUG-03: solo `payment_status == "paid"` crea un pedido pagado.
-- [ ] BUG-17: bucle de la recogida en tienda.
-- [ ] BUG-15: `remotePatterns` limitado a los dominios propios.
-- [ ] BUG-08: página y API de baja de emails.
+- [ ] BUG-01: quitar `rest_framework_simplejwt` de `requirements.txt`. PR abierto: [casspea-v2 #30](https://github.com/carlosblancosierra/casspea-v2/pull/30).
+- [ ] BUG-02: sesiones de checkout privadas. PR abierto: [casspea-v2 #31](https://github.com/carlosblancosierra/casspea-v2/pull/31).
+- [ ] BUG-03: solo `payment_status == "paid"` crea un pedido pagado. PR abierto: [casspea-v2 #32](https://github.com/carlosblancosierra/casspea-v2/pull/32). Al fusionarlo, suscribir el webhook de Stripe a `checkout.session.async_payment_succeeded` y `async_payment_failed`.
+- [ ] BUG-17: bucle de la recogida en tienda. PR abierto: [next-casspea #59](https://github.com/carlosblancosierra/next-casspea/pull/59).
+- [ ] BUG-15: `remotePatterns` limitado a los dominios propios. PR en borrador: [next-casspea #60](https://github.com/carlosblancosierra/next-casspea/pull/60). Antes de fusionarlo, comprobar en la preview que se ven las fotos de producto.
+- [ ] BUG-08: página y API de baja de emails. PRs abiertos: [casspea-v2 #33](https://github.com/carlosblancosierra/casspea-v2/pull/33) y [next-casspea #61](https://github.com/carlosblancosierra/next-casspea/pull/61), que se fusionan juntos (o primero el de la tienda).
 - [ ] BUG-04: `add_to_cart`. Es imprescindible para tener una base que comparar con el rediseño.
 - [ ] BUG-06: fecha de recogida en verano.
 - [ ] BUG-10: 500 en `GET /api/checkout/session/`.
 - [ ] BUG-07: `payment_intent.payment_failed`.
 - [ ] BUG-05: solicitudes de chocolate personalizado.
 - [ ] BUG-18: revisar en Stripe los productos en preventa.
+- [ ] BUG-19: aplicar la regla de "Adviento no se recoge" en los endpoints reales (P2).
 
 ### Fase 2. Preparar el terreno sin cambiar nada visual (en paralelo a la congelación de Navidad)
 
