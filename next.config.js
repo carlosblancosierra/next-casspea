@@ -30,4 +30,24 @@ const nextConfig = {
     },
 }
 
-module.exports = nextConfig;
+// Wraps the build so Sentry starts in the browser and on the server (see
+// instrumentation.ts and instrumentation-client.ts). Source maps are uploaded
+// only when SENTRY_AUTH_TOKEN, SENTRY_ORG and SENTRY_PROJECT are set in
+// Amplify; without them Sentry still reports errors, just with minified
+// stack traces.
+const { withSentryConfig } = require('@sentry/nextjs');
+
+module.exports = withSentryConfig(nextConfig, {
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    // Amplify's commit id ties each error to the deploy that caused it.
+    release: { name: process.env.AWS_COMMIT_ID },
+    sourcemaps: {
+        disable: !process.env.SENTRY_AUTH_TOKEN,
+        // Uploaded to Sentry, then removed so the public site doesn't serve them.
+        deleteSourcemapsAfterUpload: true,
+    },
+    silent: !process.env.CI,
+    telemetry: false,
+});
