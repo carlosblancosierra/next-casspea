@@ -211,11 +211,12 @@ Un PR por fallo, rama `feat/…`. El test ya existe: el arreglo está terminado 
 - [ ] BUG-17: bucle de la recogida en tienda. PR abierto: [next-casspea #59](https://github.com/carlosblancosierra/next-casspea/pull/59).
 - [ ] BUG-15: `remotePatterns` limitado a los dominios propios. PR en borrador: [next-casspea #60](https://github.com/carlosblancosierra/next-casspea/pull/60). Antes de fusionarlo, comprobar en la preview que se ven las fotos de producto.
 - [ ] BUG-08: página y API de baja de emails. PRs abiertos: [casspea-v2 #33](https://github.com/carlosblancosierra/casspea-v2/pull/33) y [next-casspea #61](https://github.com/carlosblancosierra/next-casspea/pull/61), que se fusionan juntos (o primero el de la tienda).
-- [ ] BUG-04: `add_to_cart`. Es imprescindible para tener una base que comparar con el rediseño.
-- [ ] BUG-06: fecha de recogida en verano.
-- [ ] BUG-10: 500 en `GET /api/checkout/session/`.
-- [ ] BUG-07: `payment_intent.payment_failed`.
-- [ ] BUG-05: solicitudes de chocolate personalizado.
+- [ ] BUG-04: `add_to_cart`. Es imprescindible para tener una base que comparar con el rediseño. PR abierto: [next-casspea #62](https://github.com/carlosblancosierra/next-casspea/pull/62).
+- [ ] BUG-06: fecha de recogida en verano. PR abierto: [next-casspea #63](https://github.com/carlosblancosierra/next-casspea/pull/63).
+- [ ] BUG-10: 500 en `GET /api/checkout/session/`. PR abierto: [casspea-v2 #34](https://github.com/carlosblancosierra/casspea-v2/pull/34).
+- [ ] BUG-07: `payment_intent.payment_failed`. PR abierto: [casspea-v2 #35](https://github.com/carlosblancosierra/casspea-v2/pull/35).
+- [ ] BUG-05: solicitudes de chocolate personalizado. PRs abiertos: [casspea-v2 #36](https://github.com/carlosblancosierra/casspea-v2/pull/36) y [next-casspea #64](https://github.com/carlosblancosierra/next-casspea/pull/64).
+- [ ] BUG-13: URLs de vuelta de Stripe configurables con `SITE_URL`, orígenes extra de CORS con `CORS_EXTRA_ORIGINS`, y la recogida reconocida por `delivery_speed` en vez del id 34. PRs abiertos: [casspea-v2 #37](https://github.com/carlosblancosierra/casspea-v2/pull/37) y [next-casspea #65](https://github.com/carlosblancosierra/next-casspea/pull/65), que va encima de #63.
 - [ ] BUG-18: revisar en Stripe los productos en preventa.
 - [ ] BUG-19: aplicar la regla de "Adviento no se recoge" en los endpoints reales (P2).
 
