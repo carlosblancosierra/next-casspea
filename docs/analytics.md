@@ -8,6 +8,7 @@ Objetivo: saber qué hace la gente en la web (vistas, clicks, embudo de compra) 
 |---|---|---|
 | **PostHog** (EU) | Vistas, clicks automáticos, embudos, grabaciones de sesión, errores JS y de API | `components/utils/AnalyticsProvider.tsx` |
 | **GA4 + Google Ads** | Campañas y conversiones (se queda como estaba) | `app/layout.tsx` |
+| **Píxel de Meta** (`854317092525657`) | Instagram Ads: `ViewContent`, `AddToCart`, `InitiateCheckout`, `Purchase`, `Lead` | `utils/metaPixel.ts` (el píxel lo carga GTM; el código solo envía los eventos) |
 | **Cookiebot** | Consentimiento: manda sobre todo lo demás | `app/layout.tsx` |
 | ~~Mouseflow~~ | Eliminado: no se usaba y PostHog cubre las grabaciones | — |
 
