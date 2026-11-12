@@ -32,9 +32,12 @@
     "source": "Old links and search results; redirected to /faq in next.config.js"
   },
   {
+    "url": "/unsubscribe?token={token}",
+    "source": "casspea-v2 leads/unsubscribe.py unsubscribe_url(): the footer of every email (mails/templates/mails/base.html, order_paid.html, leads/templates/leads/mails/*.html)"
+  },
+  {
     "url": "/unsubscribe/",
-    "source": "casspea-v2 mails/templates/mails/base.html, order_paid.html, order_paid_staff.html and every leads/templates/leads/mails/*.html",
-    "knownIssue": "BUG-08: there is no /unsubscribe page and no unsubscribe API, so every marketing email carries a dead unsubscribe link"
+    "source": "Emails sent before the signed links existed; it redirects to /unsubscribe, which explains how to opt out"
   },
   {
     "url": "/static/images/logo-gray.png",
