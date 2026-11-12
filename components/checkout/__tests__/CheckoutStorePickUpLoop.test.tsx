@@ -7,13 +7,14 @@ import type { ShippingCompany } from '@/types/shipping';
 
 /**
  * The real collection picker inside the real options list — the other
- * checkout tests replace one or the other, which is how this went unseen.
+ * checkout tests replace one or the other, which is how BUG-17 went unseen.
  *
  * CheckoutShippingOptions hands CheckoutStorePickUp a new inline onChange on
- * every render, and the picker's effect depends on onChange and reports a new
- * object every time. Once a day and a slot are chosen the two keep updating
- * each other for ever ("Maximum update depth exceeded"), and the checkout
- * page burns the customer's CPU.
+ * every render. The picker's effect used to depend on onChange and report a
+ * new object every time, so once a day and a slot were chosen the two kept
+ * updating each other for ever ("Maximum update depth exceeded") and the
+ * checkout page burned the customer's CPU. Now only the customer's choice
+ * triggers a report.
  */
 
 jest.mock('@/redux/features/carts/cartApiSlice', () => ({ useGetCartQuery: jest.fn() }));
@@ -47,14 +48,12 @@ describe('store collection picker inside the shipping options', () => {
 
     afterEach(() => consoleError.mockRestore());
 
-    // BUG-17 (docs/plan-rediseno-seguro.md). Fails on purpose until the fix
-    // (a stable onChange with useCallback, or only reporting real changes).
-    // When it starts passing, test.failing goes red: make it a normal test.
-    it.failing('[BUG-17] picking a day and a slot settles instead of looping', async () => {
+    // BUG-17 (docs/plan-rediseno-seguro.md), fixed.
+    it('[BUG-17] picking a day and a slot settles instead of looping', async () => {
         let reports = 0;
         const onChangeStorePickup = jest.fn(() => {
             reports += 1;
-            // Break the loop so the test ends; reaching this is the failure.
+            // Should the loop come back, this ends the test instead of hanging it.
             if (reports > LOOP_GUARD) throw new Error(`still updating after ${LOOP_GUARD} reports`);
         });
 
