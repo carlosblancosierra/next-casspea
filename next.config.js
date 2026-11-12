@@ -35,6 +35,14 @@ const nextConfig = {
             (process.env.AWS_APP_ID
                 ? 'https://eeda0ca8b0b43d8a26e17d7757ce1ae5@o4512420674535424.ingest.us.sentry.io/4512420747476992'
                 : ''),
+        // PostHog project casspea (US cloud). The project key is public by
+        // design (it only lets you send events), so Amplify builds get it
+        // built in; local builds and previews send nothing unless
+        // NEXT_PUBLIC_POSTHOG_KEY is set.
+        NEXT_PUBLIC_POSTHOG_KEY:
+            process.env.NEXT_PUBLIC_POSTHOG_KEY ??
+            (process.env.AWS_APP_ID ? 'phc_sKwhif89bU4NCJjc8BDgwNxuf36JXW9tdcRoDoRLz6NH' : ''),
+        NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
     },
 }
 

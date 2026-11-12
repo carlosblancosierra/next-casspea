@@ -6,7 +6,7 @@ Objetivo: saber qué hace la gente en la web (vistas, clicks, embudo de compra) 
 
 | Herramienta | Para qué | Dónde |
 |---|---|---|
-| **PostHog** (EU) | Vistas, clicks automáticos, embudos, grabaciones de sesión, errores JS y de API | `components/utils/AnalyticsProvider.tsx` |
+| **PostHog** (US cloud) | Vistas, clicks automáticos, embudos, grabaciones de sesión, errores JS y de API | `components/utils/AnalyticsProvider.tsx` |
 | **GA4 + Google Ads** | Campañas y conversiones (se queda como estaba) | `app/layout.tsx` |
 | **Cookiebot** | Consentimiento: manda sobre todo lo demás | `app/layout.tsx` |
 | ~~Mouseflow~~ | Eliminado: no se usaba y PostHog cubre las grabaciones | — |
@@ -49,17 +49,15 @@ Todo evento pasa por `track()` en `utils/analytics.ts`. Va a PostHog y, si es un
 
 **Arreglo incluido:** antes, `purchase` se enviaba a GA4/Ads sin importe y con `transaction_id` vacío, porque se leía de `useParams` en lugar de `?session_id=`. Ahora lleva importe, productos y cupón.
 
-## Puesta en marcha (lo que hay que hacer a mano)
+## Puesta en marcha
 
-1. Crear una cuenta en [posthog.com](https://posthog.com) eligiendo la **región EU**.
-2. Ir a Project settings → copiar la **Project API key** (`phc_…`).
-3. En AWS Amplify → App settings → Environment variables, añadir `NEXT_PUBLIC_POSTHOG_KEY=phc_…` y redesplegar. `NEXT_PUBLIC_POSTHOG_HOST` es opcional; por defecto usa `https://eu.i.posthog.com`.
-4. En PostHog → Project settings:
-   - Activar **Cookieless server hash mode**. Sin esto se pierden los eventos de quien no acepta cookies.
-   - Activar **Session replay**.
-   - Activar **Exception autocapture** (Error tracking).
-   - En *Authorized URLs*, añadir `https://www.casspea.co.uk`.
-5. En Cookiebot, revisar que PostHog aparece en la categoría *Statistics* tras el siguiente escaneo.
+Hecho. El proyecto es **Default project** (id 679074) en PostHog **US cloud**.
+
+- La key del proyecto (`phc_…`) va dentro del build de Amplify, en `next.config.js`, igual que el DSN de Sentry. Es pública por diseño: solo permite enviar eventos. Para cambiarla, pon `NEXT_PUBLIC_POSTHOG_KEY` en Amplify → App settings → Environment variables y redespliega.
+- `NEXT_PUBLIC_POSTHOG_HOST` es opcional; por defecto usa `https://us.i.posthog.com`. Si algún día el proyecto pasa a EU, cambia la key y el host a la vez: una key de un proyecto no sirve en el host de la otra región.
+- Ya activado en PostHog → Project settings: *Cookieless server hash mode*, *Session replay*, *Exception autocapture* y la URL autorizada `https://www.casspea.co.uk`.
+- Los *dead clicks* se activan desde el código (`capture_dead_clicks` en `AnalyticsProvider.tsx`).
+- Pendiente de revisar a mano: en Cookiebot, que PostHog aparece en la categoría *Statistics* tras el siguiente escaneo.
 
 Sin la key (en local o en previews), PostHog no se carga y la web funciona igual.
 

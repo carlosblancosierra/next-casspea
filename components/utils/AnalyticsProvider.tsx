@@ -26,12 +26,14 @@ export default function AnalyticsProvider() {
 		if (!isAnalyticsEnabled() || posthog.__loaded) return;
 
 		posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY as string, {
-			api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
+			api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
 			defaults: '2026-01-30',
 			// App Router navigations are history changes, not page loads.
 			capture_pageview: 'history_change',
 			capture_pageleave: true,
 			capture_exceptions: true,
+			// Clicks that change nothing on the page: broken buttons, confusing UI.
+			capture_dead_clicks: true,
 			person_profiles: 'identified_only',
 			cookieless_mode: 'on_reject',
 			opt_out_capturing_by_default: true,
