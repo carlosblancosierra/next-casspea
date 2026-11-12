@@ -89,17 +89,19 @@ export default function ProductCard({ product, useAlternateImage = false, wide =
                     />
                 </div>
             )}
-            <div className={`aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 dark:bg-main-bg-dark group-hover:opacity-75 ${isWide ? 'hidden sm:block' : ''}`}>
-                {displayImage && (
-                    <Image
-                        alt={product.name}
-                        src={displayImage || '/images/default-product.png'}
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        className={`h-full w-full object-cover object-center lg:h-full lg:w-full ${isSoldOut ? 'opacity-40 grayscale' : ''}`}
-                    />
-                )}
+            {/* Fixed 4:5 frame (the shape of the product photos) so every card
+                is the same height. The old `aspect-w-1 aspect-h-1` needed the
+                aspect-ratio plugin, which is not installed, so each image showed
+                at its own natural ratio and cards differed in size. A photo with
+                another ratio is cropped to fit rather than resizing the card. */}
+            <div className={`relative aspect-[4/5] w-full overflow-hidden rounded-md bg-gray-200 dark:bg-main-bg-dark group-hover:opacity-75 ${isWide ? 'hidden sm:block' : ''}`}>
+                <Image
+                    alt={product.name}
+                    src={displayImage || '/images/default-product.png'}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                    className={`object-cover object-center ${isSoldOut ? 'opacity-40 grayscale' : ''}`}
+                />
             </div>
             {summerOriginal ? (
                 <p className="text-md font-medium text-primary-text dark:text-primary-text-light mt-4">
