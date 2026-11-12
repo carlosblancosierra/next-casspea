@@ -41,8 +41,7 @@
   },
   {
     "url": "/static/images/logo-gray.png",
-    "source": "casspea-v2 mails/templates/mails/order_paid.html and leads/templates/leads/mails/*.html",
-    "knownIssue": "BUG-09: public/static does not exist, so the order-confirmation and newsletter emails show a broken logo"
+    "source": "casspea-v2 mails/templates/mails/order_paid.html and leads/templates/leads/mails/*.html: the logo on the purple header of the order confirmation and the lead emails (BUG-09, served from public/static/images since then)"
   },
   {
     "url": "/checkout/error?session_id={id}",
