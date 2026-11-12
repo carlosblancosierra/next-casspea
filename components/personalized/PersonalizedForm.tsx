@@ -6,6 +6,7 @@ import { useSendRequestMutation } from '@/redux/features/personalized/personaliz
 import CustomChocolate from './CustomChocolate';
 import ColorSelectionModal from './ColorSelectionModal';
 import { motion, useAnimation, PanInfo } from "framer-motion";
+import { CONTACT } from '@/components/common/siteLinks';
 
 interface OrderDetails {
     quantity: number;
@@ -35,6 +36,9 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
     // New state for email and comments.
     const [email, setEmail] = useState('');
     const [comments, setComments] = useState('');
+    // What the customer is told after pressing the button. The request used
+    // to fail silently (BUG-05): nothing on screen either way.
+    const [submitState, setSubmitState] = useState<'idle' | 'sending' | 'sent' | 'invalid-email' | 'failed'>('idle');
 
     const getPreviewLayers = (previewColor: LayerTypeColor): UserChosenLayer[] => {
         if (!activeLayer) return [];
@@ -102,15 +106,20 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
 
     // New submit function, sending a custom payload.
     const handleSubmit = async () => {
+        if (submitState === 'sending') return;
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+            setSubmitState('invalid-email');
+            return;
+        }
         const customDesignNames = template.layers.map(slot => {
             const color = slot.layer_type.colors.find(c => c.slug === selectedColors[slot.order]);
             return color?.name || '';
         });
+        setSubmitState('sending');
         try {
-
             const payload = {
                 template_slug: template.slug,
-                email,
+                email: email.trim(),
                 comments,
                 custom_design_names: customDesignNames,
                 flavours: orderDetails.selectedFlavours,
@@ -118,8 +127,10 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
             }
 
             await sendRequest(payload).unwrap();
+            setSubmitState('sent');
         } catch (error) {
             console.error('Failed to send request:', error);
+            setSubmitState('failed');
         }
     };
 
@@ -270,12 +281,30 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                             rows={3}
                         ></textarea>
                     </div>
-                    <button
-                        onClick={handleSubmit}
-                        className="w-full bg-primary dark:bg-primary-2 text-white py-3 px-4 rounded-md hover:bg-primary-dark dark:hover:bg-primary-2-dark transition-colors"
-                    >
-                        Request Chocolates
-                    </button>
+                    {submitState === 'sent' ? (
+                        <p role="status" className="rounded-md border border-green-200 dark:border-green-800 p-4 text-primary-text dark:text-primary-text-light">
+                            Thank you! We have your request and will reply to {email.trim()} by email.
+                        </p>
+                    ) : (
+                        <button
+                            onClick={handleSubmit}
+                            disabled={submitState === 'sending'}
+                            className="w-full bg-primary dark:bg-primary-2 text-white py-3 px-4 rounded-md hover:bg-primary-dark dark:hover:bg-primary-2-dark transition-colors disabled:opacity-60 disabled:cursor-wait"
+                        >
+                            {submitState === 'sending' ? 'Sending…' : 'Request Chocolates'}
+                        </button>
+                    )}
+                    {submitState === 'invalid-email' && (
+                        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+                            Please enter a valid email address so we can reply.
+                        </p>
+                    )}
+                    {submitState === 'failed' && (
+                        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+                            Sorry, your request did not go through. Please try again, or email it to{' '}
+                            <a href={CONTACT.email.href} className="underline">{CONTACT.email.address}</a>.
+                        </p>
+                    )}
                 </div>
             </div>
 
