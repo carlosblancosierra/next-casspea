@@ -8,7 +8,7 @@ import type { BrowserOptions, NodeOptions } from '@sentry/nextjs';
  * build time, which is what Amplify needs: its server runtime does not see the
  * console's env vars.
  *
- *   NEXT_PUBLIC_SENTRY_DSN                 turns Sentry on; without it nothing is sent
+ *   NEXT_PUBLIC_SENTRY_DSN                 built in for Amplify builds (next.config.js); set it to override
  *   NEXT_PUBLIC_SENTRY_ENVIRONMENT         defaults to "production"
  *   NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE  share of page loads traced, 0..1 (default 0)
  *
