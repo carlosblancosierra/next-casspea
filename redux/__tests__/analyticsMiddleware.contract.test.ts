@@ -5,8 +5,9 @@ import cartItemCreated from '@/contract/responses/cart-item-created.json';
 /**
  * The analytics middleware fed with what the API really answers, taken from
  * contract/responses (produced by the casspea-v2 test suite) instead of a
- * hand-written payload. analyticsMiddleware.test.ts uses a CartItem-shaped
- * payload that POST /api/carts/items/ never returns, which is why it passes.
+ * hand-written payload. analyticsMiddleware.test.ts used to feed it a
+ * CartItem-shaped payload that POST /api/carts/items/ never returns, which is
+ * how BUG-04 hid behind a passing test.
  */
 
 jest.mock('@/utils/analytics', () => ({
@@ -23,12 +24,11 @@ const fulfilledMutation = (endpointName: string, originalArgs: unknown, payload:
 describe('analyticsMiddleware with real API responses', () => {
     beforeEach(() => (track as jest.Mock).mockClear());
 
-    // BUG-04 (docs/plan-rediseno-seguro.md). Fails on purpose until the fix:
-    // the middleware reads `payload.product`, but the API returns the whole
-    // cart, so add_to_cart is never sent and the purchase funnel has a hole
-    // exactly where a redesign needs measuring. When this starts passing,
-    // test.failing goes red: turn it into a normal test.
-    it.failing('[BUG-04] reports add_to_cart when the API answers with the whole cart', () => {
+    // BUG-04 (docs/plan-rediseno-seguro.md), fixed: the middleware used to read
+    // `payload.product`, but the API returns the whole cart, so add_to_cart
+    // was never sent and the purchase funnel had a hole exactly where a
+    // redesign needs measuring.
+    it('[BUG-04] reports add_to_cart when the API answers with the whole cart', () => {
         const product = cartItemCreated.items[0].product;
         const action = fulfilledMutation('addCartItem', { product: product.id, quantity: 1 }, cartItemCreated);
         analyticsMiddleware({ dispatch: jest.fn(), getState: jest.fn() })(jest.fn(a => a))(action as never);
