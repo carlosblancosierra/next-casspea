@@ -7,12 +7,16 @@ import { Address, AddressRequest } from '@/types/addresses';
 import { toast } from 'react-toastify';
 import { useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 import { useSetAddressesMutation } from '@/redux/features/addresses/addressApiSlice';
+import { useRequireCheckoutSession } from '@/hooks/useRequireCheckoutSession';
 
 
 export default function AddressPage() {
     const router = useRouter();
 
     const { data: checkoutSession } = useGetSessionQuery();
+    // Addresses are saved on the checkout session, which a guest only has once
+    // they have given their email: without one, back to the cart.
+    const needsEmail = useRequireCheckoutSession(checkoutSession);
     const [setAddresses] = useSetAddressesMutation();
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -117,15 +121,20 @@ export default function AddressPage() {
                 setError(`Billing address validation failed:\n${formatErrors(data.billing_address)}`);
                 toast.error('Please check billing address details');
             } else {
+                // Stay on the form, so "try again" keeps what they typed. It
+                // used to navigate to /checkout/error, a page that did not
+                // exist (BUG-14), throwing the addresses away.
                 setError('Failed to save addresses. Please try again.');
                 toast.error('Failed to save addresses. Please try again.');
-                // Redirect to the error page
-                router.push('/checkout/error');
             }
         } finally {
             setIsProcessing(false);
         }
     };
+
+    if (needsEmail) {
+        return null;
+    }
 
     return (
         <main className='mx-auto max-w-3xl md:py-8 py-4 bg-main-bg dark:bg-main-bg-dark min-h-screen'>

@@ -18,6 +18,7 @@ import CartItem from '@/components/cart/CartItem';
 import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
+import { useRequireCheckoutSession } from '@/hooks/useRequireCheckoutSession';
 import { formatCurrency } from '@/utils/currency';
 import { isStorePickup } from './constants';
 import { track, rememberPendingPurchase, toAnalyticsItem, toAmount, CURRENCY } from '@/utils/analytics';
@@ -35,6 +36,9 @@ const CheckoutConfirm = () => {
     const { data: session, isLoading: sessionLoading, error: sessionError } = useGetSessionQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
+    // A guest without an email has no saved session, so nothing here could
+    // be paid for: back to the cart.
+    const needsEmail = useRequireCheckoutSession(session);
     const { data: cart, isLoading: cartLoading, error: cartError } = useGetCartQuery();
     const { data: shippingCompanies, isLoading: isShippingLoading } = useGetShippingOptionsQuery(undefined, {
         // Shipping prices depend on the live cart total (discount), so always
@@ -130,7 +134,7 @@ const CheckoutConfirm = () => {
         }
     };
 
-    if (sessionLoading || cartLoading) {
+    if (sessionLoading || cartLoading || needsEmail) {
         return (
             <div className=" dark:bg-main-bg-dark min-h-screen">
                 <div className="max-w-7xl mx-auto px-0 h-[calc(80vh)] flex items-center justify-center">

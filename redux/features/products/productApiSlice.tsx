@@ -15,12 +15,10 @@ const productApiSlice = apiSlice.injectEndpoints({
             keepUnusedDataFor: 300,
         }),
 
-        // Get products by category
-        getProductsByCategory: builder.query<Product[], string>({
-            query: (categorySlug) => `/products/?category=${categorySlug}`,
-            transformResponse: (response: Product[]) => response,
-            keepUnusedDataFor: 300,
-        }),
+        // A category's products come with GET /products/categories/<slug>/,
+        // as app/shop-now/categories/[category_slug] reads them. The unused
+        // getProductsByCategory that lived here sent ?category=, which the
+        // API ignores, so it answered with every product (BUG-16).
 
         // Get active products only
         getActiveProducts: builder.query<Product[], void>({
@@ -46,7 +44,6 @@ const productApiSlice = apiSlice.injectEndpoints({
 export const {
     useGetProductsQuery,
     useGetProductQuery,
-    useGetProductsByCategoryQuery,
     useGetActiveProductsQuery,
     useGetCategoriesQuery,
     useGetCategoryQuery,

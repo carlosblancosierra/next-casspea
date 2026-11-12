@@ -41,12 +41,10 @@
   },
   {
     "url": "/static/images/logo-gray.png",
-    "source": "casspea-v2 mails/templates/mails/order_paid.html and leads/templates/leads/mails/*.html",
-    "knownIssue": "BUG-09: public/static does not exist, so the order-confirmation and newsletter emails show a broken logo"
+    "source": "casspea-v2 mails/templates/mails/order_paid.html and leads/templates/leads/mails/*.html: the logo on the purple header of the order confirmation and the lead emails (BUG-09, served from public/static/images since then)"
   },
   {
     "url": "/checkout/error?session_id={id}",
-    "source": "casspea-v2 checkout/stripe_views.py: StripeSuccessView and StripeCancelView redirects",
-    "knownIssue": "BUG-14: there is no /checkout/error page (the views look unused: Stripe returns straight to /checkout/success and /checkout/cancel)"
+    "source": "casspea-v2 checkout/stripe_views.py: StripeSuccessView and StripeCancelView redirects (BUG-14: the page exists since then)"
   }
 ]

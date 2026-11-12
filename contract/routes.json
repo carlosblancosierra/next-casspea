@@ -16,6 +16,7 @@
   "/checkout/cancel",
   "/checkout/confirm",
   "/checkout/embedded",
+  "/checkout/error",
   "/checkout/gift-card",
   "/checkout/result",
   "/checkout/success",

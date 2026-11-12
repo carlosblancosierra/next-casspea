@@ -11,15 +11,15 @@ export default function Footer({ config }: FooterProps) {
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <div>
           <h3 className="font-semibold mb-2">Shop</h3>
-          <Link href="/shop">All Products</Link><br/>
+          <Link href="/shop-now">All Products</Link><br/>
           <Link href="#flavours">Flavours</Link><br/>
-          <Link href="/custom">Custom Orders</Link>
+          <Link href="/personalised">Custom Orders</Link>
         </div>
         <div>
           <h3 className="font-semibold mb-2">Company</h3>
-          <Link href="/about">About Us</Link><br/>
+          <Link href="/about-us">About Us</Link><br/>
           <Link href="/contact">Contact</Link><br/>
-          <Link href="/faqs">FAQs</Link>
+          <Link href="/faq">FAQs</Link>
         </div>
         <div>
           <h3 className="font-semibold mb-2">Legal</h3>
