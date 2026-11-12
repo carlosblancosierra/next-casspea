@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
 import {
     useGetSessionQuery,
     useUpdateSessionMutation,
@@ -18,7 +19,7 @@ import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/c
 import ReadOnlyCartItem from '@/components/cart/ReadOnlyCartItem';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
 import { formatCurrency } from '@/utils/currency';
-import { STORE_PICKUP_OPTION_ID } from './constants';
+import { isStorePickup } from './constants';
 import { track, rememberPendingPurchase, toAnalyticsItem, toAmount, CURRENCY } from '@/utils/analytics';
 
 const CheckoutConfirm = () => {
@@ -69,8 +70,13 @@ const CheckoutConfirm = () => {
             return;
         }
 
+        const chosenOption = shippingCompanies
+            ?.flatMap(company => company.shipping_options)
+            .find(option => option.id === selectedShippingOption);
+        const isPickup = isStorePickup(chosenOption);
+
         // Validate store pickup selection
-        if (selectedShippingOption === STORE_PICKUP_OPTION_ID && !storePickup) {
+        if (isPickup && !storePickup) {
             toast.error('Please select a pickup date and time slot');
             return;
         }
@@ -82,8 +88,11 @@ const CheckoutConfirm = () => {
             const payload: { shipping_option_id: number, pickup_date?: string, pickup_time?: string } = {
                 shipping_option_id: selectedShippingOption
             };
-            if (selectedShippingOption === STORE_PICKUP_OPTION_ID && storePickup) {
-                payload.pickup_date = storePickup.date.toISOString().slice(0, 10); // YYYY-MM-DD
+            if (isPickup && storePickup) {
+                // The picker's day is a local midnight. toISOString() would turn it
+                // into UTC, which during British Summer Time is the day before
+                // (BUG-06), so format the calendar date as the customer saw it.
+                payload.pickup_date = format(storePickup.date, 'yyyy-MM-dd');
                 payload.pickup_time = storePickup.slot.start + ' - ' + storePickup.slot.end;
             }
 
