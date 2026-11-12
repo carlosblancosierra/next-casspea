@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { addDays, format, isSameDay } from 'date-fns';
 import { enGB } from 'date-fns/locale';
 import { getLondonNow, getNextShippingDays } from '@/utils/shippingDays';
@@ -53,18 +53,30 @@ const CheckoutStorePickUp: React.FC<CheckoutStorePickUpProps> = ({ onChange }) =
   const isSlotBlocked = (slot: Slot) =>
     isSameDayPickup && slot.value !== slots[slots.length - 1]?.value;
 
+  // The latest onChange, kept out of the effect below on purpose. Parents pass
+  // an inline function, a new one on every render; with it as a dependency,
+  // each report re-rendered the parent, which handed down a new function,
+  // which triggered another report — for ever ("Maximum update depth
+  // exceeded", BUG-17). Only the customer's choice should trigger a report.
+  const onChangeRef = useRef(onChange);
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  });
+
   // Notify parent when selection changes (null if incomplete)
   useEffect(() => {
+    const notify = onChangeRef.current;
+    if (!notify) return;
     if (selectedDate && selectedSlot) {
       const slot = slots.find(s => s.value === selectedSlot);
-      if (slot && onChange) {
-        onChange({ date: selectedDate, slot });
+      if (slot) {
+        notify({ date: selectedDate, slot });
       }
-    } else if (onChange) {
+    } else {
       // If either is missing, notify parent that selection is incomplete
-      onChange(null);
+      notify(null);
     }
-  }, [selectedDate, selectedSlot, slots, onChange]);
+  }, [selectedDate, selectedSlot, slots]);
 
   const dayLabel = (day: Date) => {
     if (isSameDay(day, londonToday)) return 'Today';

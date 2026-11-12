@@ -46,8 +46,8 @@ jest.mock('@/components/checkout/CheckoutDetails', () => ({ __esModule: true, de
 
 // The real picker builds its days as local midnights (getLondonNow); this
 // stand-in picks Monday 22 June 2026, 15:00-16:00, the same way. It answers
-// once: the real one answers on every render, which loops (BUG-17,
-// CheckoutStorePickUpLoop.test.tsx) and would hang this test.
+// once, as the real one does since BUG-17 was fixed
+// (CheckoutStorePickUpLoop.test.tsx).
 function FakeStorePickUp({ onChange }: { onChange?: (value: unknown) => void }) {
     const answered = useRef(false);
     useEffect(() => {
