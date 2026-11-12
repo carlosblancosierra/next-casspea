@@ -7,12 +7,16 @@ import { Address, AddressRequest } from '@/types/addresses';
 import { toast } from 'react-toastify';
 import { useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 import { useSetAddressesMutation } from '@/redux/features/addresses/addressApiSlice';
+import { useRequireCheckoutSession } from '@/hooks/useRequireCheckoutSession';
 
 
 export default function AddressPage() {
     const router = useRouter();
 
     const { data: checkoutSession } = useGetSessionQuery();
+    // Addresses are saved on the checkout session, which a guest only has once
+    // they have given their email: without one, back to the cart.
+    const needsEmail = useRequireCheckoutSession(checkoutSession);
     const [setAddresses] = useSetAddressesMutation();
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -127,6 +131,10 @@ export default function AddressPage() {
             setIsProcessing(false);
         }
     };
+
+    if (needsEmail) {
+        return null;
+    }
 
     return (
         <main className='mx-auto max-w-3xl md:py-8 py-4 bg-main-bg dark:bg-main-bg-dark min-h-screen'>
