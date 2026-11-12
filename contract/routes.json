@@ -2,6 +2,7 @@
   "/",
   "/about-us",
   "/addresses/stats",
+  "/admin/client-setups",
   "/admin/experiments",
   "/admin/palette",
   "/admin/sms-contacts",

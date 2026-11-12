@@ -57,6 +57,8 @@ const SAMPLE_ARGS: Record<string, unknown> = {
     // client pages
     getClientPage: 'acme',
     unlockClientPage: { slug: 'acme', code: '1234' },
+    getClientSetups: undefined,
+    loadClientSetup: { setup: 'wild-at-heart', dry_run: true },
     // experiments
     assignVariant: { experiment: 'box_builder' },
     recordExperimentEvent: { experiment: 'box_builder', name: 'builder_add_to_cart' },

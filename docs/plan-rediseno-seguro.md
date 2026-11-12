@@ -175,7 +175,7 @@ En `casspea-v2`:
 - `erp/tests/test_frontend_contract.py`: cada llamada de la tienda llega a una vista que acepta su método, y las 15 respuestas mantienen su forma.
 - `erp/tests/test_known_issues.py`: BUG-01, 02, 03, 07, 10, 11, 12, 13 y 19.
 
-Estado final, con los arreglos de la Fase 1 incluidos: la tienda tiene 47 suites y 255 tests en verde, y quedan 2 fallos esperados (BUG-09 y BUG-14). La API tiene 268 tests en verde, y quedan 3 fallos esperados (BUG-11, BUG-12 y BUG-19).
+Estado final, con los arreglos de la Fase 1 incluidos: la tienda tiene 47 suites y 255 tests en verde, y quedan 2 fallos esperados (BUG-09 y BUG-14). La API tiene 278 tests en verde, contando los de casspea-v2 #38, y quedan 3 fallos esperados (BUG-11, BUG-12 y BUG-19).
 
 ### Cómo funcionan los "fallos esperados"
 
