@@ -8,9 +8,9 @@ import { makeCart } from '@/test-utils/makeCart';
 
 /**
  * Store collection in summer. The picker hands over the chosen day as a local
- * Date at midnight; CheckoutConfirm turns it into YYYY-MM-DD with
- * toISOString(), which is UTC. During British Summer Time local midnight is
- * 23:00 UTC the day before, so the order is saved for the wrong day.
+ * Date at midnight. CheckoutConfirm used to turn it into YYYY-MM-DD with
+ * toISOString(), which is UTC: during British Summer Time local midnight is
+ * 23:00 UTC the day before, so the order was saved for the wrong day.
  *
  * jest.config.js runs the suite in Europe/London. CI machines default to UTC,
  * where this bug cannot be seen at all.
@@ -100,10 +100,8 @@ describe('CheckoutConfirm store collection date', () => {
         expect(data).toEqual(expect.objectContaining({ shipping_option_id: 34, pickup_time: '15:00 - 16:00' }));
     });
 
-    // BUG-06 (docs/plan-rediseno-seguro.md). Fails on purpose until the fix
-    // (format the local date, e.g. date-fns format(date, 'yyyy-MM-dd')). When
-    // it starts passing, test.failing goes red: make it a normal test.
-    it.failing('[BUG-06] saves the collection for the day the customer picked', async () => {
+    // BUG-06 (docs/plan-rediseno-seguro.md), fixed.
+    it('[BUG-06] saves the collection for the day the customer picked', async () => {
         const data = await chooseCollectionAndPay();
         expect(data.pickup_date).toBe('2026-06-22');
     });
