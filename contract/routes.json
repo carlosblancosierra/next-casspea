@@ -40,5 +40,6 @@
   "/shop-now/categories",
   "/shop-now/categories/[category_slug]",
   "/store",
-  "/subscribe"
+  "/subscribe",
+  "/unsubscribe"
 ]

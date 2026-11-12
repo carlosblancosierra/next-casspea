@@ -97,6 +97,7 @@ const SAMPLE_ARGS: Record<string, unknown> = {
     // leads
     subscribeToNewsletter: { email: 'customer@example.com' },
     subscribeGenericLead: { email: 'customer@example.com', lead_type: 'generic' },
+    unsubscribe: { token: 'signed-token-from-the-email' },
 };
 
 /**

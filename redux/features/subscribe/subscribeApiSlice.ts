@@ -9,6 +9,10 @@ interface SubscribeRequest {
     email: string;
 }
 
+interface UnsubscribeResponse {
+    email: string;
+}
+
 export type LeadType = 'newsletter' | 'contact_form' | 'landing_page' | 'giveaway';
 export type FormCode = 'GOLD' | 'BLUE' | 'TM7' | null;
 
@@ -52,12 +56,22 @@ const subscribeApiSlice = apiSlice.injectEndpoints({
                 };
             },
         }),
+        // The token comes from the link at the bottom of every email; the
+        // API answers with the address it was for, masked (a•••@example.com).
+        unsubscribe: builder.mutation<UnsubscribeResponse, { token: string }>({
+            query: (data) => ({
+                url: '/leads/unsubscribe/',
+                method: 'POST',
+                body: data,
+            }),
+        }),
     }),
 });
 
 export const {
     useSubscribeToNewsletterMutation,
     useSubscribeGenericLeadMutation,
+    useUnsubscribeMutation,
 } = subscribeApiSlice;
 
 export default subscribeApiSlice;
