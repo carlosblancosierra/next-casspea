@@ -1,6 +1,6 @@
 import { isRejectedWithValue, type Middleware } from '@reduxjs/toolkit';
 import { track, toAnalyticsItem, toAmount, CURRENCY } from '@/utils/analytics';
-import type { CartItem, CartItemRequest } from '@/types/carts';
+import type { Cart, CartItem, CartItemRequest } from '@/types/carts';
 
 interface ApiAction {
 	type: string;
@@ -50,10 +50,10 @@ function handle(action: ApiAction): void {
 
 	switch (endpoint) {
 		case 'addCartItem': {
-			const item = action.payload as CartItem | undefined;
-			if (!item?.product) return;
 			const request = args as CartItemRequest | undefined;
-			// The response is the whole cart line; report only what was just added.
+			const item = addedLine(action.payload as Cart | undefined, request);
+			if (!item) return;
+			// Report only what was just added, not the line's running total.
 			const added = { ...toAnalyticsItem(item), quantity: request?.quantity ?? item.quantity };
 			track('add_to_cart', {
 				currency: CURRENCY,
@@ -88,4 +88,17 @@ function handle(action: ApiAction): void {
 			track('login', { method: 'email' });
 			return;
 	}
+}
+
+/**
+ * POST /api/carts/items/ answers with the whole cart, not the line it added
+ * (BUG-04: reading a line straight off the payload meant add_to_cart was never
+ * sent). Every add creates a new line, so the added one is the newest line,
+ * the highest id, for the product that was asked for.
+ */
+function addedLine(cart: Cart | undefined, request: CartItemRequest | undefined): CartItem | undefined {
+	if (!cart?.items?.length || request?.product === undefined) return undefined;
+	return cart.items
+		.filter(item => item.product?.id === Number(request.product))
+		.reduce<CartItem | undefined>((newest, item) => (!newest || item.id > newest.id ? item : newest), undefined);
 }

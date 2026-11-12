@@ -19,7 +19,8 @@ const cartApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ['Cart', 'ShippingOptions'],
         }),
 
-        addCartItem: builder.mutation<CartItem, CartItemRequest>({
+        // Answers with the whole cart, not the line it added.
+        addCartItem: builder.mutation<Cart, CartItemRequest>({
             query: (cartItem) => ({
                 url: '/carts/items/',
                 method: 'POST',
