@@ -89,10 +89,12 @@ export default function ProductCard({ product, useAlternateImage = false, wide =
                     />
                 </div>
             )}
-            {/* `aspect-square` is core Tailwind. The old `aspect-w-1 aspect-h-1`
-                needed the aspect-ratio plugin, which is not installed, so each
-                image showed at its own natural ratio and cards differed in size. */}
-            <div className={`relative aspect-square w-full overflow-hidden rounded-md bg-gray-200 dark:bg-main-bg-dark group-hover:opacity-75 ${isWide ? 'hidden sm:block' : ''}`}>
+            {/* Fixed 4:5 frame (the shape of the product photos) so every card
+                is the same height. The old `aspect-w-1 aspect-h-1` needed the
+                aspect-ratio plugin, which is not installed, so each image showed
+                at its own natural ratio and cards differed in size. A photo with
+                another ratio is cropped to fit rather than resizing the card. */}
+            <div className={`relative aspect-[4/5] w-full overflow-hidden rounded-md bg-gray-200 dark:bg-main-bg-dark group-hover:opacity-75 ${isWide ? 'hidden sm:block' : ''}`}>
                 <Image
                     alt={product.name}
                     src={displayImage || '/images/default-product.png'}
