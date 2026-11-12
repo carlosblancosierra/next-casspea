@@ -86,7 +86,6 @@ const SAMPLE_ARGS: Record<string, unknown> = {
     // products
     getProducts: undefined,
     getProduct: 'signature-box',
-    getProductsByCategory: 'boxes',
     getActiveProducts: undefined,
     getCategories: undefined,
     getCategory: 'boxes',
@@ -108,9 +107,8 @@ const SAMPLE_ARGS: Record<string, unknown> = {
  * entry together with the endpoint.
  */
 const NOT_ON_BASE_QUERY: Record<string, string> = {
-    downloadRoyalMailLabel:
-        'axios with a relative URL, so it would hit the Next.js host without a token. ' +
-        'Unused: the orders screen downloads labels with fetch in useOrderActions. Delete it.',
+    // Empty since BUG-16 removed downloadRoyalMailLabel, which used axios
+    // with a relative URL and no token.
 };
 
 type ApiCall = { endpoint: string; method: string; path: string };

@@ -1,5 +1,4 @@
 import { apiSlice } from '@/redux/services/apiSlice';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 
 export const royalMailApiSlice = apiSlice.injectEndpoints({
@@ -31,55 +30,12 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
-
-    // Query to download the Royal Mail shipping label PDF
-    downloadRoyalMailLabel: builder.mutation<Blob, { order_id: string }>({
-      queryFn: async ({ order_id }) => {
-        try {
-          const response = await axios({
-            url: `/api/royalmail/orders/${order_id}/label/`,
-            method: 'GET',
-            responseType: 'blob',
-            headers: {
-              'Accept': 'application/pdf',
-            },
-          });
-
-          // For attachment downloads, the type might be 'text/html' initially
-          // We'll check the Content-Disposition header instead
-          const contentType = String(response.headers['content-type'] ?? '');
-          const contentDisposition = String(response.headers['content-disposition'] ?? '');
-
-          if (!contentDisposition.includes('attachment') || !contentType.includes('pdf')) {
-            throw new Error('Invalid response format - Expected PDF attachment');
-          }
-
-          return { data: response.data };
-        } catch (error) {
-          // Handle specific error cases
-          const status = axios.isAxiosError(error) ? error.response?.status : undefined;
-          const errorMessage = status === 404
-            ? `Label not found for order ${order_id}`
-            : 'Failed to download shipping label';
-
-          toast.error(errorMessage);
-
-          return {
-            error: {
-              status: status || 500,
-              data: errorMessage
-            }
-          };
-        }
-      },
-      // Add invalidation if needed
-      invalidatesTags: (result) => 
-        result && !('error' in result) ? ['Orders'] : []
-    }),
+    // Label PDFs are downloaded with fetch in useOrderActions. The unused
+    // downloadRoyalMailLabel that lived here called the API through axios with
+    // a relative URL and no token, so it could never work (BUG-16).
   }),
 });
 
 export const {
   useCreateRoyalMailOrderMutation,
-  useDownloadRoyalMailLabelMutation,
 } = royalMailApiSlice;
