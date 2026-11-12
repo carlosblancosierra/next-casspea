@@ -27,7 +27,34 @@ const nextConfig = {
     },
     env: {
         GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
+        // Sentry project casspea-web. A DSN is public by design (it only lets
+        // you send events), so Amplify builds get it built in; local builds
+        // send nothing unless NEXT_PUBLIC_SENTRY_DSN is set.
+        NEXT_PUBLIC_SENTRY_DSN:
+            process.env.NEXT_PUBLIC_SENTRY_DSN ??
+            (process.env.AWS_APP_ID
+                ? 'https://eeda0ca8b0b43d8a26e17d7757ce1ae5@o4512420674535424.ingest.us.sentry.io/4512420747476992'
+                : ''),
     },
 }
 
-module.exports = nextConfig;
+// Wraps the build so Sentry starts in the browser and on the server (see
+// instrumentation.ts and instrumentation-client.ts). Source maps are uploaded
+// only when SENTRY_AUTH_TOKEN is set in Amplify; without it Sentry still
+// reports errors, just with minified stack traces.
+const { withSentryConfig } = require('@sentry/nextjs');
+
+module.exports = withSentryConfig(nextConfig, {
+    org: process.env.SENTRY_ORG || 'carlosblanco',
+    project: process.env.SENTRY_PROJECT || 'casspea-web',
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    // Amplify's commit id ties each error to the deploy that caused it.
+    release: { name: process.env.AWS_COMMIT_ID },
+    sourcemaps: {
+        disable: !process.env.SENTRY_AUTH_TOKEN,
+        // Uploaded to Sentry, then removed so the public site doesn't serve them.
+        deleteSourcemapsAfterUpload: true,
+    },
+    silent: !process.env.CI,
+    telemetry: false,
+});

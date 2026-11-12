@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import posthog from 'posthog-js';
 
 /**
@@ -56,7 +57,13 @@ export function track(event: string, properties: Properties = {}): void {
     }
 }
 
+/** Report a caught error to Sentry and PostHog. Each is a no-op without its key. */
 export function captureError(error: unknown, properties: Properties = {}): void {
+    try {
+        Sentry.captureException(error, { extra: properties });
+    } catch {
+        // ignore
+    }
     if (!isAnalyticsEnabled()) return;
     try {
         posthog.captureException(error, properties);
