@@ -111,6 +111,7 @@ Next 14.2.35 tiene 3 avisos críticos y 9 altos, y el parche solo existe a parti
 **BUG-18 (por verificar). El precio de preventa puede no coincidir con el que cobra Stripe.**
 El carrito cobra `preorder_price` cuando hay preventa, pero Stripe cobra el precio asociado a `stripe_price_id`. Si nadie cambia ese id al activar la preventa, el cliente ve un importe y paga otro.
 *Arreglo:* comprobar en Stripe cada producto en preventa, o enviar el precio de preventa a Stripe. No tiene test porque depende de datos de Stripe.
+*Arreglado en casspea-v2 #40:* si el precio de Stripe no coincide con el de preventa, la línea se cobra al precio del carrito sobre el mismo producto de Stripe (así los cupones restringidos por producto siguen aplicando), y el webhook la reconoce. Ya no hace falta revisarlo a mano. *Test:* `Bug18PreorderPriceTest`.
 
 ### P2: cuando se toque esa zona
 
@@ -123,6 +124,14 @@ El carrito cobra `preorder_price` cuando hay preventa, pero Stripe cobra el prec
 | BUG-16 | Código muerto que un rediseño podría volver a usar: `downloadRoyalMailLabel` (axios con URL relativa y sin token) y `getProductsByCategory` (la API ignora `?category=`) | `redux/features/royalmail/royalmailApiSlice.tsx:36`, `redux/features/products/productApiSlice.tsx:19` | `apiCalls.test.ts`, lista `NOT_ON_BASE_QUERY` |
 | BUG-19 | La regla "un carrito con calendario de Adviento no se recoge en tienda" solo está en `CheckoutDetailsSerializer`, que ninguna vista usa. Los endpoints que llama la tienda aceptan la recogida, y el test existente (`FixedDispatchBlocksPickupTest`) pasa porque prueba el serializer suelto. La tienda oculta la opción, así que solo pasa con una petición hecha a mano | `checkout/views.py` (`create` y `update_shipping_option`), `checkout/serializers.py:119` | `Bug19FixedDispatchPickupTest` |
 
+Todos arreglados en [casspea-v2 #40](https://github.com/carlosblancosierra/casspea-v2/pull/40) y [next-casspea #69](https://github.com/carlosblancosierra/next-casspea/pull/69):
+
+- **BUG-09:** la tienda sirve `/static/images/logo-gray.png`, lo que arregla también los emails ya enviados. Los emails de BLUE20, GOLD20 y Thermomix, que salían sin estilos, comparten ahora los de la newsletter.
+- **BUG-11 y BUG-12:** responden 400.
+- **BUG-14:** existe `/checkout/error`, y el paso de dirección ya no saca al cliente del formulario si falla el guardado. Un test nuevo comprueba todos los enlaces internos del código y encontró cinco más rotos, ya arreglados.
+- **BUG-16:** los dos endpoints se han quitado.
+- **BUG-19:** la regla se comprueba en los dos endpoints y al crear el pago en Stripe.
+
 ### Otros hallazgos que afectan al rediseño
 
 No son fallos todavía, pero conviene saberlos antes de mover nada:
@@ -134,7 +143,8 @@ No son fallos todavía, pero conviene saberlos antes de mover nada:
 - **Hay un experimento A/B activo en la ficha de producto** (`box_builder`, `ProductDetail.tsx:28`). Rediseñar la ficha mientras corre contamina el resultado.
 - **SEO:** solo 12 de las 42 páginas tienen metadata propia; las demás heredan el título genérico del layout. No hay `sitemap.xml` ni `robots.txt`.
 - **El build de CI no prueba los datos.** Corre sin `NEXT_PUBLIC_HOST`, así que las páginas estáticas se generan sin productos (avisos `fetch failed for undefined/api/...`) y el build sale verde igual.
-- **La página `/dev` es pública** en producción.
+- **La página `/dev` no es pública:** fuera de desarrollo responde 404 (comprobado con un build de producción).
+- **Faltan tres páginas que se enlazan y necesitan contenido:** `/privacy-policy` (la enlazan los formularios de suscripción, el pie de las landings y las bases del sorteo de Thermomix; un formulario que recoge emails debería llevar a una política de privacidad real), `/terms` (pie de las landings) y `/landing/fathers-day/thank-you` (adonde manda el formulario del Día del Padre; falta el código de descuento que debe mostrar). Están fijadas con `it.failing` en `contract/__tests__/routes.test.ts`.
 - **El token de sesión (JWT) se guarda en `localStorage`** y la web carga scripts de terceros (GTM, Cookiebot, PostHog, Trustpilot). Si alguno se ve comprometido, se puede robar la sesión de un administrador. Valorar cookies `httpOnly` más adelante.
 - **Las versiones del backend no están fijadas** (`Django>=4.2`, `stripe` y `djangorestframework` sin versión). Hoy se instalan Django 5.2 y Stripe 17, y cada despliegue en Heroku puede traer una versión mayor nueva.
 - **El README decía que el build ignora los errores de TypeScript.** Ya no es así; está corregido en esta rama.
@@ -145,9 +155,9 @@ Un rediseño cambia componentes, pero hay acuerdos con el exterior que no deben 
 
 | Acuerdo | Por qué importa | Protección |
 |---|---|---|
-| **42 URLs** | Google, anuncios, códigos QR, Stripe y los emails apuntan a ellas | `contract/routes.json`, comprobado en `contract/__tests__/routes.test.ts`. Quitar una ruta solo pasa el test si hay redirección en `next.config.js` |
+| **45 URLs** | Google, anuncios, códigos QR, Stripe y los emails apuntan a ellas | `contract/routes.json`, comprobado en `contract/__tests__/routes.test.ts`. Quitar una ruta solo pasa el test si hay redirección en `next.config.js` |
 | **Enlaces que llegan de fuera** | Vuelta de Stripe (`/checkout/success`, `/cancel`, `/result`), carrito abandonado (`/cart`), email al equipo (`/orders?order=`), logo de los emails | `contract/inbound-links.json` |
-| **49 llamadas a la API** | Método, ruta y barra final. Si cambia una, la API responde 404 o 405 | `contract/frontend-api-calls.json`, generado ejecutando cada endpoint de RTK Query. La API comprueba su copia en `erp/tests/test_frontend_contract.py` |
+| **51 llamadas a la API** | Método, ruta y barra final. Si cambia una, la API responde 404 o 405 | `contract/frontend-api-calls.json`, generado ejecutando cada endpoint de RTK Query. La API comprueba su copia en `erp/tests/test_frontend_contract.py` |
 | **Forma de las respuestas** | Los componentes leen campos concretos | `contract/responses/*.json`: 15 respuestas reales que genera la suite de la API. La tienda las usa como datos de prueba |
 | **Eventos de analítica** | Embudo de compra y conversiones de GA4 y Ads | Tests del middleware (BUG-04). Las acciones de PostHog definidas por selector CSS o por texto también se rompen al cambiar el HTML: revisarlas |
 | **Reglas de negocio** | Cortes de envío, recogida, mínimo para descuento, envío gratis desde 56 £, cajas "Surprise me" | Tests existentes, que buscan por rol y por texto y por eso sobreviven a un cambio visual. Ampliar en la Fase 3 |
@@ -161,8 +171,8 @@ Un rediseño cambia componentes, pero hay acuerdos con el exterior que no deben 
 En `next-casspea`:
 
 - `contract/`: los acuerdos de la sección 3, en JSON, más `contractFile.ts` para compararlos. Su `README.md` explica cómo actualizarlos.
-- `contract/__tests__/apiCalls.test.ts`: ejecuta los 49 endpoints contra un `fetch` falso y compara método y ruta con `frontend-api-calls.json`. También falla si alguien añade un endpoint sin registrarlo.
-- `contract/__tests__/routes.test.ts`: el inventario de rutas, las redirecciones y los enlaces que llegan de fuera.
+- `contract/__tests__/apiCalls.test.ts`: ejecuta los 51 endpoints contra un `fetch` falso y compara método y ruta con `frontend-api-calls.json`. También falla si alguien añade un endpoint sin registrarlo.
+- `contract/__tests__/routes.test.ts`: el inventario de rutas, las redirecciones, los enlaces que llegan de fuera y los enlaces internos escritos en el código (BUG-14).
 - `contract/__tests__/responses.test.ts`: los datos de prueba no pueden inventarse campos que la API no manda.
 - `redux/__tests__/analyticsMiddleware.contract.test.ts`: BUG-04.
 - `components/checkout/__tests__/CheckoutConfirmPickupDate.test.tsx`: BUG-06.
@@ -173,9 +183,9 @@ En `casspea-v2`:
 
 - `contract/frontend-api-calls.json` (copia del de la tienda) y `contract/responses/*.json`.
 - `erp/tests/test_frontend_contract.py`: cada llamada de la tienda llega a una vista que acepta su método, y las 15 respuestas mantienen su forma.
-- `erp/tests/test_known_issues.py`: BUG-01, 02, 03, 07, 10, 11, 12, 13 y 19.
+- `erp/tests/test_known_issues.py`: BUG-01, 02, 03, 07, 09, 10, 11, 12, 13, 18 y 19.
 
-Estado final, con los arreglos de la Fase 1 incluidos: la tienda tiene 47 suites y 255 tests en verde, y quedan 2 fallos esperados (BUG-09 y BUG-14). La API tiene 278 tests en verde, contando los de casspea-v2 #38, y quedan 3 fallos esperados (BUG-11, BUG-12 y BUG-19).
+Estado final, con todos los fallos de la auditoría arreglados (casspea-v2 #29 y #40, next-casspea #58 y #69): la tienda tiene 49 suites y 266 tests en verde, y solo quedan como fallos esperados las tres páginas que necesitan contenido (ver "Otros hallazgos"). La API tiene 295 tests en verde y ningún fallo esperado.
 
 ### Cómo funcionan los "fallos esperados"
 
@@ -203,22 +213,23 @@ Ya está comprobado que cada uno de estos tests falla por la razón correcta (la
 
 ### Fase 1. Arreglar P0 y P1 (próximas dos semanas, antes del pico de Navidad)
 
-Todos los arreglos de esta fase van en dos PRs, uno por repositorio, con un commit por fallo: [casspea-v2 #29](https://github.com/carlosblancosierra/casspea-v2/pull/29) para la API y [next-casspea #58](https://github.com/carlosblancosierra/next-casspea/pull/58) para la tienda. Son los mismos PRs que traen la red de seguridad. Cada arreglo convierte su test de fallo esperado en un test normal.
+Hecho. Los arreglos P0 y P1 llegaron con [casspea-v2 #29](https://github.com/carlosblancosierra/casspea-v2/pull/29) y [next-casspea #58](https://github.com/carlosblancosierra/next-casspea/pull/58), ya fusionados, junto con la red de seguridad. Los que quedaban (BUG-09, 11, 12, 14, 16, 18 y 19) van en [casspea-v2 #40](https://github.com/carlosblancosierra/casspea-v2/pull/40) y [next-casspea #69](https://github.com/carlosblancosierra/next-casspea/pull/69). Cada arreglo convirtió su test de fallo esperado en un test normal.
 
-- [ ] BUG-01: quitar `rest_framework_simplejwt` de `requirements.txt` (API).
-- [ ] BUG-02: sesiones de checkout privadas (API).
-- [ ] BUG-03: solo un pago hecho crea un pedido pagado (API). **Al fusionar:** suscribir el webhook de Stripe a `checkout.session.async_payment_succeeded` y `checkout.session.async_payment_failed`.
-- [ ] BUG-17: bucle de la recogida en tienda (tienda).
-- [ ] BUG-15: `remotePatterns` limitado a los dominios propios (tienda). **Antes de fusionar:** comprobar que se ven las fotos de producto con un build que apunte a la API de producción.
-- [ ] BUG-08: página y API de baja de emails (los dos).
-- [ ] BUG-04: `add_to_cart` (tienda). Es imprescindible para tener una base que comparar con el rediseño.
-- [ ] BUG-06: fecha de recogida en verano (tienda).
-- [ ] BUG-10: 500 en `GET /api/checkout/session/` (API).
-- [ ] BUG-07: `payment_intent.payment_failed` (API).
-- [ ] BUG-05: solicitudes de chocolate personalizado (los dos).
-- [ ] BUG-13: `SITE_URL` y `CORS_EXTRA_ORIGINS` configurables (API), y la recogida reconocida por `delivery_speed` en vez del id 34 (tienda).
-- [ ] BUG-18: revisar en Stripe los productos en preventa. Es una comprobación a mano.
-- [ ] BUG-19: aplicar la regla de "Adviento no se recoge" en los endpoints reales. Es P2 y sigue sin arreglar.
+- [x] BUG-01: quitar `rest_framework_simplejwt` de `requirements.txt` (API).
+- [x] BUG-02: sesiones de checkout privadas (API).
+- [x] BUG-03: solo un pago hecho crea un pedido pagado (API). **A mano, si no está hecho:** suscribir el webhook de Stripe a `checkout.session.async_payment_succeeded` y `checkout.session.async_payment_failed`.
+- [x] BUG-17: bucle de la recogida en tienda (tienda).
+- [x] BUG-15: `remotePatterns` limitado a los dominios propios (tienda). **A mano, si no está hecho:** comprobar en producción que se ven las fotos de producto.
+- [x] BUG-08: página y API de baja de emails (los dos).
+- [x] BUG-04: `add_to_cart` (tienda). Es imprescindible para tener una base que comparar con el rediseño.
+- [x] BUG-06: fecha de recogida en verano (tienda).
+- [x] BUG-10: 500 en `GET /api/checkout/session/` (API).
+- [x] BUG-07: `payment_intent.payment_failed` (API).
+- [x] BUG-05: solicitudes de chocolate personalizado (los dos).
+- [x] BUG-13: `SITE_URL` y `CORS_EXTRA_ORIGINS` configurables (API), y la recogida reconocida por `delivery_speed` en vez del id 34 (tienda).
+- [x] BUG-18: la preventa se cobra al precio del carrito (casspea-v2 #40), sin revisión a mano.
+- [x] BUG-19: la regla de "Adviento no se recoge" en los endpoints reales (casspea-v2 #40).
+- [x] BUG-09, BUG-11, BUG-12, BUG-14 y BUG-16 (casspea-v2 #40 y next-casspea #69).
 
 ### Fase 2. Preparar el terreno sin cambiar nada visual (en paralelo a la congelación de Navidad)
 
@@ -229,7 +240,7 @@ Todos los arreglos de esta fase van en dos PRs, uno por repositorio, con un comm
 5. **Reunir las fechas de campaña** en un único `config/campaigns.ts`.
 6. **Unificar las dos copias del payload de Stripe** (ver "Otros hallazgos").
 7. **Cerrar o pausar el experimento `box_builder`** antes de rediseñar la ficha de producto, o hacer el diseño nuevo como una variante del experimento.
-8. **Retirar la página `/dev`** y el código muerto de BUG-16.
+8. ~~**Retirar la página `/dev`** y el código muerto de BUG-16.~~ Hecho: el código muerto se quitó en next-casspea #69, y `/dev` ya respondía 404 fuera de desarrollo.
 
 ### Fase 3. Tests de los recorridos críticos
 
@@ -353,4 +364,4 @@ UPDATE_CONTRACT=1 python manage.py test erp.tests.test_frontend_contract --setti
 | Contenido y SEO | `/about-us`, `/faq`, `/contact`, `/flavours`, `/blog/newsletter-july-2025`, `/blog/why-chocolate-tastes-different`, `/subscribe`, `/store` |
 | Campañas | `/landing/blue`, `/landing/gold`, `/landing/thermomix`, sus páginas `thank-you`, `/landing/fathers-day`, `/landing/summer-break`, `/blue`, `/gold` |
 | Equipo | `/orders`, `/admin/experiments`, `/admin/palette`, `/admin/sms-contacts`, `/admin/summer-break`, `/addresses/stats`, `/auth/login` |
-| Retirar | `/dev` |
+| Solo en desarrollo | `/dev` (404 en producción) |
