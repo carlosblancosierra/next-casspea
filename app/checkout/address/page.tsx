@@ -117,10 +117,11 @@ export default function AddressPage() {
                 setError(`Billing address validation failed:\n${formatErrors(data.billing_address)}`);
                 toast.error('Please check billing address details');
             } else {
+                // Stay on the form, so "try again" keeps what they typed. It
+                // used to navigate to /checkout/error, a page that did not
+                // exist (BUG-14), throwing the addresses away.
                 setError('Failed to save addresses. Please try again.');
                 toast.error('Failed to save addresses. Please try again.');
-                // Redirect to the error page
-                router.push('/checkout/error');
             }
         } finally {
             setIsProcessing(false);

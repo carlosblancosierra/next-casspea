@@ -45,7 +45,6 @@
   },
   {
     "url": "/checkout/error?session_id={id}",
-    "source": "casspea-v2 checkout/stripe_views.py: StripeSuccessView and StripeCancelView redirects",
-    "knownIssue": "BUG-14: there is no /checkout/error page (the views look unused: Stripe returns straight to /checkout/success and /checkout/cancel)"
+    "source": "casspea-v2 checkout/stripe_views.py: StripeSuccessView and StripeCancelView redirects (BUG-14: the page exists since then)"
   }
 ]

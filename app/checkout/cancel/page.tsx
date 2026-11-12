@@ -21,7 +21,7 @@ const ErrorPage: React.FC = () => {
                     <Link href="/cart" className="inline-block bg-gray-600 text-primary-text px-6 py-3 rounded-md hover:bg-gray-700">
                         Return to Cart
                     </Link>
-                    <Link href="/support" className="inline-block bg-gray-600 text-primary-text px-6 py-3 rounded-md hover:bg-gray-700">
+                    <Link href="/contact" className="inline-block bg-gray-600 text-primary-text px-6 py-3 rounded-md hover:bg-gray-700">
                         Contact Support
                     </Link>
                 </div>
