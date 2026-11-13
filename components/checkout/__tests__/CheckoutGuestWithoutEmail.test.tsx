@@ -68,3 +68,20 @@ describe.each([
         expect(replace).not.toHaveBeenCalled();
     });
 });
+
+describe('a session being refetched', () => {
+    // The old copy from before the guest gave their email is still in data
+    // while the fresh one loads. Acting on it sent them back to the cart.
+    it.each([
+        ['the confirm step', () => <CheckoutConfirm />],
+        ['the address step', () => <AddressPage />],
+    ])('%s does not send the guest back on a stale copy', (_, renderStep) => {
+        (useGetSessionQuery as jest.Mock).mockReturnValue({
+            data: unsavedGuestSession, isLoading: false, isFetching: true, error: undefined,
+        });
+        render(renderStep());
+
+        expect(replace).not.toHaveBeenCalled();
+        expect(toast.info).not.toHaveBeenCalled();
+    });
+});

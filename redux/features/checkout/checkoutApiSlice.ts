@@ -17,6 +17,7 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
 
         getSession: builder.query<CheckoutSession, void>({
             query: () => '/checkout/session/',
+            providesTags: ['CheckoutSession'],
         }),
 
         updateSession: builder.mutation<CheckoutSession, Partial<CheckoutSessionRequest>>({
@@ -25,6 +26,20 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: checkoutData,
             }),
+            // The cart page reads the session before the guest gives an email,
+            // so the cache holds an unsaved one (id null). Without updating it,
+            // the next step read that stale copy and sent the guest back to the
+            // cart to give their email again, in a loop. Put the saved session
+            // in the cache right away, and refetch it as well.
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    dispatch(checkoutApiSlice.util.updateQueryData('getSession', undefined, () => data));
+                } catch {
+                    // The caller shows the error.
+                }
+            },
+            invalidatesTags: ['CheckoutSession'],
         }),
 
         createStripeCheckoutSession: builder.mutation<any, void>({
