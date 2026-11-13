@@ -7,6 +7,7 @@ import { configureStore } from '@reduxjs/toolkit';
 (process.env as Record<string, string>).NEXT_PUBLIC_HOST = 'https://api.test';
 const { apiSlice } = require('@/redux/services/apiSlice') as typeof import('@/redux/services/apiSlice');
 const { checkoutApiSlice } = require('@/redux/features/checkout/checkoutApiSlice') as typeof import('@/redux/features/checkout/checkoutApiSlice');
+const { addressApiSlice } = require('@/redux/features/addresses/addressApiSlice') as typeof import('@/redux/features/addresses/addressApiSlice');
 
 /**
  * A guest stuck in a loop: the cart page reads the checkout session before
@@ -57,6 +58,23 @@ describe('checkout session cache', () => {
             id: 7,
             email: 'ada@example.com',
         });
+        sub.unsubscribe();
+    });
+
+    it('fetches the session again once the addresses are saved on it', async () => {
+        const store = configureStore({
+            reducer: { [apiSlice.reducerPath]: apiSlice.reducer },
+            middleware: gDM => gDM().concat(apiSlice.middleware),
+        });
+        const sub = store.dispatch(checkoutApiSlice.endpoints.getSession.initiate());
+        await sub;
+        const calls = (fetch as jest.Mock).mock.calls.length;
+
+        await store.dispatch(addressApiSlice.endpoints.setAddresses.initiate({} as never)).unwrap();
+        await new Promise(resolve => setTimeout(resolve, 0));
+
+        const urls = (fetch as jest.Mock).mock.calls.slice(calls).map(([req]) => `${req.method} ${req.url}`);
+        expect(urls).toContain('GET https://api.test/api/checkout/session/');
         sub.unsubscribe();
     });
 });

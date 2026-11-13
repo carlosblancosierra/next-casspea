@@ -44,7 +44,9 @@ export const addressApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: addresses
             }),
-            invalidatesTags: [{ type: 'Addresses', id: 'LIST' }]
+            // The addresses are saved on the checkout session, so its cached
+            // copy is out of date once this succeeds.
+            invalidatesTags: [{ type: 'Addresses', id: 'LIST' }, 'CheckoutSession']
         })
     })
 });

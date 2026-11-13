@@ -26,9 +26,12 @@ const GiftCardPage = () => {
         }
     }, [cart]);
 
+    // Packs already include their card, so this step is skipped. replace, not
+    // push: with push, Back from the address step landed here and was sent
+    // straight forward again, so the customer could never get back to the cart.
     useEffect(() => {
         if (cart && cart.items && cart.items.some(item => !!item.pack_customization)) {
-            router.push('/checkout/address');
+            router.replace('/checkout/address');
         }
     }, [cart, router]);
 

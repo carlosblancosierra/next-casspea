@@ -85,3 +85,18 @@ describe('a session being refetched', () => {
         expect(toast.info).not.toHaveBeenCalled();
     });
 });
+
+describe('the confirm step when loading fails', () => {
+    // It used to say "Error loading checkout details" and nothing else.
+    it('offers to try again and a way back to the cart', async () => {
+        const refetch = jest.fn();
+        (useGetSessionQuery as jest.Mock).mockReturnValue({
+            data: undefined, isLoading: false, isFetching: false, error: { status: 500 }, refetch,
+        });
+        render(<CheckoutConfirm />);
+
+        screen.getByRole('button', { name: /try again/i }).click();
+        expect(refetch).toHaveBeenCalled();
+        expect(screen.getByRole('link', { name: /back to cart/i })).toHaveAttribute('href', '/cart');
+    });
+});

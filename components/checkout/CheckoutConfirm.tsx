@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { format } from 'date-fns';
 import {
     useGetSessionQuery,
@@ -33,13 +34,13 @@ const CheckoutConfirm = () => {
 
     const router = useRouter();
 
-    const { data: session, isLoading: sessionLoading, isFetching: sessionFetching, error: sessionError } = useGetSessionQuery(undefined, {
+    const { data: session, isLoading: sessionLoading, isFetching: sessionFetching, error: sessionError, refetch: refetchSession } = useGetSessionQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
     // A guest without an email has no saved session, so nothing here could
     // be paid for: back to the cart.
     const needsEmail = useRequireCheckoutSession(session, sessionFetching);
-    const { data: cart, isLoading: cartLoading, error: cartError } = useGetCartQuery();
+    const { data: cart, isLoading: cartLoading, error: cartError, refetch: refetchCart } = useGetCartQuery();
     const { data: shippingCompanies, isLoading: isShippingLoading } = useGetShippingOptionsQuery(undefined, {
         // Shipping prices depend on the live cart total (discount), so always
         // refetch when landing on checkout rather than serving a stale cache.
@@ -150,7 +151,28 @@ const CheckoutConfirm = () => {
         return (
             <div className=" dark:bg-main-bg-dark min-h-screen">
                 <div className="max-w-7xl mx-auto px-0">
-                    <div className="text-primary-text dark:text-primary-text-light">Error loading checkout details</div>
+                    {/* A dead end used to stop here: say what to do next. */}
+                    <div role="alert" className="py-8 space-y-4 text-primary-text dark:text-primary-text-light">
+                        <p>We couldn&apos;t load your checkout details. Please try again.</p>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (sessionError) refetchSession();
+                                    if (cartError) refetchCart();
+                                }}
+                                className="w-full sm:w-auto bg-primary dark:bg-primary-2 text-primary-text-light py-2 px-4 rounded-md"
+                            >
+                                Try again
+                            </button>
+                            <Link
+                                href="/cart"
+                                className="w-full sm:w-auto text-center border border-primary dark:border-primary-2 text-primary dark:text-primary-2 py-2 px-4 rounded-md"
+                            >
+                                Back to cart
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
