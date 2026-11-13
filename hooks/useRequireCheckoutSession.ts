@@ -16,10 +16,17 @@ import type { CheckoutSession } from '@/types/checkout';
  *
  * Returns true while that redirect is under way, so the step can render
  * nothing instead of a form that cannot be sent.
+ *
+ * Pass isFetching: while the session is being refetched, data can still be an
+ * old copy from before the guest gave their email, and acting on it sent
+ * guests who had just given it back to the cart.
  */
-export function useRequireCheckoutSession(session: CheckoutSession | undefined): boolean {
+export function useRequireCheckoutSession(
+    session: CheckoutSession | undefined,
+    isFetching = false,
+): boolean {
     const router = useRouter();
-    const needsEmail = session !== undefined && session.id === null;
+    const needsEmail = !isFetching && session !== undefined && session.id === null;
 
     useEffect(() => {
         if (!needsEmail) return;

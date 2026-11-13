@@ -33,12 +33,12 @@ const CheckoutConfirm = () => {
 
     const router = useRouter();
 
-    const { data: session, isLoading: sessionLoading, error: sessionError } = useGetSessionQuery(undefined, {
+    const { data: session, isLoading: sessionLoading, isFetching: sessionFetching, error: sessionError } = useGetSessionQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
     // A guest without an email has no saved session, so nothing here could
     // be paid for: back to the cart.
-    const needsEmail = useRequireCheckoutSession(session);
+    const needsEmail = useRequireCheckoutSession(session, sessionFetching);
     const { data: cart, isLoading: cartLoading, error: cartError } = useGetCartQuery();
     const { data: shippingCompanies, isLoading: isShippingLoading } = useGetShippingOptionsQuery(undefined, {
         // Shipping prices depend on the live cart total (discount), so always

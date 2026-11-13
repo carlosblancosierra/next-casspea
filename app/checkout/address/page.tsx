@@ -13,10 +13,12 @@ import { useRequireCheckoutSession } from '@/hooks/useRequireCheckoutSession';
 export default function AddressPage() {
     const router = useRouter();
 
-    const { data: checkoutSession } = useGetSessionQuery();
+    const { data: checkoutSession, isFetching: isSessionFetching } = useGetSessionQuery(undefined, {
+        refetchOnMountOrArgChange: true,
+    });
     // Addresses are saved on the checkout session, which a guest only has once
     // they have given their email: without one, back to the cart.
-    const needsEmail = useRequireCheckoutSession(checkoutSession);
+    const needsEmail = useRequireCheckoutSession(checkoutSession, isSessionFetching);
     const [setAddresses] = useSetAddressesMutation();
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
