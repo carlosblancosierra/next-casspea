@@ -195,13 +195,6 @@ export const COPY = {
         names: ['Kim', 'Rose', 'Ali Stoney'],
     },
 
-    guarantee: {
-        heading: 'The Door-to-Door Promise',
-        body:
-            "[GUARANTEE — confirm wording with Enrique. e.g. If your calendar arrives damaged or a single chocolate isn't perfect, " +
-            "tell us and we'll put it right. No forms, no fuss.]",
-    },
-
     faq: {
         heading: 'Questions',
         items: [
@@ -209,11 +202,16 @@ export const COPY = {
                 q: 'When will it arrive?',
                 a: 'Order by Thursday 26 November, 12pm, and it will arrive in time to open door one on 1 December. Delivery is free across the UK.',
             },
-            { q: 'Can I send it straight to someone as a gift?', a: 'Yes. Add their address at checkout. [Confirm gift note option.]' },
-            { q: 'How long do the chocolates keep?', a: '[SHELF LIFE — e.g. best enjoyed by …]' },
+            { q: 'Can I send it straight to someone as a gift?', a: 'Yes. Add their address at checkout, and you can include a gift note.' },
+            {
+                q: 'How long do the chocolates keep?',
+                a: 'We advise eating them within 2 weeks of arrival. Most of our chocolates keep longer than that, but the fresher they are, the better they taste.',
+            },
             {
                 q: 'What about allergens?',
-                a: 'When you add it to your basket, tell us if you are allergic to gluten, alcohol or nuts and we will prepare your calendar accordingly.',
+                a:
+                    'When you add it to your basket, tell us if you are allergic to gluten, alcohol or nuts and we will prepare your calendar accordingly. ' +
+                    'We handle allergens very carefully, but we cannot guarantee there is no cross-contamination.',
             },
             {
                 q: 'What if I order after 26 November?',
@@ -224,7 +222,7 @@ export const COPY = {
 
     finalCta: {
         heading: '24 Doors. 3 Secrets. One Decision.',
-        footnote: 'Covered by the Door-to-Door Promise · Handmade in London',
+        footnote: 'Handmade in London · Free UK delivery',
     },
 
     seo: {

@@ -27,7 +27,6 @@ import WhoFor from './sections/WhoFor';
 import Reminder from './sections/Reminder';
 import Story from './sections/Story';
 import Reviews from './sections/Reviews';
-import Guarantee from './sections/Guarantee';
 import Faq from './sections/Faq';
 import FinalCta from './sections/FinalCta';
 
@@ -153,7 +152,6 @@ export default function AdventLanding({ variant, product, exclusives = [] }: Lan
             {variant === 'shop' && <Reminder />}
             <Story image={images.story} />
             <Reviews />
-            <Guarantee />
             <Faq />
             <FinalCta price={price} serverNow={serverNow} buyButton={buy()} />
 

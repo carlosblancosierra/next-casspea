@@ -48,7 +48,6 @@ describe('AdventLanding, shop variant', () => {
             "Not ready yet? We'll remind you before 26 November",
             'Cass and Pea Are Our Daughters',
             "Loved Before They're Even Eaten",
-            'The Door-to-Door Promise',
             'Questions',
             '24 Doors. 3 Secrets. One Decision.',
         ]);
