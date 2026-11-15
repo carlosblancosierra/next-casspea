@@ -14,7 +14,7 @@ interface UnsubscribeResponse {
 }
 
 export type LeadType = 'newsletter' | 'contact_form' | 'landing_page' | 'giveaway';
-export type FormCode = 'GOLD' | 'BLUE' | 'TM7' | 'advent-2026' | null;
+export type FormCode = 'GOLD' | 'BLUE' | 'TM7' | null;
 
 export interface GenericLeadSubscribeRequest {
   email: string;
@@ -23,8 +23,6 @@ export interface GenericLeadSubscribeRequest {
   instagram_username?: string;
   form_code?: FormCode;
   lead_type?: LeadType;
-  /** Where on the page it was captured. Sent to Mailchimp as a tag with form_code. */
-  source?: string;
   unsubscribed?: boolean;
 }
 

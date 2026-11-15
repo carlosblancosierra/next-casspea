@@ -5,8 +5,7 @@ import posthog from 'posthog-js';
  * One place every tracked event goes through.
  *
  * Each event is sent to PostHog (product analytics, replays, errors) and, for
- * the GA4 ecommerce events Google Ads bids on, to gtag and to the GTM
- * dataLayer (GTM-TWQTXVNR) as well. Tracking must
+ * the GA4 ecommerce events Google Ads bids on, to gtag as well. Tracking must
  * never break the shop: every call is a no-op on the server, without a
  * PostHog key, or if a vendor script was blocked.
  *
@@ -38,63 +37,7 @@ const GA4_EVENTS = new Set([
     'generate_lead',
 ]);
 
-/** The GA4 events GTM reads as `ecommerce` objects; the rest go flat. */
-const ECOMMERCE_EVENTS = new Set(['view_item', 'add_to_cart', 'remove_from_cart', 'begin_checkout', 'purchase']);
-
 const PENDING_PURCHASE_KEY = 'casspea_pending_purchase';
-const ATTRIBUTION_KEY = 'casspea_attribution';
-const ATTRIBUTION_PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'fbclid', 'gclid'];
-
-export type Attribution = Partial<Record<(typeof ATTRIBUTION_PARAMS)[number], string>>;
-
-/**
- * The campaign the visitor arrived from. Ads land on one page and the sale
- * happens pages later, after the query string is gone, so the first set of
- * UTM / click ids seen in the session is kept and sent with every event. A
- * later visit with new parameters replaces it: the latest campaign wins.
- */
-export function getAttribution(): Attribution {
-    if (typeof window === 'undefined') return {};
-    const fromUrl: Attribution = {};
-    try {
-        const params = new URLSearchParams(window.location.search);
-        for (const key of ATTRIBUTION_PARAMS) {
-            const value = params.get(key);
-            if (value) fromUrl[key] = value.slice(0, 200);
-        }
-    } catch {
-        // No URL to read: fall through to the stored one.
-    }
-    try {
-        if (Object.keys(fromUrl).length) {
-            window.sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(fromUrl));
-            return fromUrl;
-        }
-        const stored = window.sessionStorage.getItem(ATTRIBUTION_KEY);
-        return stored ? (JSON.parse(stored) as Attribution) : {};
-    } catch {
-        return fromUrl;
-    }
-}
-
-/**
- * GTM's dataLayer, in the shape its GA4 ecommerce triggers expect. gtag()
- * also writes to the dataLayer, but as `arguments` that GTM triggers ignore,
- * so the events are pushed again as plain objects. The ecommerce object is
- * cleared first, as Google asks, so one event's items never leak into the
- * next.
- */
-function pushDataLayer(event: string, properties: Properties): void {
-    const w = window as unknown as { dataLayer?: unknown[] };
-    w.dataLayer = w.dataLayer || [];
-    const attribution = getAttribution();
-    if (ECOMMERCE_EVENTS.has(event)) {
-        w.dataLayer.push({ ecommerce: null });
-        w.dataLayer.push({ event, ecommerce: properties, attribution });
-    } else {
-        w.dataLayer.push({ event, ...properties, attribution });
-    }
-}
 
 export const isAnalyticsEnabled = (): boolean =>
     typeof window !== 'undefined' && !!process.env.NEXT_PUBLIC_POSTHOG_KEY;
@@ -108,10 +51,7 @@ export function track(event: string, properties: Properties = {}): void {
     if (typeof window === 'undefined') return;
     try {
         if (isAnalyticsEnabled()) posthog.capture(event, properties);
-        if (GA4_EVENTS.has(event)) {
-            gtag('event', event, properties);
-            pushDataLayer(event, properties);
-        }
+        if (GA4_EVENTS.has(event)) gtag('event', event, properties);
     } catch {
         // A lost event must never fail a customer action.
     }
