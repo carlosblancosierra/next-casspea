@@ -33,13 +33,18 @@ const CheckoutConfirm = () => {
 
     const router = useRouter();
 
-    const { data: session, isLoading: sessionLoading, isFetching: sessionFetching, error: sessionError } = useGetSessionQuery(undefined, {
+    const { data: session, isLoading: sessionLoading, isFetching: sessionFetching, error: sessionError, refetch: refetchSession } = useGetSessionQuery(undefined, {
         refetchOnMountOrArgChange: true
     });
+    const { data: cart, isLoading: cartLoading, isFetching: cartFetching, error: cartError, refetch: refetchCart } = useGetCartQuery();
+    // An empty basket has nothing to pay for. It is also what a customer who
+    // has just paid comes back to: the payment closes their cart and the API
+    // hands them a new, empty one.
+    const cartIsEmpty = !cartFetching && cart !== undefined && cart.items.length === 0;
     // A guest without an email has no saved session, so nothing here could
-    // be paid for: back to the cart.
-    const needsEmail = useRequireCheckoutSession(session, sessionFetching);
-    const { data: cart, isLoading: cartLoading, error: cartError } = useGetCartQuery();
+    // be paid for: back to the cart. Not for an empty basket, which has its
+    // own message below; asking for an email would be wrong there.
+    const needsEmail = useRequireCheckoutSession(cartIsEmpty ? undefined : session, sessionFetching);
     const { data: shippingCompanies, isLoading: isShippingLoading } = useGetShippingOptionsQuery(undefined, {
         // Shipping prices depend on the live cart total (discount), so always
         // refetch when landing on checkout rather than serving a stale cache.
@@ -54,19 +59,38 @@ const CheckoutConfirm = () => {
     // browser's back/forward cache restores this component with isProcessing
     // still true and the button stuck on "Processing...". pageshow fires on
     // that restore (persisted === true), which is the only signal we get.
+    // The restore also keeps the session and cart from before Stripe in
+    // memory. If the customer paid meanwhile, both are gone on the server and
+    // pressing pay again failed with "Failed to process payment" (Sentry
+    // CASSPEA-API-2/3), right after a payment that went through. Read both
+    // again so the page shows what is true now.
     useEffect(() => {
         const handlePageShow = (event: PageTransitionEvent) => {
-            if (event.persisted) setIsProcessing(false);
+            if (!event.persisted) return;
+            setIsProcessing(false);
+            refetchSession();
+            refetchCart();
         };
         window.addEventListener('pageshow', handlePageShow);
         return () => window.removeEventListener('pageshow', handlePageShow);
-    }, []);
+    }, [refetchSession, refetchCart]);
+
+    useEffect(() => {
+        if (!cartIsEmpty) return;
+        toast.info('Your basket is empty. If you have just paid, your order is placed and the confirmation is on its way by email.');
+        router.replace('/cart');
+    }, [cartIsEmpty, router]);
 
 
     const handleProceedToPayment = async () => {
         if (isProcessing) return;
         if (storeClosed) {
             toast.error(`Our shop is closed for Summer Break. We'll be back ${reopenLabel}.`);
+            return;
+        }
+        if (!cart?.items.length) {
+            toast.info('Your basket is empty. If you have just paid, your order is placed and the confirmation is on its way by email.');
+            router.replace('/cart');
             return;
         }
         if (!selectedShippingOption) {
@@ -128,13 +152,16 @@ const CheckoutConfirm = () => {
             // router.push('/checkout/embedded');
         
         } catch (err) {
-            toast.error('Failed to process payment');
+            // The API says what is wrong (empty basket, missing email, closed
+            // shop...). Show that rather than a message that explains nothing.
+            const apiError = (err as { data?: { error?: unknown } })?.data?.error;
+            toast.error(typeof apiError === 'string' && apiError ? apiError : 'Failed to process payment');
             console.error('Payment processing failed:', err);
             setIsProcessing(false);
         }
     };
 
-    if (sessionLoading || cartLoading || needsEmail) {
+    if (sessionLoading || cartLoading || needsEmail || cartIsEmpty) {
         return (
             <div className=" dark:bg-main-bg-dark min-h-screen">
                 <div className="max-w-7xl mx-auto px-0 h-[calc(80vh)] flex items-center justify-center">
