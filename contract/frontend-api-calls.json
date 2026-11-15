@@ -55,6 +55,11 @@
     "path": "/api/addresses/stats"
   },
   {
+    "endpoint": "getAdventLanding",
+    "method": "GET",
+    "path": "/api/products/advent-landing/"
+  },
+  {
     "endpoint": "getCart",
     "method": "GET",
     "path": "/api/carts/"

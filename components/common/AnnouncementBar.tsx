@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ADVENT_PATH, COPY as ADVENT_COPY } from '@/components/advent/content';
+import { useAdventLive } from '@/components/advent/AdventLiveContext';
 
 // Constants
 const HIDDEN_PATHS = ['/blog', '/landing/gold'];
@@ -18,6 +19,7 @@ export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
   const pathname = usePathname();
+  const adventLive = useAdventLive();
   
   // Early return if on excluded paths
   if (HIDDEN_PATHS.some(path => pathname?.startsWith(path))) return null;
@@ -62,12 +64,14 @@ export default function AnnouncementBar() {
             Free delivery on orders over £56
           </p>
 
-          <Link
-            href={ADVENT_PATH}
-            className="w-full md:w-auto text-center text-sm font-semibold leading-6 text-primary-text-light underline underline-offset-4 hover:no-underline"
-          >
-            Advent Calendar 2026: order by 26 Nov <span aria-hidden="true">&rarr;</span>
-          </Link>
+          {adventLive && (
+            <Link
+              href={ADVENT_PATH}
+              className="w-full md:w-auto text-center text-sm font-semibold leading-6 text-primary-text-light underline underline-offset-4 hover:no-underline"
+            >
+              Advent Calendar 2026: order by 26 Nov <span aria-hidden="true">&rarr;</span>
+            </Link>
+          )}
           
           {/* The accent, on the one surface where it reads as a highlight
               rather than as a second brand colour. It carries `accent-text`

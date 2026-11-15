@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
+import type { Flavour } from '@/types/flavours';
 import type { Product } from '@/types/products';
-import { getProduct } from '@/utils/products';
 import { formatCurrency } from '@/utils/currency';
 import { toAmount } from '@/utils/analytics';
 import BuyButton from './BuyButton';
@@ -39,13 +39,19 @@ import FinalCta from './sections/FinalCta';
  * Two variants share it. `shop` sells straight away; `lead` puts an
  * early-access email form in the hero, shows the buy button once the visitor
  * has signed up, and is kept out of search (noindex).
+ *
+ * Everything it shows about the calendar comes from the API's Advent landing
+ * (utils/adventLanding.ts): the product, its photos and the exclusive
+ * flavours. It renders on the server once the landing is live, and in the
+ * browser for staff before that (PrivateAdventLanding).
  */
 
-/** Seconds a built page is served before it is rebuilt with fresh stock. */
-export const REVALIDATE_SECONDS = 60;
-
-export async function getAdventProduct(): Promise<Product | null> {
-    return getProduct(ADVENT_SLUG, { revalidate: REVALIDATE_SECONDS });
+/** The landing's photos: the product's main photo, then its last gallery photo. */
+export function adventImages(product: Product | null): { hero: string | null; story: string | null } {
+    const gallery = product?.gallery_images ?? [];
+    const hero = product?.image || null;
+    const story = gallery.length > 0 ? gallery[gallery.length - 1].image : hero;
+    return { hero, story };
 }
 
 /** The selling price from the API, else the launch price, as "59.99". */
@@ -55,15 +61,17 @@ export function priceOf(product: Product | null): string {
     return amount > 0 ? amount.toFixed(2) : FALLBACK_PRICE;
 }
 
-export function adventMetadata(variant: Variant): Metadata {
-    const { title, description, ogImage } = COPY.seo;
-    const images = [{ url: ogImage, width: 1200, height: 630, alt: 'CassPea Advent Calendar 2026' }];
+export function adventMetadata(variant: Variant, { live, product }: { live: boolean; product: Product | null }): Metadata {
+    const { title, description } = COPY.seo;
+    const { hero } = adventImages(product);
+    const images = hero ? [{ url: hero, alt: 'CassPea Advent Calendar 2026' }] : [];
     return {
         title,
         description,
         // The early-access page is the same offer: point search engines at the shop page.
         alternates: { canonical: ADVENT_PATH },
-        robots: variant === 'lead' ? { index: false, follow: true } : undefined,
+        // Out of search until it is live; after that only the early-access page is.
+        robots: !live ? { index: false, follow: false } : variant === 'lead' ? { index: false, follow: true } : undefined,
         openGraph: {
             type: 'website',
             siteName: 'CassPea',
@@ -73,11 +81,18 @@ export function adventMetadata(variant: Variant): Metadata {
             description,
             images,
         },
-        twitter: { card: 'summary_large_image', title, description, images: [ogImage] },
+        twitter: { card: 'summary_large_image', title, description, images: hero ? [hero] : [] },
     };
 }
 
-export default function AdventLanding({ variant, product }: { variant: Variant; product: Product | null }) {
+interface Props {
+    variant: Variant;
+    product: Product | null;
+    flavours: Flavour[];
+}
+
+export default function AdventLanding({ variant, product, flavours }: Props) {
+    const images = adventImages(product);
     const amount = priceOf(product);
     const price = formatCurrency(amount);
     // Rendered once per build; the countdown corrects itself in the browser.
@@ -108,14 +123,14 @@ export default function AdventLanding({ variant, product }: { variant: Variant; 
                 }}
             />
 
-            <Hero variant={variant} price={price} serverNow={serverNow} buyButton={buy()} />
+            <Hero variant={variant} price={price} serverNow={serverNow} buyButton={buy()} image={images.hero} />
             <Contrast />
             <ValueStack price={price} />
-            <Exclusives />
+            <Exclusives flavours={flavours} />
             <EasiestGift />
             <WhoFor />
             {variant === 'shop' && <Reminder />}
-            <Story />
+            <Story image={images.story} />
             <Reviews />
             <Guarantee />
             <Faq />

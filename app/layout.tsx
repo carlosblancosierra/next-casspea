@@ -7,6 +7,8 @@ import { Setup, AnalyticsProvider } from '@/components/utils';
 import AnnouncementBar from '@/components/common/AnnouncementBar';
 import Script from 'next/script';
 import LayoutWrapper from '@/components/common/LayoutWrapper';
+import { AdventLiveProvider } from '@/components/advent/AdventLiveContext';
+import { getAdventLandingLive } from '@/utils/adventLanding';
 import dynamic from 'next/dynamic';
 
 const SummerBreakPopup = dynamic(() => import('@/components/common/SummerBreakPopup'), { ssr: false });
@@ -58,11 +60,14 @@ export const metadata: Metadata = {
 };
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // The Advent landing's live switch, for the links in client components
+  // (product cards, the announcement bar). Cached for a minute.
+  const adventLive = await getAdventLandingLive();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -120,6 +125,7 @@ export default function RootLayout({
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="7ef907d7-ea0d-4a43-beec-ca187e2ea5cd" data-blockingmode="auto" type="text/javascript"></script>
         <Provider>
+         <AdventLiveProvider live={adventLive}>
           <Setup />
           <AnalyticsProvider />
           {/* <GiveawayPopup /> */}
@@ -135,6 +141,7 @@ export default function RootLayout({
               {CURRENT_EFFECT !== 'none' && <CurrentEffect />}
             </div>
           </LayoutWrapper>
+         </AdventLiveProvider>
         </Provider>
       </body>
     </html>
