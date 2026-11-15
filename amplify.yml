@@ -8,6 +8,10 @@ frontend:
         - pnpm install
     build:
       commands:
+        # Next.js on Amplify only sees, at runtime, the variables written to
+        # .env.production during the build. ADVENT_PREVIEW_PASSWORD guards the
+        # private Advent landing (middleware.ts); without it those pages 404.
+        - env | grep -e '^ADVENT_PREVIEW_PASSWORD=' >> .env.production || true
         - pnpm run build
   artifacts:
     baseDirectory: .next

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import TrustpilotRating from '@/components/common/TrustpilotRating';
 import Countdown from '../Countdown';
 import LeadHeroForm from '../LeadHeroForm';
-import { COPY, type Variant } from '../content';
+import { COPY, IMAGES, type Variant } from '../content';
 import { Eyebrow, MUTED, HEADING } from './ui';
 import type { ReactNode } from 'react';
 
@@ -45,7 +45,7 @@ export default function Hero({ variant, price, serverNow, buyButton }: Props) {
             </div>
             <div className="flex flex-col gap-4">
                 <Image
-                    src="/advent/hero.jpg"
+                    src={IMAGES.hero}
                     alt={COPY.hero.imageAlt}
                     width={1200}
                     height={1200}

@@ -31,8 +31,24 @@ export type LeadSource = 'landing-reminder' | 'exit-intent' | 'early-access';
 
 /** Set to true once the bonus below is confirmed. */
 export const SHOW_BONUS = false;
-/** Set to true to show the flavour photos instead of the "?" discs. */
-export const REVEAL_EXCLUSIVES = false;
+/**
+ * True: the exclusives section names the three flavours (and shows their
+ * photos once they have one). False: "?" discs and no names.
+ */
+export const REVEAL_EXCLUSIVES = true;
+
+/**
+ * Photos from the advent-calendar product in the API's media storage
+ * (Django admin → Products → Advent Calendar 2026). og.jpg in public/advent
+ * is the main product photo framed at 1200×630 for link previews.
+ */
+const MEDIA = 'https://casspea-v2.s3.amazonaws.com/media';
+export const IMAGES = {
+    /** The calendar open, every door numbered. */
+    hero: `${MEDIA}/products/gallery/2026/09/4.jpg`,
+    /** One door open, a hand-painted bonbon inside. */
+    story: `${MEDIA}/products/gallery/2026/09/5.jpg`,
+} as const;
 
 export type Variant = 'shop' | 'lead';
 
@@ -49,7 +65,7 @@ export const COPY = {
         facts: ['360 g', 'Free UK delivery', 'Less than £2.50 a day'],
         cta: 'Reserve My Calendar',
         secondary: "See what's inside",
-        imageAlt: 'The CassPea Advent Calendar open, with a few doors showing hand-painted chocolates',
+        imageAlt: 'The CassPea Advent Calendar open, showing its 24 numbered doors',
         countdownOpen: 'Order window for a 1 December start closes in',
         countdownClosed: 'The 1 December order window has closed',
         countdownNote:
@@ -57,7 +73,7 @@ export const COPY = {
     },
 
     lead: {
-        heading: 'Get early access to the three secret flavours',
+        heading: 'Get early access to the three calendar-only flavours',
         body: "Leave your email and we'll tell you first, before anyone else, what's behind the doors.",
         button: 'Get early access',
         done: "You're in. Watch your inbox. In the meantime, you can reserve yours now.",
@@ -140,11 +156,16 @@ export const COPY = {
         body:
             "We made three new flavours just for the calendar. They won't be in the shop before December. " +
             'If you want to be among the first to taste them, this is the only way in.',
+        // Flavour category "Christmas 2026" in the admin, in the order they were
+        // created. They stay inactive in the shop until December. Descriptions
+        // are each flavour's mini description. Add a photo URL to `image` once
+        // the flavour has one; until then the disc shows its initial.
         items: [
-            { title: 'Exclusive no. 1', name: '[Flavour name, or keep it secret]', image: '/advent/exclusive-1.jpg' },
-            { title: 'Exclusive no. 2', name: '[Flavour name, or keep it secret]', image: '/advent/exclusive-2.jpg' },
-            { title: 'Exclusive no. 3', name: '[Flavour name, or keep it secret]', image: '/advent/exclusive-3.jpg' },
+            { title: 'Exclusive no. 1', name: 'Earl Grey', description: 'A fragrant ganache with delicate notes of bergamot.', image: null },
+            { title: 'Exclusive no. 2', name: 'Crunchy Berry', description: 'Bright, festive berries with a satisfying crunch in every bite.', image: null },
+            { title: 'Exclusive no. 3', name: 'Peppermint', description: 'Cool, fresh peppermint wrapped in rich chocolate.', image: null },
         ],
+        hidden: 'Revealed when you open the door',
     },
 
     easiestGift: {
@@ -181,15 +202,31 @@ export const COPY = {
         ],
         signature: 'Enrique',
         role: "Founder, and Cass and Pea's dad",
-        imageAlt: "Enrique's hands painting a chocolate shell in the London kitchen",
+        imageAlt: 'A door of the CassPea Advent Calendar open, with a hand-painted chocolate inside',
     },
 
     reviews: {
         heading: "Loved Before They're Even Eaten",
         items: [
-            { quote: '[Real Trustpilot quote about the hand-painted designs]', name: '[First name, verified buyer]' },
-            { quote: '[Real Trustpilot quote about giving it as a gift]', name: '[First name, verified buyer]' },
-            { quote: '[Real Trustpilot quote about taste or service]', name: '[First name, verified buyer]' },
+            // Real reviews from uk.trustpilot.com/review/www.casspea.co.uk, word for word.
+            {
+                quote:
+                    'There are a lot of hand painted artisan chocolates out there but CassPea are the best in my ' +
+                    'experience. Flavour, aesthetics and presentation are of the highest quality.',
+                name: 'N. Khwaja, on Trustpilot',
+            },
+            {
+                quote:
+                    'Delicious beautiful looking chocolates- a work of art! These are perfect as a gift as they ' +
+                    'come in beautiful packaging.',
+                name: 'Amba, on Trustpilot',
+            },
+            {
+                quote:
+                    'Subtle yet bold and delicate but also robust - I wish I had tried them sooner. Communication ' +
+                    'and delivery both first rate - thank you.',
+                name: 'Lesley Campbell, on Trustpilot',
+            },
         ],
     },
 

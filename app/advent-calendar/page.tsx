@@ -1,8 +1,9 @@
 import AdventLanding, { adventMetadata, getAdventProduct } from '@/components/advent/AdventLanding';
 
-// Statically built, rebuilt at most every minute so stock and the countdown's
-// starting value stay fresh. Must be a literal for Next to read it.
-export const revalidate = 60;
+// Rendered on every request while the landing is private (middleware.ts):
+// a cached copy could reach a CDN and be served without the password.
+// When it launches, go back to `export const revalidate = 60;` (ISR).
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata() {
     return adventMetadata('shop');

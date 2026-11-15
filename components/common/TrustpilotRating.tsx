@@ -4,7 +4,7 @@ export const TRUSTPILOT_URL = 'https://uk.trustpilot.com/review/www.casspea.co.u
 
 /** Update these from the Trustpilot page when the numbers change. */
 export const TRUSTPILOT_SCORE = '4.6';
-export const TRUSTPILOT_REVIEW_COUNT = 78;
+export const TRUSTPILOT_REVIEW_COUNT = 80;
 
 interface Props {
     className?: string;

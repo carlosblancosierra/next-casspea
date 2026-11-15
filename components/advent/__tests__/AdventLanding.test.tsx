@@ -120,8 +120,34 @@ describe('AdventLanding, lead variant', () => {
 
     it('is kept out of search and points at the shop page', () => {
         expect(adventMetadata('lead')).toMatchObject({ robots: { index: false }, alternates: { canonical: '/advent-calendar' } });
-        expect(adventMetadata('shop').robots).toBeUndefined();
         expect(adventMetadata('shop').openGraph).toMatchObject({ images: [expect.objectContaining({ url: '/advent/og.jpg' })] });
+    });
+});
+
+describe('while the landing is private', () => {
+    it('keeps both variants out of search', () => {
+        expect(adventMetadata('shop').robots).toEqual({ index: false, follow: false });
+        expect(adventMetadata('lead').robots).toEqual({ index: false, follow: false });
+    });
+});
+
+describe('the three calendar-only flavours', () => {
+    it('names them, with their descriptions, and no placeholder is left', () => {
+        render(<AdventLanding variant="shop" product={product()} />);
+        for (const name of ['Earl Grey', 'Crunchy Berry', 'Peppermint']) {
+            expect(screen.getByText(name)).toBeInTheDocument();
+        }
+        expect(screen.getByText('A fragrant ganache with delicate notes of bergamot.')).toBeInTheDocument();
+        expect(screen.queryByText(/Flavour name, or keep it secret/)).not.toBeInTheDocument();
+    });
+});
+
+describe('reviews', () => {
+    it('quotes three real Trustpilot reviews and counts 80 of them', () => {
+        render(<AdventLanding variant="shop" product={product()} />);
+        expect(screen.getByText('Lesley Campbell, on Trustpilot')).toBeInTheDocument();
+        expect(screen.queryByText(/Real Trustpilot quote/)).not.toBeInTheDocument();
+        expect(screen.getAllByText(/\(80 reviews\)/).length).toBeGreaterThan(0);
     });
 });
 

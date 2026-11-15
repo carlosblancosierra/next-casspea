@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { COPY } from '../content';
+import { COPY, IMAGES } from '../content';
 import { Eyebrow, MUTED, HEADING } from './ui';
 
 export default function Story() {
@@ -7,7 +7,7 @@ export default function Story() {
     return (
         <section className="mx-auto grid max-w-[1100px] grid-cols-1 items-center gap-12 px-6 pt-[88px] md:grid-cols-2">
             <Image
-                src="/advent/story.jpg"
+                src={IMAGES.story}
                 alt={s.imageAlt}
                 width={960}
                 height={1200}
