@@ -16,7 +16,8 @@ export default function Exclusives({ flavours = [] }: { flavours?: Flavour[] }) 
                 <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-3">
                     {e.items.map((item, i) => {
                         const flavour = REVEAL_EXCLUSIVES ? flavours[i] : undefined;
-                        const image = flavour?.thumbnail || flavour?.image;
+                        // The flavour's photo, as the flavour grid picks it.
+                        const image = flavour?.image || flavour?.thumbnail;
                         return (
                             <li key={item.title} className="flex flex-col items-center gap-3 rounded-xl border border-accent px-6 py-8 text-center">
                                 {flavour && image ? (

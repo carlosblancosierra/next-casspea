@@ -69,14 +69,14 @@ export const COPY = {
 
     reminder: {
         heading: "Not ready yet? We'll remind you before 26 November",
-        body: 'One email, before the order window closes. Nothing else.',
+        body: "We'll send you a reminder before the order window closes.",
         button: 'Remind me',
         done: "Done. We'll email you before 26 November.",
     },
 
     exitIntent: {
         heading: 'Before you go',
-        body: "Want a reminder before the 26 November order window closes? We'll send one email.",
+        body: "Want a reminder before the 26 November order window closes? We'll send you one.",
         button: 'Remind me',
         done: "Done. We'll email you before 26 November.",
     },
