@@ -93,7 +93,6 @@ const KNOWN_MISSING_PAGES: Record<string, string> = {
     '/privacy-policy':
         'no privacy policy page yet: the newsletter and landing forms, the landing footer and the Thermomix giveaway terms link to it',
     '/terms': 'no terms page yet: the landing footer links to it',
-    '/landing/fathers-day/thank-you': "the Father's Day form sends people here after they sign up, but the page was never made",
 };
 
 function sourceFiles(dir: string): string[] {
