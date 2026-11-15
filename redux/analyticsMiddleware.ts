@@ -69,9 +69,10 @@ function handle(action: ApiAction): void {
 			return;
 		case 'subscribeToNewsletter':
 		case 'subscribeGenericLead': {
-			const lead = args as { lead_type?: string; form_code?: string | null } | undefined;
+			const lead = args as { lead_type?: string; form_code?: string | null; source?: string } | undefined;
 			track('generate_lead', {
-				source: lead?.lead_type ?? LEAD_ENDPOINTS[endpoint],
+				// Where on the page, when the form says (e.g. "exit-intent").
+				source: lead?.source ?? lead?.lead_type ?? LEAD_ENDPOINTS[endpoint],
 				form_code: lead?.form_code ?? undefined,
 			});
 			return;
