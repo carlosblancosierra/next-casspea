@@ -23,7 +23,16 @@ const nextConfig = {
     // Help was split into separate FAQ and Contact pages; keep old links,
     // bookmarks and search results working.
     async redirects() {
-        return [{ source: '/help', destination: '/faq', permanent: true }];
+        return [
+            { source: '/help', destination: '/faq', permanent: true },
+            // Retired campaign landings (code kept in app/_outdated). Temporary
+            // redirects so a landing can come back without browsers having
+            // cached a permanent one.
+            { source: '/landing', destination: '/', permanent: false },
+            { source: '/landing/:path*', destination: '/', permanent: false },
+            { source: '/blue', destination: '/', permanent: false },
+            { source: '/gold', destination: '/', permanent: false },
+        ];
     },
     env: {
         GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
