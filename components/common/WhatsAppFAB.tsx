@@ -2,14 +2,12 @@
 
 import { useState } from 'react';
 import { IoClose } from 'react-icons/io5';
+import { whatsAppUrl } from './whatsapp';
 
 const WhatsAppFAB = () => {
     const [isVisible, setIsVisible] = useState(true);
     
-    const whatsappNumber = '447859790386';
-    const defaultMessage = 'Hi! I have a question about the website.';
-    
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(defaultMessage)}`;
+    const whatsappUrl = whatsAppUrl('Hi! I have a question about the website.');
     
     if (!isVisible) return null;
     
