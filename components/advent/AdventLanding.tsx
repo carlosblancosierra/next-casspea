@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { Product } from '@/types/products';
+import type { Flavour } from '@/types/flavours';
 import { getProduct } from '@/utils/products';
+import { getFlavours } from '@/utils/flavours';
 import { formatCurrency } from '@/utils/currency';
 import { toAmount } from '@/utils/analytics';
 import BuyButton from './BuyButton';
@@ -12,6 +14,7 @@ import {
     ADVENT_PATH,
     ADVENT_SLUG,
     COPY,
+    EXCLUSIVES_CATEGORY,
     FALLBACK_PRICE,
     type Variant,
 } from './content';
@@ -44,6 +47,30 @@ import FinalCta from './sections/FinalCta';
 /** Seconds a built page is served before it is rebuilt with fresh stock. */
 export const REVALIDATE_SECONDS = 60;
 
+/** The calendar's exclusive flavours: the first three Christmas flavours, launched or not. */
+export async function getAdventExclusives(): Promise<Flavour[]> {
+    const all = await getFlavours({ revalidate: REVALIDATE_SECONDS, includeComingSoon: true });
+    return all.filter(f => f.category?.slug?.includes(EXCLUSIVES_CATEGORY)).slice(0, 3);
+}
+
+/** The product's photos in the product page's order: main image, then the gallery. */
+export function productImages(product: Product | null): string[] {
+    if (!product) return [];
+    return [product.image, ...(product.gallery_images ?? []).map(g => g.image)].filter(
+        (src): src is string => !!src,
+    );
+}
+
+/** Photo 1 for the hero and for sharing, photo 2 for the story; the bundled ones if missing. */
+export function adventImages(product: Product | null) {
+    const [first, second] = productImages(product);
+    return {
+        hero: first ?? '/advent/hero.jpg',
+        story: second ?? first ?? '/advent/story.jpg',
+        og: first ?? COPY.seo.ogImage,
+    };
+}
+
 export async function getAdventProduct(): Promise<Product | null> {
     return getProduct(ADVENT_SLUG, { revalidate: REVALIDATE_SECONDS });
 }
@@ -55,9 +82,10 @@ export function priceOf(product: Product | null): string {
     return amount > 0 ? amount.toFixed(2) : FALLBACK_PRICE;
 }
 
-export function adventMetadata(variant: Variant): Metadata {
-    const { title, description, ogImage } = COPY.seo;
-    const images = [{ url: ogImage, width: 1200, height: 630, alt: 'CassPea Advent Calendar 2026' }];
+export function adventMetadata(variant: Variant, product: Product | null = null): Metadata {
+    const { title, description } = COPY.seo;
+    const ogImage = adventImages(product).og;
+    const images = [{ url: ogImage, alt: 'CassPea Advent Calendar 2026' }];
     return {
         title,
         description,
@@ -77,7 +105,14 @@ export function adventMetadata(variant: Variant): Metadata {
     };
 }
 
-export default function AdventLanding({ variant, product }: { variant: Variant; product: Product | null }) {
+interface LandingProps {
+    variant: Variant;
+    product: Product | null;
+    exclusives?: Flavour[];
+}
+
+export default function AdventLanding({ variant, product, exclusives = [] }: LandingProps) {
+    const images = adventImages(product);
     const amount = priceOf(product);
     const price = formatCurrency(amount);
     // Rendered once per build; the countdown corrects itself in the browser.
@@ -89,6 +124,7 @@ export default function AdventLanding({ variant, product }: { variant: Variant; 
             productId={product?.id ?? null}
             productName={productName}
             soldOut={product?.sold_out}
+            canPickAllergens={!!product?.can_pick_allergens}
             label={COPY.hero.cta}
             size={size}
         />
@@ -108,14 +144,14 @@ export default function AdventLanding({ variant, product }: { variant: Variant; 
                 }}
             />
 
-            <Hero variant={variant} price={price} serverNow={serverNow} buyButton={buy()} />
+            <Hero variant={variant} price={price} serverNow={serverNow} buyButton={buy()} image={images.hero} />
             <Contrast />
             <ValueStack price={price} />
-            <Exclusives />
+            <Exclusives flavours={exclusives} />
             <EasiestGift />
             <WhoFor />
             {variant === 'shop' && <Reminder />}
-            <Story />
+            <Story image={images.story} />
             <Reviews />
             <Guarantee />
             <Faq />

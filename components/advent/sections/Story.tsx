@@ -2,12 +2,12 @@ import Image from 'next/image';
 import { COPY } from '../content';
 import { Eyebrow, MUTED, HEADING } from './ui';
 
-export default function Story() {
+export default function Story({ image }: { image: string }) {
     const s = COPY.story;
     return (
         <section className="mx-auto grid max-w-[1100px] grid-cols-1 items-center gap-12 px-6 pt-[88px] md:grid-cols-2">
             <Image
-                src="/advent/story.jpg"
+                src={image}
                 alt={s.imageAlt}
                 width={960}
                 height={1200}

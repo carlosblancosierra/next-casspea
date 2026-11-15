@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { Product } from '@/types/products';
-import AdventLanding, { adventMetadata, priceOf } from '../AdventLanding';
+import type { Flavour } from '@/types/flavours';
+import AdventLanding, { adventImages, adventMetadata, priceOf } from '../AdventLanding';
 import { ORDER_DEADLINE } from '../content';
 
 const subscribe = jest.fn();
@@ -16,6 +17,7 @@ jest.mock('@/redux/features/carts/cartApiSlice', () => ({
     useAddCartItemMutation: () => [addToCart, { isLoading: false }],
 }));
 jest.mock('@/utils/products', () => ({ getProduct: jest.fn() }));
+jest.mock('@/utils/flavours', () => ({ getFlavours: jest.fn() }));
 
 const product = (overrides: Partial<Product> = {}): Product =>
     ({ id: 42, name: 'Advent Calendar 2026', slug: 'advent-calendar', base_price: '59.99', active: true, sold_out: false, ...overrides }) as Product;
@@ -131,7 +133,7 @@ describe('the countdown', () => {
         jest.useFakeTimers().setSystemTime(ORDER_DEADLINE.getTime() + 60_000);
         render(<AdventLanding variant="shop" product={product()} />);
         expect(screen.getByText('The 1 December order window has closed')).toBeInTheDocument();
-        expect(screen.getAllByText(/LATE-ORDER POLICY/).length).toBeGreaterThan(0);
+        expect(screen.getAllByText(/can't guarantee when it will arrive/).length).toBeGreaterThan(0);
         jest.useRealTimers();
     });
 });
@@ -141,5 +143,45 @@ describe('priceOf', () => {
         expect(priceOf(product({ current_price: '49.99' }))).toBe('49.99');
         expect(priceOf(product())).toBe('59.99');
         expect(priceOf(null)).toBe('59.99');
+    });
+});
+
+describe('content from the API', () => {
+    const photos = { image: 'https://casspea-v2.s3.amazonaws.com/a1.jpg', gallery_images: [{ id: 1, image: 'https://casspea-v2.s3.amazonaws.com/a2.jpg', thumbnail: '' }] };
+
+    it('uses product photo 1 for the hero and sharing, photo 2 for the story', () => {
+        expect(adventImages(product(photos))).toEqual({ hero: photos.image, story: photos.gallery_images[0].image, og: photos.image });
+        expect(adventImages(null)).toEqual({ hero: '/advent/hero.jpg', story: '/advent/story.jpg', og: '/advent/og.jpg' });
+        expect(adventMetadata('shop', product(photos)).openGraph).toMatchObject({ images: [expect.objectContaining({ url: photos.image })] });
+    });
+
+    it('shows the Christmas flavours as the exclusives', () => {
+        const flavour = (name: string) => ({ id: 1, name, slug: name, description: '', mini_description: '', image: 'https://casspea-v2.s3.amazonaws.com/f.jpg' }) as Flavour;
+        render(<AdventLanding variant="shop" product={product()} exclusives={[flavour('Mince Pie'), flavour('Mulled Wine'), flavour('Gingerbread')]} />);
+        expect(screen.getByAltText('Mince Pie')).toBeInTheDocument();
+        expect(screen.getByText('Gingerbread')).toBeInTheDocument();
+    });
+
+    it('quotes real Trustpilot reviews', () => {
+        render(<AdventLanding variant="shop" product={product()} />);
+        expect(screen.getByText('Kim')).toBeInTheDocument();
+        expect(screen.queryByText(/Real Trustpilot quote/)).not.toBeInTheDocument();
+    });
+});
+
+describe('allergens', () => {
+    it('asks for allergens before adding the calendar, and sends them', async () => {
+        render(<AdventLanding variant="shop" product={product({ can_pick_allergens: true })} />);
+        fireEvent.click(screen.getAllByRole('button', { name: /Reserve My Calendar/ })[0]);
+        expect(addToCart).not.toHaveBeenCalled();
+
+        const confirm = await screen.findByRole('button', { name: 'Add to basket' });
+        expect(confirm).toBeDisabled();
+        fireEvent.click(screen.getByText('No Allergens'));
+        fireEvent.click(confirm);
+
+        await waitFor(() =>
+            expect(addToCart).toHaveBeenCalledWith({ product: 42, quantity: 1, box_customization: { allergens: [] } }),
+        );
     });
 });

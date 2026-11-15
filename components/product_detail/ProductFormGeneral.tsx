@@ -8,6 +8,7 @@ import { Product as ProductType } from '@/types/products';
 import { useAddCartItemMutation } from "@/redux/features/carts/cartApiSlice";
 import ColoredList from "../common/ColoredList";
 import AllergenSelection from './AllergenSelection';
+import { PICKABLE_ALLERGENS } from './allergenOptions';
 
 interface ProductFormGeneralProps {
     product: ProductType;
@@ -66,12 +67,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
         { text: "Blue - Guava Cheesecake", colorKey: "blue" },
     ];
 
-    const allergens = [
-        { name: 'Gluten', id: 2 },
-        { name: 'Alcohol', id: 5 },
-        { name: 'Nut', id: 6 },
-        // Add more allergens as needed
-    ];
+    const allergens = PICKABLE_ALLERGENS;
 
     const customOptions = product.custom_options ?? [];
 
