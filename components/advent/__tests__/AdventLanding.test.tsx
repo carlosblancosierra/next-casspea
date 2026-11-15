@@ -120,7 +120,8 @@ describe('AdventLanding, lead variant', () => {
 
     it('is kept out of search and points at the shop page', () => {
         expect(adventMetadata('lead')).toMatchObject({ robots: { index: false }, alternates: { canonical: '/advent-calendar' } });
-        expect(adventMetadata('shop').robots).toBeUndefined();
+        // Not launched yet, so the shop page is kept out of search too.
+        expect(adventMetadata('shop').robots).toEqual({ index: false, follow: false });
         expect(adventMetadata('shop').openGraph).toMatchObject({ images: [expect.objectContaining({ url: '/advent/og.jpg' })] });
     });
 });

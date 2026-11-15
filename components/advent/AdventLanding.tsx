@@ -61,9 +61,9 @@ export function adventMetadata(variant: Variant): Metadata {
     return {
         title,
         description,
-        // The early-access page is the same offer: point search engines at the shop page.
         alternates: { canonical: ADVENT_PATH },
-        robots: variant === 'lead' ? { index: false, follow: true } : undefined,
+        // Not launched yet: both variants stay out of search until the page is ready.
+        robots: { index: false, follow: false },
         openGraph: {
             type: 'website',
             siteName: 'CassPea',

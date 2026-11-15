@@ -28,8 +28,9 @@ export interface HomeHeroConfig {
     leadProductSlugs: string[];
 }
 
-// The campaign landing, which sells it directly (app/advent-calendar).
-const ADVENT_CALENDAR_HREF = '/advent-calendar';
+// The normal product page. The campaign landing (app/advent-calendar) is
+// still in progress and is not linked from anywhere until it launches.
+const ADVENT_CALENDAR_HREF = '/shop-now/advent-calendar';
 const GIFT_BOXES_HREF = '/shop-now/categories/signature-boxes';
 
 const EVERYDAY_INTRO =
