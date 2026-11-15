@@ -31,11 +31,10 @@ export type LeadSource = 'landing-reminder' | 'exit-intent' | 'early-access';
 
 /** Set to true once the bonus below is confirmed. */
 export const SHOW_BONUS = false;
-/** Show the Christmas flavours' photos and names. With it off, or while the
- *  API returns no Christmas flavours, the cards show "?" discs. */
+/** Show the exclusives' photos and names. With it off, or while the API
+ *  returns none, the cards show "?" discs. The exclusives are the flavour
+ *  category set in Django admin → Products → Advent landing. */
 export const REVEAL_EXCLUSIVES = true;
-/** The exclusives are the flavours in this flavour category (matched on slug). */
-export const EXCLUSIVES_CATEGORY = 'christmas';
 
 export type Variant = 'shop' | 'lead';
 
@@ -186,7 +185,10 @@ export const COPY = {
         ],
         signature: 'Enrique',
         role: "Founder, and Cass and Pea's dad",
-        imageAlt: 'The CassPea Advent Calendar 2026',
+    },
+
+    flavours: {
+        heading: 'All Our Flavours',
     },
 
     reviews: {

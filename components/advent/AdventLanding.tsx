@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import type { Product } from '@/types/products';
 import type { Flavour } from '@/types/flavours';
-import { getProduct } from '@/utils/products';
+import { getAdventLanding, getProduct } from '@/utils/products';
 import { getFlavours } from '@/utils/flavours';
+import FlavourNameGrid from '@/components/flavours/FlavourNameGrid';
 import { formatCurrency } from '@/utils/currency';
 import { toAmount } from '@/utils/analytics';
 import BuyButton from './BuyButton';
@@ -14,7 +15,6 @@ import {
     ADVENT_PATH,
     ADVENT_SLUG,
     COPY,
-    EXCLUSIVES_CATEGORY,
     FALLBACK_PRICE,
     type Variant,
 } from './content';
@@ -26,6 +26,7 @@ import EasiestGift from './sections/EasiestGift';
 import WhoFor from './sections/WhoFor';
 import Reminder from './sections/Reminder';
 import Story from './sections/Story';
+import PhotoBand from './sections/PhotoBand';
 import Reviews from './sections/Reviews';
 import Faq from './sections/Faq';
 import FinalCta from './sections/FinalCta';
@@ -46,27 +47,33 @@ import FinalCta from './sections/FinalCta';
 /** Seconds a built page is served before it is rebuilt with fresh stock. */
 export const REVALIDATE_SECONDS = 60;
 
-/** The calendar's exclusive flavours: the first three Christmas flavours, launched or not. */
-export async function getAdventExclusives(): Promise<Flavour[]> {
-    const all = await getFlavours({ revalidate: REVALIDATE_SECONDS, includeComingSoon: true });
-    return all.filter(f => f.category?.slug?.includes(EXCLUSIVES_CATEGORY)).slice(0, 3);
+/** The landing's content from the API; null while it is not live (staff then preview it in the browser). */
+export async function getAdventLandingData() {
+    return getAdventLanding({ revalidate: REVALIDATE_SECONDS });
+}
+
+/** Every flavour we show off (the home page's grid), Christmas ones included. */
+export async function getShowcaseFlavours(): Promise<Flavour[]> {
+    return getFlavours({ revalidate: REVALIDATE_SECONDS, includeComingSoon: true });
 }
 
 /** The product's photos in the product page's order: main image, then the gallery. */
 export function productImages(product: Product | null): string[] {
     if (!product) return [];
-    return [product.image, ...(product.gallery_images ?? []).map(g => g.image)].filter(
-        (src): src is string => !!src,
-    );
+    const all = [product.image, ...(product.gallery_images ?? []).map(g => g.image)];
+    return all.filter((src, i): src is string => !!src && all.indexOf(src) === i);
 }
 
-/** Photo 1 for the hero and for sharing, photo 2 for the story; the bundled ones if missing. */
+/**
+ * Photo 1 for the hero and for sharing; the rest run full width between the
+ * sections, uncropped. The bundled images stand in when the product has none.
+ */
 export function adventImages(product: Product | null) {
-    const [first, second] = productImages(product);
+    const photos = productImages(product);
     return {
-        hero: first ?? '/advent/hero.jpg',
-        story: second ?? first ?? '/advent/story.jpg',
-        og: first ?? COPY.seo.ogImage,
+        hero: photos[0] ?? '/advent/hero.jpg',
+        bands: photos.slice(1),
+        og: photos[0] ?? COPY.seo.ogImage,
     };
 }
 
@@ -107,16 +114,22 @@ export function adventMetadata(variant: Variant, product: Product | null = null)
 interface LandingProps {
     variant: Variant;
     product: Product | null;
+    /** The exclusives category from the advent-landing API; the first three are shown. */
     exclusives?: Flavour[];
+    /** Every flavour, for the grid the home page has. */
+    flavours?: Flavour[];
 }
 
-export default function AdventLanding({ variant, product, exclusives = [] }: LandingProps) {
+export default function AdventLanding({ variant, product, exclusives = [], flavours = [] }: LandingProps) {
+    const productName = product?.name || 'Advent Calendar 2026';
     const images = adventImages(product);
+    // Photos 2, 3, 4… between the sections, in this order; any extra go before the final CTA.
+    const [band1, band2, band3, ...moreBands] = images.bands;
+    const band = (src?: string) => src && <PhotoBand src={src} alt={productName} />;
     const amount = priceOf(product);
     const price = formatCurrency(amount);
     // Rendered once per build; the countdown corrects itself in the browser.
     const serverNow = Date.now();
-    const productName = product?.name || 'Advent Calendar 2026';
 
     const buy = (size: 'md' | 'lg' = 'lg') => (
         <BuyButton
@@ -145,14 +158,26 @@ export default function AdventLanding({ variant, product, exclusives = [] }: Lan
 
             <Hero variant={variant} price={price} serverNow={serverNow} buyButton={buy()} image={images.hero} />
             <Contrast />
+            {band(band1)}
             <ValueStack price={price} />
-            <Exclusives flavours={exclusives} />
+            <Exclusives flavours={exclusives.slice(0, 3)} />
+            {band(band2)}
             <EasiestGift />
             <WhoFor />
             {variant === 'shop' && <Reminder />}
-            <Story image={images.story} />
+            <Story />
+            {band(band3)}
+            {flavours.length > 0 && (
+                <section className="mx-auto flex max-w-[1200px] flex-col gap-6 px-6 pt-20">
+                    <h2 className="m-0 text-center font-playfair text-[clamp(32px,4vw,52px)] font-bold leading-[1.05] tracking-tight text-primary-text dark:text-primary-text-light">
+                        {COPY.flavours.heading}
+                    </h2>
+                    <FlavourNameGrid flavours={flavours} showDescription excludeFeatured />
+                </section>
+            )}
             <Reviews />
             <Faq />
+            {moreBands.map(src => <PhotoBand key={src} src={src} alt={productName} />)}
             <FinalCta price={price} serverNow={serverNow} buyButton={buy()} />
 
             {variant === 'shop' && <ExitIntentPopup />}

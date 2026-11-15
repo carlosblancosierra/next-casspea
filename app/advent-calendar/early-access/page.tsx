@@ -1,4 +1,5 @@
-import AdventLanding, { adventMetadata, getAdventExclusives, getAdventProduct } from '@/components/advent/AdventLanding';
+import AdventLanding, { adventMetadata, getAdventLandingData, getAdventProduct, getShowcaseFlavours } from '@/components/advent/AdventLanding';
+import AdventPreview from '@/components/advent/AdventPreview';
 
 // See app/advent-calendar/page.tsx.
 export const revalidate = 60;
@@ -9,6 +10,8 @@ export async function generateMetadata() {
 }
 
 export default async function AdventEarlyAccessPage() {
-    const [product, exclusives] = await Promise.all([getAdventProduct(), getAdventExclusives()]);
-    return <AdventLanding variant="lead" product={product} exclusives={exclusives} />;
+    const [landing, flavours] = await Promise.all([getAdventLandingData(), getShowcaseFlavours()]);
+    // Not live: only staff can see it, and only their browser holds their token.
+    if (!landing) return <AdventPreview variant="lead" flavours={flavours} />;
+    return <AdventLanding variant="lead" product={landing.product} exclusives={landing.flavours} flavours={flavours} />;
 }
