@@ -12,10 +12,11 @@
  * Plain CommonJS with no TypeScript, because tailwind.config.js has to
  * require() it at build time.
  *
- * On contrast: `primary` is a button fill under white text, and so is every
- * stop of both gradients — gradient-autumn is on every money button (pay, add
- * to cart, continue to checkout) and gradient-primary is behind the units-sold
- * counter, all with white text on them. So all of those clear 4.5:1 against
+ * On contrast: `primary` is the fill of every primary button (components/
+ * common/Button.tsx — pay, add to cart, continue to checkout included) under
+ * white text, and every stop of both gradients is a surface with white text
+ * on it too (gradient-autumn behind the post-checkout units-sold block,
+ * gradient-primary behind the units-sold counter). So all of those clear 4.5:1 against
  * #fff, and /admin/palette measures it rather than trusting this comment.
  *
  * `primary-light` does NOT clear it and is only ever a focus ring or a hover
@@ -134,10 +135,9 @@ const palettes = {
      * Gold is also legible as a detail on the blue (4.95:1 against #003B78),
      * which is the navy-and-gold pairing this is after.
      *
-     * Both gradients stay blue. gradient-autumn is on every money button with
-     * white text on it, so a gold stop there would be unreadable — the one
-     * place where wanting more gold has to lose to being able to read the
-     * button.
+     * Both gradients stay blue. They are surfaces with white text on them,
+     * so a gold stop there would be unreadable — the one place where wanting
+     * more gold has to lose to being able to read the text.
      */
     christmas: {
         name: 'Christmas',

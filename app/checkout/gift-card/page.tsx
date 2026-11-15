@@ -6,6 +6,7 @@ import GiftMessage from '@/components/cart/GiftMessage';
 import SelectableGiftCard from '@/components/store/SelectableGiftCard';
 import { useAddCartItemMutation, useGetCartQuery, useUpdateCartMutation, useRemoveCartItemMutation } from '@/redux/features/carts/cartApiSlice';
 import { useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
+import { buttonClasses } from '@/components/common/Button';
 
 const GiftCardPage = () => {
     const { data: cart, isLoading, error: cartError } = useGetCartQuery();
@@ -127,14 +128,14 @@ const GiftCardPage = () => {
                     <button
                         onClick={handleAddGiftCard}
                         disabled={isProcessing}
-                        className="w-full sm:w-auto bg-primary text-primary-text-light px-4 py-2 rounded-md hover:bg-primary-2 sm:order-2"
+                        className={buttonClasses({ className: 'w-full sm:w-auto sm:order-2' })}
                     >
                         {isProcessing ? 'Adding...' : 'Add Gift Card'}
                     </button>
                     <button
                         onClick={handleContinueWithoutGiftCard}
                         disabled={isProcessing}
-                        className="w-full sm:w-auto bg-main-bg text-primary-text px-4 py-2 rounded-md hover:bg-gray-400 sm:order-1"
+                        className={buttonClasses({ variant: 'secondary', className: 'w-full sm:w-auto sm:order-1' })}
                     >
                         Continue Without Gift Card
                     </button>

@@ -3,6 +3,7 @@ import FlavourPicker from '@/components/product_detail/FlavourPicker'
 import { Product } from '@/types/products'
 import { CartItemBoxFlavorSelection } from '@/types/carts'
 import { Flavour as FlavourType } from '@/types/flavours';
+import { buttonClasses } from '@/components/common/Button';
 
 interface Props {
   signatureBox: Product
@@ -42,11 +43,7 @@ export default function FlavourStep({
       <button
         onClick={onNext}
         disabled={remaining > 0}
-        className={`mt-4 px-6 py-2 rounded ${
-          remaining > 0
-            ? 'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400 cursor-not-allowed'
-            : 'bg-blue-600 text-white hover:bg-blue-500'
-        }`}
+        className={buttonClasses({ className: 'mt-4' })}
       >
         Next
       </button>

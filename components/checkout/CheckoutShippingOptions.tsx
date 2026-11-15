@@ -285,7 +285,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         // If original price was 0, just show FREE
         if (originalPrice === 0) {
             return (
-                <span className="text-base font-semibold text-primary dark:text-primary-2">
+                <span className="text-base font-semibold text-primary dark:text-primary-light">
                     FREE
                 </span>
             );
@@ -295,7 +295,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
         if (discountedPrice === 0) {
             return (
                 <div className="flex items-center gap-2">
-                    <span className="text-base font-semibold text-primary dark:text-primary-2">
+                    <span className="text-base font-semibold text-primary dark:text-primary-light">
                         FREE
                     </span>
                     <span className="text-sm text-primary-text dark:text-primary-text-light line-through">
@@ -351,7 +351,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                 sentence. A control that silently vanished would be a mystery;
                 this says what happened and why. */}
             {fixedDispatch && (
-                <div className="mb-4 rounded-md border border-primary/30 bg-primary/5 p-3 dark:border-primary-2/40 dark:bg-primary-2/10">
+                <div className="mb-4 rounded-md border border-primary/30 bg-primary/5 p-3 dark:border-primary-light/40 dark:bg-primary-2/10">
                     <p className="text-sm text-primary-text dark:text-primary-text-light">
                         Your <strong>{fixedDispatch.productName}</strong> is posted on{' '}
                         <strong>{format(fixedDispatch.date, 'EEE d MMM')}</strong>, so this order is
@@ -510,7 +510,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                             <button
                                                 type="button"
                                                 onClick={() => { setDispatchDate(null); setShowDispatchPicker(false); }}
-                                                className="text-sm font-medium text-primary dark:text-primary-2 underline"
+                                                className="text-sm font-medium text-primary dark:text-primary-light underline"
                                             >
                                                 Post as soon as possible
                                             </button>
@@ -518,7 +518,7 @@ const CheckoutShippingOptions: React.FC<CheckoutShippingOptionsProps> = ({
                                         <button
                                             type="button"
                                             onClick={() => setShowDispatchPicker(open => !open)}
-                                            className="text-sm font-medium text-primary dark:text-primary-2 underline"
+                                            className="text-sm font-medium text-primary dark:text-primary-light underline"
                                         >
                                             Choose a different day
                                         </button>

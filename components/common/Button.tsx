@@ -13,6 +13,8 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'reac
  *                 "Back to your basket"). Outline only, so it never competes.
  * - `tertiary`  — a quiet action that is still a button (a "See all" or
  *                 "Cancel"). No border, no fill.
+ * - `danger`    — only for actions that destroy something ("Yes, remove").
+ *                 Red fill, and always next to a secondary way out.
  *
  * Each variant owns its dark-mode look. The outline used to borrow the brand
  * colour in dark mode too, which with the navy palette meant navy text on a
@@ -20,13 +22,13 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'reac
  * now the light ink instead, which is the same rule the body text follows.
  */
 
-export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 const BASE =
-    'inline-flex items-center justify-center gap-2 rounded-lg border-2 font-medium transition-colors ' +
+    'inline-flex items-center justify-center gap-2 rounded-lg border-2 text-center font-medium transition-colors ' +
     'focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-light ' +
-    'disabled:pointer-events-none disabled:opacity-50';
+    'disabled:cursor-not-allowed disabled:opacity-50 aria-busy:cursor-wait';
 
 const VARIANTS: Record<ButtonVariant, string> = {
     primary:
@@ -35,6 +37,8 @@ const VARIANTS: Record<ButtonVariant, string> = {
         'border-primary bg-transparent text-primary hover:bg-primary/5 ' +
         'dark:border-primary-text-light/70 dark:text-primary-text-light ' +
         'dark:hover:border-primary-text-light dark:hover:bg-white/10',
+    danger:
+        'border-red-600 bg-red-600 text-white hover:border-red-700 hover:bg-red-700 focus-visible:ring-red-300',
     tertiary:
         'border-transparent bg-transparent text-primary underline-offset-4 hover:underline ' +
         'dark:text-primary-text-light',
@@ -67,6 +71,8 @@ export function buttonClasses({
 }
 
 interface CommonProps {
+    /** Shows a spinner, disables the button and sets aria-busy. Buttons only. */
+    loading?: boolean;
     variant?: ButtonVariant;
     size?: ButtonSize;
     fullWidth?: boolean;
@@ -82,7 +88,7 @@ type AsButton = CommonProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'cla
  * links (`target="_blank"`) are a plain `<a>`.
  */
 export default function Button(props: AsLink | AsButton) {
-    const { variant, size, fullWidth, className, children, ...rest } = props;
+    const { variant, size, fullWidth, className, children, loading = false, ...rest } = props;
     const classes = buttonClasses({ variant, size, fullWidth, className });
 
     if (rest.href !== undefined) {
@@ -101,11 +107,27 @@ export default function Button(props: AsLink | AsButton) {
         );
     }
 
-    const { type = 'button', ...button } = rest as AsButton;
+    const { type = 'button', disabled, ...button } = rest as AsButton;
     return (
         // eslint-disable-next-line react/button-has-type
-        <button type={type} className={classes} {...button}>
+        <button
+            type={type}
+            className={classes}
+            disabled={disabled || loading}
+            aria-busy={loading || undefined}
+            {...button}
+        >
+            {loading && <Spinner />}
             {children}
         </button>
+    );
+}
+
+function Spinner() {
+    return (
+        <svg className="-ml-1 h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
     );
 }

@@ -5,6 +5,7 @@ import LeadHeroForm from '../LeadHeroForm';
 import { COPY, type Variant } from '../content';
 import { Eyebrow, MUTED, HEADING } from './ui';
 import type { ReactNode } from 'react';
+import { buttonClasses } from '@/components/common/Button';
 
 interface Props {
     variant: Variant;
@@ -34,7 +35,7 @@ export default function Hero({ variant, price, serverNow, buyButton }: Props) {
                 {variant === 'shop' ? (
                     <div className="flex flex-wrap items-center gap-3">
                         {buyButton}
-                        <a href="#inside" className="inline-flex min-h-[44px] items-center px-3 font-medium text-primary underline-offset-4 hover:underline dark:text-primary-light">
+                        <a href="#inside" className={buttonClasses({ variant: 'secondary', size: 'lg' })}>
                             {COPY.hero.secondary}
                         </a>
                     </div>

@@ -34,11 +34,11 @@ export default function FaqPage() {
                 <section className="main-bg dark:bg-main-bg-dark rounded-lg shadow-sm p-6 mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="text-center p-4 dark:bg-main-bg-dark rounded-lg">
-                            <h2 className="font-bold text-primary dark:text-primary-2">FREE DELIVERY</h2>
+                            <h2 className="font-bold text-primary dark:text-primary-light">FREE DELIVERY</h2>
                             <p className="text-primary-text dark:text-primary-text-light">On all orders over £56</p>
                         </div>
                         <div className="text-center p-4 dark:bg-main-bg-dark rounded-lg">
-                            <h2 className="font-bold text-primary dark:text-primary-2">10% OFF</h2>
+                            <h2 className="font-bold text-primary dark:text-primary-light">10% OFF</h2>
                             <p className="text-primary-text dark:text-primary-text-light">Subscribe to our newsletter</p>
                         </div>
                     </div>

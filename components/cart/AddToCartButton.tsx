@@ -1,5 +1,6 @@
 import React from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
+import Button from '@/components/common/Button';
 
 interface AddToCartButtonProps {
     onClick: () => void;
@@ -17,22 +18,14 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
     remainingChocolates
 }) => {
     return (
-        <button
-            type="button"
-            onClick={onClick}
-            disabled={isDisabled}
-            className={`w-full flex items-center justify-center bg-gradient-autumn text-primary-text-light py-3 px-4 rounded-md
-                hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary-2 focus:ring-offset-2
-                ${isDisabled ? 'bg-main-bg cursor-not-allowed' : ''}
-                transition-colors duration-200`}
-        >
+        <Button onClick={onClick} disabled={isDisabled} loading={isLoading} fullWidth>
             {isLoading ? 'Adding to Cart...' : (
                 <>
-                    <FiShoppingCart className="mr-2 w-5 h-5" />
+                    <FiShoppingCart className="w-5 h-5" aria-hidden="true" />
                     Add to Cart
                 </>
             )}
-        </button>
+        </Button>
     );
 };
 

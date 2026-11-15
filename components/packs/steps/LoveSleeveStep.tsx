@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { LOVE_SLEEVE_PRICE } from '@/components/packs/constants'
+import { buttonClasses } from '@/components/common/Button';
 
 interface Props {
   selected: boolean
@@ -33,7 +34,7 @@ export default function LoveSleeveStep({ selected, onSelect, onNext, image }: Pr
           onClick={() => onSelect(true)}
           className={`flex-1 px-6 py-4 rounded-lg border-2 font-medium transition-colors ${
             selected === true
-              ? 'border-primary bg-primary/10 text-primary'
+              ? 'border-primary bg-primary/10 text-primary dark:border-primary-text-light dark:bg-white/10 dark:text-primary-text-light'
               : 'border-gray-300 dark:border-gray-600 hover:border-primary/50 text-primary-text dark:text-primary-text-light'
           }`}
         >
@@ -44,7 +45,7 @@ export default function LoveSleeveStep({ selected, onSelect, onNext, image }: Pr
           onClick={() => onSelect(false)}
           className={`flex-1 px-6 py-4 rounded-lg border-2 font-medium transition-colors ${
             selected === false
-              ? 'border-primary bg-primary/10 text-primary'
+              ? 'border-primary bg-primary/10 text-primary dark:border-primary-text-light dark:bg-white/10 dark:text-primary-text-light'
               : 'border-gray-300 dark:border-gray-600 hover:border-primary/50 text-primary-text dark:text-primary-text-light'
           }`}
         >
@@ -53,7 +54,7 @@ export default function LoveSleeveStep({ selected, onSelect, onNext, image }: Pr
       </div>
       <button
         onClick={onNext}
-        className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90"
+        className={buttonClasses()}
       >
         Next
       </button>

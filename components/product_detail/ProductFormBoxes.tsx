@@ -19,6 +19,7 @@ import SelectableGiftCard from '@/components/store/SelectableGiftCard';
 import SelectableProductCard from '@/components/store/SelectableProductCard';
 import GiftMessage from '@/components/cart/GiftMessage';
 import { ID_MAP, LOVE_SLEEVE_PRODUCT_ID, LOVE_SLEEVE_PRICE, PACK_QUERY_PARAM } from '@/components/packs/constants';
+import { buttonClasses } from '@/components/common/Button';
 
 interface ProductInfoProps {
     product: Product;
@@ -408,7 +409,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                     type="button"
                     disabled
                     aria-disabled="true"
-                    className="w-full py-3 rounded bg-gray-400 text-primary-text dark:text-primary-text-light cursor-not-allowed flex items-center justify-center text-sm gap-2"
+                    className={buttonClasses({ variant: 'secondary', fullWidth: true })}
                 >
                     Sold Out
                 </button>
@@ -457,7 +458,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={!canProceedToStep2()}
-                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className={buttonClasses()}
                             >
                                 Next
                             </button>
@@ -480,7 +481,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className={buttonClasses({ variant: 'secondary' })}
                             >
                                 Back
                             </button>
@@ -488,7 +489,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={!canProceedToStep3()}
-                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className={buttonClasses()}
                             >
                                 Next
                             </button>
@@ -559,7 +560,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                     <button
                                         type="button"
                                         onClick={handlePrevStep}
-                                        className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                        className={buttonClasses({ variant: 'secondary' })}
                                     >
                                         Back
                                     </button>
@@ -568,7 +569,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                             type="button"
                                             onClick={finishStepThree}
                                             disabled={isStepThreeCtaDisabled()}
-                                            className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            className={buttonClasses()}
                                         >
                                             {stepThreeCtaLabel}
                                         </button>
@@ -609,7 +610,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                     <button
                                         type="button"
                                         onClick={handlePrevStep}
-                                        className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                        className={buttonClasses({ variant: 'secondary' })}
                                     >
                                         Back
                                     </button>
@@ -617,7 +618,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                         type="button"
                                         onClick={finishStepThree}
                                         disabled={isStepThreeCtaDisabled()}
-                                        className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        className={buttonClasses()}
                                     >
                                         {stepThreeCtaLabel}
                                     </button>
@@ -663,7 +664,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className={buttonClasses({ variant: 'secondary' })}
                             >
                                 Back
                             </button>
@@ -671,7 +672,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={hotChocolate === null}
-                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className={buttonClasses()}
                             >
                                 Next
                             </button>
@@ -700,7 +701,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className={buttonClasses({ variant: 'secondary' })}
                             >
                                 Back
                             </button>
@@ -708,7 +709,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                 type="button"
                                 onClick={handleNextStep}
                                 disabled={chocolateBark === null}
-                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className={buttonClasses()}
                             >
                                 Next
                             </button>
@@ -753,14 +754,14 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className={buttonClasses({ variant: 'secondary' })}
                             >
                                 Back
                             </button>
                             <button
                                 type="button"
                                 onClick={handleNextStep}
-                                className="px-6 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90"
+                                className={buttonClasses()}
                             >
                                 Next
                             </button>
@@ -817,7 +818,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                             <button
                                 type="button"
                                 onClick={handlePrevStep}
-                                className="px-6 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className={buttonClasses({ variant: 'secondary' })}
                             >
                                 Back
                             </button>
@@ -867,7 +868,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                         setIsPack(true);
                                         setCurrentStep(4);
                                     }}
-                                    className="w-full px-4 py-3 bg-primary text-primary-text-light font-medium rounded-md hover:bg-primary/90 transition-colors"
+                                    className={buttonClasses({ fullWidth: true })}
                                 >
                                     Make an indulgence pack
                                 </button>
@@ -876,7 +877,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                         setShowUpgradePopup(false);
                                         handleAddToCart();
                                     }}
-                                    className="w-full px-4 py-1.5 text-sm text-primary-text/70 dark:text-primary-text-light/70 rounded-md hover:text-primary-text dark:hover:text-primary-text-light hover:underline transition-colors"
+                                    className={buttonClasses({ variant: 'tertiary', size: 'sm', fullWidth: true })}
                                 >
                                     Continue to cart
                                 </button>
@@ -903,7 +904,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                         setShowGiftMessagePopup(false);
                                         setCurrentStep(6); // Go back to gift card step to add message
                                     }}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-primary-text dark:text-primary-text-light rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    className={buttonClasses({ variant: 'secondary', className: 'flex-1' })}
                                 >
                                     Add Message
                                 </button>
@@ -924,7 +925,7 @@ const ProductFormBoxes: React.FC<ProductInfoProps> = ({ product, onAddedToCart }
                                             console.error('Add to cart error:', error);
                                         }
                                     }}
-                                    className="flex-1 px-4 py-2 bg-primary text-primary-text-light rounded-md hover:bg-primary/90 transition-colors"
+                                    className={buttonClasses({ className: 'flex-1' })}
                                 >
                                     Continue to Cart
                                 </button>

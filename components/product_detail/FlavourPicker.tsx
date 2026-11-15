@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { CartItemBoxFlavorSelection } from '@/types/carts';
 import Spinner from "@/components/common/Spinner";
 import { toast } from 'react-toastify';
+import { buttonClasses } from '@/components/common/Button';
 
 interface FlavourPickerProps {
     flavours: CartItemBoxFlavorSelection[];
@@ -156,11 +157,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                 type="button"
                 onClick={() => setIsModalOpen(true)}
                 disabled={remainingChocolates <= 0}
-                className={`mt-4 cursor-pointer group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium focus:outline-none text-primary-text dark:text-primary-text-light
-                ${remainingChocolates > 0
-                        ? 'bg-primary-2 dark:bg-primary text-primary-text-light border-gray-300 dark:border-primary hover:bg-primary dark:hover:bg-primary'
-                        : 'bg-main-bg dark:bg-main-bg-dark text-primary-text dark:text-primary-text-light cursor-not-allowed border-gray-300 dark:border-gray-600'
-                    }`}
+                className={buttonClasses({ fullWidth: true, className: 'mt-4' })}
             >
                 {remainingChocolates > 0 ? 'Add Flavour' : 'All Flavours Selected'}
             </button>
@@ -278,7 +275,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="w-full bg-primary text-primary-text-light py-3 rounded-lg hover:bg-primary transition-colors"
+                                    className={buttonClasses({ fullWidth: true })}
                                 >
                                     Done
                                 </button>

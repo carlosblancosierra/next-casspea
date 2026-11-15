@@ -3,6 +3,7 @@ import { Playfair_Display } from 'next/font/google';
 import FlavourStoryRow from '@/components/flavours/FlavourStoryRow';
 import Link from 'next/link';
 import { filterFlavours, getFeaturedSections, getFlavours } from '@/utils/flavours';
+import { buttonClasses } from '@/components/common/Button';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
@@ -56,7 +57,7 @@ export default async function FlavoursPage() {
                             {category.featured_cta_label && category.featured_cta_url && (
                                 <Link
                                     href={category.featured_cta_url}
-                                    className="mt-4 inline-flex items-center justify-center rounded-lg bg-red-600 px-5 py-2.5 font-semibold text-white transition hover:bg-red-700"
+                                    className={buttonClasses({ className: 'mt-4' })}
                                 >
                                     {category.featured_cta_label}
                                 </Link>

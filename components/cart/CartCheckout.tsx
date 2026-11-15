@@ -8,9 +8,9 @@ import GiftMessage from './GiftMessage';
 import { useGetCartQuery, useUpdateCartMutation } from '@/redux/features/carts/cartApiSlice';
 import { CartUpdate } from '@/types/carts';
 import { formatCurrency } from '@/utils/currency';
-import Link from 'next/link';
 import { useUpdateSessionMutation, useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
+import Button from '@/components/common/Button';
 
 export default function CartCheckout() {
 
@@ -277,38 +277,27 @@ export default function CartCheckout() {
                         </div>
                     )}
 
-                    <button
-                        type="button"
+                    <Button
                         onClick={handleCheckout}
-                        disabled={isProcessing || storeClosed}
-                        className={`w-full rounded-md px-4 py-4 text-xl font-bold
-                            shadow-lg transition-all duration-200 flex items-center justify-center
-                            ${isProcessing
-                                ? 'text-primary-text dark:text-primary-text-light bg-gray-400 dark:bg-main-bg-dark cursor-wait opacity-70'
-                                : storeClosed
-                                ? 'text-primary-text dark:text-primary-text-light bg-gray-300 dark:bg-gray-700 cursor-not-allowed opacity-70'
-                                : 'text-primary-text-light bg-gradient-autumn dark:bg-primary-2 hover:shadow-xl hover:scale-[1.02] dark:hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
-                            }`}
+                        disabled={storeClosed}
+                        loading={isProcessing}
+                        size="lg"
+                        fullWidth
+                        className="font-bold shadow-lg"
                     >
                         {storeClosed ? (
-                            <>Closed for Summer Break</>
+                            'Closed for Summer Break'
                         ) : isProcessing ? (
-                            <>
-                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-text-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Processing...
-                            </>
+                            'Processing...'
                         ) : (
                             <>
                                 Continue to Checkout
-                                <svg className="w-6 h-6 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                     <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"/>
                                 </svg>
                             </>
                         )}
-                    </button>
+                    </Button>
 
                     {error && (
                         <div className="flex items-start bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3">
@@ -319,15 +308,12 @@ export default function CartCheckout() {
                         </div>
                     )}
 
-                    <Link
-                        href="/shop-now/"
-                        className="inline-flex items-center justify-center rounded-md text-primary dark:text-primary-2 px-4 py-3 text-sm font-semibold w-full border border-primary dark:border-primary-2 hover:bg-primary hover:text-white dark:hover:bg-primary-2 dark:hover:text-white transition-colors"
-                    >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <Button href="/shop-now/" variant="secondary" fullWidth>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
                         <span>Continue Shopping</span>
-                    </Link>
+                    </Button>
                 </div>
             </div>
 
@@ -372,21 +358,22 @@ export default function CartCheckout() {
                                 </div>
                             </div>
                             <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
-                                <button
-                                    type="button"
-                                    disabled={isProcessing}
+                                <Button
+                                    loading={isProcessing}
                                     onClick={handleModalCheckout}
-                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-primary-text-light bg-primary dark:bg-primary-2 hover:bg-primary-2 dark:hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-60 disabled:cursor-wait sm:col-start-2 sm:text-sm"
+                                    fullWidth
+                                    className="sm:col-start-2"
                                 >
                                     Continue to Checkout
-                                </button>
-                                <button
-                                    type="button"
+                                </Button>
+                                <Button
+                                    variant="secondary"
                                     onClick={() => setShowEmailModal(false)}
-                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-main-bg dark:bg-main-bg-dark text-base font-medium text-primary-text dark:text-primary-text-light hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:col-start-1 sm:text-sm"
+                                    fullWidth
+                                    className="mt-3 sm:mt-0 sm:col-start-1"
                                 >
                                     Cancel
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     </div>

@@ -7,6 +7,7 @@ import { formatCurrency } from '@/utils/currency';
 import { Product } from '@/types/products';
 import { useSendTrackingCodeMailMutation } from '@/redux/features/orders/ordersApiSlice';
 import { toast } from 'react-toastify';
+import { buttonClasses } from '@/components/common/Button';
 
 const getCustomization = (
   boxCustomization?: CartItemBoxCustomization,
@@ -339,7 +340,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                     <button
                       onClick={handleSendTrackingMail}
                       disabled={sendingTrackingMail}
-                      className="w-full inline-flex items-center gap-1 px-3 py-2 rounded bg-indigo-500 hover:bg-indigo-600 text-white"
+                      className={buttonClasses({ size: 'sm', fullWidth: true })}
                     >
                       {sendingTrackingMail ? 'Sending...' : 'Send Tracking Code Mail'}
                     </button>

@@ -4,7 +4,7 @@ import CartItemTable from './CartItemTable';
 import CartCheckout from './CartCheckout';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import Spinner from '@/components/common/Spinner';
-import Link from 'next/link';
+import Button from '@/components/common/Button';
 
 const Cart: React.FC = () => {
   const { data: cart, isLoading, error } = useGetCartQuery();
@@ -36,12 +36,9 @@ const Cart: React.FC = () => {
         ) : (
           <div className="flex flex-col items-center justify-center h-[calc(80vh)]">
             <p className="text-primary-text dark:text-primary-text-light text-center">Your cart is empty.</p>
-            <Link
-              href="/shop-now/"
-              className="inline-flex items-center justify-center rounded-md bg-pink-600 px-4 py-3 text-sm font-semibold text-primary-text-light"
-            >
-              <span>Keep Shopping</span>
-            </Link>
+            <Button href="/shop-now/" className="mt-4">
+              Keep Shopping
+            </Button>
           </div>
         )}
       </div>

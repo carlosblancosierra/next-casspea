@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice';
 import { ADVENT_SLUG } from './content';
+import { buttonClasses } from '@/components/common/Button';
 
 /**
  * The page's money button. Adds the calendar to the cart with the same
@@ -25,13 +26,6 @@ interface Props {
     className?: string;
 }
 
-const BASE =
-    'inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-gradient-autumn font-medium text-primary-button-text ' +
-    'transition-opacity hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-primary-light disabled:cursor-not-allowed disabled:opacity-60';
-const SIZES = {
-    md: 'px-6 py-3 text-lg',
-    lg: 'px-8 py-4 text-xl leading-7',
-};
 
 function Arrow() {
     return (
@@ -48,7 +42,7 @@ function Arrow() {
 export default function BuyButton({ productId, productName, soldOut, label, size = 'lg', className = '' }: Props) {
     const router = useRouter();
     const [addToCart, { isLoading }] = useAddCartItemMutation();
-    const classes = `${BASE} ${SIZES[size]} ${className}`;
+    const classes = buttonClasses({ size, className });
 
     if (productId === null) {
         return (

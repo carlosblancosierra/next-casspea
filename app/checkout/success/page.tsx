@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import CheckoutSuccessUnitsSold from '@/components/checkout/CheckoutSuccessUnitsSold';
 import { track, consumePendingPurchase, CURRENCY } from '@/utils/analytics';
+import { buttonClasses } from '@/components/common/Button';
 
 const ConfirmPage: React.FC = () => {
     useEffect(() => {
@@ -81,7 +82,7 @@ const ConfirmPage: React.FC = () => {
                         <div className="mt-8">
                             <Link
                                 href="/shop-now/"
-                                className="inline-flex items-center justify-center py-3 px-5 text-base font-medium text-center text-primary-text rounded-lg bg-primary hover:bg-primary focus:ring-4 focus:ring-primary-light dark:focus:ring-primary transition-colors"
+                                className={buttonClasses()}
                             >
                                 Continue Shopping
                                 <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20">

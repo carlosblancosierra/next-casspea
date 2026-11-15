@@ -13,6 +13,7 @@ import ProductionTotals from './ProductionTotals';
 import Input from '@/components/ui/Input';
 import Spinner from '@/components/common/Spinner';
 import { Table, THead, TBody, TR, TH, TD } from '@/components/ui/Table';
+import { buttonClasses } from '@/components/common/Button';
 
 // The default question is "what came in recently?", not "what came in during
 // this window" — so no date filter and a short page.
@@ -156,7 +157,7 @@ export default function OrdersTable() {
                 <button
                     type="button"
                     onClick={applyFilters}
-                    className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-button-text hover:bg-primary-dark"
+                    className={buttonClasses({ size: 'sm' })}
                 >
                     Search
                 </button>
@@ -172,14 +173,14 @@ export default function OrdersTable() {
                             <button
                                 type="button"
                                 onClick={() => setShowTotals(open => !open)}
-                                className="rounded-md bg-primary px-3 py-1.5 text-sm font-semibold text-primary-button-text hover:bg-primary-dark"
+                                className={buttonClasses({ size: 'sm' })}
                             >
                                 {showTotals ? 'Hide totals' : 'What to prepare'}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => { setTicked([]); setShowTotals(false); }}
-                                className="text-sm font-medium text-primary dark:text-primary-2 underline"
+                                className="text-sm font-medium text-primary dark:text-primary-light underline"
                             >
                                 Clear
                             </button>
@@ -336,7 +337,7 @@ export default function OrdersTable() {
                             type="button"
                             disabled={page <= 1}
                             onClick={() => setPage(p => Math.max(1, p - 1))}
-                            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-primary-text disabled:opacity-40 dark:border-gray-600 dark:text-primary-text-light"
+                            className={buttonClasses({ variant: 'secondary', size: 'sm' })}
                         >
                             Previous
                         </button>
@@ -344,7 +345,7 @@ export default function OrdersTable() {
                             type="button"
                             disabled={page >= totalPages}
                             onClick={() => setPage(p => p + 1)}
-                            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-primary-text disabled:opacity-40 dark:border-gray-600 dark:text-primary-text-light"
+                            className={buttonClasses({ variant: 'secondary', size: 'sm' })}
                         >
                             Next
                         </button>

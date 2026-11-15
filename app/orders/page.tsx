@@ -62,7 +62,7 @@ export default function OrdersPage() {
                             onClick={() => choose(value)}
                             className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
                                 view === value
-                                    ? 'border-primary text-primary dark:border-primary-2 dark:text-primary-2'
+                                    ? 'border-primary text-primary dark:border-primary-light dark:text-primary-light'
                                     : 'border-transparent text-primary-text/60 hover:text-primary-text dark:text-primary-text-light/60 dark:hover:text-primary-text-light'
                             }`}
                         >
