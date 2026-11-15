@@ -16,8 +16,9 @@ jest.mock('@/redux/features/subscribe/subscribeApiSlice', () => ({
 jest.mock('@/redux/features/carts/cartApiSlice', () => ({
     useAddCartItemMutation: () => [addToCart, { isLoading: false }],
 }));
+jest.mock('@/redux/features/flavour/flavourApiSlice', () => ({ useGetShowcaseFlavoursQuery: () => ({ data: undefined }) }));
 jest.mock('@/utils/products', () => ({ getProduct: jest.fn() }));
-jest.mock('@/utils/flavours', () => ({ getFlavours: jest.fn() }));
+jest.mock('@/utils/flavours', () => ({ ...jest.requireActual('@/utils/flavours'), getFlavours: jest.fn() }));
 
 const product = (overrides: Partial<Product> = {}): Product =>
     ({ id: 42, name: 'Advent Calendar 2026', slug: 'advent-calendar', base_price: '59.99', active: true, sold_out: false, ...overrides }) as Product;
@@ -148,10 +149,27 @@ describe('priceOf', () => {
 describe('content from the API', () => {
     const photos = { image: 'https://casspea-v2.s3.amazonaws.com/a1.jpg', gallery_images: [{ id: 1, image: 'https://casspea-v2.s3.amazonaws.com/a2.jpg', thumbnail: '' }] };
 
-    it('uses product photo 1 for the hero and sharing, photo 2 for the story', () => {
-        expect(adventImages(product(photos))).toEqual({ hero: photos.image, story: photos.gallery_images[0].image, og: photos.image });
-        expect(adventImages(null)).toEqual({ hero: '/advent/hero.jpg', story: '/advent/story.jpg', og: '/advent/og.jpg' });
+    it('uses photo 1 for the hero and sharing, and the rest as uncropped bands', () => {
+        expect(adventImages(product(photos))).toEqual({ hero: photos.image, bands: [photos.gallery_images[0].image], og: photos.image });
+        expect(adventImages(null)).toEqual({ hero: '/advent/hero.jpg', bands: [], og: '/advent/og.jpg' });
         expect(adventMetadata('shop', product(photos)).openGraph).toMatchObject({ images: [expect.objectContaining({ url: photos.image })] });
+    });
+
+    it('shows every product photo once, in order', () => {
+        const four = product({
+            image: 'https://casspea-v2.s3.amazonaws.com/1.jpg',
+            gallery_images: ['1', '2', '3', '4'].map((n, id) => ({ id, image: `https://casspea-v2.s3.amazonaws.com/${n}.jpg`, thumbnail: '' })),
+        });
+        render(<AdventLanding variant="shop" product={four} />);
+        const srcs = screen.getAllByRole('img').map(img => decodeURIComponent(img.getAttribute('src') ?? ''));
+        expect(['1', '2', '3', '4'].map(n => srcs.filter(src => src.includes(`amazonaws.com/${n}.jpg`)).length)).toEqual([1, 1, 1, 1]);
+    });
+
+    it('shows the grid of every flavour', () => {
+        const f = { id: 9, name: 'Salted Caramel', slug: 'salted-caramel', description: '', mini_description: '' } as Flavour;
+        render(<AdventLanding variant="shop" product={product()} flavours={[f]} />);
+        expect(screen.getByRole('heading', { level: 2, name: 'All Our Flavours' })).toBeInTheDocument();
+        expect(screen.getByText('Salted Caramel')).toBeInTheDocument();
     });
 
     it('shows the Christmas flavours as the exclusives', () => {

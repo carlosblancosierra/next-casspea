@@ -52,7 +52,8 @@ export default function Hero({ variant, price, serverNow, buyButton, image }: Pr
                     height={1200}
                     priority
                     sizes="(min-width: 1024px) 560px, 100vw"
-                    className="aspect-square w-full rounded-2xl object-cover"
+                    // Its own height, uncropped.
+                    className="h-auto w-full rounded-2xl"
                 />
                 <Countdown serverNow={serverNow} layout="boxes" />
             </div>

@@ -87,6 +87,7 @@ const SAMPLE_ARGS: Record<string, unknown> = {
     getProducts: undefined,
     getProduct: 'signature-box',
     getActiveProducts: undefined,
+    getAdventLanding: undefined,
     getCategories: undefined,
     getCategory: 'boxes',
     getSummerBreakStatus: undefined,
