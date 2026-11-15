@@ -11,7 +11,7 @@ Objetivo: saber qué hace la gente en la web (vistas, clicks, embudo de compra) 
 | **Cookiebot** | Consentimiento: manda sobre todo lo demás | `app/layout.tsx` |
 | ~~Mouseflow~~ | Eliminado: no se usaba y PostHog cubre las grabaciones | — |
 
-Todo evento pasa por `track()` en `utils/analytics.ts`. Va a PostHog y, si es un evento ecommerce de GA4, también a `gtag`. Si falta la key o un script está bloqueado, no hace nada y nunca rompe la tienda.
+Todo evento pasa por `track()` en `utils/analytics.ts`. Va a PostHog y, si es un evento de GA4, también a `gtag` y al `dataLayer` de GTM (`GTM-TWQTXVNR`): los ecommerce como `{ event, ecommerce }` (vaciando antes `ecommerce`) y `generate_lead`/`login` en plano. Cada push lleva `attribution` con los `utm_*`, `fbclid` y `gclid` de la visita, guardados en `sessionStorage` para que sigan ahí cuando la query ya no está (carrito, checkout). Si falta la key o un script está bloqueado, no hace nada y nunca rompe la tienda.
 
 ## Consentimiento (RGPD / UK GDPR)
 
@@ -35,13 +35,13 @@ Todo evento pasa por `track()` en `utils/analytics.ts`. Va a PostHog y, si es un
 
 | Evento | Cuándo | Propiedades | GA4 | Dónde |
 |---|---|---|---|---|
-| `view_item` | Se abre la ficha de un producto | `value`, `currency`, `items[]` | ✅ | `ProductDetail.tsx` |
+| `view_item` | Se abre la ficha de un producto o la landing del Advent | `value`, `currency`, `items[]` | ✅ | `ProductDetail.tsx`, `components/advent/ViewItemTracker.tsx` |
 | `add_to_cart` | Cualquier botón de añadir al carrito (cajas, packs, gift card, landings) | `value`, `items[]`, `customised` | ✅ | `redux/analyticsMiddleware.ts` |
 | `remove_from_cart` | Se quita una línea | `cart_item_id` | ✅ | middleware |
 | `discount_applied` | Se aplica un código | `coupon` | — | middleware |
 | `begin_checkout` | Clic en pagar, justo antes de ir a Stripe | `value` (con envío), `items[]`, `coupon`, `shipping_option_id` | ✅ | `CheckoutConfirm.tsx` |
 | `purchase` | Página de éxito, **una sola vez por pedido** | `transaction_id`, `value`, `currency`, `items[]`, `coupon` | ✅ | `app/checkout/success/page.tsx` |
-| `generate_lead` | Newsletter y formularios de leads | `source`, `form_code` | ✅ | middleware |
+| `generate_lead` | Newsletter y formularios de leads | `source` (en el Advent: `landing-reminder`, `exit-intent`, `early-access`), `form_code` (`advent-2026`) | ✅ | middleware |
 | `personalised_request_sent` | Solicitud de chocolates personalizados | — | — | middleware |
 | `login` | Login correcto | `method` | ✅ | middleware |
 | `api_error` | Cualquier llamada a la API que falla (excepto 401) | `endpoint`, `status` | — | middleware |

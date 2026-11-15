@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
-// Last order time for 1 December delivery: 26 Nov 2026, 12:00 UK time
-// (GMT in November, so UTC). Change these two values for next year.
-export const ORDER_DEADLINE = new Date('2026-11-26T12:00:00Z');
+import { ORDER_DEADLINE } from '@/components/advent/content';
+
+// Last order time for 1 December delivery lives with the Advent landing's
+// copy, so the two countdowns can never disagree. Change it there.
+export { ORDER_DEADLINE };
 const DELIVERY_LABEL = '1st December';
 
 type TimeLeft = { days: number; hours: number; minutes: number; seconds: number };
