@@ -31,8 +31,11 @@ export type LeadSource = 'landing-reminder' | 'exit-intent' | 'early-access';
 
 /** Set to true once the bonus below is confirmed. */
 export const SHOW_BONUS = false;
-/** Set to true to show the flavour photos instead of the "?" discs. */
-export const REVEAL_EXCLUSIVES = false;
+/** Show the Christmas flavours' photos and names. With it off, or while the
+ *  API returns no Christmas flavours, the cards show "?" discs. */
+export const REVEAL_EXCLUSIVES = true;
+/** The exclusives are the flavours in this flavour category (matched on slug). */
+export const EXCLUSIVES_CATEGORY = 'christmas';
 
 export type Variant = 'shop' | 'lead';
 
@@ -48,6 +51,8 @@ export const COPY = {
             'including three new flavours you can only find behind these doors.',
         facts: ['360 g', 'Free UK delivery', 'Less than £2.50 a day'],
         cta: 'Reserve My Calendar',
+        allergenHeading: 'Any allergies?',
+        allergenConfirm: 'Add to basket',
         secondary: "See what's inside",
         imageAlt: 'The CassPea Advent Calendar open, with a few doors showing hand-painted chocolates',
         countdownOpen: 'Order window for a 1 December start closes in',
@@ -77,7 +82,7 @@ export const COPY = {
         done: "Done. We'll email you before 26 November.",
     },
 
-    lateOrders: '[LATE-ORDER POLICY — e.g. we\'ll still send it, and you can catch up on the doors you\'ve missed.]',
+    lateOrders: "Ordered after 26 November? We'll still send it, but we can't guarantee when it will arrive.",
 
     contrast: {
         heading: 'Most Advent Calendars Are Forgotten by Day Six',
@@ -141,9 +146,9 @@ export const COPY = {
             "We made three new flavours just for the calendar. They won't be in the shop before December. " +
             'If you want to be among the first to taste them, this is the only way in.',
         items: [
-            { title: 'Exclusive no. 1', name: '[Flavour name, or keep it secret]', image: '/advent/exclusive-1.jpg' },
-            { title: 'Exclusive no. 2', name: '[Flavour name, or keep it secret]', image: '/advent/exclusive-2.jpg' },
-            { title: 'Exclusive no. 3', name: '[Flavour name, or keep it secret]', image: '/advent/exclusive-3.jpg' },
+            { title: 'Exclusive no. 1' },
+            { title: 'Exclusive no. 2' },
+            { title: 'Exclusive no. 3' },
         ],
     },
 
@@ -181,23 +186,13 @@ export const COPY = {
         ],
         signature: 'Enrique',
         role: "Founder, and Cass and Pea's dad",
-        imageAlt: "Enrique's hands painting a chocolate shell in the London kitchen",
+        imageAlt: 'The CassPea Advent Calendar 2026',
     },
 
     reviews: {
         heading: "Loved Before They're Even Eaten",
-        items: [
-            { quote: '[Real Trustpilot quote about the hand-painted designs]', name: '[First name, verified buyer]' },
-            { quote: '[Real Trustpilot quote about giving it as a gift]', name: '[First name, verified buyer]' },
-            { quote: '[Real Trustpilot quote about taste or service]', name: '[First name, verified buyer]' },
-        ],
-    },
-
-    guarantee: {
-        heading: 'The Door-to-Door Promise',
-        body:
-            "[GUARANTEE — confirm wording with Enrique. e.g. If your calendar arrives damaged or a single chocolate isn't perfect, " +
-            "tell us and we'll put it right. No forms, no fuss.]",
+        // Names from components/common/trustpilotReviews.ts: presentation, gifting, taste.
+        names: ['Kim', 'Rose', 'Ali Stoney'],
     },
 
     faq: {
@@ -207,19 +202,27 @@ export const COPY = {
                 q: 'When will it arrive?',
                 a: 'Order by Thursday 26 November, 12pm, and it will arrive in time to open door one on 1 December. Delivery is free across the UK.',
             },
-            { q: 'Can I send it straight to someone as a gift?', a: 'Yes. Add their address at checkout. [Confirm gift note option.]' },
-            { q: 'How long do the chocolates keep?', a: '[SHELF LIFE — e.g. best enjoyed by …]' },
-            { q: 'What about allergens?', a: '[ALLERGEN LINE — confirm with the kitchen.]' },
+            { q: 'Can I send it straight to someone as a gift?', a: 'Yes. Add their address at checkout, and you can include a gift note.' },
+            {
+                q: 'How long do the chocolates keep?',
+                a: 'We advise eating them within 2 weeks of arrival. Most of our chocolates keep longer than that, but the fresher they are, the better they taste.',
+            },
+            {
+                q: 'What about allergens?',
+                a:
+                    'When you add it to your basket, tell us if you are allergic to gluten, alcohol or nuts and we will prepare your calendar accordingly. ' +
+                    'We handle allergens very carefully, but we cannot guarantee there is no cross-contamination.',
+            },
             {
                 q: 'What if I order after 26 November?',
-                a: "[LATE-ORDER POLICY — e.g. we'll still send it, and you can catch up on the doors you've missed.]",
+                a: "We'll still send it, but we can't guarantee when it will arrive.",
             },
         ],
     },
 
     finalCta: {
         heading: '24 Doors. 3 Secrets. One Decision.',
-        footnote: 'Covered by the Door-to-Door Promise · Handmade in London',
+        footnote: 'Handmade in London · Free UK delivery',
     },
 
     seo: {
@@ -227,6 +230,7 @@ export const COPY = {
         description:
             'The CassPea Advent Calendar 2026: 24 hand-painted chocolates made in London, with three flavours you can ' +
             'only find behind these doors. £59.99, free UK delivery. Order by 26 November for 1 December.',
+        /** Used only when the product has no photo in the API. */
         ogImage: '/advent/og.jpg',
     },
 } as const;

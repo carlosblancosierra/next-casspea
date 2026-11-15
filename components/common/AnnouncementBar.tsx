@@ -62,12 +62,6 @@ export default function AnnouncementBar() {
             Free delivery on orders over £56
           </p>
 
-          <Link
-            href={ADVENT_PATH}
-            className="w-full md:w-auto text-center text-sm font-semibold leading-6 text-primary-text-light underline underline-offset-4 hover:no-underline"
-          >
-            Advent Calendar 2026: order by 26 Nov <span aria-hidden="true">&rarr;</span>
-          </Link>
           
           {/* The accent, on the one surface where it reads as a highlight
               rather than as a second brand colour. It carries `accent-text`
