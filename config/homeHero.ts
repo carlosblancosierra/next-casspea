@@ -28,8 +28,8 @@ export interface HomeHeroConfig {
     leadProductSlugs: string[];
 }
 
-// The product page. The campaign landing (app/advent-calendar) is private
-// until it launches, so nothing on the site links to it yet.
+// The product page. app/page.tsx swaps it for the campaign landing
+// (/advent-calendar) while the landing is live (utils/adventLanding.ts).
 const ADVENT_CALENDAR_HREF = '/shop-now/advent-calendar';
 const GIFT_BOXES_HREF = '/shop-now/categories/signature-boxes';
 

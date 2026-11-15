@@ -1,6 +1,6 @@
 import type { Product } from '@/types/products';
 import { TRUSTPILOT_REVIEW_COUNT, TRUSTPILOT_SCORE } from '@/components/common/TrustpilotRating';
-import { ADVENT_PATH, COPY, IMAGES } from './content';
+import { ADVENT_PATH, COPY } from './content';
 
 const SITE = 'https://www.casspea.co.uk';
 
@@ -13,13 +13,12 @@ export function availability(product: Product | null): string {
 
 /** The Product block search engines read for price, stock and stars. */
 export function productJsonLd(product: Product | null, price: string) {
-    const image = product?.image || IMAGES.hero;
     return {
         '@context': 'https://schema.org',
         '@type': 'Product',
         name: product?.name || 'CassPea Advent Calendar 2026',
         description: COPY.seo.description,
-        image: [image],
+        image: product?.image ? [product.image] : undefined,
         sku: product ? String(product.id) : undefined,
         brand: { '@type': 'Brand', name: 'CassPea' },
         offers: {

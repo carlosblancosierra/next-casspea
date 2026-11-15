@@ -1,19 +1,22 @@
 import Image from 'next/image';
-import { COPY, IMAGES } from '../content';
+import { COPY } from '../content';
 import { Eyebrow, MUTED, HEADING } from './ui';
 
-export default function Story() {
+/** `image`: a photo of the calendar from the API (its last gallery photo). */
+export default function Story({ image }: { image: string | null }) {
     const s = COPY.story;
     return (
         <section className="mx-auto grid max-w-[1100px] grid-cols-1 items-center gap-12 px-6 pt-[88px] md:grid-cols-2">
-            <Image
-                src={IMAGES.story}
-                alt={s.imageAlt}
-                width={960}
-                height={1200}
-                sizes="(min-width: 768px) 520px, 100vw"
-                className="aspect-[4/5] w-full rounded-2xl object-cover"
-            />
+            {image && (
+                <Image
+                    src={image}
+                    alt={s.imageAlt}
+                    width={960}
+                    height={1200}
+                    sizes="(min-width: 768px) 520px, 100vw"
+                    className="aspect-[4/5] w-full rounded-2xl object-cover"
+                />
+            )}
             <div className="flex flex-col gap-5">
                 <Eyebrow>{s.eyebrow}</Eyebrow>
                 <h2 className={`m-0 font-playfair text-[clamp(32px,4vw,52px)] font-bold leading-[1.05] tracking-tight ${HEADING}`}>

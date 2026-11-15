@@ -3,6 +3,8 @@ import { BadgeColor, Product as ProductType } from '@/types/products';
 import Link from 'next/link';
 import { useProductDiscountedPrice } from '@/utils/useProductDiscountedPrice';
 import Image from 'next/image';
+import { useAdventLive } from '@/components/advent/AdventLiveContext';
+import { productHref } from '@/utils/adventLanding';
 
 // The backend stores a colour key, not a hex, because Tailwind compiles class
 // names at build time — a hex could only be applied as an inline style, and a
@@ -49,10 +51,12 @@ export default function ProductCard({ product, useAlternateImage = false, wide =
         : undefined;
 
     const isSoldOut = !!product.sold_out;
+    // The Advent calendar's card goes to its landing while that is live.
+    const href = productHref(product.slug, useAdventLive());
 
     return (
         <Link
-            href={`/shop-now/${product.slug}`}
+            href={href}
             aria-label={isSoldOut ? `${product.name} — sold out` : product.name}
             className="block group relative shadow-lg rounded-lg p-2 border border-gray-200 dark:border-gray-700 bg-main-bg dark:bg-main-bg-dark hover:opacity-90 transition-opacity"
         >

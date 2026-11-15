@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import ProductCard from '@/components/store/ProductCard';
 import type { Product } from '@/types/products';
+import { AdventLiveProvider } from '@/components/advent/AdventLiveContext';
 
 jest.mock('@/utils/useProductDiscountedPrice', () => ({
     useProductDiscountedPrice: () => ({ discountedPrice: null, discount_percentage: null }),
@@ -62,5 +63,37 @@ describe('ProductCard featured layout', () => {
         render(<ProductCard product={box} wide />);
 
         expect(screen.getAllByAltText('Signature Box of 24')).toHaveLength(1);
+    });
+});
+
+describe('ProductCard link', () => {
+    const advent: Product = { ...box, id: 9, name: 'Advent Calendar 2026', slug: 'advent-calendar' };
+
+    it('goes to the product page', () => {
+        render(<ProductCard product={box} />);
+        expect(screen.getByRole('link').getAttribute('href')).toBe('/shop-now/box-of-24');
+    });
+
+    it('sends the Advent calendar to its product page until the landing is live', () => {
+        render(<ProductCard product={advent} />);
+        expect(screen.getByRole('link').getAttribute('href')).toBe('/shop-now/advent-calendar');
+    });
+
+    it('sends the Advent calendar to its landing once it is live', () => {
+        render(
+            <AdventLiveProvider live>
+                <ProductCard product={advent} />
+            </AdventLiveProvider>
+        );
+        expect(screen.getByRole('link').getAttribute('href')).toBe('/advent-calendar');
+    });
+
+    it('leaves every other product alone when the landing is live', () => {
+        render(
+            <AdventLiveProvider live>
+                <ProductCard product={box} />
+            </AdventLiveProvider>
+        );
+        expect(screen.getByRole('link').getAttribute('href')).toBe('/shop-now/box-of-24');
     });
 });

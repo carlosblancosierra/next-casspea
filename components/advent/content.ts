@@ -32,23 +32,11 @@ export type LeadSource = 'landing-reminder' | 'exit-intent' | 'early-access';
 /** Set to true once the bonus below is confirmed. */
 export const SHOW_BONUS = false;
 /**
- * True: the exclusives section names the three flavours (and shows their
- * photos once they have one). False: "?" discs and no names.
+ * True: the exclusives section names the flavours (and shows their photos once
+ * they have one). False: "?" discs and no names. The flavours themselves come
+ * from the API: Django admin → Products → Advent landing → flavour category.
  */
 export const REVEAL_EXCLUSIVES = true;
-
-/**
- * Photos from the advent-calendar product in the API's media storage
- * (Django admin → Products → Advent Calendar 2026). og.jpg in public/advent
- * is the main product photo framed at 1200×630 for link previews.
- */
-const MEDIA = 'https://casspea-v2.s3.amazonaws.com/media';
-export const IMAGES = {
-    /** The calendar open, every door numbered. */
-    hero: `${MEDIA}/products/gallery/2026/09/4.jpg`,
-    /** One door open, a hand-painted bonbon inside. */
-    story: `${MEDIA}/products/gallery/2026/09/5.jpg`,
-} as const;
 
 export type Variant = 'shop' | 'lead';
 
@@ -65,7 +53,7 @@ export const COPY = {
         facts: ['360 g', 'Free UK delivery', 'Less than £2.50 a day'],
         cta: 'Reserve My Calendar',
         secondary: "See what's inside",
-        imageAlt: 'The CassPea Advent Calendar open, showing its 24 numbered doors',
+        imageAlt: 'The CassPea Advent Calendar 2026',
         countdownOpen: 'Order window for a 1 December start closes in',
         countdownClosed: 'The 1 December order window has closed',
         countdownNote:
@@ -156,15 +144,8 @@ export const COPY = {
         body:
             "We made three new flavours just for the calendar. They won't be in the shop before December. " +
             'If you want to be among the first to taste them, this is the only way in.',
-        // Flavour category "Christmas 2026" in the admin, in the order they were
-        // created. They stay inactive in the shop until December. Descriptions
-        // are each flavour's mini description. Add a photo URL to `image` once
-        // the flavour has one; until then the disc shows its initial.
-        items: [
-            { title: 'Exclusive no. 1', name: 'Earl Grey', description: 'A fragrant ganache with delicate notes of bergamot.', image: null },
-            { title: 'Exclusive no. 2', name: 'Crunchy Berry', description: 'Bright, festive berries with a satisfying crunch in every bite.', image: null },
-            { title: 'Exclusive no. 3', name: 'Peppermint', description: 'Cool, fresh peppermint wrapped in rich chocolate.', image: null },
-        ],
+        // The cards are the API's flavours (name, mini description, photo).
+        itemTitle: (n: number) => `Exclusive no. ${n}`,
         hidden: 'Revealed when you open the door',
     },
 
@@ -202,7 +183,7 @@ export const COPY = {
         ],
         signature: 'Enrique',
         role: "Founder, and Cass and Pea's dad",
-        imageAlt: 'A door of the CassPea Advent Calendar open, with a hand-painted chocolate inside',
+        imageAlt: 'The CassPea Advent Calendar 2026, up close',
     },
 
     reviews: {
@@ -264,6 +245,5 @@ export const COPY = {
         description:
             'The CassPea Advent Calendar 2026: 24 hand-painted chocolates made in London, with three flavours you can ' +
             'only find behind these doors. £59.99, free UK delivery. Order by 26 November for 1 December.',
-        ogImage: '/advent/og.jpg',
     },
 } as const;

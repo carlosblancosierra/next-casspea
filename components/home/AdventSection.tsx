@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getProduct } from '@/utils/products';
+import { adventHref, getAdventLandingLive } from '@/utils/adventLanding';
 import ChristmasDeliveryCountdown from '@/components/common/ChristmasDeliveryCountdown';
 
 /**
@@ -17,11 +18,12 @@ import ChristmasDeliveryCountdown from '@/components/common/ChristmasDeliveryCou
  * photo shipped in public/.
  */
 export const ADVENT_SLUG = 'advent-calendar';
-const ADVENT_HREF = `/shop-now/${ADVENT_SLUG}`;
 const FALLBACK_IMAGE = '/advent-calendar/2025/2.jpg';
 
 export default async function AdventSection() {
-  const product = await getProduct(ADVENT_SLUG);
+  const [product, live] = await Promise.all([getProduct(ADVENT_SLUG), getAdventLandingLive()]);
+  // The landing once it is live, else the product page.
+  const ADVENT_HREF = adventHref(live);
   const imageSrc = product?.wide_image || product?.image || FALLBACK_IMAGE;
 
   return (

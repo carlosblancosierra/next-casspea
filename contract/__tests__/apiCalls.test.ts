@@ -84,6 +84,7 @@ const SAMPLE_ARGS: Record<string, unknown> = {
         quantity: 1,
     },
     // products
+    getAdventLanding: { signedIn: true },
     getProducts: undefined,
     getProduct: 'signature-box',
     getActiveProducts: undefined,
