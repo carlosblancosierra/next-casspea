@@ -1,6 +1,7 @@
 'use client';
 
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useRef } from 'react';
+import MobileBuyBar from './MobileBuyBar';
 import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 import { notFound } from 'next/navigation';
 import ProductInfo from '@/components/product_detail/ProductInfo';
@@ -26,6 +27,8 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 	// after it — a builder that appears and is then swapped is both a bad
 	// experience and a dirty impression.
 	const { variant, isLoading: variantLoading, track } = useExperiment(BOX_BUILDER_EXPERIMENT);
+	// The form column, watched by the mobile buy bar.
+	const formRef = useRef<HTMLDivElement>(null);
 	// Prefer the SSR-provided products for the first render (SEO / no spinner),
 	// then let the client query keep them current.
 	const products: Product[] = data ?? initialProducts ?? [];
@@ -112,7 +115,7 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 					<ImageGallery images={images} />
 				</div>
 
-				<div className="flex flex-col top-48 py-0 w-full gap-y-12">
+				<div ref={formRef} id="product-form" className="flex flex-col top-48 py-0 w-full gap-y-12 scroll-mt-24">
 					<Suspense fallback="Loading...">
 						{isSignatureBox ? (
 							variantLoading ? (
@@ -138,6 +141,15 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 					<ProductAccordion isSignatureBox={isSignatureBox} product={product} />
 				</div>
 			</div>
+
+			<MobileBuyBar
+				targetRef={formRef}
+				productId={product.id}
+				name={product.name}
+				price={product.current_price ?? product.base_price}
+				isBox={isSignatureBox}
+				soldOut={!!product.sold_out}
+			/>
 
 			<div className="my-16">
 				<h2 className="text-center text-xl my-5 font-bold text-primary-text dark:text-primary-text-light">Our Flavours</h2>
