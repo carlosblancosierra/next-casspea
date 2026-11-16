@@ -7,6 +7,12 @@ interface SubscribeResponse {
 
 interface SubscribeRequest {
     email: string;
+    /**
+     * Where on the site it was captured, for the generate_lead event only
+     * (redux/analyticsMiddleware reads it from the call's arguments). Not sent
+     * to the API, which takes the email alone.
+     */
+    source?: string;
 }
 
 interface UnsubscribeResponse {
@@ -31,10 +37,10 @@ export interface GenericLeadSubscribeRequest {
 const subscribeApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         subscribeToNewsletter: builder.mutation<SubscribeResponse, SubscribeRequest>({
-            query: (data) => ({
+            query: ({ email }) => ({
                 url: '/leads/subscribe/',
                 method: 'POST',
-                body: data,
+                body: { email },
             }),
             transformResponse: (response: SubscribeResponse) => response,
             transformErrorResponse: (response: { status: number; data?: { error?: string } }) => {
