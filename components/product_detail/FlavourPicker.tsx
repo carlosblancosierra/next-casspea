@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FiPlus, FiMinus, FiTrash, FiX } from "react-icons/fi";
 import { useGetFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';;
 import { Flavour as FlavourType } from '@/types/flavours';
@@ -27,6 +27,7 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     remainingChocolates,
     maxChocolates,
     handleAddFlavour,
+    handleFlavourChange,
     incrementQuantity,
     decrementQuantity,
     deleteFlavour,
@@ -39,6 +40,20 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
     // Every hook must run before the early returns below, otherwise the hook
     // order changes once loading finishes and React throws.
     const [isModalOpen, setIsModalOpen] = useState(false);
+    // "+5" on a flavour that is not in the box yet: the parent can only add it
+    // with a quantity of 1, so remember the target and top it up once the new
+    // row shows up in `flavours`.
+    const pendingTopUp = useRef<{ id: number; quantity: number } | null>(null);
+    useEffect(() => {
+        const pending = pendingTopUp.current;
+        if (!pending) return;
+        const index = flavours.findIndex(f => f.flavor?.id === pending.id);
+        if (index < 0) return;
+        pendingTopUp.current = null;
+        if (flavours[index].quantity < pending.quantity) {
+            handleFlavourChange(index, 'quantity', pending.quantity);
+        }
+    }, [flavours, handleFlavourChange]);
 
     const availableFlavours = propAvailableFlavours ?? fetchedFlavours;
     if (!propAvailableFlavours && isLoading) return <div className="flex items-center justify-center min-h-screen">
@@ -85,6 +100,25 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
         }
     };
 
+    // Adds up to `count` of a flavour in one tap. On the big boxes people were
+    // tapping "+" ten times in a row for one flavour, which PostHog recorded as
+    // rage clicks (101 in 30 days, nearly all on the 48 and 96 boxes).
+    const addMany = (flavour: FlavourType, count: number) => {
+        const amount = Math.min(count, remainingChocolates);
+        if (amount <= 0) return;
+        const existingIndex = flavours.findIndex(f => f.flavor?.id === flavour.id);
+        if (existingIndex >= 0) {
+            handleFlavourChange(existingIndex, 'quantity', flavours[existingIndex].quantity + amount);
+            return;
+        }
+        handleAddFlavour(flavour);
+        if (amount > 1) pendingTopUp.current = { id: flavour.id, quantity: amount };
+    };
+
+    const boxFull = remainingChocolates <= 0;
+    // Only the big boxes get "+5": on a box of 9 it would fill half of it.
+    const showAddFive = maxChocolates >= 24;
+
     // Helper function to handle decrement
     const handleDecrement = (flavour: FlavourType) => {
         const existingIndex = flavours.findIndex(f => f.flavor?.id === flavour.id);
@@ -122,7 +156,8 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                             <button
                                 type="button"
                                 onClick={() => handleDecrement(flavor)}
-                                className="bg-gray-100 hover:bg-gray-200 dark:bg-main-bg-dark dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-s-lg p-3 h-11 focus:ring-2 focus:outline-none"
+                                aria-label={`Remove one ${flavor.name}`}
+                                className="touch-manipulation bg-gray-100 hover:bg-gray-200 dark:bg-main-bg-dark dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-s-lg p-3 h-11 focus:ring-2 focus:outline-none"
                             >
                                 <FiMinus />
                             </button>
@@ -135,7 +170,9 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                             <button
                                 type="button"
                                 onClick={() => addFlavour(flavor)}
-                                className="bg-gray-100 hover:bg-gray-200 dark:bg-main-bg-dark dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-e-lg p-3 h-11 focus:ring-2 focus:outline-none"
+                                disabled={boxFull}
+                                aria-label={`Add one ${flavor.name}`}
+                                className="touch-manipulation bg-gray-100 hover:bg-gray-200 dark:bg-main-bg-dark dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-e-lg p-3 h-11 focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-40"
                             >
                                 <FiPlus />
                             </button>
@@ -212,34 +249,39 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                     </div>
 
                                     {/* Quantity Controls */}
-                                    <div className="flex items-center justify-center mt-2">
+                                    <div className="flex items-center justify-center gap-3 mt-2">
                                         <button
                                             type="button"
                                             onClick={() => handleDecrement(flavour)}
                                             disabled={getFlavorQuantity(flavour.id) === 0}
-                                            className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-2
-                                            ${getFlavorQuantity(flavour.id) > 0
-                                                    ? 'bg-primary text-primary-text-light hover:bg-primary'
-                                                    : 'bg-main-bg text-primary-text cursor-not-allowed'
-                                                }`}
+                                            aria-label={`Remove one ${flavour.name}`}
+                                            className={buttonClasses({ size: 'sm', className: 'touch-manipulation !px-4 !py-2' })}
                                         >
                                             <FiMinus size={16} />
                                         </button>
-                                        <span className="mx-4 text-sm text-primary-text dark:text-primary-text-light">
+                                        <span className="min-w-[1.5rem] text-center text-sm tabular-nums text-primary-text dark:text-primary-text-light" aria-live="polite">
                                             {getFlavorQuantity(flavour.id)}
                                         </span>
                                         <button
                                             type="button"
                                             onClick={() => addFlavour(flavour)}
-                                            disabled={remainingChocolates <= 0 && getFlavorQuantity(flavour.id) === 0}
-                                            className={`py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-2
-                                            ${remainingChocolates > 0 || getFlavorQuantity(flavour.id) > 0
-                                                    ? 'bg-primary text-primary-text-light hover:bg-primary'
-                                                    : 'bg-main-bg text-primary-text cursor-not-allowed'
-                                                }`}
+                                            disabled={boxFull}
+                                            aria-label={`Add one ${flavour.name}`}
+                                            className={buttonClasses({ size: 'sm', className: 'touch-manipulation !px-4 !py-2' })}
                                         >
                                             <FiPlus size={16} />
                                         </button>
+                                        {showAddFive && (
+                                            <button
+                                                type="button"
+                                                onClick={() => addMany(flavour, 5)}
+                                                disabled={boxFull}
+                                                aria-label={`Add ${Math.min(5, remainingChocolates) || 5} ${flavour.name}`}
+                                                className={buttonClasses({ variant: 'secondary', size: 'sm', className: 'touch-manipulation !px-3 !py-2' })}
+                                            >
+                                                +{Math.min(5, remainingChocolates) || 5}
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             ))}
@@ -266,9 +308,12 @@ const FlavourPicker: React.FC<FlavourPickerProps> = ({
                                     ></div>
                                 </div>
 
-                                {/* Progress text */}
-                                <div className="text-sm text-primary-text dark:text-primary-text-light text-center">
-                                    {maxChocolates - remainingChocolates} of {maxChocolates} chocolates selected
+                                {/* Progress text. When the box is full the "+" buttons
+                                    are disabled, and this says why. */}
+                                <div className="text-sm text-primary-text dark:text-primary-text-light text-center" aria-live="polite">
+                                    {boxFull
+                                        ? `Your box is full: ${maxChocolates} of ${maxChocolates} chocolates. Tap Done to continue.`
+                                        : `${maxChocolates - remainingChocolates} of ${maxChocolates} chocolates selected`}
                                 </div>
 
                                 {/* Done button */}
