@@ -16,12 +16,13 @@ export default function Exclusives({ flavours = [] }: { flavours?: Flavour[] }) 
                 <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-3">
                     {e.items.map((item, i) => {
                         const flavour = REVEAL_EXCLUSIVES ? flavours[i] : undefined;
-                        // The flavour's photo, as the flavour grid picks it.
+                        // The flavour's photo, as the flavour grid picks it. The photos are not
+                        // square: shown at a fixed width and their own height, uncropped.
                         const image = flavour?.image || flavour?.thumbnail;
                         return (
                             <li key={item.title} className="flex flex-col items-center gap-3 rounded-xl border border-accent px-6 py-8 text-center">
                                 {flavour && image ? (
-                                    <Image src={image} alt={flavour.name} width={96} height={96} className="h-24 w-24 rounded-full object-cover" />
+                                    <Image src={image} alt={flavour.name} width={96} height={96} sizes="96px" className="h-auto w-24" />
                                 ) : (
                                     // Gold fill, so dark lettering (accent-text).
                                     <div aria-hidden="true" className="flex h-24 w-24 items-center justify-center rounded-full bg-accent font-playfair text-5xl font-bold text-accent-text">
