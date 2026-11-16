@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation';
 import ProductDetail from '@/components/product_detail/ProductDetail';
 import { getProduct, getProducts } from '@/utils/products';
 import { packRedirectTarget } from '@/components/packs/constants';
+import { productJsonLd } from '@/utils/seo';
+import { jsonLdScript } from '@/components/advent/jsonLd';
 
 // Render on the server per request so price/availability changes show immediately.
 export const dynamic = 'force-dynamic';
@@ -41,6 +43,12 @@ export default async function Page({ params }: { params: { product_slug: string 
 
 	return (
 		<main className="mx-auto max-w-screen-2xl">
+			{product && (
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{ __html: jsonLdScript(productJsonLd(product)) }}
+				/>
+			)}
 			<ProductDetail slug={params.product_slug} initialProducts={products} />
 		</main>
 	);
