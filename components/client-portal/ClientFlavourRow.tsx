@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { formatCurrency } from '@/utils/currency';
+import { buttonClasses } from '@/components/common/Button';
 
 interface Props {
     name: string;
@@ -19,8 +20,11 @@ export const snapToStep = (value: number, step: number): number =>
     Math.max(0, Math.round((Number.isFinite(value) ? value : 0) / step) * step);
 
 export default function ClientFlavourRow({ name, description, image, quantity, step, unitPrice, onChange }: Props) {
-    const buttonClass =
-        'p-2 bg-gray-200 dark:bg-main-bg-dark rounded hover:bg-gray-300 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors';
+    // 44px targets and no double-tap zoom: on phones the old 32px buttons
+    // collected rage clicks from people adding a large order ten at a time.
+    const buttonClass = buttonClasses({ variant: 'secondary', size: 'sm', className: 'touch-manipulation h-11 w-11 !px-0 !py-0' });
+    // A bigger jump for corporate orders, so 100 is two taps, not ten.
+    const bigStep = step * 5;
 
     return (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-3 p-4">
@@ -68,7 +72,10 @@ export default function ClientFlavourRow({ name, description, image, quantity, s
                     value={quantity}
                     onChange={e => onChange(Math.max(0, parseInt(e.target.value, 10) || 0))}
                     onBlur={e => onChange(snapToStep(parseInt(e.target.value, 10), step))}
-                    className="w-16 rounded-md border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark text-center shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                    // Selecting on focus means typing "120" replaces the value
+                    // instead of appending to it.
+                    onFocus={e => e.target.select()}
+                    className="h-11 w-20 rounded-md text-base text-primary-text dark:text-primary-text-light border-gray-300 dark:border-gray-600 bg-main-bg dark:bg-main-bg-dark text-center shadow-sm focus:border-primary focus:ring-primary"
                 />
                 <button
                     type="button"
@@ -78,6 +85,16 @@ export default function ClientFlavourRow({ name, description, image, quantity, s
                 >
                     <PlusIcon className="h-4 w-4" />
                 </button>
+                {step > 1 && (
+                    <button
+                        type="button"
+                        aria-label={`Add ${bigStep} ${name}`}
+                        className={buttonClasses({ variant: 'secondary', size: 'sm', className: 'touch-manipulation h-11 !py-0' })}
+                        onClick={() => onChange(snapToStep(quantity + bigStep, step))}
+                    >
+                        +{bigStep}
+                    </button>
+                )}
             </div>
         </div>
     );
