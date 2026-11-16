@@ -39,9 +39,7 @@ function handle(action: ApiAction): void {
 	if (!endpoint || !action.type.startsWith('api/')) return;
 
 	if (isRejectedWithValue(action)) {
-		const payload = action.payload as { status?: number | string } | undefined;
-		if (payload?.status !== undefined && IGNORED_ERROR_STATUSES.has(payload.status as number)) return;
-		track('api_error', { endpoint, status: payload?.status });
+		reportFailure(endpoint, action);
 		return;
 	}
 
@@ -89,6 +87,40 @@ function handle(action: ApiAction): void {
 			track('login', { method: 'email' });
 			return;
 	}
+}
+
+/**
+ * Splits failed calls so api_error means "the API answered badly":
+ * - FETCH_ERROR (no answer at all: signal lost, tab closed or navigated away
+ *   mid-request) is api_network_error. In PostHog these showed up as bursts
+ *   of every endpoint on a page failing in the same millisecond, with a null
+ *   status, and drowned out the real errors.
+ * - A 400 on updateCart with a discount code is a code the API refused,
+ *   which is a customer outcome (discount_rejected), not a fault.
+ * - Everything else stays api_error. PARSING_ERROR also carries the HTTP
+ *   status behind the unreadable body (usually a 502 HTML page).
+ */
+function reportFailure(endpoint: string, action: ApiAction): void {
+	const payload = action.payload as { status?: number | string; originalStatus?: number } | undefined;
+	const status = payload?.status;
+	if (status !== undefined && IGNORED_ERROR_STATUSES.has(status as number)) return;
+
+	if (status === 'FETCH_ERROR') {
+		track('api_network_error', { endpoint });
+		return;
+	}
+
+	const update = action.meta?.arg?.originalArgs as { discount_code?: string } | undefined;
+	if (endpoint === 'updateCart' && status === 400 && update?.discount_code) {
+		track('discount_rejected', { coupon: update.discount_code });
+		return;
+	}
+
+	track('api_error', {
+		endpoint,
+		status,
+		...(payload?.originalStatus !== undefined ? { http_status: payload.originalStatus } : {}),
+	});
 }
 
 /**

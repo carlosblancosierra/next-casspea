@@ -86,6 +86,38 @@ describe('analyticsMiddleware', () => {
 		expect(track).toHaveBeenCalledWith('api_error', { endpoint: 'getCart', status: 500 });
 	});
 
+	const rejectedWith = (endpointName: string, payload: unknown, originalArgs?: unknown, type = 'query') => ({
+		type: `api/execute${type === 'query' ? 'Query' : 'Mutation'}/rejected`,
+		payload,
+		error: { message: 'Rejected' },
+		meta: { requestId: 'r1', requestStatus: 'rejected', rejectedWithValue: true, arg: { type, endpointName, originalArgs } },
+	});
+
+	it('reports requests that never reached the API apart from real API errors', () => {
+		// fetchBaseQuery's shape when the phone drops signal or the tab is closed mid-request.
+		dispatch(rejectedWith('getProducts', { status: 'FETCH_ERROR', error: 'TypeError: Failed to fetch' }));
+		expect(track).toHaveBeenCalledTimes(1);
+		expect(track).toHaveBeenCalledWith('api_network_error', { endpoint: 'getProducts' });
+	});
+
+	it('keeps timeouts and unreadable responses as API errors, with a string status', () => {
+		dispatch(rejectedWith('getCart', { status: 'TIMEOUT_ERROR', error: 'timeout' }));
+		dispatch(rejectedWith('getCart', { status: 'PARSING_ERROR', originalStatus: 502, data: '<html>', error: 'SyntaxError' }));
+		expect(track).toHaveBeenNthCalledWith(1, 'api_error', { endpoint: 'getCart', status: 'TIMEOUT_ERROR' });
+		expect(track).toHaveBeenNthCalledWith(2, 'api_error', { endpoint: 'getCart', status: 'PARSING_ERROR', http_status: 502 });
+	});
+
+	it('treats a rejected discount code as a customer outcome, not an API error', () => {
+		dispatch(rejectedWith('updateCart', { status: 400, data: { error: 'Invalid code' } }, { discount_code: 'XMAS' }, 'mutation'));
+		expect(track).toHaveBeenCalledTimes(1);
+		expect(track).toHaveBeenCalledWith('discount_rejected', { coupon: 'XMAS' });
+	});
+
+	it('still reports other updateCart failures', () => {
+		dispatch(rejectedWith('updateCart', { status: 400 }, { gift_message: 'hi' }, 'mutation'));
+		expect(track).toHaveBeenCalledWith('api_error', { endpoint: 'updateCart', status: 400 });
+	});
+
 	it('ignores queries that succeed and non-API actions', () => {
 		dispatch({ type: 'api/executeQuery/fulfilled', meta: { requestStatus: 'fulfilled', arg: { type: 'query', endpointName: 'getCart' } } });
 		dispatch({ type: 'auth/setAuth' });
