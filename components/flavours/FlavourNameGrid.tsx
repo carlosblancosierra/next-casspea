@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Flavour } from '@/types/flavours';
 import { useGetShowcaseFlavoursQuery } from '@/redux/features/flavour/flavourApiSlice';
 import { comingSoonLabel, filterFlavours } from '@/utils/flavours';
+import { useHydrated } from '@/hooks/useHydrated';
 
 export type FlavourGridVariant = 'caption' | 'tile' | 'overlay';
 
@@ -106,7 +107,9 @@ export default function FlavourNameGrid({
     // The showcase list, so flavours not on sale yet show here (badged); the
     // box builders read the other list, which leaves them out.
     const { data } = useGetShowcaseFlavoursQuery();
-    const list = filterFlavours(data ?? flavours, { categorySlug, excludeFeatured });
+    // Live data only after hydration, so the first render matches the HTML.
+    const hydrated = useHydrated();
+    const list = filterFlavours((hydrated && data) || flavours, { categorySlug, excludeFeatured });
     const [selected, setSelected] = useState<Flavour | null>(null);
 
     const handleClick = (f: Flavour) => openOnClick && setSelected(f);

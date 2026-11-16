@@ -5,6 +5,7 @@ import ProductCard from '@/components/store/ProductCard';
 import { Product } from '@/types/products';
 import { useGetActiveProductsQuery } from '@/redux/features/products/productApiSlice';
 import { orderRow } from './orderRow';
+import { useHydrated } from '@/hooks/useHydrated';
 
 const variants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -24,7 +25,9 @@ export default function HomeProductsGrid({
     // SSR paints these instantly; the client refreshes so price/availability
     // changes show without waiting for a rebuild. Falls back to the SSR list.
     const { data } = useGetActiveProductsQuery();
-    const list = data ? orderRow(data, categorySlug, leadSlugs) : products;
+    // Live data only after hydration, so the first render matches the HTML.
+    const hydrated = useHydrated();
+    const list = hydrated && data ? orderRow(data, categorySlug, leadSlugs) : products;
 
     return (
         <section className="dark:bg-main-bg-dark">

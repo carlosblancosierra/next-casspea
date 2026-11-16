@@ -17,6 +17,7 @@ import { Product } from '@/types/products';
 import { useExperiment } from '@/hooks/useExperiment';
 import { BOX_BUILDER_EXPERIMENT, BUILDER_ADD_TO_CART } from '@/types/experiments';
 import { track as trackEvent, toAmount, CURRENCY } from '@/utils/analytics';
+import { useHydrated } from '@/hooks/useHydrated';
 
 const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> = ({ slug, initialProducts }) => {
 	// Explicitly provide the type for the query result
@@ -28,7 +29,9 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 	const { variant, isLoading: variantLoading, track } = useExperiment(BOX_BUILDER_EXPERIMENT);
 	// Prefer the SSR-provided products for the first render (SEO / no spinner),
 	// then let the client query keep them current.
-	const products: Product[] = data ?? initialProducts ?? [];
+	// Live data only after hydration, so the first render matches the HTML.
+	const hydrated = useHydrated();
+	const products: Product[] = (hydrated ? data : undefined) ?? initialProducts ?? [];
 
 	const viewed = products.find((p) => p.slug === slug);
 	useEffect(() => {
