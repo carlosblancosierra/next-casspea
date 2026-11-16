@@ -6,6 +6,7 @@ import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { useUnlockClientPageMutation } from '@/redux/features/clients/clientApiSlice';
 import { LockedClientPage } from '@/types/clients';
 import ClientLogos from './ClientLogos';
+import { buttonClasses } from '@/components/common/Button';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
@@ -70,7 +71,7 @@ export default function ClientAccessGate({ page }: { page: LockedClientPage }) {
                     <button
                         type="submit"
                         disabled={isLoading || !code.trim()}
-                        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-autumn py-3 text-lg font-semibold text-primary-text-light shadow transition-opacity hover:opacity-95 disabled:opacity-60 dark:bg-primary-2"
+                        className={buttonClasses({ size: 'lg', fullWidth: true, className: 'mt-5 font-semibold shadow' })}
                     >
                         <LockClosedIcon className="h-5 w-5" />
                         {isLoading ? 'Checking…' : 'Enter'}

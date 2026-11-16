@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { useSubscribeToNewsletterMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 import { track } from '@/utils/analytics';
+import { buttonClasses } from '@/components/common/Button';
 
 export const SUBSCRIBED_KEY = 'casspea_newsletter_subscribed';
 export const DISMISSED_KEY = 'casspea_email_slide_in_dismissed_at';
@@ -137,7 +138,7 @@ export default function EmailSlideIn({ showAfterMs = SHOW_AFTER_MS }: { showAfte
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="min-h-[44px] shrink-0 rounded-lg bg-gradient-autumn px-4 text-sm font-medium text-primary-button-text disabled:opacity-60"
+                            className={buttonClasses({ size: 'sm', className: 'min-h-[44px] shrink-0' })}
                         >
                             {isLoading ? 'Sending…' : 'Get my 10%'}
                         </button>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { track } from '@/utils/analytics';
+import { buttonClasses } from '@/components/common/Button';
 
 /** CSS variable the WhatsApp button adds to its bottom offset, so the bar never covers it. */
 export const BUY_BAR_HEIGHT_VAR = '--buy-bar-height';
@@ -73,7 +74,7 @@ const MobileBuyBar: React.FC<MobileBuyBarProps> = ({ targetRef, productId, name,
                     type="button"
                     onClick={goToForm}
                     disabled={soldOut}
-                    className="min-h-[44px] shrink-0 rounded-lg bg-gradient-autumn px-5 text-sm font-medium text-primary-button-text disabled:cursor-not-allowed disabled:opacity-60"
+                    className={buttonClasses({ size: 'sm', className: 'min-h-[44px] shrink-0 !px-5' })}
                 >
                     {label}
                 </button>

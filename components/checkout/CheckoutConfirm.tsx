@@ -22,6 +22,7 @@ import { useRequireCheckoutSession } from '@/hooks/useRequireCheckoutSession';
 import { formatCurrency } from '@/utils/currency';
 import { isStorePickup } from './constants';
 import { track, rememberPendingPurchase, toAnalyticsItem, toAmount, CURRENCY } from '@/utils/analytics';
+import { buttonClasses } from '@/components/common/Button';
 
 const CheckoutConfirm = () => {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -260,10 +261,7 @@ const CheckoutConfirm = () => {
                                skipped by screen readers, and leaves the customer
                                guessing; clicking it says what is missing instead. */
                             disabled={isProcessing}
-                            className="w-full bg-gradient-autumn text-primary-text-light dark:text-primary-text-light py-3 px-4 rounded-md
-                                hover:bg-primary focus:outline-none focus:ring-2
-                                focus:ring-primary-2 focus:ring-offset-2
-                                disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-200"
+                            className={buttonClasses({ size: 'lg', fullWidth: true })}
                         >
                             {isProcessing ? 'Processing...' : 'Continue to secure payment'}
                         </button>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useUpdateCartMutation, useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import { XMarkIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
+import Button from '@/components/common/Button';
 
 export default function DiscountForm() {
     const { data: cart, isLoading, error } = useGetCartQuery();
@@ -85,16 +86,14 @@ export default function DiscountForm() {
                             transition-colors duration-200"
                         required
                     />
-                    <button
+                    <Button
                         type="submit"
-                        disabled={isValidating || !discountCode}
-                        className="bg-primary dark:bg-primary-2 text-primary-text-light text-xs px-4 py-2 rounded-md
-                            hover:bg-primary-2 dark:hover:bg-primary-2
-                            disabled:bg-main-bg dark:disabled:bg-gray-600
-                            disabled:cursor-not-allowed"
+                        variant="secondary"
+                        disabled={!discountCode}
+                        loading={isValidating}
                     >
                         {isValidating ? 'Validating...' : 'Apply'}
-                    </button>
+                    </Button>
                 </div>
                 {errorMessage && (
                     <div className="flex items-center text-primary-text dark:text-primary-text-light text-xs mt-1">

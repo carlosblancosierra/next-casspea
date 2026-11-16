@@ -10,6 +10,7 @@ import { useGetProductQuery, useGetProductsQuery } from '@/redux/features/produc
 import { skipToken } from '@reduxjs/toolkit/query';
 import { toast } from 'react-toastify';
 import { Allergen } from '@/types/allergens';
+import Button from '@/components/common/Button';
 
 interface CartItemProps {
   entry: CartItemType;
@@ -162,12 +163,9 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
             {/* Flavours: desktop (en columna derecha) */}
             {customization?.selection_type === 'PICK_AND_MIX' && (
                 <div className="hidden md:block md:col-start-2">
-                  <button
-                    onClick={() => setShowFlavours(prev => !prev)}
-                    className="px-4 py-2 text-primary-text dark:text-primary-text-light rounded-md text-sm border border-text-primary-text dark:text-primary-text-light"
-                  >
+                  <Button variant="secondary" size="sm" onClick={() => setShowFlavours(prev => !prev)}>
                     {showFlavours ? 'Hide flavours' : 'Show flavours'}
-                  </button>
+                  </Button>
                   {showFlavours && (
                     <div className="mt-2">
                       <FlavourSelectionGrid flavours={customization.flavor_selections || []} boxSize={boxSize} />
@@ -215,12 +213,9 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
         {customization?.selection_type === 'PICK_AND_MIX' && (
           <div className="col-span-2 md:hidden flex flex-col">
             <div className="flex justify-end">
-              <button
-                onClick={() => setShowFlavours(prev => !prev)}
-                className="px-4 py-2 text-primary-text dark:text-primary-text-light rounded-md text-sm border border-text-primary-text dark:text-primary-text-light"
-              >
+              <Button variant="secondary" size="sm" onClick={() => setShowFlavours(prev => !prev)}>
                 {showFlavours ? 'Hide flavours' : 'Show flavours'}
-              </button>
+              </Button>
             </div>
             {showFlavours && (
               <div className="mt-2">
@@ -244,22 +239,19 @@ const CartItem: React.FC<CartItemProps> = ({ entry }) => {
             <div className="p-4 text-primary-text dark:text-primary-text-light">
               Are you sure you want to remove {entry.product.name}?
             </div>
-            <div className="flex justify-end p-4 border-t dark:border-gray-600">
-              <button
+            <div className="flex justify-end gap-2 p-4 border-t dark:border-gray-600">
+              <Button variant="secondary" onClick={() => setIsDeleteModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
                 onClick={() => {
                   handleRemove();
                   setIsDeleteModalOpen(false);
                 }}
-                className="px-5 py-2.5 text-sm font-medium text-primary-text dark:text-primary-text-light bg-red-600 rounded-lg"
               >
                 Yes, remove
-              </button>
-              <button
-                onClick={() => setIsDeleteModalOpen(false)}
-                className="px-5 py-2.5 ml-2 text-sm font-medium border rounded-lg"
-              >
-                Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </div>

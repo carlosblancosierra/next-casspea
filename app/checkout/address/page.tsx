@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 import { useSetAddressesMutation } from '@/redux/features/addresses/addressApiSlice';
 import { useRequireCheckoutSession } from '@/hooks/useRequireCheckoutSession';
+import { buttonClasses } from '@/components/common/Button';
 
 
 export default function AddressPage() {
@@ -167,7 +168,7 @@ export default function AddressPage() {
                             checked={useSameAddress}
                             onChange={(e) => setUseSameAddress(e.target.checked)}
                             className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-primary
-                                dark:text-primary-2 focus:ring-primary-2"
+                                dark:text-primary-light focus:ring-primary-2"
                         />
                         <span className="text-sm text-primary-text dark:text-primary-text-light">
                             Billing address is the same as shipping address
@@ -197,10 +198,7 @@ export default function AddressPage() {
                 <button
                     onClick={handleSubmitClick}
                     disabled={isProcessing}
-                    className="w-full bg-primary dark:bg-primary-2 text-primary-text-light py-3 px-4 rounded-md
-                        hover:bg-primary-dark dark:hover:bg-primary focus:outline-none focus:ring-2
-                        focus:ring-primary-2 focus:ring-offset-2
-                        disabled:opacity-60 disabled:cursor-wait transition-colors duration-200"
+                    className={buttonClasses({ size: 'lg', fullWidth: true })}
                 >
                     {isProcessing ? 'Processing...' : 'Continue to Review Order'}
                 </button>

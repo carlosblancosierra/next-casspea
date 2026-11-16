@@ -1,4 +1,5 @@
 import React from 'react'
+import { buttonClasses } from '@/components/common/Button';
 
 interface Option { name: string; value: string; description: string }
 interface Props {
@@ -31,11 +32,7 @@ export default function BoxTypeStep({ options, selected, onChange, onNext }: Pro
       <button
         onClick={onNext}
         disabled={!selected}
-        className={`mt-4 px-6 py-2 rounded ${
-          selected
-            ? 'bg-primary text-white hover:bg-primary/80'
-            : 'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400 cursor-not-allowed'
-        }`}
+        className={buttonClasses({ className: 'mt-4' })}
       >
         Next
       </button>

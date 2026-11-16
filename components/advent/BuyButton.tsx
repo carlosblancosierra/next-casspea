@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { useAddCartItemMutation } from '@/redux/features/carts/cartApiSlice';
 import AllergenSelection from '@/components/product_detail/AllergenSelection';
 import { PICKABLE_ALLERGENS } from '@/components/product_detail/allergenOptions';
+import { buttonClasses } from '@/components/common/Button';
 import { ADVENT_SLUG, COPY } from './content';
 
 /**
@@ -33,13 +34,6 @@ interface Props {
     className?: string;
 }
 
-const BASE =
-    'inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-gradient-autumn font-medium text-primary-button-text ' +
-    'transition-opacity hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-primary-light disabled:cursor-not-allowed disabled:opacity-60';
-const SIZES = {
-    md: 'px-6 py-3 text-lg',
-    lg: 'px-8 py-4 text-xl leading-7',
-};
 
 function Arrow() {
     return (
@@ -59,7 +53,7 @@ export default function BuyButton({ productId, productName, soldOut, canPickAlle
     const [askAllergens, setAskAllergens] = useState(false);
     const [allergenOption, setAllergenOption] = useState<'NONE' | 'SPECIFY' | null>(null);
     const [selectedAllergens, setSelectedAllergens] = useState<number[]>([]);
-    const classes = `${BASE} ${SIZES[size]} ${className}`;
+    const classes = buttonClasses({ size, className });
 
     if (productId === null) {
         return (
@@ -121,7 +115,7 @@ export default function BuyButton({ productId, productName, soldOut, canPickAlle
                                 type="button"
                                 onClick={add}
                                 disabled={!allergensChosen || isLoading}
-                                className={`${BASE} ${SIZES.md} w-full`}
+                                className={buttonClasses({ size: 'md', fullWidth: true })}
                             >
                                 {isLoading ? 'Adding to cart…' : COPY.hero.allergenConfirm}
                             </button>

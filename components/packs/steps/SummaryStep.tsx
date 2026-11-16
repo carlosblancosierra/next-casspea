@@ -2,6 +2,7 @@ import React from 'react'
 import { Product } from '@/types/products'
 import { CartItemBoxFlavorSelection } from '@/types/carts'
 import { LOVE_SLEEVE_PRICE } from '@/components/packs/constants'
+import { buttonClasses } from '@/components/common/Button';
 
 interface Props {
   signatureBox: Product
@@ -46,7 +47,7 @@ export default function SummaryStep({
       ))}
       <button
         onClick={onConfirm}
-        className="mt-4 px-10 py-4 bg-pink-600 text-white rounded hover:bg-pink-500 float-right"
+        className={buttonClasses({ size: 'lg', className: 'mt-4 float-right' })}
       >
         Add to Cart
       </button>

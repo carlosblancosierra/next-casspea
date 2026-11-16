@@ -4,6 +4,7 @@ import { useState, type FormEvent, type ReactNode } from 'react';
 import { useSubscribeGenericLeadMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 import { LEAD_FORM_CODE, type LeadSource } from './content';
 import { markSubscribed } from './subscribed';
+import { buttonClasses } from '@/components/common/Button';
 
 /**
  * One email field and a button. Posts to the generic lead endpoint, which
@@ -76,7 +77,7 @@ export default function EmailCapture({ source, buttonLabel, doneMessage, after, 
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="min-h-[44px] rounded-lg bg-gradient-autumn px-6 font-medium text-primary-button-text transition-opacity hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-primary-light disabled:opacity-60"
+                    className={buttonClasses()}
                 >
                     {isLoading ? 'Sending…' : buttonLabel}
                 </button>

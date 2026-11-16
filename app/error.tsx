@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { captureError } from '@/utils/analytics';
+import { buttonClasses } from '@/components/common/Button';
 
 /** Catches render errors below the root layout, so the navbar and footer stay. */
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
@@ -22,7 +23,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
 					<button
 						type='button'
 						onClick={reset}
-						className='rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-2'
+						className={buttonClasses()}
 					>
 						Try again
 					</button>

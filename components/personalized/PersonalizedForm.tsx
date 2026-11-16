@@ -7,6 +7,7 @@ import CustomChocolate from './CustomChocolate';
 import ColorSelectionModal from './ColorSelectionModal';
 import { motion, useAnimation, PanInfo } from "framer-motion";
 import { CONTACT } from '@/components/common/siteLinks';
+import { buttonClasses } from '@/components/common/Button';
 
 interface OrderDetails {
     quantity: number;
@@ -246,7 +247,7 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                             </div>
                             <button
                                 onClick={() => setActiveLayer(slot.order)}
-                                className="px-4 py-2 text-sm rounded-md bg-gray-100 dark:bg-main-bg-dark hover:bg-gray-200 dark:hover:bg-gray-600"
+                                className={buttonClasses({ variant: 'secondary', size: 'sm' })}
                             >
                                 Change ✏️
                             </button>
@@ -289,7 +290,7 @@ export default function PersonalizedForm({ template, onLayersChange, orderDetail
                         <button
                             onClick={handleSubmit}
                             disabled={submitState === 'sending'}
-                            className="w-full bg-primary dark:bg-primary-2 text-white py-3 px-4 rounded-md hover:bg-primary-dark dark:hover:bg-primary-2-dark transition-colors disabled:opacity-60 disabled:cursor-wait"
+                            className={buttonClasses({ fullWidth: true })}
                         >
                             {submitState === 'sending' ? 'Sending…' : 'Request Chocolates'}
                         </button>

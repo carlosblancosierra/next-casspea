@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Button from '@/components/common/Button';
 
 export const metadata: Metadata = {
     title: 'Something went wrong',
@@ -27,18 +27,12 @@ export default function CheckoutErrorPage() {
                     If not, your basket is saved and you can try again.
                 </p>
                 <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-                    <Link
-                        href="/cart"
-                        className="rounded-md bg-primary px-6 py-3 font-semibold text-primary-text-light hover:bg-primary-2 dark:bg-primary-2 dark:hover:bg-primary"
-                    >
+                    <Button href="/cart" variant="primary">
                         Back to your basket
-                    </Link>
-                    <Link
-                        href="/contact"
-                        className="rounded-md border border-primary px-6 py-3 font-semibold text-primary hover:bg-primary hover:text-primary-text-light dark:border-primary-2 dark:text-primary-2"
-                    >
+                    </Button>
+                    <Button href="/contact" variant="secondary">
                         Contact us
-                    </Link>
+                    </Button>
                 </div>
             </div>
         </main>

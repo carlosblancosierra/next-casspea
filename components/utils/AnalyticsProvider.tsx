@@ -21,6 +21,15 @@ interface CookiebotWindow {
  * Cookieless mode has to be switched on in the PostHog project settings or
  * those pre-consent events are dropped.
  */
+const THIRD_PARTY_NOISE = [/Java object is gone/, /window\.webkit\.messageHandlers/];
+
+function isThirdPartyNoise(properties: Record<string, unknown> | undefined): boolean {
+	const values = (properties?.$exception_values as unknown[] | undefined) ?? [];
+	const list = (properties?.$exception_list as { value?: string }[] | undefined) ?? [];
+	const messages = [...values.map(String), ...list.map(e => e?.value ?? '')];
+	return messages.some(m => THIRD_PARTY_NOISE.some(re => re.test(m)));
+}
+
 export default function AnalyticsProvider() {
 	useEffect(() => {
 		if (!isAnalyticsEnabled() || posthog.__loaded) return;
@@ -32,6 +41,12 @@ export default function AnalyticsProvider() {
 			capture_pageview: 'history_change',
 			capture_pageleave: true,
 			capture_exceptions: true,
+			// Errors from in-app browsers' own JavaScript bridges, not our code.
+			// "Java object is gone" alone was 373 of 452 people with an error.
+			before_send: event => {
+				if (event?.event === '$exception' && isThirdPartyNoise(event.properties)) return null;
+				return event;
+			},
 			person_profiles: 'identified_only',
 			cookieless_mode: 'on_reject',
 			opt_out_capturing_by_default: true,

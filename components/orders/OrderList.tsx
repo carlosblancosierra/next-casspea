@@ -8,6 +8,7 @@ import { useGetProductsQuery } from '@/redux/features/products/productApiSlice';
 import { Order } from '@/types/orders';
 import DaySection from './DaySection';
 import { useOrderActions } from './useOrderActions';
+import { buttonClasses } from '@/components/common/Button';
 
 export default function OrderList() {
   const today = useMemo(() => new Date(), []);
@@ -65,7 +66,7 @@ export default function OrderList() {
           className="text-primary-text dark:text-primary-text-light bg-main-bg dark:bg-main-bg-dark border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
         />
         <button
-          className="px-4 py-2 bg-blue-600 text-white rounded"
+          className={buttonClasses()}
           onClick={handleSearch}
         >
           Buscar

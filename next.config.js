@@ -23,7 +23,27 @@ const nextConfig = {
     // Help was split into separate FAQ and Contact pages; keep old links,
     // bookmarks and search results working.
     async redirects() {
-        return [{ source: '/help', destination: '/faq', permanent: true }];
+        return [
+            { source: '/help', destination: '/faq', permanent: true },
+            // Retired campaign landings (code kept in app/_outdated). Temporary
+            // redirects so a landing can come back without browsers having
+            // cached a permanent one.
+            // Listed one by one so contract/__tests__/routes.test.ts can see each
+            // old URL still lands somewhere; the wildcard catches anything else.
+            { source: '/landing', destination: '/', permanent: false },
+            { source: '/blue', destination: '/', permanent: false },
+            { source: '/gold', destination: '/', permanent: false },
+            { source: '/landing/blue', destination: '/', permanent: false },
+            { source: '/landing/blue/thank-you', destination: '/', permanent: false },
+            { source: '/landing/fathers-day', destination: '/', permanent: false },
+            { source: '/landing/fathers-day/thank-you', destination: '/', permanent: false },
+            { source: '/landing/gold', destination: '/', permanent: false },
+            { source: '/landing/gold/thank-you', destination: '/', permanent: false },
+            { source: '/landing/summer-break', destination: '/', permanent: false },
+            { source: '/landing/thermomix', destination: '/', permanent: false },
+            { source: '/landing/thermomix/thank-you', destination: '/', permanent: false },
+            { source: '/landing/:path*', destination: '/', permanent: false },
+        ];
     },
     env: {
         GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',

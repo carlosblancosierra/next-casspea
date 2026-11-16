@@ -8,6 +8,7 @@ import { Product as ProductType } from '@/types/products';
 import { useAddCartItemMutation } from "@/redux/features/carts/cartApiSlice";
 import ColoredList from "../common/ColoredList";
 import AllergenSelection from './AllergenSelection';
+import { buttonClasses } from '@/components/common/Button';
 import { PICKABLE_ALLERGENS } from './allergenOptions';
 
 interface ProductFormGeneralProps {
@@ -166,7 +167,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                 <button
                     type="button"
                     disabled
-                    className="mt-8 w-full py-3 rounded bg-gray-400 text-primary-text dark:text-primary-text-light cursor-not-allowed flex items-center justify-center text-sm gap-2"
+                    className={buttonClasses({ variant: 'secondary', fullWidth: true, className: 'mt-8' })}
                 >
                     Sold Out
                 </button>
@@ -175,7 +176,7 @@ const ProductFormGeneral: React.FC<ProductFormGeneralProps> = ({ product }) => {
                     type="button"
                     onClick={handleAddToCart}
                     disabled={customOptions.length > 0 && !selectedCustomOptionKey}
-                    className="mt-8 w-full py-3 rounded bg-primary-2 text-primary-text-light dark:bg-primary cursor-pointer flex items-center justify-center text-sm gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className={buttonClasses({ size: 'lg', fullWidth: true, className: 'mt-8' })}
                 >
                     Add to Cart
                 </button>

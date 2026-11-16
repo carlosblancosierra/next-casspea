@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { buttonClasses } from '@/components/common/Button';
 
 export default function GiveawayThankYou() {
   return (
@@ -22,10 +23,10 @@ export default function GiveawayThankYou() {
               Good luck!
             </p>
             <div className="flex flex-col gap-2 items-center md:flex-row md:gap-4 md:justify-center">
-              <Link href="/" className="mt-4 md:mt-0 px-6 py-3 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark transition">
+              <Link href="/" className={buttonClasses({ className: 'mt-4 md:mt-0' })}>
                 Back to Home
               </Link>
-              <Link href="/shop-now" className="mt-2 md:mt-0 px-6 py-3 bg-gray-200 dark:bg-main-bg-dark text-primary-text dark:text-white rounded-lg font-bold hover:bg-main-bg dark:hover:bg-gray-600 transition">
+              <Link href="/shop-now" className={buttonClasses({ variant: 'secondary', className: 'mt-2 md:mt-0' })}>
                 Shop Now
               </Link>
             </div>

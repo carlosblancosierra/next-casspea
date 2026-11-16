@@ -17,6 +17,7 @@ import { formatCurrency } from '@/utils/currency';
 import { Flavour as FlavourType } from '@/types/flavours';
 import { Product } from '@/types/products';
 import { CartItemBoxFlavorSelection, CartItemRequest } from '@/types/carts';
+import { buttonClasses } from '@/components/common/Button';
 
 /**
  * The challenger in the box-builder experiment.
@@ -75,7 +76,7 @@ function OptionRow({
                     aria-pressed={selectedId === null}
                     className={`shrink-0 snap-start w-24 rounded-lg border-2 p-2 text-center transition-colors ${
                         selectedId === null
-                            ? 'border-primary bg-primary/5 dark:border-primary-2 dark:bg-primary-2/10'
+                            ? 'border-primary bg-primary/5 dark:border-primary-light dark:bg-primary-2/10'
                             : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
                     }`}
                 >
@@ -94,7 +95,7 @@ function OptionRow({
                         aria-pressed={selected}
                         className={`shrink-0 snap-start w-24 rounded-lg border-2 p-2 text-left transition-colors ${
                             selected
-                                ? 'border-primary bg-primary/5 dark:border-primary-2 dark:bg-primary-2/10'
+                                ? 'border-primary bg-primary/5 dark:border-primary-light dark:bg-primary-2/10'
                                 : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
                         }`}
                     >
@@ -333,7 +334,7 @@ const QuickBoxBuilder: React.FC<QuickBoxBuilderProps> = ({ product, onAddedToCar
                     type="button"
                     disabled
                     aria-disabled="true"
-                    className="w-full py-3 rounded bg-gray-400 text-primary-text dark:text-primary-text-light cursor-not-allowed"
+                    className={buttonClasses({ variant: 'secondary', fullWidth: true })}
                 >
                     Sold Out
                 </button>
@@ -387,7 +388,7 @@ const QuickBoxBuilder: React.FC<QuickBoxBuilderProps> = ({ product, onAddedToCar
                         aria-pressed={!indulgent}
                         className={`text-left rounded-xl border-2 p-4 transition-colors ${
                             !indulgent
-                                ? 'border-primary bg-primary/5 dark:border-primary-2 dark:bg-primary-2/10'
+                                ? 'border-primary bg-primary/5 dark:border-primary-light dark:bg-primary-2/10'
                                 : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
                         }`}
                     >
@@ -403,7 +404,7 @@ const QuickBoxBuilder: React.FC<QuickBoxBuilderProps> = ({ product, onAddedToCar
                         aria-pressed={indulgent}
                         className={`text-left rounded-xl border-2 p-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                             indulgent
-                                ? 'border-primary bg-primary/5 dark:border-primary-2 dark:bg-primary-2/10'
+                                ? 'border-primary bg-primary/5 dark:border-primary-light dark:bg-primary-2/10'
                                 : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
                         }`}
                     >
@@ -482,7 +483,7 @@ const QuickBoxBuilder: React.FC<QuickBoxBuilderProps> = ({ product, onAddedToCar
                         <button
                             type="button"
                             onClick={resetToOurPicks}
-                            className="inline-flex items-center gap-1 text-xs font-medium text-primary dark:text-primary-2 hover:underline"
+                            className={buttonClasses({ variant: 'tertiary', size: 'sm', className: '!px-0 !py-0 text-xs' })}
                         >
                             <FiRefreshCw size={12} /> Reset to our picks
                         </button>
@@ -521,7 +522,7 @@ const QuickBoxBuilder: React.FC<QuickBoxBuilderProps> = ({ product, onAddedToCar
                     type="button"
                     onClick={handleAddToCart}
                     disabled={adding}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-autumn dark:bg-primary-2 text-primary-text-light font-semibold py-4 text-lg shadow hover:opacity-95 transition-opacity disabled:opacity-60 disabled:cursor-wait"
+                    className={buttonClasses({ size: 'lg', fullWidth: true, className: 'font-semibold shadow' })}
                 >
                     {adding ? 'Adding…' : (<><FiShoppingCart /> Add to cart</>)}
                 </button>

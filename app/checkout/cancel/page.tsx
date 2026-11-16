@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { buttonClasses } from '@/components/common/Button';
 
 const ErrorPage: React.FC = () => {
     return (
@@ -14,14 +15,14 @@ const ErrorPage: React.FC = () => {
                 <p className="mt-2 text-primary-text dark:text-primary-text-light">
                     Please try again or contact our support team for assistance.
                 </p>
-                <div className="mt-6 flex justify-center space-x-4">
-                    <Link href="/checkout/address" className="inline-block bg-primary text-primary-text px-6 py-3 rounded-md hover:bg-primary">
+                <div className="mt-6 flex flex-wrap justify-center gap-3">
+                    <Link href="/checkout/address" className={buttonClasses()}>
                         Retry Order
                     </Link>
-                    <Link href="/cart" className="inline-block bg-gray-600 text-primary-text px-6 py-3 rounded-md hover:bg-gray-700">
+                    <Link href="/cart" className={buttonClasses({ variant: 'secondary' })}>
                         Return to Cart
                     </Link>
-                    <Link href="/contact" className="inline-block bg-gray-600 text-primary-text px-6 py-3 rounded-md hover:bg-gray-700">
+                    <Link href="/contact" className={buttonClasses({ variant: 'tertiary' })}>
                         Contact Support
                     </Link>
                 </div>

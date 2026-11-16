@@ -101,7 +101,7 @@ export default function ColorSelectionModal({
                                     <div className="relative aspect-square rounded-lg">
                                         {!loadedStates[color.slug] && (
                                             <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-main-bg-dark">
-                                                <div className="animate-spin rounded-full h-8 w-8 border-4 border-primary dark:border-primary-2 border-t-transparent"></div>
+                                                <div className="animate-spin rounded-full h-8 w-8 border-4 border-primary dark:border-primary-light border-t-transparent"></div>
                                             </div>
                                         )}
                                         <span className="absolute top-1 md:top-2 left-0 right-0 text-center text-xs md:text-sm font-medium z-20">

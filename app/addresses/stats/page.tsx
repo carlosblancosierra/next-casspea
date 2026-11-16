@@ -3,6 +3,7 @@
 import { RequireAuth } from '@/components/utils';
 import { useGetAddressesStatsQuery } from '@/redux/features/addresses/addressApiSlice';
 import React from 'react';
+import { buttonClasses } from '@/components/common/Button';
 
 export default function AddressesStatsPage() {
     const { data, isLoading, isError } = useGetAddressesStatsQuery();
@@ -35,7 +36,7 @@ export default function AddressesStatsPage() {
                     <>
                         <button
                             onClick={handleDownloadCSV}
-                            className="mb-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+                            className={buttonClasses({ className: 'mb-4' })}
                         >
                             Download CSV
                         </button>

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Button from './Button';
 import TrustpilotRating from './TrustpilotRating';
 
 /**
@@ -17,19 +17,13 @@ import TrustpilotRating from './TrustpilotRating';
 export const SHOP_CTA_LABEL = 'Shop Indulgence Now!';
 export const SHOP_CTA_HREF = '/shop-now';
 
-// Smaller on phones so two buttons fit side by side or stacked without pushing
-// the second one below the fold. The border is on both so they are the same
-// height.
-const BUTTON_BASE =
-    'inline-flex items-center justify-center px-5 py-2.5 text-base sm:px-8 sm:py-4 sm:text-xl font-medium rounded-lg border-2 transition-colors focus:ring-4';
-
 interface ShopNowCTAProps {
     /** Override the shared label only when a page genuinely needs different copy. */
     label?: string;
     href?: string;
     /**
-     * An optional second link, drawn as an outline button beside the main one.
-     * It uses the same outline style as "See all reviews" under the reviews.
+     * An optional second link, drawn as the secondary (outline) button beside
+     * the main one.
      */
     secondary?: { label: string; href: string };
     /** The rating is the whole point of it being here; hide it deliberately. */
@@ -53,13 +47,10 @@ export default function ShopNowCTA({
                 one link that leaves. */}
             {showRating && <TrustpilotRating href="#reviews" className="!justify-start" />}
             <div className="flex flex-wrap items-center gap-3">
-                <Link
-                    href={href}
-                    className={`${BUTTON_BASE} text-primary-button-text bg-primary border-primary hover:bg-primary-dark focus:ring-primary-light`}
-                >
+                <Button href={href} variant="primary" size="lg">
                     {label}
                     <svg
-                        className="w-5 h-5 ml-2 -mr-1"
+                        className="w-5 h-5 -mr-1"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -71,14 +62,11 @@ export default function ShopNowCTA({
                             clipRule="evenodd"
                         />
                     </svg>
-                </Link>
+                </Button>
                 {secondary && (
-                    <Link
-                        href={secondary.href}
-                        className={`${BUTTON_BASE} text-primary border-primary hover:bg-primary hover:text-primary-button-text focus:ring-primary-light dark:border-primary-2 dark:text-primary-2`}
-                    >
+                    <Button href={secondary.href} variant="secondary" size="lg">
                         {secondary.label}
-                    </Link>
+                    </Button>
                 )}
             </div>
         </div>

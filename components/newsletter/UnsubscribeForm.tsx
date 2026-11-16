@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useUnsubscribeMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 import { CONTACT } from '@/components/common/siteLinks';
+import { buttonClasses } from '@/components/common/Button';
 
 type State = 'loading' | 'no-token' | 'ready' | 'done' | 'error';
 
@@ -62,7 +63,7 @@ export default function UnsubscribeForm() {
                         type="button"
                         onClick={handleClick}
                         disabled={isLoading}
-                        className="rounded-md px-6 py-3 font-semibold text-primary-text-light bg-primary dark:bg-primary-2 hover:bg-primary-2 dark:hover:bg-primary disabled:opacity-60 disabled:cursor-wait"
+                        className={buttonClasses()}
                     >
                         {isLoading ? 'Unsubscribing…' : 'Unsubscribe'}
                     </button>

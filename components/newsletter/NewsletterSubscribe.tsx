@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { useSubscribeToNewsletterMutation } from '@/redux/features/subscribe/subscribeApiSlice';
+import { buttonClasses } from '@/components/common/Button';
 
 export default function
     NewsletterSubscribe() {
@@ -93,13 +94,7 @@ export default function
                                     <button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="py-3 px-5 w-full text-sm font-medium text-center text-white
-                                            rounded-lg border cursor-pointer bg-primary border-primary
-                                            sm:rounded-none sm:rounded-r-lg hover:bg-primary-light
-                                            focus:ring-4 focus:ring-primary-light dark:bg-primary dark:hover:bg-primary-light
-                                            dark:focus:ring-primary dark:focus:ring-primary
-                                            disabled:bg-main-bg dark:disabled:bg-gray-600
-                                            disabled:cursor-not-allowed transition-colors duration-200"
+                                        className={buttonClasses({ fullWidth: true, className: 'h-full sm:rounded-none sm:rounded-r-lg' })}
                                     >
                                         {isLoading ? 'Subscribing...' : 'Subscribe'}
                                     </button>
@@ -109,7 +104,7 @@ export default function
                                 We care about the protection of your data.{' '}
                                 <a
                                     href="/privacy-policy"
-                                    className="font-medium text-primary dark:text-primary hover:underline"
+                                    className="font-medium text-primary dark:text-primary-light hover:underline"
                                 >
                                     Read our Privacy Policy
                                 </a>.

@@ -1,5 +1,6 @@
 import React from 'react';
 import { List, Spinner } from '@/components/common';
+import { buttonClasses } from '@/components/common/Button';
 
 interface AddToCartButtonProps {
     onClick: () => void;
@@ -29,18 +30,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
             type="button"
             onClick={onClick}
             disabled={isDisabled}
-            className={`
-                w-full py-4 rounded-lg text-sm font-medium
-                transition-all duration-200 ease-in-out
-                flex items-center justify-center gap-2
-                ${!selection
-                    ? 'bg-gray-100 text-primary-text dark:bg-main-bg-dark dark:text-primary-text cursor-not-allowed'
-                    : isDisabled
-                        ? 'bg-gray-100 text-primary-text dark:bg-main-bg-dark dark:text-primary-text cursor-not-allowed'
-                        : 'bg-primary text-primary-text-light hover:bg-primary dark:bg-primary-2 dark:hover:bg-primary'
-                }
-                disabled:cursor-not-allowed disabled:opacity-50
-            `}
+            className={buttonClasses({ size: 'lg', fullWidth: true })}
         >
             {!selection ? (
                 'Choose your box type to continue'

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getProduct } from '@/utils/products';
 import ChristmasDeliveryCountdown from '@/components/common/ChristmasDeliveryCountdown';
+import { buttonClasses } from '@/components/common/Button';
 
 /**
  * Restored from the dead-code sweep that removed it (it had been left
@@ -53,7 +54,7 @@ export default async function AdventSection() {
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <Link
             href={ADVENT_HREF}
-            className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition"
+            className={buttonClasses()}
           >
             Shop Now
           </Link>

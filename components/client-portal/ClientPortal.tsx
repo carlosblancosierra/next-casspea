@@ -10,6 +10,7 @@ import { ClientPageItem, UnlockedClientPage } from '@/types/clients';
 import { formatCurrency } from '@/utils/currency';
 import ClientFlavourRow, { snapToStep } from './ClientFlavourRow';
 import ClientLogos from './ClientLogos';
+import { buttonClasses } from '@/components/common/Button';
 
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
@@ -160,7 +161,7 @@ export default function ClientPortal({ page }: { page: UnlockedClientPage }) {
                         type="button"
                         disabled={totalPieces === 0 || adding}
                         onClick={handleAddToCart}
-                        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-autumn py-4 text-lg font-semibold text-primary-text-light shadow transition-opacity hover:opacity-95 disabled:opacity-60 dark:bg-primary-2"
+                        className={buttonClasses({ size: 'lg', fullWidth: true, className: 'mt-4 font-semibold shadow' })}
                     >
                         <ShoppingBagIcon className="h-5 w-5" />
                         {adding ? 'Adding…' : 'Add to cart'}

@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
 import { SUMMER_BREAK_ENABLED } from '@/utils/storeStatus';
+import { buttonClasses } from '@/components/common/Button';
 
 const SUMMER_BREAK_CATEGORY = '/landing/summer-break';
 
@@ -63,7 +64,7 @@ export default function SummerBreakPopup() {
               </p>
               <button
                 onClick={handleClose}
-                className="mt-2 px-6 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-pink-300"
+                className={buttonClasses({ className: 'mt-2' })}
               >
                 OK, got it!
               </button>
@@ -83,13 +84,13 @@ export default function SummerBreakPopup() {
                 <Link
                   href={SUMMER_BREAK_CATEGORY}
                   onClick={handleClose}
-                  className="px-6 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-pink-300"
+                  className={buttonClasses()}
                 >
                   Shop 25% Off Boxes
                 </Link>
                 <button
                   onClick={handleClose}
-                  className="px-6 py-2 text-primary-text dark:text-primary-text-light rounded-lg font-medium hover:underline focus:outline-none"
+                  className={buttonClasses({ variant: 'tertiary' })}
                 >
                   No thanks
                 </button>
