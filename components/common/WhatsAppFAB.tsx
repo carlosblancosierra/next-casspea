@@ -12,7 +12,11 @@ const WhatsAppFAB = () => {
     if (!isVisible) return null;
     
     return (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+        // Sits above the mobile buy bar on product pages (it sets --buy-bar-height).
+        <div
+            className="fixed right-6 z-50 flex flex-col items-end gap-2 transition-[bottom] duration-200"
+            style={{ bottom: 'calc(1.5rem + var(--buy-bar-height, 0px))' }}
+        >
             <div className="relative group">
                 {/* Close button - outside the link */}
                 <button
