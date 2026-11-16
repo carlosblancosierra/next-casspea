@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import posthog from 'posthog-js';
-import { isAnalyticsEnabled } from '@/utils/analytics';
+import { forgetPersistentAttribution, isAnalyticsEnabled } from '@/utils/analytics';
 
 interface CookiebotWindow {
 	Cookiebot?: {
@@ -32,7 +32,17 @@ function isThirdPartyNoise(properties: Record<string, unknown> | undefined): boo
 
 export default function AnalyticsProvider() {
 	useEffect(() => {
-		if (!isAnalyticsEnabled() || posthog.__loaded) return;
+		// Withdrawing statistics consent also drops the 30-day campaign
+		// touches kept in localStorage. Runs without a PostHog key too.
+		const forgetOnDecline = () => {
+			const cookiebot = (window as unknown as CookiebotWindow).Cookiebot;
+			if (cookiebot?.hasResponse && !cookiebot.consent?.statistics) forgetPersistentAttribution();
+		};
+		forgetOnDecline();
+		window.addEventListener('CookiebotOnDecline', forgetOnDecline);
+		const stopForgetting = () => window.removeEventListener('CookiebotOnDecline', forgetOnDecline);
+
+		if (!isAnalyticsEnabled() || posthog.__loaded) return stopForgetting;
 
 		posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY as string, {
 			api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
@@ -76,6 +86,7 @@ export default function AnalyticsProvider() {
 			window.removeEventListener('CookiebotOnConsentReady', syncConsent);
 			window.removeEventListener('CookiebotOnAccept', syncConsent);
 			window.removeEventListener('CookiebotOnDecline', syncConsent);
+			stopForgetting();
 		};
 	}, []);
 

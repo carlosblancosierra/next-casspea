@@ -1,6 +1,7 @@
 import { apiSlice } from '@/redux/services/apiSlice';
 import { CheckoutSession, CheckoutSessionRequest } from '@/types/checkout';
 import { toast } from 'react-toastify';
+import { getAttributionTouches } from '@/utils/analytics';
 
 export interface StoreStatus {
     open: boolean;
@@ -45,14 +46,20 @@ export const checkoutApiSlice = apiSlice.injectEndpoints({
         createStripeCheckoutSession: builder.mutation<any, void>({
             query: () => ({
                 url: '/checkout/stripe/create-session/',
-                method: 'POST'
+                method: 'POST',
+                // First / last campaign touch, so the order can be credited
+                // without relying on Stripe's redirect. See docs/analytics.md.
+                body: { attribution: getAttributionTouches() },
             }),
         }),
 
         createEmbeddedCheckoutSession: builder.mutation<any, void>({
             query: () => ({
                 url: '/checkout/stripe/embedded/create-session/',
-                method: 'POST'
+                method: 'POST',
+                // First / last campaign touch, so the order can be credited
+                // without relying on Stripe's redirect. See docs/analytics.md.
+                body: { attribution: getAttributionTouches() },
             }),
         }),
 
