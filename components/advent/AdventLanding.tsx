@@ -158,10 +158,24 @@ export default function AdventLanding({ variant, product, exclusives = [], flavo
 
             <Hero variant={variant} price={price} serverNow={serverNow} buyButton={buy()} image={images.hero} />
             <Contrast />
-            {band(band1)}
-            <ValueStack price={price} />
+            {/* The photos are portrait, like a story: full width they fill a
+                desktop screen. So on desktop photo 2 takes half the width with
+                the price beside it, and photo 3 is left out. On phones both
+                stay full width between the sections. */}
+            <div className={band1 ? 'lg:grid lg:grid-cols-2 lg:items-center' : ''}>
+                {band1 && (
+                    <PhotoBand
+                        src={band1}
+                        alt={productName}
+                        className="lg:max-w-none lg:px-0 lg:py-20"
+                        imageClassName="md:rounded-2xl lg:rounded-l-none"
+                        sizes="(min-width: 1024px) 50vw, (min-width: 1200px) 1200px, 100vw"
+                    />
+                )}
+                <ValueStack price={price} />
+            </div>
             <Exclusives flavours={exclusives.slice(0, 3)} />
-            {band(band2)}
+            {band2 && <PhotoBand src={band2} alt={productName} className="lg:hidden" />}
             <EasiestGift />
             <WhoFor />
             {variant === 'shop' && <Reminder />}
