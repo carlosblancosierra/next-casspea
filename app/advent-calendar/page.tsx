@@ -6,7 +6,8 @@ import AdventPreview from '@/components/advent/AdventPreview';
 export const revalidate = 60;
 
 export async function generateMetadata() {
-    return adventMetadata('shop', await getAdventProduct());
+    const landing = await getAdventLandingData();
+    return adventMetadata('shop', landing?.product ?? (await getAdventProduct()), !!landing?.live);
 }
 
 export default async function AdventCalendarPage() {

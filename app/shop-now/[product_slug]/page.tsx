@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import ProductDetail from '@/components/product_detail/ProductDetail';
 import { getProduct, getProducts } from '@/utils/products';
+import { ADVENT_PATH } from '@/components/advent/content';
+import { getAdventLandingData } from '@/components/advent/AdventLanding';
 import { packRedirectTarget } from '@/components/packs/constants';
 import { productJsonLd } from '@/utils/seo';
 import { jsonLdScript } from '@/components/advent/jsonLd';
@@ -33,7 +35,15 @@ export async function generateMetadata(
 export default async function Page({ params }: { params: { product_slug: string } }) {
 	// Fetch on the server so the product renders in the initial HTML (SEO / no
 	// spinner); ProductDetail keeps it current on the client.
-	const products = await getProducts({ revalidate: false });
+	const [products, advent] = await Promise.all([
+		getProducts({ revalidate: false }),
+		getAdventLandingData(),
+	]);
+
+	// Once the Advent landing is switched live it is where the calendar is
+	// sold, so every link to its product page (shop grids, home rows, old
+	// bookmarks) lands there. Temporary: switching it off brings this page back.
+	if (advent?.live && advent.product?.slug === params.product_slug) redirect(ADVENT_PATH);
 
 	const product = products.find((candidate) => candidate.slug === params.product_slug);
 	if (product) {

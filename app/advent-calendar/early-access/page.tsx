@@ -6,7 +6,8 @@ export const revalidate = 60;
 
 // Same offer as /advent-calendar, behind an email form: noindex, canonical to the shop page.
 export async function generateMetadata() {
-    return adventMetadata('lead', await getAdventProduct());
+    const landing = await getAdventLandingData();
+    return adventMetadata('lead', landing?.product ?? (await getAdventProduct()), !!landing?.live);
 }
 
 export default async function AdventEarlyAccessPage() {

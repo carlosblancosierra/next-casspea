@@ -48,6 +48,16 @@ export async function getProduct(slug: string, opts?: CacheOpts): Promise<Produc
     return fetchJson<Product | null>(`/products/${slug}/`, null, opts);
 }
 
+/**
+ * Whether the Advent landing is switched live (Django admin → Products →
+ * Advent landing). Public and cheap; false when the API does not answer, so
+ * links fall back to the product page.
+ */
+export async function isAdventLandingLive(opts: CacheOpts = { revalidate: 60 }): Promise<boolean> {
+    const status = await fetchJson<{ live?: boolean } | null>('/products/advent-landing/status/', null, opts);
+    return !!status?.live;
+}
+
 /** The Advent landing's content, or null while it is not live (the API answers 404). */
 export function getAdventLanding(opts?: CacheOpts): Promise<AdventLandingData | null> {
     return fetchJson<AdventLandingData | null>('/products/advent-landing/', null, opts);
