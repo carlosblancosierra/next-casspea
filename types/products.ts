@@ -109,3 +109,12 @@ export interface Product {
     created?: string;
     updated?: string;
 }
+
+/** GET /api/products/advent-landing/: the calendar and its exclusive flavours.
+ *  Public once `live`; before that only staff get it, everyone else a 404. */
+export interface AdventLandingData {
+    live: boolean;
+    product: Product | null;
+    /** The whole exclusives category, inactive flavours included, oldest first. */
+    flavours: import('./flavours').Flavour[];
+}

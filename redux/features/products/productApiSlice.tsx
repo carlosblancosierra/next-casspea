@@ -1,5 +1,5 @@
+import { AdventLandingData, Product, ProductCategory } from '@/types/products';
 import { apiSlice } from '@/redux/services/apiSlice';
-import { Product, ProductCategory } from '@/types/products';
 
 const productApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
@@ -38,6 +38,10 @@ const productApiSlice = apiSlice.injectEndpoints({
             query: (slug) => `/products/categories/${slug}/`,
             keepUnusedDataFor: 300,
         }),
+        // Sent with the staff member's token, so the landing can be previewed before it is live.
+        getAdventLanding: builder.query<AdventLandingData, void>({
+            query: () => '/products/advent-landing/',
+        }),
     }),
 });
 
@@ -47,6 +51,7 @@ export const {
     useGetActiveProductsQuery,
     useGetCategoriesQuery,
     useGetCategoryQuery,
+    useGetAdventLandingQuery,
 } = productApiSlice;
 
 export default productApiSlice;

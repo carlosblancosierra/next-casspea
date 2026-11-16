@@ -2,6 +2,7 @@
 import React from 'react';
 import CartItemTable from './CartItemTable';
 import CartCheckout from './CartCheckout';
+import FreeDeliveryUpsell from './FreeDeliveryUpsell';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/common/Button';
@@ -31,7 +32,10 @@ const Cart: React.FC = () => {
         {cart?.items && cart.items.length > 0 ? (
           <div className="md:grid md:grid-cols-[3fr,1fr] md:gap-8">
             <CartItemTable cartEntries={cart.items} />
-            <CartCheckout />
+            <div className="pt-4">
+              <FreeDeliveryUpsell />
+              <CartCheckout />
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-[calc(80vh)]">

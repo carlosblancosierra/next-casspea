@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import type { Product } from '@/types/products';
-import { getProduct } from '@/utils/products';
+import type { Flavour } from '@/types/flavours';
+import { getAdventLanding, getProduct } from '@/utils/products';
+import { getFlavours } from '@/utils/flavours';
+import FlavourNameGrid from '@/components/flavours/FlavourNameGrid';
 import { formatCurrency } from '@/utils/currency';
 import { toAmount } from '@/utils/analytics';
 import BuyButton from './BuyButton';
@@ -23,8 +26,8 @@ import EasiestGift from './sections/EasiestGift';
 import WhoFor from './sections/WhoFor';
 import Reminder from './sections/Reminder';
 import Story from './sections/Story';
+import PhotoBand from './sections/PhotoBand';
 import Reviews from './sections/Reviews';
-import Guarantee from './sections/Guarantee';
 import Faq from './sections/Faq';
 import FinalCta from './sections/FinalCta';
 
@@ -44,6 +47,36 @@ import FinalCta from './sections/FinalCta';
 /** Seconds a built page is served before it is rebuilt with fresh stock. */
 export const REVALIDATE_SECONDS = 60;
 
+/** The landing's content from the API; null while it is not live (staff then preview it in the browser). */
+export async function getAdventLandingData() {
+    return getAdventLanding({ revalidate: REVALIDATE_SECONDS });
+}
+
+/** Every flavour we show off (the home page's grid), Christmas ones included. */
+export async function getShowcaseFlavours(): Promise<Flavour[]> {
+    return getFlavours({ revalidate: REVALIDATE_SECONDS, includeComingSoon: true });
+}
+
+/** The product's photos in the product page's order: main image, then the gallery. */
+export function productImages(product: Product | null): string[] {
+    if (!product) return [];
+    const all = [product.image, ...(product.gallery_images ?? []).map(g => g.image)];
+    return all.filter((src, i): src is string => !!src && all.indexOf(src) === i);
+}
+
+/**
+ * Photo 1 for the hero and for sharing; the rest run full width between the
+ * sections, uncropped. The bundled images stand in when the product has none.
+ */
+export function adventImages(product: Product | null) {
+    const photos = productImages(product);
+    return {
+        hero: photos[0] ?? '/advent/hero.jpg',
+        bands: photos.slice(1),
+        og: photos[0] ?? COPY.seo.ogImage,
+    };
+}
+
 export async function getAdventProduct(): Promise<Product | null> {
     return getProduct(ADVENT_SLUG, { revalidate: REVALIDATE_SECONDS });
 }
@@ -55,15 +88,16 @@ export function priceOf(product: Product | null): string {
     return amount > 0 ? amount.toFixed(2) : FALLBACK_PRICE;
 }
 
-export function adventMetadata(variant: Variant): Metadata {
-    const { title, description, ogImage } = COPY.seo;
-    const images = [{ url: ogImage, width: 1200, height: 630, alt: 'CassPea Advent Calendar 2026' }];
+export function adventMetadata(variant: Variant, product: Product | null = null): Metadata {
+    const { title, description } = COPY.seo;
+    const ogImage = adventImages(product).og;
+    const images = [{ url: ogImage, alt: 'CassPea Advent Calendar 2026' }];
     return {
         title,
         description,
-        // The early-access page is the same offer: point search engines at the shop page.
         alternates: { canonical: ADVENT_PATH },
-        robots: variant === 'lead' ? { index: false, follow: true } : undefined,
+        // Not launched yet: both variants stay out of search until the page is ready.
+        robots: { index: false, follow: false },
         openGraph: {
             type: 'website',
             siteName: 'CassPea',
@@ -77,18 +111,32 @@ export function adventMetadata(variant: Variant): Metadata {
     };
 }
 
-export default function AdventLanding({ variant, product }: { variant: Variant; product: Product | null }) {
+interface LandingProps {
+    variant: Variant;
+    product: Product | null;
+    /** The exclusives category from the advent-landing API; the first three are shown. */
+    exclusives?: Flavour[];
+    /** Every flavour, for the grid the home page has. */
+    flavours?: Flavour[];
+}
+
+export default function AdventLanding({ variant, product, exclusives = [], flavours = [] }: LandingProps) {
+    const productName = product?.name || 'Advent Calendar 2026';
+    const images = adventImages(product);
+    // Photos 2, 3, 4… between the sections, in this order; any extra go before the final CTA.
+    const [band1, band2, band3, ...moreBands] = images.bands;
+    const band = (src?: string) => src && <PhotoBand src={src} alt={productName} />;
     const amount = priceOf(product);
     const price = formatCurrency(amount);
     // Rendered once per build; the countdown corrects itself in the browser.
     const serverNow = Date.now();
-    const productName = product?.name || 'Advent Calendar 2026';
 
     const buy = (size: 'md' | 'lg' = 'lg') => (
         <BuyButton
             productId={product?.id ?? null}
             productName={productName}
             soldOut={product?.sold_out}
+            canPickAllergens={!!product?.can_pick_allergens}
             label={COPY.hero.cta}
             size={size}
         />
@@ -108,17 +156,42 @@ export default function AdventLanding({ variant, product }: { variant: Variant; 
                 }}
             />
 
-            <Hero variant={variant} price={price} serverNow={serverNow} buyButton={buy()} />
+            <Hero variant={variant} price={price} serverNow={serverNow} buyButton={buy()} image={images.hero} />
             <Contrast />
-            <ValueStack price={price} />
-            <Exclusives />
+            {/* The photos are portrait, like a story: full width they fill a
+                desktop screen. So on desktop photo 2 takes half the width with
+                the price beside it, and photo 3 is left out. On phones both
+                stay full width between the sections. */}
+            <div className={band1 ? 'lg:grid lg:grid-cols-2 lg:items-center' : ''}>
+                {band1 && (
+                    <PhotoBand
+                        src={band1}
+                        alt={productName}
+                        className="lg:max-w-none lg:px-0 lg:py-20"
+                        imageClassName="md:rounded-2xl lg:rounded-l-none"
+                        sizes="(min-width: 1024px) 50vw, (min-width: 1200px) 1200px, 100vw"
+                    />
+                )}
+                <ValueStack price={price} />
+            </div>
+            <Exclusives flavours={exclusives.slice(0, 3)} />
+            {band2 && <PhotoBand src={band2} alt={productName} className="lg:hidden" />}
             <EasiestGift />
             <WhoFor />
             {variant === 'shop' && <Reminder />}
             <Story />
+            {band(band3)}
+            {flavours.length > 0 && (
+                <section className="mx-auto flex max-w-[1200px] flex-col gap-6 px-6 pt-20">
+                    <h2 className="m-0 text-center font-playfair text-[clamp(32px,4vw,52px)] font-bold leading-[1.05] tracking-tight text-primary-text dark:text-primary-text-light">
+                        {COPY.flavours.heading}
+                    </h2>
+                    <FlavourNameGrid flavours={flavours} showDescription excludeFeatured />
+                </section>
+            )}
             <Reviews />
-            <Guarantee />
             <Faq />
+            {moreBands.map(src => <PhotoBand key={src} src={src} alt={productName} />)}
             <FinalCta price={price} serverNow={serverNow} buyButton={buy()} />
 
             {variant === 'shop' && <ExitIntentPopup />}

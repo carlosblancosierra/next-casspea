@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import { useDiscountCode } from '@/hooks/useDiscountCode';
 import WhatsAppFAB from './WhatsAppFAB';
+import EmailSlideIn from './EmailSlideIn';
 
 // Separate client component for discount code handling
 function DiscountCodeHandler() {
@@ -26,6 +27,8 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
             </Suspense>
             {children}
             {!isCheckout && <WhatsAppFAB />}
+            {/* Decides on its own where it may show (never cart or checkout). */}
+            <EmailSlideIn />
         </>
     );
 }

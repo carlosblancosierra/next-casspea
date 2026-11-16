@@ -44,7 +44,9 @@ Todo evento pasa por `track()` en `utils/analytics.ts`. Va a PostHog y, si es un
 | `generate_lead` | Newsletter y formularios de leads | `source` (en el Advent: `landing-reminder`, `exit-intent`, `early-access`), `form_code` (`advent-2026`) | ✅ | middleware |
 | `personalised_request_sent` | Solicitud de chocolates personalizados | — | — | middleware |
 | `login` | Login correcto | `method` | ✅ | middleware |
-| `api_error` | Cualquier llamada a la API que falla (excepto 401) | `endpoint`, `status` | — | middleware |
+| `api_error` | La API respondió con error (excepto 401). No incluye fallos de red ni códigos de descuento rechazados | `endpoint`, `status`, `http_status` (en `PARSING_ERROR`) | — | middleware |
+| `api_network_error` | La petición no llegó a responder (`FETCH_ERROR`: sin cobertura, pestaña cerrada o navegación a mitad) | `endpoint` | — | middleware |
+| `discount_rejected` | La API rechazó un código de descuento (400 en `updateCart`) | `coupon` | — | middleware |
 | `$exception` | Pantalla de error de la app | `boundary`, `digest` | — | `app/error.tsx`, `app/global-error.tsx` |
 
 **Arreglo incluido:** antes, `purchase` se enviaba a GA4/Ads sin importe y con `transaction_id` vacío, porque se leía de `useParams` en lugar de `?session_id=`. Ahora lleva importe, productos y cupón.

@@ -12,9 +12,10 @@ interface Props {
     price: string;
     serverNow: number;
     buyButton: ReactNode;
+    image: string;
 }
 
-export default function Hero({ variant, price, serverNow, buyButton }: Props) {
+export default function Hero({ variant, price, serverNow, buyButton, image }: Props) {
     const facts = [price, ...COPY.hero.facts];
     return (
         <section className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-12 px-6 pb-16 pt-8 lg:grid-cols-2">
@@ -46,13 +47,14 @@ export default function Hero({ variant, price, serverNow, buyButton }: Props) {
             </div>
             <div className="flex flex-col gap-4">
                 <Image
-                    src="/advent/hero.jpg"
+                    src={image}
                     alt={COPY.hero.imageAlt}
                     width={1200}
                     height={1200}
                     priority
                     sizes="(min-width: 1024px) 560px, 100vw"
-                    className="aspect-square w-full rounded-2xl object-cover"
+                    // Its own height, uncropped.
+                    className="h-auto w-full rounded-2xl"
                 />
                 <Countdown serverNow={serverNow} layout="boxes" />
             </div>

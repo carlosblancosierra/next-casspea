@@ -1,4 +1,4 @@
-import { Product, ProductCategory } from '@/types/products';
+import { Product, ProductCategory, AdventLandingData } from '@/types/products';
 
 type CacheOpts = { revalidate?: number | false };
 
@@ -46,4 +46,9 @@ export async function getCategory(
 /** A single product by slug. Returns null when not found. */
 export async function getProduct(slug: string, opts?: CacheOpts): Promise<Product | null> {
     return fetchJson<Product | null>(`/products/${slug}/`, null, opts);
+}
+
+/** The Advent landing's content, or null while it is not live (the API answers 404). */
+export function getAdventLanding(opts?: CacheOpts): Promise<AdventLandingData | null> {
+    return fetchJson<AdventLandingData | null>('/products/advent-landing/', null, opts);
 }
