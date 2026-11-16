@@ -38,6 +38,14 @@ describe('sitemapEntries', () => {
         expect(urls).toContain(`${SITE_URL}/advent-calendar`);
         expect(urls).not.toContain(`${SITE_URL}/advent-calendar/early-access`);
     });
+
+    it('drops the calendar product page once the landing is live, since it redirects there', () => {
+        const advent = { id: 7, name: 'Advent', slug: 'advent-calendar', active: true } as never;
+        const list = (adventLive: boolean) =>
+            sitemapEntries({ products: [advent], categories: [], adventLive, now }).map(e => e.url);
+        expect(list(true)).not.toContain(`${SITE_URL}/shop-now/advent-calendar`);
+        expect(list(false)).toContain(`${SITE_URL}/shop-now/advent-calendar`);
+    });
 });
 
 describe('robotsRules', () => {

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import type { Product, ProductCategory } from '@/types/products';
 import { availability } from '@/components/advent/jsonLd';
+import { ADVENT_SLUG } from '@/components/advent/content';
 
 export const SITE_URL = 'https://www.casspea.co.uk';
 
@@ -44,7 +45,11 @@ export function sitemapEntries({ products, categories, adventLive, now = new Dat
         ...PUBLIC_PAGES.map(({ path, priority }) => entry(path, priority)),
         ...(adventLive ? [entry('/advent-calendar', 0.9)] : []),
         ...categories.filter(c => c.slug).map(c => entry(`/shop-now/categories/${c.slug}`, 0.7)),
-        ...products.filter(p => p.slug && p.active !== false).map(p => entry(`/shop-now/${p.slug}`, 0.8)),
+        ...products
+            .filter(p => p.slug && p.active !== false)
+            // Live, the calendar's product page redirects to the landing: list the landing only.
+            .filter(p => !(adventLive && p.slug === ADVENT_SLUG))
+            .map(p => entry(`/shop-now/${p.slug}`, 0.8)),
     ];
 }
 

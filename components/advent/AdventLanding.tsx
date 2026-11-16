@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import type { Product } from '@/types/products';
 import type { Flavour } from '@/types/flavours';
-import { getAdventLanding, getProduct } from '@/utils/products';
+import { getAdventLanding, getProduct, isAdventLandingLive } from '@/utils/products';
 import { getFlavours } from '@/utils/flavours';
 import FlavourNameGrid from '@/components/flavours/FlavourNameGrid';
 import { formatCurrency } from '@/utils/currency';
@@ -49,6 +49,10 @@ export const REVALIDATE_SECONDS = 60;
 
 /** The landing's content from the API; null while it is not live (staff then preview it in the browser). */
 export async function getAdventLandingData() {
+    // Ask the status first. Switched off, the content endpoint answers 404,
+    // and Next keeps serving the last good copy of a cached fetch that starts
+    // failing, so the page would stay public. The status always answers 200.
+    if (!(await isAdventLandingLive({ revalidate: REVALIDATE_SECONDS }))) return null;
     return getAdventLanding({ revalidate: REVALIDATE_SECONDS });
 }
 
@@ -88,7 +92,7 @@ export function priceOf(product: Product | null): string {
     return amount > 0 ? amount.toFixed(2) : FALLBACK_PRICE;
 }
 
-export function adventMetadata(variant: Variant, product: Product | null = null): Metadata {
+export function adventMetadata(variant: Variant, product: Product | null = null, live = false): Metadata {
     const { title, description } = COPY.seo;
     const ogImage = adventImages(product).og;
     const images = [{ url: ogImage, alt: 'CassPea Advent Calendar 2026' }];
@@ -97,7 +101,9 @@ export function adventMetadata(variant: Variant, product: Product | null = null)
         description,
         alternates: { canonical: ADVENT_PATH },
         // Not launched yet: both variants stay out of search until the page is ready.
-        robots: { index: false, follow: false },
+        // Indexed only once switched live, and only the shop variant: early
+        // access is the same offer behind a form.
+        robots: !live ? { index: false, follow: false } : variant === 'lead' ? { index: false, follow: true } : undefined,
         openGraph: {
             type: 'website',
             siteName: 'CassPea',

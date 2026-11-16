@@ -30,6 +30,8 @@ export interface HomeHeroConfig {
 
 // The normal product page. The campaign landing (app/advent-calendar) is
 // still in progress and is not linked from anywhere until it launches.
+// The product page; the home page swaps in the landing once it is live
+// (see adventHref in components/advent/content.ts).
 const ADVENT_CALENDAR_HREF = '/shop-now/advent-calendar';
 const GIFT_BOXES_HREF = '/shop-now/categories/signature-boxes';
 

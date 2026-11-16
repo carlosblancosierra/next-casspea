@@ -16,6 +16,14 @@ export const ORDER_DEADLINE = new Date(ORDER_DEADLINE_ISO);
 /** The product the page sells, looked up in the API by slug. */
 export const ADVENT_SLUG = 'advent-calendar';
 export const ADVENT_PATH = '/advent-calendar';
+/** The calendar's normal product page, where links go while the landing is not live. */
+export const ADVENT_PRODUCT_PATH = `/shop-now/${ADVENT_SLUG}`;
+
+/**
+ * Where the shop links to the calendar: the landing once it is switched live
+ * (Django admin → Products → Advent landing), else the product page.
+ */
+export const adventHref = (live: boolean) => (live ? ADVENT_PATH : ADVENT_PRODUCT_PATH);
 export const ADVENT_EARLY_ACCESS_PATH = '/advent-calendar/early-access';
 
 /** Shown only when the API does not answer; the page never shows an empty price. */

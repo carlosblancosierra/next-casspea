@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { Product } from '@/types/products';
 import type { Flavour } from '@/types/flavours';
 import AdventLanding, { adventImages, adventMetadata, priceOf } from '../AdventLanding';
-import { ORDER_DEADLINE } from '../content';
+import { ORDER_DEADLINE, adventHref } from '../content';
 
 const subscribe = jest.fn();
 const addToCart = jest.fn();
@@ -200,5 +200,18 @@ describe('allergens', () => {
         await waitFor(() =>
             expect(addToCart).toHaveBeenCalledWith({ product: 42, quantity: 1, box_customization: { allergens: [] } }),
         );
+    });
+});
+
+describe('switching the landing live', () => {
+    it('is indexed only when live, and only the shop variant', () => {
+        expect(adventMetadata('shop', null, true).robots).toBeUndefined();
+        expect(adventMetadata('lead', null, true).robots).toEqual({ index: false, follow: true });
+        expect(adventMetadata('shop', null, false).robots).toEqual({ index: false, follow: false });
+    });
+
+    it('points the shop at the landing once live, else at the product page', () => {
+        expect(adventHref(true)).toBe('/advent-calendar');
+        expect(adventHref(false)).toBe('/shop-now/advent-calendar');
     });
 });

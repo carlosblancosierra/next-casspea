@@ -1,10 +1,24 @@
 "use client";
 
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ADVENT_PATH, COPY as ADVENT_COPY } from '@/components/advent/content';
+
+/** Asks the API whether the Advent landing is switched live; false until it answers. */
+function useAdventLive() {
+  const [live, setLive] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${process.env.NEXT_PUBLIC_HOST}/api/products/advent-landing/status/`)
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => { if (!cancelled) setLive(!!data?.live); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+  return live;
+}
 
 // Constants
 const HIDDEN_PATHS = ['/blog', '/landing/gold'];
@@ -18,6 +32,7 @@ export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
   const pathname = usePathname();
+  const adventLive = useAdventLive();
   
   // Early return if on excluded paths
   if (HIDDEN_PATHS.some(path => pathname?.startsWith(path))) return null;
@@ -61,6 +76,15 @@ export default function AnnouncementBar() {
           <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
             Free delivery on orders over £56
           </p>
+
+          {adventLive && (
+            <Link
+              href={ADVENT_PATH}
+              className="w-full md:w-auto text-center text-sm font-semibold leading-6 text-primary-text-light underline underline-offset-4 hover:no-underline"
+            >
+              Advent Calendar 2026: order by 26 Nov <span aria-hidden="true">&rarr;</span>
+            </Link>
+          )}
 
           
           {/* The accent, on the one surface where it reads as a highlight

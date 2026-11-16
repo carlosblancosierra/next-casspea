@@ -11,7 +11,8 @@ import ShopNowCTA from '@/components/common/ShopNowCTA';
 import ReviewCarousel from '@/components/common/ReviewCarousel';
 import HomeProductsServer from '@/components/home/HomeProductsServer';
 import AdventSection, { ADVENT_SLUG } from '@/components/home/AdventSection';
-import { getProduct } from '@/utils/products';
+import { getProduct, isAdventLandingLive } from '@/utils/products';
+import { ADVENT_PRODUCT_PATH, adventHref } from '@/components/advent/content';
 import { HOME_HERO } from '@/config/homeHero';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
 import FeaturedFlavourSections from '@/components/flavours/FeaturedFlavourSections';
@@ -75,8 +76,12 @@ async function getAdventCarouselImage(): Promise<string | null> {
 // phones, one for desktop), which put two H1s on the page. On phones it comes
 // first and the pictures follow; from lg the pictures move to the left.
 const HeroSection = async () => {
-  const adventImage = await getAdventCarouselImage();
+  const [adventImage, adventLive] = await Promise.all([getAdventCarouselImage(), isAdventLandingLive()]);
   const hero = HOME_HERO;
+  // The Advent CTA goes to the landing once it is switched live.
+  const primaryCta = hero.primaryCta.href === ADVENT_PRODUCT_PATH
+    ? { ...hero.primaryCta, href: adventHref(adventLive) }
+    : hero.primaryCta;
 
   return (
   <section className="dark:bg-main-bg-dark">
@@ -91,8 +96,8 @@ const HeroSection = async () => {
           {hero.preview}
         </p>
         <ShopNowCTA
-          label={hero.primaryCta.label}
-          href={hero.primaryCta.href}
+          label={primaryCta.label}
+          href={primaryCta.href}
           secondary={hero.secondaryCta}
           className="mb-4"
         />

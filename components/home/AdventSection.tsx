@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getProduct } from '@/utils/products';
+import { getProduct, isAdventLandingLive } from '@/utils/products';
+import { adventHref } from '@/components/advent/content';
 import ChristmasDeliveryCountdown from '@/components/common/ChristmasDeliveryCountdown';
 
 /**
@@ -17,16 +18,17 @@ import ChristmasDeliveryCountdown from '@/components/common/ChristmasDeliveryCou
  * photo shipped in public/.
  */
 export const ADVENT_SLUG = 'advent-calendar';
-const ADVENT_HREF = `/shop-now/${ADVENT_SLUG}`;
 const FALLBACK_IMAGE = '/advent-calendar/2025/2.jpg';
 
 export default async function AdventSection() {
-  const product = await getProduct(ADVENT_SLUG);
+  const [product, live] = await Promise.all([getProduct(ADVENT_SLUG), isAdventLandingLive()]);
+  // The landing once it is switched live, else the product page.
+  const href = adventHref(live);
   const imageSrc = product?.wide_image || product?.image || FALLBACK_IMAGE;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch rounded-xl overflow-hidden bg-[#977545]">
-      <Link href={ADVENT_HREF} className="relative min-h-[220px] md:min-h-[320px] block group">
+      <Link href={href} className="relative min-h-[220px] md:min-h-[320px] block group">
         <Image
           src={imageSrc}
           alt="Advent Calendar"
@@ -52,7 +54,7 @@ export default async function AdventSection() {
 
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <Link
-            href={ADVENT_HREF}
+            href={href}
             className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition"
           >
             Shop Now
