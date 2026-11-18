@@ -3,6 +3,7 @@ import { apiSlice } from '@/redux/services/apiSlice';
 export interface ClientSetupProduct {
     slug: string;
     name: string;
+    /** Empty while the client's price hasn't been agreed. */
     price: string;
     stripe_price_id: string;
     exists: boolean;
@@ -16,6 +17,8 @@ export interface ClientSetupStatus {
     page_exists: boolean;
     page_active: boolean;
     has_access_code: boolean;
+    /** False while a product has no price or Stripe price id: it can't be loaded. */
+    ready?: boolean;
     products: ClientSetupProduct[];
 }
 
