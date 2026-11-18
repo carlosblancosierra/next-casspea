@@ -4,6 +4,19 @@ import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { useCreateRoyalMailOrderMutation } from '@/redux/features/royalmail/royalmailApiSlice';
 
+/**
+ * The reason the API gave for refusing to create a shipment, so the admin
+ * sees "this is a store collection" or Royal Mail's own message instead of a
+ * bare failure.
+ */
+export function shippingErrorMessage(err: unknown): string {
+    const data = (err as { data?: { error?: unknown; detail?: unknown } } | null)?.data;
+    const parts = [data?.error, data?.detail].filter(
+        (part): part is string => typeof part === 'string' && part.trim() !== '',
+    );
+    return parts.length ? `Error al crear envío: ${parts.join(' — ')}` : 'Error al crear envío';
+}
+
 function getCookie(name: string) {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     return match ? decodeURIComponent(match[2]) : null;
@@ -24,8 +37,8 @@ export function useOrderActions() {
             try {
                 await createRoyalMailOrder({ order_id }).unwrap();
                 toast.success('Envío creado');
-            } catch {
-                toast.error('Error al crear envío');
+            } catch (err) {
+                toast.error(shippingErrorMessage(err));
             }
         },
         [createRoyalMailOrder],

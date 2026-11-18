@@ -8,6 +8,7 @@ import { Product } from '@/types/products';
 import { useSendTrackingCodeMailMutation } from '@/redux/features/orders/ordersApiSlice';
 import { toast } from 'react-toastify';
 import { buttonClasses } from '@/components/common/Button';
+import { isStorePickup } from '@/components/checkout/constants';
 
 const getCustomization = (
   boxCustomization?: CartItemBoxCustomization,
@@ -346,6 +347,10 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onCreateShipping, onDownlo
                     </button>
                   </div>
                 </div>
+              ) : isStorePickup(order.checkout_session?.shipping_option) ? (
+                <p className="text-sm text-primary-text dark:text-primary-text-light">
+                  Recogida en tienda: no necesita envío de Royal Mail.
+                </p>
               ) : (
                 <div>
                   <button
