@@ -52,6 +52,11 @@ function SetupCard({ setup, onLoaded }: { setup: ClientSetupStatus; onLoaded: ()
                 {setup.page_exists && (
                     <StatusPill ok={setup.has_access_code} labelOn="Code set" labelOff="No code" />
                 )}
+                {setup.ready === false && (
+                    <span className="inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+                        Price missing
+                    </span>
+                )}
                 <Link href={setup.path} className="ml-auto text-sm text-blue-600 hover:underline">
                     Open {setup.path} →
                 </Link>
@@ -78,7 +83,9 @@ function SetupCard({ setup, onLoaded }: { setup: ClientSetupStatus; onLoaded: ()
                                         <span className="text-gray-500">Not loaded</span>
                                     )}
                                 </td>
-                                <td className="px-3 py-2 text-right">£{product.price}</td>
+                                <td className="px-3 py-2 text-right">
+                                    {product.price ? `£${product.price}` : <span className="text-amber-700">Pending</span>}
+                                </td>
                                 <td className="max-w-[180px] truncate px-3 py-2 font-mono text-xs">{product.stripe_price_id}</td>
                             </tr>
                         ))}
@@ -94,7 +101,7 @@ function SetupCard({ setup, onLoaded }: { setup: ClientSetupStatus; onLoaded: ()
             <div className="flex flex-wrap gap-3">
                 <button
                     onClick={() => run(false)}
-                    disabled={isLoading}
+                    disabled={isLoading || setup.ready === false}
                     className="rounded-md bg-primary px-4 py-2 font-semibold text-white disabled:opacity-50"
                 >
                     {isLoading ? 'Working…' : setup.page_exists ? 'Update' : 'Load'}
