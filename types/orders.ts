@@ -6,6 +6,8 @@ export interface OrderShippingOption {
     id: number;
     name: string;
     price: string;
+    // Absent on orders cached from before the API sent it.
+    delivery_speed?: string;
 }
 
 export interface OrderCart {
