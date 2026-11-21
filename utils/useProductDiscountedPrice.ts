@@ -43,6 +43,7 @@ export const useProductDiscountedPrice = (productId: number, product: Product) =
         discountedPrice,
         savings: (originalPrice - parseFloat(discountedPrice)).toFixed(2),
         hasDiscount: true,
-        discount_percentage: cart.discount.amount
+        // The API sends the amount as a decimal string ("15.00"): show "15", not "15.00".
+        discount_percentage: Number(cart.discount.amount)
     };
 };

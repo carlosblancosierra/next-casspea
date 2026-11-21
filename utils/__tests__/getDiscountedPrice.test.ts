@@ -9,6 +9,10 @@ describe('getDiscountedPrice', () => {
         expect(getDiscountedPrice(discount(), 1, '40.00')).toBe('34.00');
     });
 
+    it('copes with the decimal string the API sends', () => {
+        expect(getDiscountedPrice(discount({ amount: '15.00' as unknown as number }), 1, '23.00')).toBe('19.55');
+    });
+
     it('takes a fixed amount off', () => {
         expect(getDiscountedPrice(discount({ discount_type: 'FIXED_AMOUNT', amount: 5 }), 1, '40.00')).toBe('35.00');
     });
