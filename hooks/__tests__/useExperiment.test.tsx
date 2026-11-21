@@ -1,3 +1,4 @@
+import { StrictMode } from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useExperiment } from '@/hooks/useExperiment';
 import {
@@ -77,5 +78,19 @@ describe('useExperiment', () => {
         await waitFor(() => expect(result.current.isLoading).toBe(false));
 
         expect(() => result.current.track('builder_add_to_cart')).not.toThrow();
+    });
+
+    it('finishes loading under StrictMode, with one request', async () => {
+        // Development runs every effect twice. The builder used to stay on
+        // "Loading..." for good there, because the first run's cleanup
+        // cancelled the only request ever made.
+        const assign = jest.fn(() => ({ unwrap: () => Promise.resolve({ variant: 'quick' }) }));
+        mockAssign.mockReturnValue([assign, {}]);
+
+        const { result } = renderHook(() => useExperiment('box_builder'), { wrapper: StrictMode });
+
+        await waitFor(() => expect(result.current.isLoading).toBe(false));
+        expect(result.current.variant).toBe('quick');
+        expect(assign).toHaveBeenCalledTimes(1);
     });
 });

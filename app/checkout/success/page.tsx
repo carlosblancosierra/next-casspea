@@ -12,18 +12,22 @@ const ConfirmPage: React.FC = () => {
         // Stripe appends ?session_id=… to the success URL. Read straight from
         // the URL: useSearchParams would force a Suspense boundary on the page.
         const sessionId = new URLSearchParams(window.location.search).get('session_id');
+        // No Stripe session means no order: someone opened the page from a
+        // bookmark, a shared link or their history. Reporting a purchase then
+        // would count a conversion that never happened.
+        if (!sessionId) return;
         // One report per order, even if the page is reloaded or reopened.
         const reportedKey = `casspea_purchase_reported_${sessionId}`;
         try {
-            if (sessionId && window.localStorage.getItem(reportedKey)) return;
-            if (sessionId) window.localStorage.setItem(reportedKey, '1');
+            if (window.localStorage.getItem(reportedKey)) return;
+            window.localStorage.setItem(reportedKey, '1');
         } catch {
             // Storage blocked: report anyway rather than lose the sale.
         }
 
         const pending = consumePendingPurchase();
         track('purchase', {
-            transaction_id: sessionId ?? undefined,
+            transaction_id: sessionId,
             currency: pending?.currency ?? CURRENCY,
             value: pending?.value,
             items: pending?.items,

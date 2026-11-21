@@ -28,20 +28,21 @@ export function useExperiment(experiment: string) {
         if (requested.current) return;
         requested.current = true;
 
-        let cancelled = false;
+        // No "cancelled" flag here: in StrictMode the first run's cleanup
+        // would mark this one request as cancelled, the second run returns
+        // early above, and the builder stayed on "Loading..." for good in
+        // development. Setting state after an unmount is a no-op in React 18.
         assignVariant({ experiment })
             .unwrap()
             .then(response => {
-                if (!cancelled) setVariant(response.variant || 'control');
+                setVariant(response.variant || 'control');
             })
             .catch(() => {
                 // Deliberately silent: control is already the state.
             })
             .finally(() => {
-                if (!cancelled) setIsLoading(false);
+                setIsLoading(false);
             });
-
-        return () => { cancelled = true; };
     }, [assignVariant, experiment]);
 
     /** Fire-and-forget: a lost funnel event must never fail a customer action. */

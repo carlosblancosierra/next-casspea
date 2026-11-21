@@ -160,4 +160,16 @@ describe('ProductFormBoxes', () => {
         // The offer comes first; the way past it is underneath.
         expect(upgrade.compareDocumentPosition(past) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     });
+
+    it('prices the upgrade in pounds and pence, said once', async () => {
+        const user = userEvent.setup();
+        render(<ProductFormBoxes product={boxOfNine} />);
+
+        await goToStepThree(user);
+        await user.click(screen.getByRole('button', { name: /add to cart/i }));
+
+        // It used to read "For £9.5 pounds more add:".
+        expect(screen.getByText('For £9.50 more, add:')).toBeInTheDocument();
+        expect(screen.queryByText(/pounds/i)).not.toBeInTheDocument();
+    });
 });
