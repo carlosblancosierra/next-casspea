@@ -30,6 +30,41 @@ function isThirdPartyNoise(properties: Record<string, unknown> | undefined): boo
 	return messages.some(m => THIRD_PARTY_NOISE.some(re => re.test(m)));
 }
 
+// TEMPORARY (CWH-134): React #418/#422/#425 on "/" do not reproduce in local
+// development, and production builds drop React's component stack, so the
+// event alone cannot say what differs from the server HTML. These fields tell
+// the likely causes apart: Cookiebot rewriting the DOM before hydration,
+// browser auto-translate, in-app browsers, or nodes injected into <body>.
+// Remove once the cause is known.
+const HYDRATION_ERROR = /Minified React error #(418|422|425)\b|Hydration failed|hydrating|does not match server-rendered HTML/;
+
+function exceptionMessages(properties: Record<string, unknown> | undefined): string[] {
+	const values = (properties?.$exception_values as unknown[] | undefined) ?? [];
+	const list = (properties?.$exception_list as { value?: string }[] | undefined) ?? [];
+	return [...values.map(String), ...list.map(e => e?.value ?? '')];
+}
+
+export function isHydrationError(properties: Record<string, unknown> | undefined): boolean {
+	return exceptionMessages(properties).some(m => HYDRATION_ERROR.test(m));
+}
+
+export function hydrationContext(): Record<string, unknown> {
+	const cookiebot = (window as unknown as CookiebotWindow).Cookiebot;
+	const html = document.documentElement;
+	return {
+		hydration_route: window.location.pathname,
+		hydration_cookiebot_has_response: cookiebot ? !!cookiebot.hasResponse : null,
+		hydration_cookiebot_statistics: cookiebot ? !!cookiebot.consent?.statistics : null,
+		hydration_translated: /\btranslated-(ltr|rtl)\b/.test(html.className) || !!document.querySelector('font[style]'),
+		hydration_html_lang: html.lang,
+		hydration_in_app_browser: /FBAN|FBAV|Instagram|TikTok|Line\//.test(navigator.userAgent),
+		hydration_body_children: Array.from(document.body.children)
+			.slice(0, 20)
+			.map(el => el.tagName.toLowerCase() + (el.id ? `#${el.id}` : '')),
+		hydration_ms_since_load: Math.round(performance.now()),
+	};
+}
+
 export default function AnalyticsProvider() {
 	useEffect(() => {
 		if (!isAnalyticsEnabled() || posthog.__loaded) return;
@@ -45,6 +80,9 @@ export default function AnalyticsProvider() {
 			// "Java object is gone" alone was 373 of 452 people with an error.
 			before_send: event => {
 				if (event?.event === '$exception' && isThirdPartyNoise(event.properties)) return null;
+				if (event?.event === '$exception' && isHydrationError(event.properties)) {
+					Object.assign(event.properties, hydrationContext());
+				}
 				return event;
 			},
 			person_profiles: 'identified_only',
