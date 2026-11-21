@@ -77,3 +77,16 @@ describe('christmas', () => {
         expect(contrast(c.accent, c.primary)).toBeGreaterThanOrEqual(4.5);
     });
 });
+
+describe('black friday', () => {
+    const c = palettes.blackfriday.colors;
+
+    it('never puts white text on the gold', () => {
+        expect(contrast(c.accent, '#FFFFFF')).toBeLessThan(4.5);
+        expect(c['accent-text']).not.toBe('#FFFFFF');
+    });
+
+    it('keeps the gold legible on the black', () => {
+        expect(contrast(c.accent, c.primary)).toBeGreaterThanOrEqual(4.5);
+    });
+});

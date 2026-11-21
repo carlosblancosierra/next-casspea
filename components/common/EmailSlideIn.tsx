@@ -6,6 +6,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid';
 import { useSubscribeToNewsletterMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 import { track } from '@/utils/analytics';
 import { buttonClasses } from '@/components/common/Button';
+import { getActivePromo } from '@/components/blackfriday/campaign';
 
 export const SUBSCRIBED_KEY = 'casspea_newsletter_subscribed';
 export const DISMISSED_KEY = 'casspea_email_slide_in_dismissed_at';
@@ -32,6 +33,27 @@ function write(key: string, value: string): void {
     }
 }
 
+const COPY = {
+    regular: {
+        label: 'Get 10% off your first box',
+        heading: '10% off your first box',
+        body: "Join our list and we'll email you the code, plus a reminder before the Christmas delivery cut-off.",
+        submit: 'Get my 10%',
+        done: 'Thank you. Check your inbox for your 10% code.',
+    },
+    // While a Black Friday promo runs the public code is already in the
+    // announcement bar, so the 10% would be worse than what everyone gets.
+    // Subscribers get a better code by email (the Mailchimp welcome email
+    // carries it during the campaign); the number stays out of the page.
+    promo: {
+        label: 'Subscribers get a better Black Friday offer',
+        heading: 'Subscribers get a better Black Friday offer.',
+        body: "Join the list and we'll email you a code that beats the one on the site.",
+        submit: 'Get my code',
+        done: 'Thank you. Check your inbox for your Black Friday code.',
+    },
+};
+
 function shouldAsk(): boolean {
     if (read(SUBSCRIBED_KEY) === '1' || read(ADVENT_SUBSCRIBED_KEY) === '1') return false;
     const dismissedAt = Number(read(DISMISSED_KEY));
@@ -51,6 +73,8 @@ export default function EmailSlideIn({ showAfterMs = SHOW_AFTER_MS }: { showAfte
     const [done, setDone] = useState(false);
     const [error, setError] = useState('');
     const [subscribe, { isLoading }] = useSubscribeToNewsletterMutation();
+
+    const copy = getActivePromo() ? COPY.promo : COPY.regular;
 
     const hidden = HIDDEN_ON.some(prefix => pathname === prefix || pathname.startsWith(`${prefix}/`));
 
@@ -95,7 +119,7 @@ export default function EmailSlideIn({ showAfterMs = SHOW_AFTER_MS }: { showAfte
 
     return (
         <aside
-            aria-label="Get 10% off your first box"
+            aria-label={copy.label}
             className="fixed inset-x-4 z-[60] rounded-xl border border-gray-200 bg-main-bg p-4 shadow-lg dark:border-gray-700 dark:bg-main-bg-dark sm:left-6 sm:right-auto sm:w-[22rem] fade-in"
             style={{ bottom: 'calc(1rem + var(--buy-bar-height, 0px))' }}
         >
@@ -109,15 +133,15 @@ export default function EmailSlideIn({ showAfterMs = SHOW_AFTER_MS }: { showAfte
             </button>
             {done ? (
                 <p role="status" className="pr-10 text-sm font-medium text-primary-text dark:text-primary-text-light">
-                    Thank you. Check your inbox for your 10% code.
+                    {copy.done}
                 </p>
             ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-2 pr-6">
                     <p className="font-playfair text-lg font-bold text-primary-text dark:text-primary-text-light">
-                        10% off your first box
+                        {copy.heading}
                     </p>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                        Join our list and we&apos;ll email you the code, plus a reminder before the Christmas delivery cut-off.
+                        {copy.body}
                     </p>
                     <label htmlFor="slide-in-email" className="sr-only">
                         Email address
@@ -140,7 +164,7 @@ export default function EmailSlideIn({ showAfterMs = SHOW_AFTER_MS }: { showAfte
                             disabled={isLoading}
                             className={buttonClasses({ size: 'sm', className: 'min-h-[44px] shrink-0' })}
                         >
-                            {isLoading ? 'Sending…' : 'Get my 10%'}
+                            {isLoading ? 'Sending…' : copy.submit}
                         </button>
                     </div>
                     {error && (

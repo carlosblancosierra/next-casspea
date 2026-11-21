@@ -1,10 +1,12 @@
 "use client";
 
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ADVENT_PATH, COPY as ADVENT_COPY } from '@/components/advent/content';
+import { getActivePromo } from '@/components/blackfriday/campaign';
+import PromoAnnouncement from '@/components/blackfriday/PromoAnnouncement';
 
 // Constants
 const HIDDEN_PATHS = ['/blog', '/landing/gold'];
@@ -18,6 +20,12 @@ export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
   const pathname = usePathname();
+  // Worked out again after mount: a page cached before the promo started (or
+  // ended) would otherwise keep showing the bar it was built with.
+  const [promo, setPromo] = useState(() => getActivePromo());
+  useEffect(() => {
+    setPromo(getActivePromo());
+  }, []);
   
   // Early return if on excluded paths
   if (HIDDEN_PATHS.some(path => pathname?.startsWith(path))) return null;
@@ -57,6 +65,7 @@ export default function AnnouncementBar() {
   return (
     <div className="relative isolate overflow-hidden px-6 py-2.5 sm:px-3.5 bg-primary">
       <div className="flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-x-6 max-w-screen-2xl mx-auto text-primary-text-light">
+        {promo ? <PromoAnnouncement promo={promo} /> : (
         <div className="flex flex-col md:flex-row flex-1 justify-center items-center gap-y-2 md:gap-x-8 w-full">
           <p className="text-sm leading-6 w-full md:w-auto text-center text-primary-text-light">
             Free delivery on orders over £56
@@ -75,6 +84,7 @@ export default function AnnouncementBar() {
           </Link>
 
         </div>
+        )}
 
         <button
           type="button"

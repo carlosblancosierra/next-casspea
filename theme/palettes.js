@@ -3,7 +3,7 @@
  *
  * Tailwind reads `palettes[ACTIVE]` from here, so switching the whole site is
  * the one-word edit below rather than hunting hex codes through
- * tailwind.config.js. /admin/palette renders all three side by side.
+ * tailwind.config.js. /admin/palette renders them all side by side.
  *
  * Every option is drawn from the CassPea flavours artwork — deep forest
  * green, ochre, burnt orange, dusty rose, sage — so they are the brand's own
@@ -164,9 +164,47 @@ const palettes = {
             'gradient-autumn': 'linear-gradient(to right, #002B57, #0A4E96)',
         },
     },
+
+    /**
+     * Black Friday: black and gold, across the whole site.
+     *
+     * Black leads: announcement bar, footer, buttons and chips, under white
+     * text at well over 4.5:1. Gold is the accent and, like the Christmas
+     * gold, it carries dark lettering, never white. It is also bright enough
+     * to read as a detail on the black.
+     *
+     * The page background stays a warm off-white rather than going dark: many
+     * components set dark text on `main-bg`, so a black background would
+     * leave them unreadable. The black lives in the chrome and the buttons.
+     */
+    blackfriday: {
+        name: 'Black Friday',
+        description: 'Black with a gold accent. Seasonal; gold carries dark text, never white.',
+        colors: {
+            primary: '#111111',
+            'primary-2': '#111111',
+            'primary-dark': '#000000',
+            'primary-light': '#6B6B6B',
+            'primary-button-text': '#FFFFFF',
+            accent: '#D4AF37',
+            'accent-text': '#111111',
+            'main-bg': '#FAF8F4',
+            'main-bg-dark': '#0A0A0A',
+            'secondary-bg': '#000000',
+            'primary-text': '#1A1A1A',
+            'primary-text-light': '#FAF8F4',
+            'primary-text-dark': '#1A1A1A',
+            'secondary-text': '#1A1A1A',
+            'secondary-text-dark': '#FAF8F4',
+        },
+        gradients: {
+            'gradient-primary': 'linear-gradient(to right, #000000, #1F1F1F)',
+            'gradient-autumn': 'linear-gradient(to right, #111111, #2E2E2E)',
+        },
+    },
 };
 
 /** Change this one word to change the site. */
-const ACTIVE = 'christmas';
+const ACTIVE = 'blackfriday';
 
 module.exports = { palettes, ACTIVE, active: palettes[ACTIVE] };
