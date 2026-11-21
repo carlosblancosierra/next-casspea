@@ -28,7 +28,8 @@ const GiftCardPage = () => {
     }, [cart]);
 
     useEffect(() => {
-        if (cart && cart.items && cart.items.some(item => !!item.pack_customization)) {
+        // Packs carry their own gift card; client orders don't get one.
+        if (cart && (cart.is_client_order || cart.items?.some(item => !!item.pack_customization))) {
             router.push('/checkout/address');
         }
     }, [cart, router]);

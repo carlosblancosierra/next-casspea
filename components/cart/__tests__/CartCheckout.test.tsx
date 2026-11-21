@@ -1,10 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import CartCheckout from '@/components/cart/CartCheckout';
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
+import { useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 import type { Cart } from '@/types/carts';
 
+const mockPush = jest.fn();
 jest.mock('next/navigation', () => ({
-    useRouter: () => ({ push: jest.fn() }),
+    useRouter: () => ({ push: mockPush }),
 }));
 
 jest.mock('@/redux/features/carts/cartApiSlice', () => ({
@@ -92,5 +94,37 @@ describe('CartCheckout discount panel', () => {
 
         expect(screen.getByLabelText(/Add Discount Code/i)).not.toBeChecked();
         expect(screen.queryByTestId('discount-form')).not.toBeInTheDocument();
+    });
+});
+
+describe('CartCheckout on a client order', () => {
+    const clientCart = { ...baseCart, is_client_order: true } as Cart;
+
+    beforeEach(() => jest.clearAllMocks());
+
+    it('hides the discount code, even one already on the cart', () => {
+        mockCart.mockReturnValue({
+            data: { ...clientCart, discount: { code: 'WELCOME10' } },
+            isLoading: false,
+        });
+
+        render(<CartCheckout />);
+
+        expect(screen.queryByLabelText(/Add Discount Code/i)).not.toBeInTheDocument();
+        expect(screen.queryByTestId('discount-form')).not.toBeInTheDocument();
+        expect(screen.queryByText(/WELCOME10/)).not.toBeInTheDocument();
+    });
+
+    it.each([
+        [true, '/checkout/address'],
+        [false, '/checkout/gift-card'],
+    ])('client order %s goes to %s', async (isClientOrder, path) => {
+        (useGetSessionQuery as jest.Mock).mockReturnValue({ data: { email: 'a@example.com' }, isLoading: false });
+        mockCart.mockReturnValue({ data: { ...baseCart, is_client_order: isClientOrder }, isLoading: false });
+
+        render(<CartCheckout />);
+        fireEvent.click(screen.getByRole('button', { name: /checkout/i }));
+
+        await waitFor(() => expect(mockPush).toHaveBeenCalledWith(path));
     });
 });

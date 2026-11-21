@@ -79,6 +79,8 @@ export interface Cart {
     discounted_total: string;
     total_savings: string;
     is_discount_valid: boolean;
+    /** Holds a client-page product: no discount codes, no gift card step. */
+    is_client_order?: boolean;
     created: string;
     updated: string;
 }

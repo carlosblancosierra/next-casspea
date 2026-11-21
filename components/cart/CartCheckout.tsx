@@ -68,6 +68,9 @@ export default function CartCheckout() {
     // clearance boxes were only the first thing to carry it — so nothing here
     // names a campaign.
     const hasAlreadyDiscountedItem = cart.items.some(item => item.product?.block_discount_codes);
+    // Client pages have agreed prices: no discount codes and no gift card
+    // upsell. The backend refuses codes on these carts too.
+    const isClientOrder = !!cart.is_client_order;
 
     const handleValidEmail = async (newEmail: string) => {
         setEmail(newEmail);
@@ -123,7 +126,7 @@ export default function CartCheckout() {
 
             await updateSession({ email: emailToUse }).unwrap();
 
-            router.push(`/checkout/gift-card`);
+            router.push(isClientOrder ? '/checkout/address' : '/checkout/gift-card');
 
         } catch (err) {
             console.error('Checkout error:', err);
@@ -149,7 +152,7 @@ export default function CartCheckout() {
                     </dl>
 
                     {/* Discount if applied */}
-                    {cart.discount && (
+                    {cart.discount && !isClientOrder && (
                         <dl className="flex items-center justify-between gap-4">
                             <dt className="text-base font-normal text-primary-text dark:text-primary-text-light">
                                 Discount ({cart.discount.code})
@@ -207,6 +210,7 @@ export default function CartCheckout() {
                     {/* Always available. An already-discounted item keeps its own
                         price and a code still applies to everything else, which
                         is worth saying — otherwise the discount looks broken. */}
+                    {!isClientOrder && (
                     <div className="mt-4">
                         <label className="flex items-center space-x-2">
                             <input
@@ -232,6 +236,7 @@ export default function CartCheckout() {
                             </div>
                         )}
                     </div>
+                    )}
                 </div>
             </div>
 

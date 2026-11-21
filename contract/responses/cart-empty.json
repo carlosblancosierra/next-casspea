@@ -10,6 +10,7 @@
   "discounted_total": "0.00",
   "total_savings": "0.00",
   "is_discount_valid": false,
+  "is_client_order": false,
   "created": "2026-01-01T00:00:00Z",
   "updated": "2026-01-01T00:00:00Z"
 }
