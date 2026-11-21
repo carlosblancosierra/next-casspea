@@ -49,6 +49,18 @@ describe.each(entries)('%s palette', (_name, palette) => {
         expect(c['accent-text']).toBeDefined();
         expect(contrast(c.accent, c['accent-text'])).toBeGreaterThanOrEqual(4.5);
     });
+
+    it('keeps buttons visible on a dark-mode page', () => {
+        // Black Friday's #111111 primary on the #0A0A0A dark page is 1.05:1:
+        // the buttons looked like black holes. Under 3:1 the palette has to
+        // say what buttons use in dark mode instead (tailwind.config.js).
+        const dark = c['main-bg-dark'];
+        const button = (palette as Palette & { darkButton?: { bg: string; text: string } }).darkButton;
+        if (contrast(c.primary, dark) >= 3) return;
+        expect(button).toBeDefined();
+        expect(contrast(button!.bg, dark)).toBeGreaterThanOrEqual(3);
+        expect(contrast(button!.bg, button!.text)).toBeGreaterThanOrEqual(4.5);
+    });
 });
 
 describe('the active palette', () => {

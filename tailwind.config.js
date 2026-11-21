@@ -1,7 +1,35 @@
 // The brand colours live in theme/palettes.js so they can be swapped in one
 // word and previewed at /admin/palette. Everything below the spread is either
 // a one-off swatch nobody changes or a structural setting.
+const plugin = require('tailwindcss/plugin');
 const { active } = require('./theme/palettes');
+
+/**
+ * Primary and money buttons on a dark-mode page. Their fill (`bg-primary`,
+ * `bg-gradient-autumn`) is the palette's primary, which can vanish against
+ * the near-black page, so a palette can give a `darkButton` colour for dark
+ * mode. Only real buttons and links are matched, so the footer, chips and
+ * announcement bar keep the primary. The selector outranks the components'
+ * own `dark:bg-*` and `hover:` classes, so nothing has to change in them.
+ */
+const DARK_BUTTON =
+	':is(button, a, [role="button"], input[type="submit"]):is(.bg-primary, .bg-primary-dark, .bg-gradient-autumn)';
+
+const darkButtons = plugin(({ addBase }) => {
+	const dark = active.darkButton;
+	if (!dark) return;
+	addBase({
+		'@media (prefers-color-scheme: dark)': {
+			[DARK_BUTTON]: {
+				'background-color': dark.bg,
+				'background-image': 'none',
+				'border-color': dark.bg,
+				color: dark.text,
+			},
+			[`${DARK_BUTTON}:hover:not(:disabled)`]: { filter: 'brightness(1.08)' },
+		},
+	});
+});
 
 module.exports = {
 	content: [
@@ -36,5 +64,5 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+	plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography'), darkButtons],
 };
