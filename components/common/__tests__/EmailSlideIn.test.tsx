@@ -4,9 +4,14 @@ import EmailSlideIn, { DISMISSED_KEY, SHOW_AFTER_MS, SUBSCRIBED_KEY } from '@/co
 import { useSubscribeToNewsletterMutation } from '@/redux/features/subscribe/subscribeApiSlice';
 import { usePathname } from 'next/navigation';
 import { track } from '@/utils/analytics';
+import { getActivePromo, PRE_BLACK_FRIDAY } from '@/components/blackfriday/campaign';
 
 jest.mock('@/redux/features/subscribe/subscribeApiSlice', () => ({
     useSubscribeToNewsletterMutation: jest.fn(),
+}));
+jest.mock('@/components/blackfriday/campaign', () => ({
+    ...jest.requireActual('@/components/blackfriday/campaign'),
+    getActivePromo: jest.fn(),
 }));
 jest.mock('next/navigation', () => ({ usePathname: jest.fn() }));
 jest.mock('@/utils/analytics', () => ({
@@ -24,6 +29,7 @@ beforeEach(() => {
     (useSubscribeToNewsletterMutation as jest.Mock).mockReturnValue([subscribe, { isLoading: false }]);
     (usePathname as jest.Mock).mockReturnValue('/shop-now');
     (track as jest.Mock).mockClear();
+    (getActivePromo as jest.Mock).mockReturnValue(null);
 });
 
 afterEach(() => {
@@ -91,5 +97,21 @@ describe('EmailSlideIn', () => {
         expect(subscribe).toHaveBeenCalledWith({ email: 'ana@example.com', source: 'slide-in' });
         await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(/check your inbox/i));
         expect(window.localStorage.getItem(SUBSCRIBED_KEY)).toBe('1');
+    });
+});
+
+describe('EmailSlideIn during a Black Friday promo', () => {
+    beforeEach(() => {
+        (getActivePromo as jest.Mock).mockReturnValue(PRE_BLACK_FRIDAY);
+    });
+
+    it('promises a better code than the public one, without naming it', () => {
+        render(<EmailSlideIn />);
+        wait();
+
+        const promoPanel = screen.getByRole('complementary', { name: /better Black Friday offer/i });
+        expect(promoPanel).toHaveTextContent("Join the list and we'll email you a code that beats the one on the site.");
+        expect(promoPanel).not.toHaveTextContent(/\d+%/);
+        expect(screen.getByRole('button', { name: 'Get my code' })).toBeInTheDocument();
     });
 });
