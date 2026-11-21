@@ -19,6 +19,8 @@ import { useExperiment } from '@/hooks/useExperiment';
 import { BOX_BUILDER_EXPERIMENT, BUILDER_ADD_TO_CART } from '@/types/experiments';
 import { track as trackEvent, toAmount, CURRENCY } from '@/utils/analytics';
 import { useHydrated } from '@/hooks/useHydrated';
+import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
+import { getDiscountedPrice } from '@/utils/useProductDiscountedPrice';
 
 const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> = ({ slug, initialProducts }) => {
 	// Explicitly provide the type for the query result
@@ -30,6 +32,7 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 	const { variant, isLoading: variantLoading, track } = useExperiment(BOX_BUILDER_EXPERIMENT);
 	// The form column, watched by the mobile buy bar.
 	const formRef = useRef<HTMLDivElement>(null);
+	const { data: cart } = useGetCartQuery();
 	// Prefer the SSR-provided products for the first render (SEO / no spinner),
 	// then let the client query keep them current.
 	// Live data only after hydration, so the first render matches the HTML.
@@ -150,6 +153,7 @@ const ProductTemplate: React.FC<{ slug: string; initialProducts?: Product[] }> =
 				productId={product.id}
 				name={product.name}
 				price={product.current_price ?? product.base_price}
+				discountedPrice={getDiscountedPrice(cart?.discount, product.id, product.current_price ?? product.base_price)}
 				isBox={isSignatureBox}
 				soldOut={!!product.sold_out}
 			/>

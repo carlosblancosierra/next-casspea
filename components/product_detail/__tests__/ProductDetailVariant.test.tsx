@@ -7,6 +7,7 @@ jest.mock('@/redux/features/products/productApiSlice', () => ({
     useGetProductsQuery: jest.fn(),
 }));
 
+jest.mock('@/redux/features/carts/cartApiSlice', () => ({ useGetCartQuery: () => ({ data: undefined }) }));
 jest.mock('@/hooks/useExperiment', () => ({
     useExperiment: jest.fn(),
 }));

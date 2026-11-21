@@ -14,6 +14,8 @@ interface MobileBuyBarProps {
     productId: number;
     name: string;
     price?: string;
+    /** The price after the basket's discount code, when there is one. */
+    discountedPrice?: string | null;
     /** Boxes are built in several steps, so the bar can't add to the bag itself. */
     isBox: boolean;
     soldOut: boolean;
@@ -26,7 +28,7 @@ interface MobileBuyBarProps {
  * bag on its own, because boxes need flavours and allergens first; it takes
  * the shopper back to the form, where the one real Add to Cart lives.
  */
-const MobileBuyBar: React.FC<MobileBuyBarProps> = ({ targetRef, productId, name, price, isBox, soldOut }) => {
+const MobileBuyBar: React.FC<MobileBuyBarProps> = ({ targetRef, productId, name, price, discountedPrice, isBox, soldOut }) => {
     const [formOffScreen, setFormOffScreen] = useState(false);
 
     useEffect(() => {
@@ -66,9 +68,14 @@ const MobileBuyBar: React.FC<MobileBuyBarProps> = ({ targetRef, productId, name,
             <div className="flex items-center gap-3">
                 <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-semibold text-primary-text dark:text-primary-text-light">{name}</p>
-                    {price && (
+                    {price && (discountedPrice ? (
+                        <p className="text-sm text-primary-text dark:text-primary-text-light">
+                            <span className="font-semibold"><span className="sr-only">Now </span>£{Number(discountedPrice).toFixed(2)}</span>
+                            <s className="ml-1.5 text-xs text-gray-500 dark:text-gray-400"><span className="sr-only">Was </span>£{Number(price).toFixed(2)}</s>
+                        </p>
+                    ) : (
                         <p className="text-sm text-primary-text dark:text-primary-text-light">£{Number(price).toFixed(2)}</p>
-                    )}
+                    ))}
                 </div>
                 <button
                     type="button"
