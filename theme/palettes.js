@@ -28,6 +28,13 @@
  * 7.78:1 under the dark ink, so an accent that assumed white text would be
  * unreadable. Every palette carries the pair so `bg-accent` resolves whichever
  * one is active.
+ *
+ * `darkButton` is the button fill on a dark-mode page. The site follows the
+ * visitor's system setting, and on the near-black `main-bg-dark` a navy,
+ * forest or black `primary` is barely visible (1.05:1 for Black Friday).
+ * A palette whose primary is under 3:1 against `main-bg-dark` must carry one;
+ * tailwind.config.js turns it into a dark-mode rule for every primary and
+ * money button.
  */
 
 const palettes = {
@@ -60,6 +67,9 @@ const palettes = {
             'gradient-primary': 'linear-gradient(to right, #1F3D2B, #2F5741)',
             'gradient-autumn': 'linear-gradient(to right, #8C3F13, #B4571F)',
         },
+        // The page is near-black in dark mode, where the primary fill
+        // disappears; buttons use the accent there instead.
+        darkButton: { bg: '#B4571F', text: '#FFFFFF' },
     },
 
     /**
@@ -163,6 +173,9 @@ const palettes = {
             'gradient-primary': 'linear-gradient(to right, #002B57, #003B78)',
             'gradient-autumn': 'linear-gradient(to right, #002B57, #0A4E96)',
         },
+        // The page is near-black in dark mode, where the primary fill
+        // disappears; buttons use the accent there instead.
+        darkButton: { bg: '#DAA520', text: '#1A1A1A' },
     },
 
     /**
@@ -201,6 +214,9 @@ const palettes = {
             'gradient-primary': 'linear-gradient(to right, #000000, #1F1F1F)',
             'gradient-autumn': 'linear-gradient(to right, #111111, #2E2E2E)',
         },
+        // The page is near-black in dark mode, where the primary fill
+        // disappears; buttons use the accent there instead.
+        darkButton: { bg: '#D4AF37', text: '#111111' },
     },
 };
 
