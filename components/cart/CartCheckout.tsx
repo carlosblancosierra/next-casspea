@@ -11,6 +11,7 @@ import { formatCurrency } from '@/utils/currency';
 import { useUpdateSessionMutation, useGetSessionQuery } from '@/redux/features/checkout/checkoutApiSlice';
 import { useStoreStatus } from '@/hooks/useStoreStatus';
 import Button from '@/components/common/Button';
+import { getSavedEmail, saveEmail } from '@/utils/savedEmail';
 
 export default function CartCheckout() {
 
@@ -33,11 +34,11 @@ export default function CartCheckout() {
     // here, when load the page, get the session
     const { data: checkoutSession, isLoading: isSessionLoading } = useGetSessionQuery();
 
-    // Update useEffect to handle loading state
+    // The session's email wins; a fresh cart has none, so fall back to the
+    // email this browser last checked out with.
     useEffect(() => {
-        if (!isSessionLoading && checkoutSession?.email) {
-            setEmail(checkoutSession.email);
-        }
+        if (isSessionLoading) return;
+        setEmail(checkoutSession?.email || getSavedEmail());
     }, [checkoutSession, isSessionLoading]);
 
     // Add the useEffect hook after the cart is retrieved to set the gift message from the cart
@@ -67,6 +68,10 @@ export default function CartCheckout() {
     // a code cannot stack on it". It is a generic flag — the Summer Break
     // clearance boxes were only the first thing to carry it — so nothing here
     // names a campaign.
+    // A logged-in customer's cart has a user, and the API takes their email
+    // from the account (it ignores one sent in the request), so don't ask.
+    const isAccountCart = !!cart.user;
+
     const hasAlreadyDiscountedItem = cart.items.some(item => item.product?.block_discount_codes);
 
     const handleValidEmail = async (newEmail: string) => {
@@ -80,9 +85,14 @@ export default function CartCheckout() {
             return;
         }
 
+        if (isAccountCart) {
+            await proceedToCheckout(null);
+            return;
+        }
+
         // If no email, open modal to collect it
         if (!email) {
-            setModalEmail(''); // Reset modal email
+            setModalEmail(getSavedEmail());
             setModalEmailError(null);
             setShowEmailModal(true);
             return;
@@ -109,7 +119,7 @@ export default function CartCheckout() {
         await proceedToCheckout(modalEmail);
     };
 
-    const proceedToCheckout = async (emailToUse: string) => {
+    const proceedToCheckout = async (emailToUse: string | null) => {
         setIsProcessing(true);
         setError(null);
 
@@ -121,7 +131,8 @@ export default function CartCheckout() {
                 await updateCart(cartUpdate).unwrap();
             }
 
-            await updateSession({ email: emailToUse }).unwrap();
+            await updateSession(emailToUse ? { email: emailToUse } : {}).unwrap();
+            if (emailToUse) saveEmail(emailToUse);
 
             router.push(`/checkout/gift-card`);
 
@@ -236,7 +247,7 @@ export default function CartCheckout() {
             </div>
 
             {/* Contact Information - Optional */}
-            {email && (
+            {email && !isAccountCart && (
                 <div className="border-b border-gray-900/10 pb-6 dark:border-gray-700">
                     <div className="bg-main-bg dark:bg-main-bg-dark border border-green-200 dark:border-green-800 rounded-lg p-4">
                         <div className="flex items-start">
@@ -346,6 +357,7 @@ export default function CartCheckout() {
                                     </div>
                                     <div className="mt-4">
                                         <EmailForm
+                                            initialEmail={getSavedEmail()}
                                             onChange={(v) => { setModalEmail(v); if (modalEmailError) setModalEmailError(null); }}
                                             invalid={!!modalEmailError}
                                         />
