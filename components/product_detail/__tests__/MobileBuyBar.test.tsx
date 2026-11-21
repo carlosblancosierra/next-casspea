@@ -89,4 +89,12 @@ describe('MobileBuyBar', () => {
         scrollToForm();
         expect(document.documentElement.style.getPropertyValue(BUY_BAR_HEIGHT_VAR)).toBe('');
     });
+
+    it('strikes through the real price when the basket has a discount code', () => {
+        setup({ discountedPrice: '30.00' });
+        scrollAway();
+        const bar = screen.getByRole('region', { name: /buy/i });
+        expect(bar).toHaveTextContent('Now £30.00');
+        expect(bar.querySelector('s')).toHaveTextContent('Was £37.50');
+    });
 });

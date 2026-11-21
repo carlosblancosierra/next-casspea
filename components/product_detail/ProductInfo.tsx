@@ -31,9 +31,15 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                             </p>
                         )}
                         {discountedPrice ? (
-                            <p className="text-xl text-primary-text dark:text-primary-text-light font-semibold">
-                                <span className="text-primary-text dark:text-primary-text-light">£{discountedPrice} GBP</span>
-                                <span className="ml-1 text-primary-text-light bg-primary p-1 text-sm rounded -mt-2">{discount_percentage}% off</span>
+                            // Same as the shop cards: the price they pay, then the real price struck through.
+                            <p className="flex flex-wrap items-baseline gap-x-2 text-xl text-primary-text dark:text-primary-text-light">
+                                <span className="font-semibold">
+                                    <span className="sr-only">Now </span>£{discountedPrice} GBP
+                                </span>
+                                <s className="text-base text-gray-500 dark:text-gray-400">
+                                    <span className="sr-only">Was </span>£{product.current_price}
+                                </s>
+                                <span className="self-center rounded bg-primary px-1.5 py-0.5 text-sm font-medium text-primary-text-light">{discount_percentage}% off</span>
                             </p>
                         ) : (
                             <p className="text-xl text-primary-text dark:text-primary-text-light">

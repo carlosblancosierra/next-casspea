@@ -1,25 +1,34 @@
 import { useGetCartQuery } from '@/redux/features/carts/cartApiSlice';
-import { DISCOUNT_TYPES } from '@/types/discounts';
+import { DISCOUNT_TYPES, Discount } from '@/types/discounts';
 import { Product } from '@/types/products';
 
-export const useProductDiscountedPrice = (productId: number, product: Product) => {
-    const { data: cart, isLoading, error } = useGetCartQuery();
+/**
+ * The price after the basket's discount code, as "12.34", or null when the
+ * basket has no code or this product is excluded from it.
+ */
+export function getDiscountedPrice(
+    discount: Discount | null | undefined,
+    productId: number,
+    price: string | number | null | undefined,
+): string | null {
+    if (!discount) return null;
+    if (discount.exclusions.some(p => p.id === productId)) return null;
 
-    // If no cart or no discount, return original price
-    if (!cart?.discount) {
-        return {
-            originalPrice: product.current_price,
-            discountedPrice: null,
-            savings: null,
-            hasDiscount: false
-        };
+    const originalPrice = parseFloat(String(price ?? '0'));
+    let discountAmount = 0;
+    if (discount.discount_type === DISCOUNT_TYPES.PERCENTAGE) {
+        discountAmount = originalPrice * (discount.amount / 100);
+    } else if (discount.discount_type === DISCOUNT_TYPES.FIXED_AMOUNT) {
+        discountAmount = discount.amount;
     }
+    return (originalPrice - discountAmount).toFixed(2);
+}
 
-    const { discount } = cart;
+export const useProductDiscountedPrice = (productId: number, product: Product) => {
+    const { data: cart } = useGetCartQuery();
+    const discountedPrice = getDiscountedPrice(cart?.discount, productId, product?.current_price);
 
-    // Check if product is excluded from discount
-    const isExcluded = discount.exclusions.some(p => p.id === productId);
-    if (isExcluded) {
+    if (!discountedPrice || !cart?.discount) {
         return {
             originalPrice: product.current_price,
             discountedPrice: null,
@@ -29,23 +38,11 @@ export const useProductDiscountedPrice = (productId: number, product: Product) =
     }
 
     const originalPrice = parseFloat(product?.current_price || '0');
-    let discountAmount = 0;
-
-    // Calculate discount based on type
-    if (discount.discount_type === DISCOUNT_TYPES.PERCENTAGE) {
-        discountAmount = originalPrice * (discount.amount / 100);
-    } else if (discount.discount_type === DISCOUNT_TYPES.FIXED_AMOUNT) {
-        discountAmount = discount.amount;
-    }
-
-    const discountedPrice = (originalPrice - discountAmount).toFixed(2);
-    const savings = discountAmount.toFixed(2);
-
     return {
         originalPrice: product.current_price,
         discountedPrice,
-        savings,
+        savings: (originalPrice - parseFloat(discountedPrice)).toFixed(2),
         hasDiscount: true,
-        discount_percentage: discount.amount
+        discount_percentage: cart.discount.amount
     };
 };
