@@ -34,4 +34,20 @@ describe('OrderCard', () => {
         renderCard();
         expect(screen.getByText('Tracked 24 - £5.99')).toBeInTheDocument();
     });
+
+    it('offers a Royal Mail shipment for a courier order', () => {
+        renderCard();
+        expect(screen.getByRole('button', { name: /create shipping order/i })).toBeInTheDocument();
+    });
+
+    it('does not offer a Royal Mail shipment for a store collection (CASSPEA-API-4)', () => {
+        const order = makeOrder();
+        order.checkout_session.shipping_option = {
+            id: 7, name: 'Pick up', price: '0.00', delivery_speed: 'PICKUP',
+        };
+
+        renderCard(order);
+        expect(screen.queryByRole('button', { name: /create shipping order/i })).not.toBeInTheDocument();
+        expect(screen.getByText(/recogida en tienda/i)).toBeInTheDocument();
+    });
 });

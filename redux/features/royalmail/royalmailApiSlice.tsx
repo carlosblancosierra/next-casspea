@@ -1,5 +1,4 @@
 import { apiSlice } from '@/redux/services/apiSlice';
-import { toast } from 'react-toastify';
 
 export const royalMailApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -21,14 +20,7 @@ export const royalMailApiSlice = apiSlice.injectEndpoints({
       }),
       // Invalidate the orders cache to trigger a refetch
       invalidatesTags: ['Orders'],
-      async onQueryStarted(arg, { queryFulfilled }) {
-        try {
-          await queryFulfilled;
-          toast.success('Royal Mail order created successfully');
-        } catch {
-          toast.error('Failed to create Royal Mail order');
-        }
-      },
+      // Toasts come from useOrderActions, which can show the API's reason.
     }),
     // Label PDFs are downloaded with fetch in useOrderActions. The unused
     // downloadRoyalMailLabel that lived here called the API through axios with
