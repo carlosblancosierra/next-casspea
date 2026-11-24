@@ -151,6 +151,7 @@ export const apiSlice = createApi({
     'Products',
     'UserDesigns',
     'Orders',
+    'Profile',
   ],
   endpoints: builder => ({})
 });

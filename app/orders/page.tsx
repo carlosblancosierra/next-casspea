@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { RequireAuth } from '@/components/utils';
+import { RequireStaff } from '@/components/utils';
 import OrderList from '@/components/orders/OrderList';
 import OrdersTable from '@/components/orders/OrdersTable';
 import Link from 'next/link';
@@ -40,7 +40,7 @@ export default function OrdersPage() {
     };
 
     return (
-        <RequireAuth>
+        <RequireStaff>
             <div className="container mx-auto py-8">
                 <h1 className="mb-4 text-2xl font-bold text-primary-text dark:text-primary-text-light">
                     Orders
@@ -85,6 +85,6 @@ export default function OrdersPage() {
                     </Link>
                 </div>
             </div>
-        </RequireAuth>
+        </RequireStaff>
     );
 }

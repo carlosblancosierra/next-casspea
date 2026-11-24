@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { RequireAuth } from '@/components/utils';
+import { RequireStaff } from '@/components/utils';
 import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/Table';
 import { formatDate } from '@/components/orders/ordersUtils';
 import {
@@ -31,9 +31,8 @@ function SmsContactsInner() {
     const [downloadCsv, { isLoading: downloading }] = useDownloadSmsContactsCsvMutation();
     const [downloadError, setDownloadError] = useState<string | null>(null);
 
-    // RequireAuth only checks that someone is signed in, not that they are an
-    // admin, so any logged-in customer can reach this URL and needs to be told
-    // why there is nothing here.
+    // RequireStaff lets in any staff member, but the export is for superusers
+    // only, so other staff need to be told why there is nothing here.
     const status = error && 'status' in error ? (error as { status: unknown }).status : null;
     const isForbidden = status === 403 || status === 401;
 
@@ -165,8 +164,8 @@ function SmsContactsInner() {
 
 export default function AdminSmsContactsPage() {
     return (
-        <RequireAuth>
+        <RequireStaff>
             <SmsContactsInner />
-        </RequireAuth>
+        </RequireStaff>
     );
 }

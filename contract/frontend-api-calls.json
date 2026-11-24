@@ -130,6 +130,11 @@
     "path": "/api/products/"
   },
   {
+    "endpoint": "getProfile",
+    "method": "GET",
+    "path": "/api/users/profile/"
+  },
+  {
     "endpoint": "getSession",
     "method": "GET",
     "path": "/api/checkout/session/"
@@ -213,6 +218,11 @@
     "endpoint": "setAddresses",
     "method": "POST",
     "path": "/api/addresses/"
+  },
+  {
+    "endpoint": "socialLogin",
+    "method": "POST",
+    "path": "/api/users/social/google/"
   },
   {
     "endpoint": "subscribeGenericLead",

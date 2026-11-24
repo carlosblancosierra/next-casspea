@@ -1,5 +1,5 @@
 import { LoginForm } from '@/components/forms';
-import { SocialButtons } from '@/components/common';
+import SocialSignIn from '@/components/auth/SocialSignIn';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 
@@ -22,13 +22,13 @@ export default function Page() {
 					alt='CassPea Chocolates Logo'
 				/>
 				<h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-primary-text dark:text-primary-text-light'>
-					Sign in to your account
+					Sign in
 				</h2>
 			</div>
 
 			<div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
+				<SocialSignIn />
 				<LoginForm />
-				{/* <SocialButtons /> */}
 			</div>
 		</div>
 	);

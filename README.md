@@ -9,6 +9,15 @@ pnpm install
 pnpm dev        # http://localhost:3005
 ```
 
+## Accounts
+
+Customers sign in with Google or Microsoft (`components/auth/`), staff with
+their password. Back-office pages are wrapped in `RequireStaff`, which uses
+`is_staff` from `GET /api/users/profile/`; the API checks it again on every
+staff request. Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID` and
+`NEXT_PUBLIC_MICROSOFT_CLIENT_ID` to show the buttons. Setup steps are in
+casspea-v2's `SOCIAL_LOGIN.md`.
+
 ## Testing
 
 Unit tests use Jest + React Testing Library (`jest.config.js` / `jest.setup.js`). They run automatically in CI on every push and pull request (`.github/workflows/tests.yml`).

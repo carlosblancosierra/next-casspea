@@ -1,12 +1,12 @@
 'use client';
 
-import { RequireAuth } from '@/components/utils';
+import { RequireStaff } from '@/components/utils';
 import PalettePreview from '@/components/admin/PalettePreview';
 import { palettes, ACTIVE } from '@/theme/palettes';
 
 export default function PalettePage() {
     return (
-        <RequireAuth>
+        <RequireStaff>
             <div className="container mx-auto py-8">
                 <h1 className="mb-2 text-2xl font-bold text-primary-text dark:text-primary-text-light">
                     Palette
@@ -19,6 +19,6 @@ export default function PalettePage() {
                 </p>
                 <PalettePreview palettes={palettes} active={ACTIVE} />
             </div>
-        </RequireAuth>
+        </RequireStaff>
     );
 }

@@ -38,6 +38,8 @@ const SAMPLE_ARGS: Record<string, unknown> = {
     login: { email: 'customer@example.com', password: 'secret' },
     logout: undefined,
     verify: { token: 'token' },
+    socialLogin: { provider: 'google', id_token: 'id-token-from-google' },
+    getProfile: undefined,
     // cart
     getCart: undefined,
     updateCart: { gift_message: 'Happy birthday' },

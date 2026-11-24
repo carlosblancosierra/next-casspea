@@ -15,10 +15,10 @@ describe('Footer', () => {
             .toHaveAttribute('href', 'mailto:info@casspea.co.uk');
     });
 
-    it('keeps the staff log-in link', () => {
+    it('keeps the log-in link (staff land on the orders, customers on their account)', () => {
         render(<Footer />);
 
-        expect(screen.getByRole('link', { name: /log in/i })).toHaveAttribute('href', '/orders');
+        expect(screen.getByRole('link', { name: /log in/i })).toHaveAttribute('href', '/auth/login');
     });
 });
 

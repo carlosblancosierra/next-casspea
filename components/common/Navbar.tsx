@@ -16,7 +16,7 @@ const LOGO_DARK = '/logos/white.png';
 
 const mobileNav: SiteLink[] = [
   ...NAVIGATION,
-  { name: 'Log in', href: '/orders' },
+  { name: 'Account', href: '/account' },
 ]
 
 function classNames(...classes: string[]) {

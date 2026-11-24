@@ -1,6 +1,7 @@
 [
   "/",
   "/about-us",
+  "/account",
   "/addresses/stats",
   "/admin/client-setups",
   "/admin/experiments",

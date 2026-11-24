@@ -1,6 +1,6 @@
 'use client';
 
-import { RequireAuth } from '@/components/utils';
+import { RequireStaff } from '@/components/utils';
 import { useGetAddressesStatsQuery } from '@/redux/features/addresses/addressApiSlice';
 import React from 'react';
 import { buttonClasses } from '@/components/common/Button';
@@ -27,7 +27,7 @@ export default function AddressesStatsPage() {
     };
 
     return (
-        <RequireAuth>
+        <RequireStaff>
             <div className="container mx-auto py-8">
                 <h1 className="text-2xl font-bold mb-6">Addresses Stats</h1>
                 {isLoading && <p>Loading...</p>}
@@ -61,6 +61,6 @@ export default function AddressesStatsPage() {
                     </>
                 )}
             </div>
-        </RequireAuth>
+        </RequireStaff>
     );
 }

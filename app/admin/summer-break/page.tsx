@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { RequireAuth } from '@/components/utils';
+import { RequireStaff } from '@/components/utils';
 import {
     useGetSummerBreakStatusQuery,
     useRunSummerBreakActionMutation,
@@ -161,8 +161,8 @@ function AdminSummerBreakInner() {
 
 export default function AdminSummerBreakPage() {
     return (
-        <RequireAuth>
+        <RequireStaff>
             <AdminSummerBreakInner />
-        </RequireAuth>
+        </RequireStaff>
     );
 }

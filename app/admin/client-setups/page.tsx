@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { RequireAuth } from '@/components/utils';
+import { RequireStaff } from '@/components/utils';
 import {
     ClientSetupLoadResult,
     ClientSetupStatus,
@@ -171,8 +171,8 @@ function AdminClientSetupsInner() {
 
 export default function AdminClientSetupsPage() {
     return (
-        <RequireAuth>
+        <RequireStaff>
             <AdminClientSetupsInner />
-        </RequireAuth>
+        </RequireStaff>
     );
 }

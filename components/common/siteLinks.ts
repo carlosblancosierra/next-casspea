@@ -59,7 +59,7 @@ export const FOOTER_SECTIONS: { title: string; links: SiteLink[] }[] = [
 		links: [
 			{ name: 'About Us', href: '/about-us' },
 			{ name: 'Instagram', href: CONTACT.instagram.href, external: true },
-			{ name: 'Log In', href: '/orders' },
+			{ name: 'Log In', href: '/auth/login' },
 		],
 	},
 ];
