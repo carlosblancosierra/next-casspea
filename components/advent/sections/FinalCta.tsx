@@ -11,7 +11,7 @@ export default function FinalCta({ price, serverNow, buyButton }: { price: strin
                     {COPY.finalCta.heading}
                 </h2>
                 <p className={`m-0 text-lg ${MUTED}`}>
-                    {price} · {WEIGHT_GRAMS} g · free UK delivery · order by Thursday 26 November, 12pm for delivery before 1 December
+                    {price} · {WEIGHT_GRAMS} g · free UK delivery · order by Thursday 26 November, 11:59pm for delivery before 1 December
                 </p>
                 <Countdown serverNow={serverNow} layout="inline" />
                 {buyButton}

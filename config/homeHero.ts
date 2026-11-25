@@ -46,7 +46,7 @@ export const CHRISTMAS_HERO: HomeHeroConfig = {
     heading: 'Luxury Chocolate for Christmas, Handmade in London',
     preview:
         'Start with our Advent calendar, the only place to taste our three new ' +
-        'flavours before December. Order by 26 November at noon for delivery ' +
+        'flavours before December. Order by 26 November at 11:59pm for delivery ' +
         'guaranteed before 1 December.',
     primaryCta: { label: 'Order the Advent calendar', href: ADVENT_CALENDAR_HREF },
     secondaryCta: { label: 'Shop Christmas gifts', href: GIFT_BOXES_HREF },

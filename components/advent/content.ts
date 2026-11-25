@@ -6,11 +6,11 @@
  * replaced before the campaign goes live — search this file for "[".
  */
 /**
- * Last order time for a 1 December start: Thursday 26 November 2026, 12:00
- * London time. London is on GMT then, so that is 12:00 UTC. The home page's
+ * Last order time for a 1 December start: Thursday 26 November 2026, 23:59
+ * London time. London is on GMT then, so that is 23:59 UTC. The home page's
  * ChristmasDeliveryCountdown reads it from here too.
  */
-export const ORDER_DEADLINE_ISO = '2026-11-26T12:00:00Z';
+export const ORDER_DEADLINE_ISO = '2026-11-26T23:59:00Z';
 export const ORDER_DEADLINE = new Date(ORDER_DEADLINE_ISO);
 
 /** The product the page sells, looked up in the API by slug. */
@@ -39,7 +39,7 @@ export const REVEAL_EXCLUSIVES = true;
 export type Variant = 'shop' | 'lead';
 
 export const COPY = {
-    announcement: 'Order by Thursday 26 November, 12pm for delivery guaranteed before 1 December',
+    announcement: 'Order by Thursday 26 November, 11:59pm for delivery guaranteed before 1 December',
     announcementPill: 'Free UK delivery',
 
     hero: {
@@ -57,7 +57,7 @@ export const COPY = {
         countdownOpen: 'Order window for a 1 December start closes in',
         countdownClosed: 'The 1 December order window has closed',
         countdownNote:
-            "Thursday 26 November, 12pm. After that, we can't promise your calendar in time for 1 December.",
+            "Thursday 26 November, 11:59pm. After that, we can't promise your calendar in time for 1 December.",
     },
 
     lead: {
@@ -156,7 +156,7 @@ export const COPY = {
         items: [
             { icon: 'heart', title: 'Joy, 24 times over', body: 'One gift that gets opened again every morning until Christmas Eve.' },
             { icon: 'star', title: 'Rated Excellent', body: '4.6 out of 5 on Trustpilot. Handmade in London, in small batches.' },
-            { icon: 'calendar', title: 'Here before 1 December', body: 'Order by Thursday 26 November, 12pm, for delivery guaranteed before 1 December.' },
+            { icon: 'calendar', title: 'Here before 1 December', body: 'Order by Thursday 26 November, 11:59pm, for delivery guaranteed before 1 December.' },
             { icon: 'box', title: 'No effort at all', body: 'Ready to give, delivered free. Send it straight to them.' },
         ],
     },
@@ -202,7 +202,7 @@ export const COPY = {
         items: [
             {
                 q: 'When will it arrive?',
-                a: 'Order by Thursday 26 November, 12pm, and delivery is guaranteed before 1 December. Delivery is free across the UK.',
+                a: 'Order by Thursday 26 November, 11:59pm, and delivery is guaranteed before 1 December. Delivery is free across the UK.',
             },
             { q: 'Can I send it straight to someone as a gift?', a: 'Yes. Add their address at checkout, and you can include a gift note.' },
             {
