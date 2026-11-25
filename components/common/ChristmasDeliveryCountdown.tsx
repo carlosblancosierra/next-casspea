@@ -7,7 +7,7 @@ import { ORDER_DEADLINE } from '@/components/advent/content';
 // Last order time for 1 December delivery lives with the Advent landing's
 // copy, so the two countdowns can never disagree. Change it there.
 export { ORDER_DEADLINE };
-const DELIVERY_LABEL = '1st December';
+const MESSAGE = 'Order by November 26th for delivery guaranteed before December 1st';
 
 type TimeLeft = { days: number; hours: number; minutes: number; seconds: number };
 
@@ -25,7 +25,7 @@ function getTimeLeft(): TimeLeft | null {
 const pad = (n: number) => String(n).padStart(2, '0');
 
 /**
- * "Order by 26th November at noon for 1st December delivery" with a live
+ * "Order by November 26th for delivery guaranteed before December 1st" with a live
  * countdown. Renders nothing on the server (the time depends on the viewer's
  * clock) and nothing once the deadline has passed, so it can stay in the code.
  */
@@ -53,10 +53,10 @@ export default function ChristmasDeliveryCountdown({ className = '' }: { classNa
         <div
             className={`w-fit rounded-lg bg-red-700 text-white px-4 py-3 shadow-sm ${className}`}
             role="timer"
-            aria-label={`Order by 26th November at noon for ${DELIVERY_LABEL} delivery`}
+            aria-label={MESSAGE}
         >
             <p className="text-sm font-semibold">
-                Order by 26th November at noon for {DELIVERY_LABEL} delivery
+                {MESSAGE}
             </p>
             <div className="mt-2 flex gap-3">
                 {units.map(([value, label]) => (
