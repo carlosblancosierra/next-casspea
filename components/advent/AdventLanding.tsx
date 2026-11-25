@@ -96,8 +96,9 @@ export function adventMetadata(variant: Variant, product: Product | null = null)
         title,
         description,
         alternates: { canonical: ADVENT_PATH },
-        // Not launched yet: both variants stay out of search until the page is ready.
-        robots: { index: false, follow: false },
+        // The shop page is live and open to search. The early-access page is
+        // for the email campaign only and stays out of search.
+        robots: variant === 'shop' ? { index: true, follow: true } : { index: false, follow: false },
         openGraph: {
             type: 'website',
             siteName: 'CassPea',
