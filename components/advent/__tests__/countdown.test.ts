@@ -4,10 +4,10 @@ import { ORDER_DEADLINE } from '../content';
 describe('timeLeft', () => {
     const deadline = ORDER_DEADLINE.getTime();
 
-    it('is 12:00 London time on Thursday 26 November 2026 (GMT, so UTC)', () => {
-        expect(ORDER_DEADLINE.toISOString()).toBe('2026-11-26T12:00:00.000Z');
+    it('is 23:59 London time on Thursday 26 November 2026 (GMT, so UTC)', () => {
+        expect(ORDER_DEADLINE.toISOString()).toBe('2026-11-26T23:59:00.000Z');
         expect(ORDER_DEADLINE.toLocaleString('en-GB', { timeZone: 'Europe/London', weekday: 'long', hour: '2-digit' }))
-            .toBe('Thursday, 12');
+            .toBe('Thursday, 23');
     });
 
     it('splits what is left into days, hours, minutes and seconds', () => {

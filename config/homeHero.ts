@@ -1,3 +1,5 @@
+import { ADVENT_PATH } from '@/components/advent/content';
+
 /**
  * Homepage hero copy, in one place.
  *
@@ -28,9 +30,8 @@ export interface HomeHeroConfig {
     leadProductSlugs: string[];
 }
 
-// The normal product page. The campaign landing (app/advent-calendar) is
-// still in progress and is not linked from anywhere until it launches.
-const ADVENT_CALENDAR_HREF = '/shop-now/advent-calendar';
+// The campaign landing (app/advent-calendar), live since November 2026.
+const ADVENT_CALENDAR_HREF = ADVENT_PATH;
 const GIFT_BOXES_HREF = '/shop-now/categories/signature-boxes';
 
 const EVERYDAY_INTRO =
@@ -45,8 +46,8 @@ export const CHRISTMAS_HERO: HomeHeroConfig = {
     heading: 'Luxury Chocolate for Christmas, Handmade in London',
     preview:
         'Start with our Advent calendar, the only place to taste our three new ' +
-        'flavours before December. Order by 26 November at noon to start on ' +
-        '1 December.',
+        'flavours before December. Order by 26 November at 11:59pm for delivery ' +
+        'guaranteed before 1 December.',
     primaryCta: { label: 'Order the Advent calendar', href: ADVENT_CALENDAR_HREF },
     secondaryCta: { label: 'Shop Christmas gifts', href: GIFT_BOXES_HREF },
     belowHero: {

@@ -120,10 +120,10 @@ describe('AdventLanding, lead variant', () => {
         expect(screen.getAllByRole('button', { name: /Reserve My Calendar/ })).toHaveLength(before + 1);
     });
 
-    it('is kept out of search and points at the shop page', () => {
+    it('keeps early access out of search, lets the shop page in, and points at the shop page', () => {
         expect(adventMetadata('lead')).toMatchObject({ robots: { index: false }, alternates: { canonical: '/advent-calendar' } });
-        // Not launched yet, so the shop page is kept out of search too.
-        expect(adventMetadata('shop').robots).toEqual({ index: false, follow: false });
+        // The shop page is live, so search engines may index it.
+        expect(adventMetadata('shop').robots).toEqual({ index: true, follow: true });
         expect(adventMetadata('shop').openGraph).toMatchObject({ images: [expect.objectContaining({ url: '/advent/og.jpg' })] });
     });
 });
