@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getProduct } from '@/utils/products';
 import ChristmasDeliveryCountdown from '@/components/common/ChristmasDeliveryCountdown';
 import { buttonClasses } from '@/components/common/Button';
+import { ADVENT_PATH } from '@/components/advent/content';
 
 /**
  * Restored from the dead-code sweep that removed it (it had been left
@@ -10,15 +11,14 @@ import { buttonClasses } from '@/components/common/Button';
  * target of 15 Oct 2025 and was already commented out, so it would only render
  * zeros.
  *
- * The link resolves a product by slug, so it needs an active `advent-calendar`
- * product to land anywhere.
+ * The link goes to the campaign landing (app/advent-calendar).
  *
  * The picture comes from that product too, so it can be changed in the admin:
  * its wide image (this slot is landscape), else its main image, else the 2025
  * photo shipped in public/.
  */
 export const ADVENT_SLUG = 'advent-calendar';
-const ADVENT_HREF = `/shop-now/${ADVENT_SLUG}`;
+const ADVENT_HREF = ADVENT_PATH;
 const FALLBACK_IMAGE = '/advent-calendar/2025/2.jpg';
 
 export default async function AdventSection() {

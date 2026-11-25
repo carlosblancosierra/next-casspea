@@ -39,7 +39,7 @@ export const REVEAL_EXCLUSIVES = true;
 export type Variant = 'shop' | 'lead';
 
 export const COPY = {
-    announcement: 'Order by Thursday 26 November, 12pm to open door one on 1 December',
+    announcement: 'Order by Thursday 26 November, 12pm for delivery guaranteed before 1 December',
     announcementPill: 'Free UK delivery',
 
     hero: {
@@ -156,7 +156,7 @@ export const COPY = {
         items: [
             { icon: 'heart', title: 'Joy, 24 times over', body: 'One gift that gets opened again every morning until Christmas Eve.' },
             { icon: 'star', title: 'Rated Excellent', body: '4.6 out of 5 on Trustpilot. Handmade in London, in small batches.' },
-            { icon: 'calendar', title: 'Here before 1 December', body: 'Order by Thursday 26 November, 12pm, and door one is ready on time.' },
+            { icon: 'calendar', title: 'Here before 1 December', body: 'Order by Thursday 26 November, 12pm, for delivery guaranteed before 1 December.' },
             { icon: 'box', title: 'No effort at all', body: 'Ready to give, delivered free. Send it straight to them.' },
         ],
     },
@@ -202,7 +202,7 @@ export const COPY = {
         items: [
             {
                 q: 'When will it arrive?',
-                a: 'Order by Thursday 26 November, 12pm, and it will arrive in time to open door one on 1 December. Delivery is free across the UK.',
+                a: 'Order by Thursday 26 November, 12pm, and delivery is guaranteed before 1 December. Delivery is free across the UK.',
             },
             { q: 'Can I send it straight to someone as a gift?', a: 'Yes. Add their address at checkout, and you can include a gift note.' },
             {
@@ -231,7 +231,7 @@ export const COPY = {
         title: 'Advent Calendar 2026: 24 Hand-Painted Chocolates',
         description:
             'The CassPea Advent Calendar 2026: 24 hand-painted chocolates made in London, with three flavours you can ' +
-            'only find behind these doors. £59.99, free UK delivery. Order by 26 November for 1 December.',
+            'only find behind these doors. £59.99, free UK delivery. Order by 26 November for delivery guaranteed before 1 December.',
         /** Used only when the product has no photo in the API. */
         ogImage: '/advent/og.jpg',
     },
