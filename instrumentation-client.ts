@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/nextjs';
 import { sentryOptions } from '@/config/sentry';
 import { installChunkReload } from '@/utils/chunkReload';
 import { isFromDeno } from '@/utils/sentryFilters';
+import { installSentryReplay, replaysOnErrorSampleRate, replaysSessionSampleRate } from '@/utils/sentryReplay';
 
 // A tab left open across a deploy asks for chunks that no longer exist; reload
 // it once instead of leaving the click dead. See utils/chunkReload.ts.
@@ -25,6 +26,11 @@ Sentry.init({
 	// fetch() gives no response body, so React's prefetch throws on it
 	// (CASSPEA-WEB-1). See utils/sentryFilters.ts.
 	beforeSend: event => (isFromDeno(event) ? null : event),
+	// Recorded only after statistics consent; see utils/sentryReplay.ts.
+	replaysSessionSampleRate,
+	replaysOnErrorSampleRate,
 });
+
+installSentryReplay();
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
