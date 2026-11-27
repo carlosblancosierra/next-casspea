@@ -12,8 +12,9 @@ import type { BrowserOptions, NodeOptions } from '@sentry/nextjs';
  *   NEXT_PUBLIC_SENTRY_ENVIRONMENT         defaults to "production"
  *   NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE  share of page loads traced, 0..1 (default 0)
  *
- * Sentry sets no cookies and session replay is off, so it runs whatever the
- * visitor answers in Cookiebot. PostHog stays the place for replays.
+ * Sentry sets no cookies, so error reporting runs whatever the visitor answers
+ * in Cookiebot. Session replay waits for statistics consent; see
+ * utils/sentryReplay.ts.
  */
 export const sentryOptions: BrowserOptions & NodeOptions = {
 	dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
