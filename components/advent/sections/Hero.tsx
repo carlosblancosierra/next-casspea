@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import TrustpilotRating from '@/components/common/TrustpilotRating';
-import Countdown from '../Countdown';
 import LeadHeroForm from '../LeadHeroForm';
 import { COPY, type Variant } from '../content';
 import { Eyebrow, MUTED, HEADING } from './ui';
@@ -10,12 +9,11 @@ import { buttonClasses } from '@/components/common/Button';
 interface Props {
     variant: Variant;
     price: string;
-    serverNow: number;
     buyButton: ReactNode;
     image: string;
 }
 
-export default function Hero({ variant, price, serverNow, buyButton, image }: Props) {
+export default function Hero({ variant, price, buyButton, image }: Props) {
     const facts = [price, ...COPY.hero.facts];
     return (
         <section className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-12 px-6 pb-16 pt-8 lg:grid-cols-2">
@@ -56,7 +54,6 @@ export default function Hero({ variant, price, serverNow, buyButton, image }: Pr
                     // Its own height, uncropped.
                     className="h-auto w-full rounded-2xl"
                 />
-                <Countdown serverNow={serverNow} layout="boxes" />
             </div>
         </section>
     );

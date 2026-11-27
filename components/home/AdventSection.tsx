@@ -43,7 +43,7 @@ export default async function AdventSection() {
 
       <div className="flex flex-col justify-center gap-3 p-6 md:p-8">
         <h3 className="text-2xl md:text-3xl font-bold text-primary-button-text">
-          Introducing the 2026 Advent Calendar
+          The 2026 Advent Calendar
         </h3>
         <p className="text-sm md:text-base text-primary-button-text">
           A 24-day countdown to Christmas with 24 delicious treats.

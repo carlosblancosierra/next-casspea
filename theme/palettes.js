@@ -218,9 +218,48 @@ const palettes = {
         // disappears; buttons use the accent there instead.
         darkButton: { bg: '#D4AF37', text: '#111111' },
     },
+
+    /**
+     * Christmas, classic: green and red, across the whole site.
+     *
+     * The green leads — announcement bar, footer, buttons and chips — under
+     * white text at 7.75:1. The red is the accent and, unlike the gold, it
+     * holds white text (6.64:1), so it can carry the subscribe pill and the
+     * money buttons (gradient-autumn) as well.
+     *
+     * In dark mode the green is too close to the near-black page (2.37:1), so
+     * buttons switch to a brighter red there (3.68:1 on the page, 5.00:1
+     * under white).
+     */
+    christmasClassic: {
+        name: 'Christmas (green & red)',
+        description: 'Christmas green with a red accent. Seasonal; both carry white text.',
+        colors: {
+            primary: '#1B5E3B',
+            'primary-2': '#1B5E3B',
+            'primary-dark': '#124229',
+            'primary-light': '#6E9E82',
+            'primary-button-text': '#FFFFFF',
+            accent: '#B3202E',
+            'accent-text': '#FFFFFF',
+            'main-bg': '#FBF8F3',
+            'main-bg-dark': '#0E1611',
+            'secondary-bg': '#124229',
+            'primary-text': '#1A1A1A',
+            'primary-text-light': '#FBF8F3',
+            'primary-text-dark': '#1A1A1A',
+            'secondary-text': '#1A1A1A',
+            'secondary-text-dark': '#FBF8F3',
+        },
+        gradients: {
+            'gradient-primary': 'linear-gradient(to right, #124229, #1B5E3B)',
+            'gradient-autumn': 'linear-gradient(to right, #8E1622, #B3202E)',
+        },
+        darkButton: { bg: '#D42A3C', text: '#FFFFFF' },
+    },
 };
 
 /** Change this one word to change the site. */
-const ACTIVE = 'blackfriday';
+const ACTIVE = 'christmasClassic';
 
 module.exports = { palettes, ACTIVE, active: palettes[ACTIVE] };

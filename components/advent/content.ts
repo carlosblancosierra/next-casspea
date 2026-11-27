@@ -39,7 +39,7 @@ export const REVEAL_EXCLUSIVES = true;
 export type Variant = 'shop' | 'lead';
 
 export const COPY = {
-    announcement: 'Order by Thursday 26 November, 12pm to open door one on 1 December',
+    announcement: '24 hand-painted chocolates, family-made in London',
     announcementPill: 'Free UK delivery',
 
     hero: {
@@ -54,10 +54,6 @@ export const COPY = {
         allergenConfirm: 'Add to basket',
         secondary: "See what's inside",
         imageAlt: 'The CassPea Advent Calendar open, with a few doors showing hand-painted chocolates',
-        countdownOpen: 'Order window for a 1 December start closes in',
-        countdownClosed: 'The 1 December order window has closed',
-        countdownNote:
-            "Thursday 26 November, 12pm. After that, we can't promise your calendar in time for 1 December.",
     },
 
     lead: {
