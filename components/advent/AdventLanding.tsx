@@ -36,7 +36,7 @@ import FinalCta from './sections/FinalCta';
  *
  * A Server Component: every word, the price and the JSON-LD are in the HTML
  * the server sends, which is what Google Ads' landing-page check and search
- * engines read. Only the countdown, the buy buttons, the email forms, the
+ * engines read. Only the buy buttons, the email forms, the
  * exit-intent popup and the view_item event run in the browser.
  *
  * Two variants share it. `shop` sells straight away; `lead` puts an
@@ -128,8 +128,6 @@ export default function AdventLanding({ variant, product, exclusives = [], flavo
     const band = (src?: string) => src && <PhotoBand src={src} alt={productName} />;
     const amount = priceOf(product);
     const price = formatCurrency(amount);
-    // Rendered once per build; the countdown corrects itself in the browser.
-    const serverNow = Date.now();
 
     const buy = (size: 'md' | 'lg' = 'lg') => (
         <BuyButton
@@ -156,7 +154,7 @@ export default function AdventLanding({ variant, product, exclusives = [], flavo
                 }}
             />
 
-            <Hero variant={variant} price={price} serverNow={serverNow} buyButton={buy()} image={images.hero} />
+            <Hero variant={variant} price={price} buyButton={buy()} image={images.hero} />
             <Contrast />
             {/* The photos are portrait, like a story: full width they fill a
                 desktop screen. So on desktop photo 2 takes half the width with
@@ -192,7 +190,7 @@ export default function AdventLanding({ variant, product, exclusives = [], flavo
             <Reviews />
             <Faq />
             {moreBands.map(src => <PhotoBand key={src} src={src} alt={productName} />)}
-            <FinalCta price={price} serverNow={serverNow} buyButton={buy()} />
+            <FinalCta price={price} buyButton={buy()} />
 
             {variant === 'shop' && <ExitIntentPopup />}
         </div>

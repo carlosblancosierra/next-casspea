@@ -28,9 +28,6 @@ export interface HomeHeroConfig {
     leadProductSlugs: string[];
 }
 
-// The normal product page. The campaign landing (app/advent-calendar) is
-// still in progress and is not linked from anywhere until it launches.
-const ADVENT_CALENDAR_HREF = '/shop-now/advent-calendar';
 const GIFT_BOXES_HREF = '/shop-now/categories/signature-boxes';
 
 const EVERYDAY_INTRO =
@@ -40,20 +37,19 @@ const EVERYDAY_INTRO =
     'chocolatiers, every bite is a work of art and a journey through inspired ' +
     'flavours.';
 
-/** November 2026: Advent calendar. */
+/** December 2026: Christmas gifts. */
 export const CHRISTMAS_HERO: HomeHeroConfig = {
-    heading: 'Luxury Chocolate for Christmas, Handmade in London',
+    heading: 'Luxury Chocolate Gifts for Christmas, Handmade in London',
     preview:
-        'Start with our Advent calendar, the only place to taste our three new ' +
-        'flavours before December. Order by 26 November at noon to start on ' +
-        '1 December.',
-    primaryCta: { label: 'Order the Advent calendar', href: ADVENT_CALENDAR_HREF },
-    secondaryCta: { label: 'Shop Christmas gifts', href: GIFT_BOXES_HREF },
+        'Hand-painted gift boxes for everyone on your list, made in small ' +
+        'batches in our London kitchen.',
+    primaryCta: { label: 'Shop Christmas gifts', href: GIFT_BOXES_HREF },
+    secondaryCta: { label: 'Shop all chocolates', href: '/shop-now' },
     belowHero: {
         heading: 'Luxury Chocolate Gifts for Every Occasion',
         body: EVERYDAY_INTRO,
     },
-    leadProductSlugs: ['advent-calendar'],
+    leadProductSlugs: [],
 };
 
 /** The hero as it was before the Christmas campaign. */

@@ -10,8 +10,7 @@ import UnitSoldCounter from '@/components/common/UnitSoldCounter';
 import ShopNowCTA from '@/components/common/ShopNowCTA';
 import ReviewCarousel from '@/components/common/ReviewCarousel';
 import HomeProductsServer from '@/components/home/HomeProductsServer';
-import AdventSection, { ADVENT_SLUG } from '@/components/home/AdventSection';
-import { getProduct } from '@/utils/products';
+import AdventSection from '@/components/home/AdventSection';
 import { HOME_HERO } from '@/config/homeHero';
 import FlavourGridServer from '@/components/landing/main/FlavourGridServer';
 import FeaturedFlavourSections from '@/components/flavours/FeaturedFlavourSections';
@@ -57,16 +56,6 @@ const Section = ({
 // Initialize font
 const playfair = Playfair_Display({ subsets: ['latin'] });
 
-// The advent calendar's third picture, counted the way its product page shows
-// them (main image, then gallery), so it can be changed in the admin. Null when
-// the product or that picture is missing.
-async function getAdventCarouselImage(): Promise<string | null> {
-  const advent = await getProduct(ADVENT_SLUG);
-  if (!advent) return null;
-  const images = [advent.image, ...(advent.gallery_images ?? []).map(image => image.image)];
-  return images[2] || null;
-}
-
 // Hero section. A server component, so the H1, the preview line and the
 // buttons are in the HTML the server sends. The copy comes from
 // config/homeHero.ts.
@@ -74,8 +63,7 @@ async function getAdventCarouselImage(): Promise<string | null> {
 // The text is written once for every width: it used to be two copies (one for
 // phones, one for desktop), which put two H1s on the page. On phones it comes
 // first and the pictures follow; from lg the pictures move to the left.
-const HeroSection = async () => {
-  const adventImage = await getAdventCarouselImage();
+const HeroSection = () => {
   const hero = HOME_HERO;
 
   return (
@@ -111,8 +99,7 @@ const HeroSection = async () => {
         </div>
         <ImageGallery
           images={[
-            // The Advent calendar leads the gallery during the campaign.
-            adventImage || '/home/2026/01/2.jpg',
+            '/home/2026/01/2.jpg',
             '/home/2026/01/1.jpg',
             '/home/2026/01/3.jpg',
             '/home/2026/01/4.jpg',
@@ -179,9 +166,15 @@ export default function HomePage() {
 
       <HomeSummerBoxes />
 
-      {/* Above the boxes: it is seasonal and time-limited, and the boxes are
-          here all year. */}
-      <section className="mt-8 px-2">
+      <HomeSignatureGate>
+        <Section title="Christmas Gift Boxes" extraClass="mt-8">
+          <HomeProductsServer leadSlugs={HOME_HERO.leadProductSlugs} />
+        </Section>
+      </HomeSignatureGate>
+
+      {/* Christmas gifts lead; the Advent calendar follows the boxes now its
+          1 December order window has closed. */}
+      <section className="mt-10 px-2">
         <AdventSection />
       </section>
 
@@ -191,12 +184,6 @@ export default function HomePage() {
       <Suspense fallback={<LoadingSection />}>
         <FeaturedFlavourSections className="mt-10" />
       </Suspense>
-
-      <HomeSignatureGate>
-        <Section title="Signature Boxes" extraClass="mt-5 md:mt-4">
-          <HomeProductsServer leadSlugs={HOME_HERO.leadProductSlugs} />
-        </Section>
-      </HomeSignatureGate>
 
       <Section title="Our Flavours" extraClass="mt-10">
         <FlavourGridServer />

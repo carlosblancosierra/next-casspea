@@ -23,8 +23,7 @@ const EFFECTS_CONFIG: Record<EffectType, () => Promise<{ default: React.Componen
 };
 
 // Change this constant to switch effects - can be 'snow', 'christmas', 'heart', 'autumn', or 'none'
-// Off for Black Friday: falling Christmas decorations clash with the black theme.
-const CURRENT_EFFECT: EffectType = 'none';
+const CURRENT_EFFECT: EffectType = 'christmas';
 
 const CurrentEffect = dynamic(EFFECTS_CONFIG[CURRENT_EFFECT], { ssr: false });
 

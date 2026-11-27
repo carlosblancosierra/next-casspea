@@ -1,8 +1,8 @@
 import AdventLanding, { adventMetadata, getAdventLandingData, getAdventProduct, getShowcaseFlavours } from '@/components/advent/AdventLanding';
 import AdventPreview from '@/components/advent/AdventPreview';
 
-// Statically built, rebuilt at most every minute so stock and the countdown's
-// starting value stay fresh. Must be a literal for Next to read it.
+// Statically built, rebuilt at most every minute so stock stays fresh.
+// Must be a literal for Next to read it.
 export const revalidate = 60;
 
 export async function generateMetadata() {

@@ -2,7 +2,6 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { Product } from '@/types/products';
 import type { Flavour } from '@/types/flavours';
 import AdventLanding, { adventImages, adventMetadata, priceOf } from '../AdventLanding';
-import { ORDER_DEADLINE } from '../content';
 
 const subscribe = jest.fn();
 const addToCart = jest.fn();
@@ -128,13 +127,12 @@ describe('AdventLanding, lead variant', () => {
     });
 });
 
-describe('the countdown', () => {
-    it('switches to the late-order policy once the window has closed', () => {
-        jest.useFakeTimers().setSystemTime(ORDER_DEADLINE.getTime() + 60_000);
+describe('the order deadline', () => {
+    it('shows no countdown, only the late-order policy', () => {
         render(<AdventLanding variant="shop" product={product()} />);
-        expect(screen.getByText('The 1 December order window has closed')).toBeInTheDocument();
+        expect(screen.queryByText(/left to order/)).not.toBeInTheDocument();
+        expect(screen.queryByRole('timer')).not.toBeInTheDocument();
         expect(screen.getAllByText(/can't guarantee when it will arrive/).length).toBeGreaterThan(0);
-        jest.useRealTimers();
     });
 });
 
